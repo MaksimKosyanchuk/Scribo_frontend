@@ -68,9 +68,15 @@ const CreatePost = () => {
     }
 
     const handleFocus = (fieldName) => {
-        const { [fieldName]: removedField, ...other } = errors;
-        setErrors (other)
-    }
+        setErrors(prevErrors => ({
+            ...prevErrors,
+            body: Object.fromEntries(
+                Object.entries(prevErrors.body || {}).filter(
+                    ([key]) => key !== fieldName
+                )
+            )
+        }));
+    };
 
     const create_post = async (title, mainText) => {
         const formData = new FormData();
@@ -83,12 +89,9 @@ const CreatePost = () => {
         }
 
         try{
-            const creating = await fetch(`${API_URL}/api/posts/create-post`, { method: "POST", body: formData, headers: headers})
-            if (!creating.ok) {
-                console.log(creating)
-            }
+            const creating = await fetch(`${API_URL}/api/posts`, { method: "POST", body: formData, headers: headers})
             const result = await creating.json()
-            if(result.status === "success") {
+            if(result.status === true) {
                 navigate("/posts")
                 showToast({ message: "Опубликовано!", type: "success" })
                 return result
@@ -117,9 +120,9 @@ const CreatePost = () => {
                 multiline_rows={1}
                 onChange={(e) => setFields({ ...fields, title: e.target.value })}
                 onFocus={() => handleFocus('title')}
-                error={errors?.title}
+                error={errors?.body?.title?.message}
             />
-            <DropFile setValue={(file) => setFields({ ...fields, featured_image: file })} drop_file_type={"image/*"} file_types={"SVG, PNG, JPEG, JPG и другие"} errors={errors.featured_image} add_new_errors={add_errors_to_image} clear_errors={clear_errors_from_image} handleClick={handleClick}/>
+            <DropFile setValue={(file) => setFields({ ...fields, featured_image: file })} drop_file_type={"image/*"} file_types={"SVG, PNG, JPEG, JPG и другие"} errors={errors?.body?.featured_image?.message} add_new_errors={add_errors_to_image} clear_errors={clear_errors_from_image} handleClick={handleClick}/>
             <InputFiled
                 className={"create_post_main_text" + (createResult.status === "error" && createResult.message === "'content_text' length must be mroe than 0" ? " incorrect_field" : "")}
                 placeholder={"Введите текст"}
@@ -128,7 +131,7 @@ const CreatePost = () => {
                 is_multiline={true}
                 multiline_rows={navigator.maxTouchPoints > 0 ? 6 : 10}
                 length={400}
-                error={errors?.content_text}
+                error={errors?.body?.content_text?.message}
             />
             <div className="create_post_buttons">
                 <button className='submit_button create_post_submit app-transition' type="submit">
