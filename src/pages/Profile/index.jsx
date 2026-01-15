@@ -247,7 +247,7 @@ const Profile = () => {
                 ))}
             </div>
             <div className="profile_posts">
-                <Posts posts={activePosts} isLoading={isLoading} />
+                <Posts posts_filters={[]} posts={activePosts} isLoading={isLoading} />
             </div>
         </div>
     );

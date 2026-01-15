@@ -40,7 +40,7 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
                 : posts_filters.includes("все")
         });
         setFilters(uniqueFilters);
-    }, [posts, posts_filters]);
+    }, [posts, posts_filters ]);
 
     useEffect(() => {
         
