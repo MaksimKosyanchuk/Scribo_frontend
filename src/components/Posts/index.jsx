@@ -12,7 +12,6 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
     const [ filters, setFilters ] = useState([])
     const [ filteredPosts, setFilteredPosts ] = useState()
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         const isPostsFiltersEmpty = posts_filters.length === 0;
 
@@ -41,9 +40,10 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
                 : posts_filters.includes("все")
         });
         setFilters(uniqueFilters);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [posts, posts_filters ]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         
         const subscriptionFilterActive = filters.find(f => f.name.toLowerCase() === "по подписке")?.is_active;
@@ -58,6 +58,8 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
         }
         
         setFilteredPosts(updated_posts)
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters])
 
     if(!posts) {
