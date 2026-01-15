@@ -45,6 +45,7 @@ const Profile = () => {
                 follows: newData?.follower?.follows
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [newData])
 
     useEffect(() => {
@@ -71,6 +72,7 @@ const Profile = () => {
         if (user && user._id) {
             fetchPosts({ author: user._id }).then(data => setPosts(data));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?._id]);
 
     useEffect(() => {
