@@ -122,6 +122,7 @@ const CreatePost = () => {
                 multiline_rows={1}
                 onChange={(e) => setFields({ ...fields, title: e.target.value })}
                 onFocus={() => handleFocus('title')}
+                length={200}
                 error={errors?.body?.title?.message}
             />
             <InputFiled 
@@ -131,6 +132,7 @@ const CreatePost = () => {
                 multiline_rows={1}
                 onChange={(e) => setFields({ ...fields, category: e.target.value })}
                 onFocus={() => handleFocus('category')}
+                length={50}
                 error={errors?.body?.category?.message}
             />
             <DropFile setValue={(file) => setFields({ ...fields, featured_image: file })} drop_file_type={"image/*"} file_types={"SVG, PNG, JPEG, JPG и другие"} errors={errors?.body?.featured_image?.message} add_new_errors={add_errors_to_image} clear_errors={clear_errors_from_image} handleClick={handleClick}/>
@@ -141,7 +143,7 @@ const CreatePost = () => {
                 onFocus={() => handleFocus('content_text')}
                 is_multiline={true}
                 multiline_rows={navigator.maxTouchPoints > 0 ? 6 : 10}
-                length={400}
+                length={2000}
                 error={errors?.body?.content_text?.message}
             />
             <div className="create_post_buttons">
