@@ -28,7 +28,8 @@ const Profile = () => {
     useEffect(() => {
         setProfile({
             ...profile,
-            follows: newData?.follower?.follows
+            follows: newData?.follower?.follows,
+            notifications: newData?.follower?.notifications
         })
         if(profile?._id !== user?._id) {
             setUser({

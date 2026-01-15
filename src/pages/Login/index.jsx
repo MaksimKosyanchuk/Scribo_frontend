@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { AppContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../../config';
@@ -14,8 +14,9 @@ const Login = () => {
             password: '',
         }
     )
+    
     const [errors, setErrors] = useState({}); 
-   
+
     const { showToast } = useContext(AppContext); 
    
     const handleFocus = (fieldName) => {
@@ -24,36 +25,36 @@ const Login = () => {
     }
 
     const field_validation = () => {
+        let is_error = false
         if (fields.nick_name.length < 3) {
             setErrors(prevErrors => ({
                 ...prevErrors,
                 nick_name: "Username must be at least 3 characters long!"
             }));
-            return false;
+            is_error = true
         }
         if (fields.nick_name.length > 20) {
             setErrors(prevErrors => ({
                 ...prevErrors,
                 nick_name: "Username cannot be longer than 20 characters!"
             }));
-            return false;
+            is_error = true
         }
         if (fields.password.length < 8) {
             setErrors(prevErrors => ({
                 ...prevErrors,
                 password: "Password must be at least 8 characters long!"
             }));
-            return false;
+            is_error = true
         }
         if (fields.password.length > 20) {
             setErrors(prevErrors => ({
                 ...prevErrors,
                 password: "Password cannot be longer than 20 characters!"
             }));
-            return false;
+            is_error = true
         }
-
-        return true
+        return !is_error
     }
 
     const handleLogin = async () => {
@@ -76,9 +77,14 @@ const Login = () => {
             } 
             else { 
                 showToast({ message: 'Неверно!', type: 'error' }); 
-                setErrors({ "password": result.message })
-                if (result?.errors?.body) { 
-                    setErrors(result.errors.body);
+                if (result?.errors?.body) {
+                    const formattedErrors = Object.fromEntries(
+                        Object.entries(result.errors.body).map(
+                            ([field, obj]) => [field, obj.message]
+                        )
+                    );
+
+                    setErrors(formattedErrors);
                 }
         
                 return result; 

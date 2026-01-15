@@ -50,8 +50,53 @@ const Register = () => {
         setErrors (other)
     }
 
+    const field_validation = () => {
+        let is_error = false
+        if (fields.nick_name.length < 3) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                nick_name: "Username must be at least 3 characters long!"
+            }));
+            is_error = true
+        }
+        if (fields.nick_name.length > 20) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                nick_name: "Username cannot be longer than 20 characters!"
+            }));
+            is_error = true
+        }
+        if (fields.password.length < 8) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                password: "Password must be at least 8 characters long!"
+            }));
+            is_error = true
+        }
+        if (fields.password.length > 20) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                password: "Password cannot be longer than 20 characters!"
+            }));
+            is_error = true
+        }
+        if (fields.description.length > 60) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                password: "Description cannot be longer than 60 characters!"
+            }));
+            is_error = true
+        }
+        return !is_error
+    }
+
     const handleRegister = async () => {
+        if(!field_validation()) {
+            return
+        }
+
         const formData = new FormData();
+        
         for(let field in fields) {
             formData.append(field, fields[field])
         }
@@ -59,12 +104,18 @@ const Register = () => {
         try {
             const register = await fetch(`${API_URL}/api/auth/register`, { method: "POST", body: formData });
             const result = await register.json();
-            if (result.status === "success") {
+            if (result.status === true) {
                 navigate("/auth/login");
                 showToast({ message: "Зарегистрировано!", type: "success" });
             } else {
-                if(result?.errors && Object.keys(result?.errors).length > 0) {
-                    setErrors(result.errors)
+                if (result?.errors?.body) {
+                    const formattedErrors = Object.fromEntries(
+                        Object.entries(result.errors.body).map(
+                            ([field, obj]) => [field, obj.message]
+                        )
+                    );
+
+                    setErrors(formattedErrors);
                 }
                 showToast({ message: "Ошибка!", type: "error" });
                 return result;
@@ -88,7 +139,7 @@ const Register = () => {
     return (
         <form className='form_input app-transition'>
             <>
-                <DropFile setValue={(file) => setFields({ ...fields, avatar: file })} value={fields.avatar} background={<AvatarIcon className="drop_file_info_avatar_icon app-transition"/>} drop_file_type={"image/*"} file_types={"SVG, PNG, JPEG, JPG и другие"} errors={errors.featured_image} add_new_errors={add_errors_to_image} clear_errors={clear_errors_from_image} handleClick={handleClick}/> 
+                <DropFile setValue={(file) => setFields({ ...fields, avatar: file })} value={fields.avatar} background={<AvatarIcon className="drop_file_info_avatar_icon app-transition"/>} drop_file_type={"image/*"} file_types={"SVG, PNG, JPEG, JPG и другие"} errors={errors?.featured_image} add_new_errors={add_errors_to_image} clear_errors={clear_errors_from_image} handleClick={handleClick}/> 
                 <InputField
                     className={`user_name`}
                     type="text"

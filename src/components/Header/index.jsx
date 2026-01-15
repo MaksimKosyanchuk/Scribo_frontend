@@ -89,14 +89,12 @@ function Header() {
       showToast({type: "warning", message: "Войдите в аккаунт, чтоб получать уведомления!"})
       return
     }
-    console.log("PROFILE:", profile)
-console.log("TYPE:", typeof profile)
 
     const notificationContent = await get_notification(profile?.notifications);
   
     const update_notification = async () => {
       const result = await read_notifications()
-      if(result.status === "success"){
+      if(result.status === true){
         setProfile({ 
           ...profile, 
           notifications: profile.notifications.map((item) => ({ ...item, is_read: true }))

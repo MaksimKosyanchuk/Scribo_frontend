@@ -35,9 +35,8 @@ export const getUsers = async (query) => {
 };
 
 export const read_notifications = async () => {
-    const formData = new FormData();
-    formData.append("token", localStorage.getItem("token"));
+    const headers = { 'Authorization': `Bearer ${localStorage.getItem("token")}`}
     
-    const result = await fetch(`${API_URL}/api/profile/read-notifications`, { method: "POST", body: formData})
+    const result = await fetch(`${API_URL}/api/profile/read-notifications`, { method: "PATCH", headers: headers })
     return await result.json();
 }
