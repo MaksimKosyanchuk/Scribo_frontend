@@ -81,6 +81,7 @@ const ArticleTopic = ({ article }) => {
     return (
         <div className="article_topic">
             <Author author_data={article.author} />
+            <button type="button" className="app-transition category">{article.category}</button>
             <p className="article_topic_date">{format_date(article.created_date)}</p>
             <button type="button" className="article_topic_button" onClick={() => 
             {
