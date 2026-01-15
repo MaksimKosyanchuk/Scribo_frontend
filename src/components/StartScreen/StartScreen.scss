@@ -5,9 +5,9 @@
     flex-direction: column;
     min-height: 100dvh;
 
-    @include screen(){
-        min-height: unset;
-    }
+    // @include screen(){
+    //     min-height: unset;
+    // }
 
     .create_post_button {
         position: sticky;
