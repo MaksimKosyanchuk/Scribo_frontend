@@ -29,6 +29,11 @@
         color: var(--article-topic-category-color);
         background-color: var(--article-topic-category-background-color);
         font-size: 14px;
+
+        a{
+            height: 100%;
+            width: 100%;
+        }
     }
 
     .category:hover {

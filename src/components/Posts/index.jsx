@@ -10,6 +10,7 @@ import "./Posts.scss";
 const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
     const { profile } = useContext(AppContext)
     const [ filters, setFilters ] = useState([])
+    const [ filteredPosts, setFilteredPosts ] = useState()
 
     useEffect(() => {
         const isPostsFiltersEmpty = posts_filters.length === 0;
@@ -19,14 +20,16 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
         ].map(category => ({
             name: category,
             is_active: isPostsFiltersEmpty
-                ? true
-                : posts_filters.includes(category),
+                ? 
+                    true
+                : 
+                    (posts_filters.includes("все") ? true : posts_filters.includes(category.toLowerCase())),
         }));
 
         if(profile){
             uniqueFilters.unshift({
                 name: "По подписке",
-                is_active: posts_filters.includes("По подписке")
+                is_active: posts_filters.includes("по подписке")
             });
         }
         
@@ -34,26 +37,29 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
             name: "Все",
             is_active: isPostsFiltersEmpty
                 ? true
-                : posts_filters.includes("Все")
+                : posts_filters.includes("все")
         });
-
         setFilters(uniqueFilters);
-    }, [posts]);
+    }, [posts, posts_filters]);
+
+    useEffect(() => {
+        
+        const subscriptionFilterActive = filters.find(f => f.name.toLowerCase() === "по подписке")?.is_active;
+
+        let updated_posts = posts.filter(post =>
+            filters.some(f => f.name?.toLowerCase() === post.category?.toLowerCase() && f?.is_active)
+        );
+        if (subscriptionFilterActive) {
+            updated_posts = updated_posts.filter(post =>
+                profile?.follows?.map(id => id?.toLowerCase())?.includes(post.author._id.toLowerCase())
+            );
+        }
+        
+        setFilteredPosts(updated_posts)
+    }, [filters])
 
     if(!posts) {
         return <NoPosts/>
-    }
-    
-    const subscriptionFilterActive = filters.find(f => f.name === "По подписке")?.is_active;
-
-    let filteredPosts = posts.filter(post =>
-    filters.some(f => f.name === post.category && f.is_active)
-    );
-
-    if (subscriptionFilterActive) {
-        filteredPosts = filteredPosts.filter(post =>
-            profile?.follows?.includes(post.author._id)
-        );
     }
     
     return (
@@ -65,12 +71,11 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
                     posts.length === 0 ?
                         <NoPosts />
                     :
-                        
                     <>
                         <PostsFilters filters={filters} setFilters={setFilters} />
 
                         {filteredPosts.length === 0 ? (
-                        <NoPosts />
+                            <NoPosts />
                         ) : (
                         filteredPosts.map(post => (
                             <div key={post._id} className="posts_item app-transition">
