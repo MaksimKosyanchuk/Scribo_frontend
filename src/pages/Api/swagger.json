@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Scribo-blog",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Api documentation for scribo-blog backend."
   },
   "paths": {
