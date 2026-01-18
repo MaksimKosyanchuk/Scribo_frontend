@@ -216,7 +216,7 @@ const Profile = () => {
                         >
                             {user.nick_name}
                         </p>
-                        {user && user.is_verified ? <Verified className="profile_info_bottom_nick_verified" /> : null}
+                        {user && user.is_verified ? <Verified className="profile_info_bottom_nick_verified verified-icon" /> : null}
                     </div>
                     <div className="profile_info_bottom_administrator">
                         {
