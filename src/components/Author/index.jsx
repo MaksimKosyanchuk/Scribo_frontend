@@ -15,7 +15,7 @@ const Author = ( { author_data, class_name } ) => {
                 <p className="author_info_name">
                     {author_data.nick_name}
                 </p>
-                {author_data?.is_verified ? <Verified className="author_info_verified"/> : <></>}
+                {author_data?.is_verified ? <Verified key={`verified-${author_data._id}`} className="author_info_verified"/> : <></>}
             </div>
         </Link>
     )
