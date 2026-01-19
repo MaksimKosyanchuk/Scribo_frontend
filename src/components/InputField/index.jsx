@@ -1,4 +1,3 @@
-import React from 'react';
 import "./InputField.scss";
 import { ReactComponent as WarningIcon } from "../../assets/svg/warning-icon.svg"
 
