@@ -1,24 +1,75 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { AppContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../../config';
 import { Link } from 'react-router-dom';
 import InputField from '../../components/InputField/index';
 import "./Login.scss";
+import GoogleAuthButton from '../../components/GoogleAuthButton/index';
+import Register from '../Register';
 
 const Login = () => {
     const navigate = useNavigate(); 
+    const [ tokenId, setTokenId ] = useState(null)
+    const [ shouldRegister, setShouldRegister ] = useState(false)
     const [ fields, setFields ] = useState(
         {
             nick_name: '',
             password: '',
         }
     )
-    
     const [errors, setErrors] = useState({}); 
-
     const { showToast } = useContext(AppContext); 
    
+    useEffect(() => {
+        const do_login = async () => {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ google_token_id: tokenId }),
+            }
+            
+            const login = await fetch(`${API_URL}/api/auth/google-login`, requestOptions)
+            
+            if(login.status === 200) {
+                const result = await login.json() 
+                if(result.is_registered) {
+                    localStorage.setItem('token', result.data.token); 
+                    navigate('/posts');
+                    showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
+                }
+                else {
+                    const fetch = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', "Authorization": `Baerer ${tokenId}` }
+                    })
+
+                    navigate('/register', {
+                        state: {
+                            email: email,
+                            google_token: tokenId 
+                        }
+                    });
+                    return
+                }
+            }
+            const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+                headers: {
+                    Authorization: `Bearer ${tokenId}`
+                }
+            });
+            const email = (await res.json()).email;
+
+            navigate('/auth/register', { state: { email: email, google_token: tokenId }})
+
+            return
+        } 
+
+        if(tokenId) {
+            do_login()
+        }
+    }, [tokenId]);
+
     const handleFocus = (fieldName) => {
         const { [fieldName]: removedField, ...other } = errors;
         setErrors (other)
@@ -118,10 +169,11 @@ const Login = () => {
             error={errors?.password ?? null}
         />
         <button className="submit_button app-transition" onClick={handleLogin} type="button">Войти</button>
+        <GoogleAuthButton setTokenId={setTokenId}/>
         <p className={"redirect_object"}>Нет акаунта?
-            <Link to={"/auth/register"}>
-                Зарегестрироваться.
-            </Link>
+        <Link to={"/auth/register"}>
+            Зарегестрироваться.
+        </Link>
         </p>
     </form>
   );

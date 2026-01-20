@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { AppContext } from '../../App';
@@ -7,15 +7,22 @@ import InputField from '../../components/InputField/index';
 import DropFile from '../../components/DropFile/index';
 import "./Register.scss";
 import { ReactComponent as AvatarIcon } from "../../assets/svg/avatar-icon.svg"
+import { ReactComponent as ConfirmedIcon } from "../../assets/svg/confirmed-icon.svg"
 
 const Register = () => {
     const navigate = useNavigate();
+    const { email, google_token } = useLocation().state || {};
+
+    if(email) {
+        console.log(email)
+    }
 
     const [ fields, setFields ] = useState(
         {
             nick_name: '',
             password: '',
             description: '',
+            email: '',
             avatar: null
         }
     )
@@ -140,6 +147,17 @@ const Register = () => {
         <form className='form_input app-transition'>
             <>
                 <DropFile setValue={(file) => setFields({ ...fields, avatar: file })} value={fields.avatar} background={<AvatarIcon className="drop_file_info_avatar_icon app-transition"/>} drop_file_type={"image/*"} file_types={"SVG, PNG, JPEG, JPG и другие"} errors={errors?.featured_image} add_new_errors={add_errors_to_image} clear_errors={clear_errors_from_image} handleClick={handleClick}/> 
+                <InputField
+                    className={`email`}
+                    type="text"
+                    onChange={(e) => setFields({ ...fields, email: e.target.value })}
+                    onFocus={() => handleFocus('nick_name')}
+                    input_label="Почта"
+                    placeholder="Email"
+                    value={email ?? fields.email}
+                    error={errors?.email ?? null}
+                    confirmed={Boolean(email)}
+                />
                 <InputField
                     className={`user_name`}
                     type="text"
