@@ -1,21 +1,22 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { AppContext } from '../../App';
 import { API_URL } from '../../config';
 import InputField from '../../components/InputField/index';
 import DropFile from '../../components/DropFile/index';
 import "./Register.scss";
 import { ReactComponent as AvatarIcon } from "../../assets/svg/avatar-icon.svg"
-import { ReactComponent as ConfirmedIcon } from "../../assets/svg/confirmed-icon.svg"
+import GoogleAuthButton from '../../components/GoogleAuthButton/index';
 
-const Register = () => {
+const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) => {
     const navigate = useNavigate();
-    const { email, google_token } = useLocation().state || {};
 
-    if(email) {
+    useEffect(() => {
         console.log(email)
-    }
+        console.log(google_token)
+        console.log(gmail_code)
+    }, [email])
 
     const [ fields, setFields ] = useState(
         {
@@ -28,6 +29,10 @@ const Register = () => {
     )
     const [errors, setErrors] = useState({});
     const { showToast } = useContext(AppContext);
+    
+    if(!email || (!google_token && !gmail_code) ) {
+        return <></>
+    }
 
     const add_errors_to_image = (new_errors) => {
         const updated_errors = { ...errors };
@@ -198,5 +203,224 @@ const Register = () => {
         </form>
     );
 };
+
+const VerifyGmailCode = ({ email }) => {
+    const CODE_LENGTH = 6
+
+    const [code, setCode] = useState(Array(CODE_LENGTH).fill(""));
+    const [errors, setErrors] = useState({});
+    const [redigrectToForm, setRedigrectToForm] = useState(false)
+    const inputsRef = useRef([]);
+
+    if (!email) return null;
+
+    const handleChange = (e, index) => {
+        const value = e.target.value.replace(/\D/g, "");
+        if (!value) return;
+
+        const newCode = [...code];
+        newCode[index] = value[value.length - 1];
+        setCode(newCode);
+
+        if (index < CODE_LENGTH - 1) {
+            inputsRef.current[index + 1]?.focus();
+        }
+    };
+
+    const handleKeyDown = (e, index) => {
+        if (e.key === "Backspace") {
+            const newCode = [...code];
+
+            if (code[index]) {
+                newCode[index] = "";
+                setCode(newCode);
+            } else if (index > 0) {
+                inputsRef.current[index - 1]?.focus();
+            }
+        }
+    };
+
+    const handleSubmit = async () => {
+        const fullCode = code.join("");
+
+        if (fullCode.length !== CODE_LENGTH) {
+            setErrors({ code: " " });
+            return;
+        }
+
+        const formData = new FormData();
+        
+        formData.append("email", email)
+        formData.append("code", fullCode)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        }
+        
+        const result = await fetch(`${API_URL}/api/auth/verify`, requestOptions)
+
+        if(result.status === 404) {
+            setRedigrectToForm(true)
+        }
+    };
+
+    return (
+        redigrectToForm ? <RegisterForm email={email} gmail_code={code.join("")}/> : 
+        <form className="form_input app-transition">
+            <div className="otp_container">
+                <div className='otp_container_title'>
+                    <p>Введите код, отправленный на </p>
+                    <p className='otp_container_title_email'>{email}</p>
+                </div>
+                <div className='otp_container_content'>
+                    {code.map((digit, index) => (
+                        <InputField
+                        key={index}
+                        ref={(el) => (inputsRef.current[index] = el)}
+                        className="otp_input"
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(e) => handleChange(e, index)}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
+                        onFocus={() => setErrors({})}
+                        error={errors?.code ?? null}
+                        placeholder=""
+                        input_label=""
+                        />
+                    ))}
+                </div>
+            </div>
+
+            <button
+                className="submit_button app-transition"
+                type="button"
+                onClick={handleSubmit}
+            >
+                Отправить
+            </button>
+        </form>
+    );
+};
+
+const Register = () => {
+    const { email, google_token, gmail_code } = useLocation().state || {};
+    const navigate = useNavigate();
+    
+    const [ fields, setFields ] = useState({ email: '' })
+    const [errors, setErrors] = useState({});
+    const { showToast } = useContext(AppContext);
+    const [googleToken, setGoogleToken] = useState();
+    const [gmailCodeSedned, setGmailCodeSedned] = useState(false);
+
+    useEffect(() => {
+        const do_login = async () => {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ google_token: googleToken }),
+            }
+            
+            const login = await fetch(`${API_URL}/api/auth/google-login`, requestOptions)
+            
+            if(login.status === 200) {
+                const result = await login.json() 
+                if(result.is_registered) {
+                    localStorage.setItem('token', result.data.token); 
+                    navigate('/posts');
+                    showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
+                }
+                else {
+                    navigate('/register', {
+                        state: {
+                            email: fields.email,
+                            google_token: googleToken 
+                        }
+                    });
+                    return
+                }
+            }
+            const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+                headers: {
+                    Authorization: `Bearer ${googleToken}`
+                }
+            });
+            const email = (await res.json()).email;
+
+            navigate('/auth/register', { state: { email: email, google_token: googleToken }})
+
+            return
+        } 
+
+        if(googleToken) {
+            do_login()
+        }
+    }, [googleToken]);
+
+    if (email && (google_token || gmail_code)) {
+        return <RegisterForm email={email ?? null} google_token={google_token ?? null} gmail_code={gmail_code ?? null}/>
+    }
+
+    const handleFocus = (fieldName) => {
+        const { [fieldName]: removedField, ...other } = errors;
+        setErrors (other)
+    }
+
+    const field_validation = () => {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) {
+            setErrors({
+                email: "Incorrect email!"
+            });
+            return false
+        }
+        return true
+    }
+
+    const handleRegister = async () => {
+        if(!field_validation()) {
+            return
+        }
+
+        const formData = new FormData();
+        
+        formData.append("email", fields.email)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        }
+        
+        const result = await fetch(`${API_URL}/api/auth/email/verification/`, requestOptions)
+        
+        setGmailCodeSedned(result.status === 200)
+        setGmailCodeSedned(true)
+    };
+
+    return (
+        gmailCodeSedned ? <VerifyGmailCode email={fields.email}/> : 
+        <form className='form_input app-transition'>
+            <>
+                <InputField
+                    className={`email`}
+                    type="text"
+                    onChange={(e) => setFields({ ...fields, email: e.target.value })}
+                    onFocus={() => handleFocus('email')}
+                    input_label="Почта"
+                    placeholder="Email"
+                    value={email ?? fields.email}
+                    error={errors?.email ?? null}
+                    confirmed={Boolean(email)}
+                />
+                <button className="submit_button app-transition" type="button" onClick={handleRegister}>Зарегистрироваться</button>
+                <GoogleAuthButton setGoogleToken={setGoogleToken}/>
+                <p className={"redirect_object"}>Уже есть аккаунт?
+                    <Link to={"/auth/login"}>Войти.</Link>
+                </p>
+            </>
+        </form>
+    )
+}
 
 export default Register;
