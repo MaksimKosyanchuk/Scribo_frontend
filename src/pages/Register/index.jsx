@@ -12,25 +12,18 @@ import GoogleAuthButton from '../../components/GoogleAuthButton/index';
 const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) => {
     const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log(email)
-        console.log(google_token)
-        console.log(gmail_code)
-    }, [email])
-
     const [ fields, setFields ] = useState(
         {
             nick_name: '',
             password: '',
             description: '',
-            email: '',
             avatar: null
         }
     )
     const [errors, setErrors] = useState({});
     const { showToast } = useContext(AppContext);
     
-    if(!email || (!google_token && !gmail_code) ) {
+    if(!(google_token || (email && gmail_code))) {
         return <></>
     }
 
@@ -113,6 +106,14 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
             formData.append(field, fields[field])
         }
 
+        if(google_token) {
+            formData.append("google_token", google_token)
+        }
+        else {
+            formData.append("email", email)
+            formData.append("code", gmail_code)
+        }
+        console.log(google_token)
         try {
             const register = await fetch(`${API_URL}/api/auth/register`, { method: "POST", body: formData });
             const result = await register.json();
@@ -248,20 +249,23 @@ const VerifyGmailCode = ({ email }) => {
             return;
         }
 
-        const formData = new FormData();
-        
-        formData.append("email", email)
-        formData.append("code", fullCode)
-
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                code: fullCode,
+            })
         }
-        
-        const result = await fetch(`${API_URL}/api/auth/verify`, requestOptions)
+        const verification = await fetch(`${API_URL}/api/auth/email/verification/confirm`, requestOptions)
 
-        if(result.status === 404) {
+        if(verification.status === 200) {
             setRedigrectToForm(true)
+        }
+        if(verification.status === 401) {
+            setErrors({ "code": " " })
         }
     };
 
@@ -323,35 +327,27 @@ const Register = () => {
                 body: JSON.stringify({ google_token: googleToken }),
             }
             
-            const login = await fetch(`${API_URL}/api/auth/google-login`, requestOptions)
-            
-            if(login.status === 200) {
-                const result = await login.json() 
-                if(result.is_registered) {
-                    localStorage.setItem('token', result.data.token); 
-                    navigate('/posts');
-                    showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
-                }
-                else {
-                    navigate('/register', {
+            const login = await fetch(`${API_URL}/api/auth/login`, requestOptions)
+            const result = await login.json()
+
+            if(result.status === true) {
+                localStorage.setItem('token', result.data.token); 
+                navigate('/posts');
+                showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
+            }
+            else {
+                if(login.status === 404) {
+                    navigate('/auth/register', {
                         state: {
-                            email: fields.email,
-                            google_token: googleToken 
+                            google_token: googleToken,
+                            email: result.data.email
                         }
                     });
-                    return
+                }
+                else {
+                    throw new Error(`Invalid google goken ${result}`)
                 }
             }
-            const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-                headers: {
-                    Authorization: `Bearer ${googleToken}`
-                }
-            });
-            const email = (await res.json()).email;
-
-            navigate('/auth/register', { state: { email: email, google_token: googleToken }})
-
-            return
         } 
 
         if(googleToken) {
@@ -359,7 +355,7 @@ const Register = () => {
         }
     }, [googleToken]);
 
-    if (email && (google_token || gmail_code)) {
+    if (google_token || (email && gmail_code)) {
         return <RegisterForm email={email ?? null} google_token={google_token ?? null} gmail_code={gmail_code ?? null}/>
     }
 
@@ -383,19 +379,26 @@ const Register = () => {
             return
         }
 
-        const formData = new FormData();
-        
-        formData.append("email", fields.email)
-
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: fields.email
+            })
         }
-        
-        const result = await fetch(`${API_URL}/api/auth/email/verification/`, requestOptions)
-        
-        setGmailCodeSedned(result.status === 200)
-        setGmailCodeSedned(true)
+        const verification = await fetch(`${API_URL}/api/auth/email/verification/`, requestOptions)
+        const result = await verification.json()
+
+        if(verification.status === 200) {
+            setGmailCodeSedned(true)
+        }        
+        if(verification.status === 409) {
+            setErrors({
+                email: result.message
+            });
+        }
     };
 
     return (

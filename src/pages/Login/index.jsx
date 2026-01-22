@@ -12,7 +12,7 @@ const Login = () => {
     const [ googleToken, setGoogleToken ] = useState(null)
     const [ fields, setFields ] = useState(
         {
-            nick_name: '',
+            user_login: '',
             password: '',
         }
     )
@@ -27,41 +27,28 @@ const Login = () => {
                 body: JSON.stringify({ google_token: googleToken }),
             }
             
-            const login = await fetch(`${API_URL}/api/auth/google/verification`, requestOptions)
+            const login = await fetch(`${API_URL}/api/auth/login`, requestOptions)
+            const result = await login.json()
 
-            if(login.status === 200) {
-                const result = await login.json() 
-                if(result.data.is_registered) {
-                    localStorage.setItem('token', result.data.token); 
-                    navigate('/posts');
-                    showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
-                }
-                else {
-                    const fetch = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', "Authorization": `Baerer ${googleToken}` }
-                    })
-
-                    navigate('/register', {
+            if(result.status === true) {
+                localStorage.setItem('token', result.data.token); 
+                navigate('/posts');
+                showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
+            }
+            else {
+                if(login.status === 404) {
+                    navigate('/auth/register', {
                         state: {
-                            email: email,
-                            google_token: googleToken 
+                            google_token: googleToken,
+                            email: result.data.email
                         }
                     });
-                    return
+                }
+                else {
+                    throw new Error(`Invalid google goken ${result}`)
                 }
             }
-            const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-                headers: {
-                    Authorization: `Bearer ${googleToken}`
-                }
-            });
-            const email = (await res.json()).email;
-
-            navigate('/auth/register', { state: { email: email, google_token: googleToken }})
-
-            return
-        } 
+        }
 
         if(googleToken) {
             do_login()
@@ -75,17 +62,17 @@ const Login = () => {
 
     const field_validation = () => {
         let is_error = false
-        if (fields.nick_name.length < 3) {
+        if (fields.user_login.length < 3) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                nick_name: "Username must be at least 3 characters long!"
+                user_login: "User login must be at least 3 characters long!"
             }));
             is_error = true
         }
-        if (fields.nick_name.length > 20) {
+        if (fields.user_login.length > 60) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                nick_name: "Username cannot be longer than 20 characters!"
+                user_login: "User login cannot be longer than 60 characters!"
             }));
             is_error = true
         }
@@ -113,7 +100,7 @@ const Login = () => {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nick_name: fields.nick_name, password: fields.password }),
+            body: JSON.stringify({ user_login: fields.user_login, password: fields.password }),
         }
         try {
             const login = await fetch(`${API_URL}/api/auth/login`, requestOptions)
@@ -147,14 +134,14 @@ const Login = () => {
   return (
     <form className='form_input app-transition'>
         <InputField
-            className={`user_name`}
+            className={`user_login`}
             type="text"
-            onChange={(e) => setFields({ ...fields, nick_name: e.target.value })}
-            onFocus={() => handleFocus('nick_name')}
-            input_label="Имя пользователя"
-            placeholder="Введите имя пользователя"
-            value={fields.nick_name}
-            error={errors?.nick_name ?? null}
+            onChange={(e) => setFields({ ...fields, user_login: e.target.value })}
+            onFocus={() => handleFocus('user_login')}
+            input_label="Логин"
+            placeholder="Введите имя пользователя или email"
+            value={fields.user_login}
+            error={errors?.user_login ?? null}
         />
         <InputField
             className={`password`}
