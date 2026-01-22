@@ -8,9 +8,6 @@ A news blog platform built with ReactJS and a RESTful API.
 
 - HTML, CSS, SCSS, JS
 - ReactJS
-- MongoDb
-- Vercel
-- Aws S3
 - JSON Web Token (JWT)  
 - dotenv for environment variables
 - Swagger UI
