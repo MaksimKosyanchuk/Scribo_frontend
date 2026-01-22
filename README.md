@@ -1,17 +1,20 @@
 # Scribo — React Blog Project
 
-A simple blog platform built with **ReactJS**.  
-Allows users to create and read posts, manage accounts, and follow other users.
+A news blog platform built with ReactJS and a RESTful API.
 
 ---
 
 ## Technologies
 
-- HTML, CSS, SCSS  
-- ReactJS  
+- HTML, CSS, SCSS, JS
+- ReactJS
+- MongoDb
+- Vercel
+- Aws S3
 - JSON Web Token (JWT)  
 - dotenv for environment variables
 - Swagger UI
+- Google OAuth 2.0
 
 ---
 
@@ -29,7 +32,7 @@ Allows users to create and read posts, manage accounts, and follow other users.
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/MaksimKosyanchuk/Scribo_frontend.git
+https://github.com/scribo-blog-org/Scribo_frontend
 cd Scribo_frontend
 ```
 
@@ -38,9 +41,12 @@ Create a `.env` file in the root of the project and set:
 
 ```env
 REACT_APP_API_URL=<your backend server URL>
+REACT_APP_GOOGLE_CLIENT_ID=<your google cliend id for Google OAuth>
 ```
 
 > Example: `REACT_APP_API_URL=https://scribo-backend.vercel.app`
+
+> Example: `REACT_APP_GOOGLE_CLIENT_ID=340625159023-mgjdt8l715vba1m2dh4qor76gosrqv98.apps.googleusercontent.com`
 
 ### 3. Install dependencies
 ```bash
@@ -59,7 +65,9 @@ The app will run locally at [http://localhost:3000](http://localhost:3000).
 ## Links
 
 - [Live site](https://scribo-blog.vercel.app)  
-- [Backend repository](https://github.com/MaksimKosyanchuk/news_site_backend)  
-- [GitHub](https://github.com/MaksimKosyanchuk)  
+- [Backend repository](https://github.com/scribo-blog-org/Scribo_backend)
+- [GitHub](https://github.com/scribo-blog-org)  
+- [Personal github](https://github.com/MaksimKosyanchuk)  
 - [Telegram](https://t.me/maks_k0s)  
+- [Instagram](https://www.instagram.com/maks_kos/)  
 - [Twitter](https://twitter.com/maks_k0s)
