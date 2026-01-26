@@ -5,6 +5,7 @@ import StartScreen from './components/StartScreen/index.jsx';
 import HomePage from './pages/HomePage/index.jsx';
 import Article from './pages/Article';
 import Profile from "./pages/Profile";
+import Settings from './pages/Settings/index.jsx';
 import PageNotFound from './pages/PageNotFound/index.jsx';
 import Footer from "./components/Footer/index.jsx";
 import Login from './pages/Login/index.jsx';
@@ -178,6 +179,7 @@ function App() {
               <Route path="/create-post" Component={CreatePost}/>
               <Route path="/users/:id" Component={Profile}/>
               <Route path="/posts/:id" Component={Article}/>
+              <Route path="/settings" Component={Settings}/>
             </Routes>
             
           </StartScreen>
