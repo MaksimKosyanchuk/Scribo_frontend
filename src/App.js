@@ -80,7 +80,7 @@ function App() {
     '--author-name-hover-color' : isDarkTheme ? 'var(--gray-f1)' : 'var(--gray-16)',
     '--input-text-color': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-1e)',
     '--input-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-f9)',
-    '--input-outline-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-c6)',
+    '--input-outline-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
     '--input-outline-active-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-25)',
     '--input-placeholder-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-c6)',
     // '--drop-file-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-f7)',
@@ -145,10 +145,10 @@ function App() {
     '--dropdown-selected-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-d7)',
     '--dropdown-item-hover-background-color': isDarkTheme ? 'var(--gray-25)' : '',
 
-    '--toggle-track-background': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
-    '--toggle-active-track-background': isDarkTheme ? '#4caf50' : '#4caf50',
-    '--toggle-thumb-background': isDarkTheme ? 'var(--gray-79)' : 'var(--gray-ff)',
-    '--toggle-active-thumb-background': 'var(--gray-ff)'
+    '--toggle-track-background': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-c6)',
+    '--toggle-active-track-background': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-25)',
+    '--toggle-thumb-background': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-ff)',
+    '--toggle-active-thumb-background': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-ff)'
   }
 
 
@@ -161,7 +161,7 @@ function App() {
 
   return (
     <AppContext.Provider value={{profile, setProfile, isDarkTheme, setIsDarkTheme, profileLoading, setProfileLoading, toast, showToast, modalWindow, showModalWindow }}>
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <div className={`App ${isDarkTheme ? 'App_dark' : ''}`} style={CssVariables}>
 
           <ModalWindow

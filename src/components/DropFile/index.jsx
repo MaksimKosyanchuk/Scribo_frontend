@@ -6,6 +6,7 @@ import { ReactComponent as UploadFileIcon } from "../../assets/svg/upload-file-i
 
 const DropFile = ({
     value,
+    preview_url = null,
     setValue,
     background = null,
     drop_file_type,
@@ -21,18 +22,21 @@ const DropFile = ({
     const inputRef = useRef(null);
 
     useEffect(() => {
-        if (!value) {
-            setPreview(null);
+        if (value instanceof File) {
+            const url = URL.createObjectURL(value);
+            setPreview(url);
+
+            return () => URL.revokeObjectURL(url);
+        }
+
+        if (preview_url) {
+            setPreview(preview_url);
             return;
         }
 
-        const url = URL.createObjectURL(value);
-        setPreview(url);
+        setPreview(null);
+    }, [value, preview_url]);
 
-        return () => URL.revokeObjectURL(url);
-    }, [value]);
-
-    /* ---------- validation ---------- */
     const image_validation = (file) => {
         const errors = [];
 
