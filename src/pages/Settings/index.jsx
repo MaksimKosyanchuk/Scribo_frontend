@@ -118,17 +118,22 @@ const Settings = () => {
         }
 
         const formData = new FormData();
-        
-        for(let field in fields) {
-            if(field === 'avatar') {
-                if(typeof fields.avatar === 'string' && fields.avatar === profile.avatar) {
-                    continue
-                }
-                formData.append('avatar', fields.avatar)
-            } else {
-                if(fields[field] === profile[field]) continue
-                formData.append(field, fields[field])
+
+        const avatarChanged =
+            fields.avatar instanceof File ||
+            fields.avatar !== (profile?.avatar ?? null);
+
+        for (let field in fields) {
+            if (field === 'avatar') {
+                continue;
             }
+
+            if (fields[field] === profile[field]) continue
+            formData.append(field, fields[field])
+        }
+
+        if (avatarChanged) {
+            formData.append('avatar', fields.avatar ?? '');
         }
 
         const headers = {

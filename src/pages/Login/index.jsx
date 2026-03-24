@@ -11,6 +11,7 @@ import GoogleAuthButton from '../../components/Ui/GoogleAuthButton/index';
 const Login = () => {
     const navigate = useNavigate(); 
     const [ googleToken, setGoogleToken ] = useState(null)
+    const [ isLoading, setIsLoading ] = useState(false)
     const [ fields, setFields ] = useState(
         {
             user_login: '',
@@ -28,26 +29,25 @@ const Login = () => {
                 body: JSON.stringify({ google_token: googleToken }),
             }
             
-            const login = await fetch(`${API_URL}/api/auth/login`, requestOptions)
-            const result = await login.json()
+            setIsLoading(true)
+            const verification = await fetch(`${API_URL}/api/auth/verification/google`, requestOptions)
+            const result = await verification.json()
 
             if(result.status === true) {
-                localStorage.setItem('token', result.data.token); 
-                navigate('/posts');
-                showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
-            }
-            else {
-                if(login.status === 404) {
-                    navigate('/auth/register', {
-                        state: {
-                            google_token: googleToken,
-                            email: result.data.email
-                        }
-                    });
+                if(result.data.is_registered === true) {
+                    const login = await fetch(`${API_URL}/api/auth/login/google`, requestOptions)
+                    const login_result = await login.json()
+                    setIsLoading(false)
+                    localStorage.setItem('token', login_result.data.token);
+                    navigate('/posts');
+                    showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
                 }
                 else {
-                    throw new Error(`Invalid google goken ${result}`)
+                    navigate('/auth/register', { state: { google_token: googleToken, email: result.data.email } });
                 }
+            }
+            else {
+                throw new Error(`Invalid google token ${result}`)
             }
         }
 
@@ -101,11 +101,14 @@ const Login = () => {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_login: fields.user_login, password: fields.password }),
+            body: JSON.stringify({ user_name: fields.user_login, password: fields.password }),
         }
         try {
-            const login = await fetch(`${API_URL}/api/auth/login`, requestOptions)
+            setIsLoading(true)
+            const login = await fetch(`${API_URL}/api/auth/login/username`, requestOptions)
             const result = await login.json() 
+            setIsLoading(false)
+            
             if (result.status === true) { 
                 localStorage.setItem('token', result.data.token); 
                 navigate('/posts');
@@ -155,7 +158,7 @@ const Login = () => {
                 value={fields.password}
                 error={errors?.password ?? null}
             />
-            <PrimaryButton onClick={handleLogin}>Войти</PrimaryButton>
+            <PrimaryButton onClick={handleLogin} is_loading={isLoading}>Войти</PrimaryButton>
             <GoogleAuthButton setGoogleToken={setGoogleToken}/>
             <p className={"redirect_object"}>Нет акаунта?
             <Link to={"/auth/register"}>

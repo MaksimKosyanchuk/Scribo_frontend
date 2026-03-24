@@ -37,6 +37,6 @@ export const getUsers = async (query) => {
 export const read_notifications = async () => {
     const headers = { 'Authorization': `Bearer ${localStorage.getItem("token")}`}
     
-    const result = await fetch(`${API_URL}/api/profile/read-notifications`, { method: "PATCH", headers: headers })
+    const result = await fetch(`${API_URL}/api/profile/notifications`, { method: "PATCH", headers: headers })
     return await result.json();
 }
