@@ -12,5 +12,20 @@
 
 .google_auth_button:hover {
     background-color: var(--submit-button-primary-color);
-    color: var(--submit-button-secondary-color);
+
+    p {
+        color: var(--submit-button-secondary-color);
+    }
+}
+
+.google_auth_button_loading {
+    cursor: not-allowed;
+    
+    .loader {
+        position: absolute;
+    }
+}
+
+.google_auth_button_loading:hover {
+    background-color: unset;
 }
