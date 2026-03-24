@@ -24,6 +24,11 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
     const [errors, setErrors] = useState({});
     const { showToast } = useContext(AppContext);
     
+    useEffect(() => {
+        console.log(errors)    
+    }
+    ,[errors])
+
     if(!(google_token || (email && gmail_code))) {
         return <></>
     }
@@ -107,15 +112,18 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
             formData.append(field, fields[field])
         }
 
+        formData.append("email", email)
+        var url = ""
         if(google_token) {
             formData.append("google_token", google_token)
+            url = "/api/auth/register/google"
         }
         else {
-            formData.append("email", email)
-            formData.append("code", gmail_code)
+            formData.append("email_code", gmail_code)
+            url = "/api/auth/register/email"
         }
         try {
-            const register = await fetch(`${API_URL}/api/auth/register`, { method: "POST", body: formData });
+            const register = await fetch(`${API_URL}${url}`, { method: "POST", body: formData });
             const result = await register.json();
             if (result.status === true) {
                 navigate("/auth/login");
@@ -127,7 +135,6 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                             ([field, obj]) => [field, obj.message]
                         )
                     );
-
                     setErrors(formattedErrors);
                 }
                 showToast({ message: "Ошибка!", type: "error" });
@@ -271,10 +278,10 @@ const VerifyGmailCode = ({ email }) => {
             },
             body: JSON.stringify({
                 email: email,
-                code: fullCode,
+                email_code: fullCode,
             })
         }
-        const verification = await fetch(`${API_URL}/api/auth/email/verification/confirm`, requestOptions)
+        const verification = await fetch(`${API_URL}/api/auth/verification/email/confirm`, requestOptions)
 
         if(verification.status === 200) {
             setRedigrectToForm(true)
@@ -336,26 +343,24 @@ const Register = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ google_token: googleToken }),
             }
+            const verification = await fetch(`${API_URL}/api/auth/verification/google`, requestOptions)
+            const result = await verification.json()
             
-            const login = await fetch(`${API_URL}/api/auth/login`, requestOptions)
-            const result = await login.json()
-
-            if(result.status === true) {
-                localStorage.setItem('token', result.data.token); 
-                navigate('/posts');
-                showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
+            if(result.status !== true) {
+                throw new Error(`Invalid google goken ${result}`)
             }
             else {
-                if(login.status === 404) {
-                    navigate('/auth/register', {
-                        state: {
-                            google_token: googleToken,
-                            email: result.data.email
-                        }
-                    });
+                if(result.data.is_registered) {
+                    const login_result = await fetch(`${API_URL}/api/auth/login/google`, { method: "POST", body: JSON.stringify({ google_token: googleToken }), headers: { 'Content-Type': 'application/json' } })
+                    const login_result_json = await login_result.json()
+                    if(login_result_json.status === true) {
+                        localStorage.setItem("token", login_result_json.token)
+                        navigate("/")
+                        showToast({ message: "Вход выполнен!", type: "success" });
+                    }
                 }
                 else {
-                    throw new Error(`Invalid google goken ${result}`)
+                    navigate("/auth/register", { state: { google_token: googleToken, email: result.data.email } })
                 }
             }
         } 
@@ -364,9 +369,12 @@ const Register = () => {
             do_login()
         }
     }, [googleToken, navigate, showToast]);
+    if (google_token) {
+        return <RegisterForm google_token={google_token} email={email}/>
+    }
 
-    if (google_token || (email && gmail_code)) {
-        return <RegisterForm email={email ?? null} google_token={google_token ?? null} gmail_code={gmail_code ?? null}/>
+    if(email &&  gmail_code) {
+        return <RegisterForm email={email} gmail_code={gmail_code}/>
     }
 
     const handleFocus = (fieldName) => {
@@ -398,7 +406,7 @@ const Register = () => {
                 email: fields.email
             })
         }
-        const verification = await fetch(`${API_URL}/api/auth/email/verification/`, requestOptions)
+        const verification = await fetch(`${API_URL}/api/auth/verification/email`, requestOptions)
         const result = await verification.json()
 
         if(verification.status === 200) {
