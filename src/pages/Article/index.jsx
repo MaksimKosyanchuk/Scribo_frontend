@@ -65,7 +65,7 @@ const Article = () => {
             }
             </div>
         :
-        <Loading /> 
+        <Loading size={48}/> 
     )
 }
 
