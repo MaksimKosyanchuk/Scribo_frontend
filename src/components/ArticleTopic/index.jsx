@@ -61,7 +61,7 @@ const ArticleTopic = ({ article }) => {
         };
 
         try {
-            let result = await fetch(`${API_URL}/api/profile/save-post/${article._id}`, requestOptions)
+            let result = await fetch(`${API_URL}/api/posts/${article._id}/save`, requestOptions)
             result = await result.json();
             if (result.status === true) {
                 let saved_posts = isSaved ? profile.saved_posts.filter(element => element !== article._id ) : [...profile.saved_posts, article._id]
