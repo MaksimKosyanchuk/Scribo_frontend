@@ -6,6 +6,9 @@ export const getPosts = async (query) => {
     if(query) {
         queryString = Object.entries(query).map(([key, value]) => {
             if (Array.isArray(value)) {
+                if (value.length === 0) {
+                    return `${key}=`
+                }
                 return value.map(id => `${key}=${id}`).join('&')
             }
             return `${key}=${value}`
