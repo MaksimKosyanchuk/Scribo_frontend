@@ -57,6 +57,7 @@ const Profile = () => {
             try {
                 let response = await fetch(`${API_URL}/api/users/${id}`);
                 let findNeededUser = await response.json();
+                setActiveTab(tabs[0]);
 
                 if (findNeededUser.status === false) {
                     navigate('/404');
@@ -83,12 +84,14 @@ const Profile = () => {
         if (activeTab === "Посты") {
             setActivePosts(posts);
         } else if (activeTab === "Сохранённые") {
-            if (profile?.saved_posts?.length > 0) {
-                fetchPosts({ _id: profile.saved_posts }).then(data => setActivePosts(data));
-            } else {
-                setActivePosts([]);
+            if(profile && user?._id === profile?._id) {
+                fetchPosts({ _id: profile?.saved_posts }).then((posts) => setActivePosts(posts));
+            }
+            else {
+                fetchPosts({ _id: user?.saved_posts }).then((posts) => setActivePosts(posts));
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab, posts, profile?.saved_posts]);
 
     const fetchPosts = async (query) => {
@@ -99,17 +102,10 @@ const Profile = () => {
     };
 
     const handleTabClick = async (item) => {
-        if (item === "Сохранённые" && (!profile || profile._id !== user._id)) {
+        if (item === "Сохранённые" && (!profile || profile._id !== user._id) && (user.is_saved_posts_public !== true)) {
             return;
         }
         setActiveTab(item);
-
-        if (item === "Посты" && user?._id) {
-            setIsLoading(true);
-            const updatedPosts = await fetchPosts({ author: user._id });
-            setPosts(updatedPosts);
-            setIsLoading(false);
-        }
     };
 
     const open_settings = () => {
@@ -256,7 +252,7 @@ const Profile = () => {
                         onClick={() => handleTabClick(item)}
                         className={`${
                             activeTab === item ? "profile_tab_list_active" : ""
-                        } ${item === "Сохранённые" && (!profile || profile._id !== user._id) ? "not_allowed" : ""}`}
+                        } ${item === "Сохранённые" && (!profile || profile._id !== user._id) && (user.is_saved_posts_public !== true) ? "not_allowed" : ""}`}
                     >
                         <p>{item}</p>
                     </div>
