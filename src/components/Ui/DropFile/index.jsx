@@ -17,25 +17,35 @@ const DropFile = ({
     onRemove,
 }) => {
     const [preview, setPreview] = useState(null);
+    const [isPreviewHidden, setIsPreviewHidden] = useState(false);
     const [isDragged, setDraged] = useState(false);
     const fileRef = useRef(null);
     const inputRef = useRef(null);
+    const lastPreviewUrlRef = useRef(preview_url);
+
+    useEffect(() => {
+        if (lastPreviewUrlRef.current !== preview_url) {
+            lastPreviewUrlRef.current = preview_url;
+            setIsPreviewHidden(false);
+        }
+    }, [preview_url]);
 
     useEffect(() => {
         if (value instanceof File) {
             const url = URL.createObjectURL(value);
+            setIsPreviewHidden(false);
             setPreview(url);
 
             return () => URL.revokeObjectURL(url);
         }
 
-        if (preview_url) {
+        if (preview_url && !isPreviewHidden) {
             setPreview(preview_url);
             return;
         }
 
         setPreview(null);
-    }, [value, preview_url]);
+    }, [value, preview_url, isPreviewHidden]);
 
     const image_validation = (file) => {
         const errors = [];
@@ -125,16 +135,18 @@ const DropFile = ({
                     errors ? "drop_file_incorrect_field" : ""
                 }`}
             >
-                {value ? (
+                {preview ? (
                     <>
-                        {preview && <img src={preview} alt="" />}
+                        <img src={preview} alt="" />
                         <div className="remove_image app-transition blurred">
-                            <p>{value.name}</p>
+                            <p>{value?.name ?? "Выбранный файл"}</p>
                             <button
                                 className="remove_image_button"
                                 onClick={(e) => {
                                     e.preventDefault();
                                     inputRef.current && (inputRef.current.value = "");
+                                    setIsPreviewHidden(true);
+                                    setPreview(null);
                                     setValue(null);
                                     onRemove?.();
                                 }}
