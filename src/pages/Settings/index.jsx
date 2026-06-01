@@ -21,6 +21,7 @@ const Settings = () => {
             nick_name: '',
             description: '',
             is_email_public: false,
+            is_saved_posts_public: false,
             avatar: null
         }
     )
@@ -29,6 +30,13 @@ const Settings = () => {
         setFields(prev => ({
             ...prev,
             is_email_public: visibility
+        }))
+    }
+    
+    const set_saved_posts_visibility = (visibility) => {
+        setFields(prev => ({
+            ...prev,
+            is_saved_posts_public: visibility
         }))
     }
 
@@ -51,7 +59,8 @@ const Settings = () => {
                 nick_name: profile.nick_name ?? "",
                 description: profile.description ?? "",
                 avatar: profile.avatar,
-                is_email_public: profile.is_email_public
+                is_email_public: profile.is_email_public,
+                is_saved_posts_public: profile.is_saved_posts_public
             }));
         };
 
@@ -213,16 +222,23 @@ const Settings = () => {
                             </p>
                         </div>
                     </div>
-                        <div className='email_private_setting'>
-                            <div className='email_private_setting_title'>
+                        <div className='private_setting'>
+                            <div className='private_setting_title'>
                                 <p>Приватность</p>
                             </div>
-                            <div className='email_private_setting_content app-transition'>
-                                <div className='email_private_setting_content_item'>
+                            <div className='private_setting_content app-transition'>
+                                <div className='private_setting_content_item app-transition'>
                                     <p>Отображать мой email в профиле</p>
                                     <Toggle 
                                         checked={fields.is_email_public}
                                         onChange={set_email_visibility}
+                                    />
+                                </div>
+                                <div className='private_setting_content_item app-transition'>
+                                    <p>Разрешить просмотр моих сохраненных постов</p>
+                                    <Toggle 
+                                        checked={fields.is_saved_posts_public}
+                                        onChange={set_saved_posts_visibility}
                                     />
                                 </div>
                             </div>
