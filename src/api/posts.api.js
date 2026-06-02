@@ -15,8 +15,6 @@ const getPosts = async (query) => {
         }).join('&')
     }
     
-    const token = localStorage.getItem('token')
-
     const result = await fetch(`${API_URL}/api/posts?${queryString}&expand=author`)
     .then(res => res.json())
     .then(res => {
@@ -53,8 +51,6 @@ const deletePost = async (id) => {
 }
 
 const getPostById = async (id) => {
-    const token = localStorage.getItem('token')
-
     const result = await fetch(`${API_URL}/api/posts/${id}?expand=author`)
         .then(res => res.json())
         .catch((err) => {

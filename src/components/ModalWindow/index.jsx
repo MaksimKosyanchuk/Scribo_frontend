@@ -9,6 +9,7 @@ const ModalWindow = ({ modalWindow, showModalWindow, modalCloseRequest }) => {
 
     useEffect(() => {
         close_modal_window()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[location])
 
     const closeTimeoutRef = useRef(null)
@@ -58,6 +59,7 @@ const ModalWindow = ({ modalWindow, showModalWindow, modalCloseRequest }) => {
                 close_modal_window()
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [modalCloseRequest])
 
     useEffect(() => {
