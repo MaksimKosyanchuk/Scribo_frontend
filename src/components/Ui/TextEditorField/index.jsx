@@ -88,17 +88,17 @@ const EditorToolbar = () => {
   // const [color, setColor] = useState("#ff0000");
   // const colorInputRef = useRef();
 
-  const applyTextColor = (color) => {
-    editor.update(() => {
-      const selection = $getSelection();
+  // const applyTextColor = (color) => {
+  //   editor.update(() => {
+  //     const selection = $getSelection();
 
-      if ($isRangeSelection(selection)) {
-        $patchStyleText(selection, {
-          color,
-        });
-      }
-    });
-  }
+  //     if ($isRangeSelection(selection)) {
+  //       $patchStyleText(selection, {
+  //         color,
+  //       });
+  //     }
+  //   });
+  // }
 
   return (
     <div className="text_editor_body_top_side_toolbar app-transition">
