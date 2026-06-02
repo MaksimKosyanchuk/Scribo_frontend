@@ -179,7 +179,7 @@ function App() {
     '--popup-border-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
     '--popup-text-color': 'var(--main-text-color)',
     '--popup-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-ff)',
-    '--popup-item-hover-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-e7)',
+    '--popup-item-hover-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-f1)',
     '--popup-danger-item-hover-background-color': isDarkTheme ? 'var(--red-34)' : 'var(--red-ff)',
   }
 
