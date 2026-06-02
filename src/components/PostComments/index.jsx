@@ -1,7 +1,6 @@
 import "./PostComments.scss";
 import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { API_URL } from "../../config";
 import Author from "../Author";
 import { AppContext } from "../../App.js";
 import { format_date } from "../../utils/format";
