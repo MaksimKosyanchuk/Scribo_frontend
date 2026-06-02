@@ -9,6 +9,8 @@ import { $getRoot } from "lexical";
 import { FORMAT_TEXT_COMMAND } from "lexical";
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { $generateNodesFromDOM } from "@lexical/html";
+import { $getSelection, $isRangeSelection } from "lexical";
+import { $patchStyleText } from "@lexical/selection";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   INSERT_UNORDERED_LIST_COMMAND,
@@ -83,6 +85,20 @@ function InitialHtmlPlugin({ html }) {
 
 const EditorToolbar = () => {
   const [editor] = useLexicalComposerContext();
+  // const [color, setColor] = useState("#ff0000");
+  // const colorInputRef = useRef();
+
+  const applyTextColor = (color) => {
+    editor.update(() => {
+      const selection = $getSelection();
+
+      if ($isRangeSelection(selection)) {
+        $patchStyleText(selection, {
+          color,
+        });
+      }
+    });
+  }
 
   return (
     <div className="text_editor_body_top_side_toolbar app-transition">
@@ -138,6 +154,27 @@ const EditorToolbar = () => {
       >
         <LinkText />
       </button>
+      {/* <button
+        type="button"
+        onClick={() => colorInputRef.current?.click()}
+        className="color_picker_button"
+      >
+        <span
+          className="color_picker_preview"
+          style={{ backgroundColor: color }}
+        />
+      </button>
+
+      <input
+        ref={colorInputRef}
+        type="color"
+        value={color}
+        onChange={(e) => {
+          setColor(e.target.value);
+          applyTextColor(e.target.value);
+        }}
+        style={{ display: "none" }}
+      /> */}
     </div>
   );
 }
