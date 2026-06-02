@@ -129,9 +129,6 @@
 }
 
 .modal_window_body {
-  width: 500px;
-  max-width: 500px;
-
   &_content{
     @include screen() {
       padding: 10px !important;

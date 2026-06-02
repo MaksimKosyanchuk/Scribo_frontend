@@ -85,7 +85,7 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
                         ) : (
                         filteredPosts.map(post => (
                             <div key={post._id} className="posts_item app-transition">
-                            <ArticleTopic article={post} profile={profile} />
+                            <ArticleTopic article={post} onDeletePost={() => setFilteredPosts(prev => prev.filter(p => p._id !== post._id))} />
                             <div>
                                 <h2 className="posts_item_title">{post.title}</h2>
                             </div>
