@@ -52,9 +52,25 @@ function PopupMenu({ anchorRef, children, onClose, z_index }) {
     );
 }
 
-function Popup({ children,body, z_index = 99 }) {
+function Popup({ children, body, z_index = 99 }) {
     const buttonRef = useRef(null);
     const [open, setOpen] = useState(false);
+    
+        // when popup opens, raise z-index of closest article container to avoid other elements painting above
+        useEffect(() => {
+            const node = buttonRef.current
+            if (!node) return
+            const article = node.closest('.article_topic')
+            if (!article) return
+
+            if (open) {
+                article.classList.add('article_topic_popup_open')
+            } else {
+                article.classList.remove('article_topic_popup_open')
+            }
+
+            return () => article.classList.remove('article_topic_popup_open')
+        }, [open])
     
     return (
         <div style={{ position: "relative" }}>

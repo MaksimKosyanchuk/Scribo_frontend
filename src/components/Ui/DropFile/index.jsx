@@ -139,7 +139,14 @@ const DropFile = ({
                     <>
                         <img src={preview} alt="" />
                         <div className="remove_image app-transition blurred">
-                            <p>{value?.name ?? "Выбранный файл"}</p>
+                            <p>
+                                {value instanceof File
+                                    ? value.name
+                                    : typeof value === "string"
+                                    ? value.split("/").pop()
+                                    : "Выбранный файл"
+                                }
+                            </p>
                             <button
                                 className="remove_image_button"
                                 onClick={(e) => {

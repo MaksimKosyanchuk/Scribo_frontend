@@ -8,6 +8,7 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { $getRoot } from "lexical";
 import { FORMAT_TEXT_COMMAND } from "lexical";
 import { $generateHtmlFromNodes } from "@lexical/html";
+import { $generateNodesFromDOM } from "@lexical/html";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   INSERT_UNORDERED_LIST_COMMAND,
@@ -29,6 +30,7 @@ import { ReactComponent as LinkText } from "../../../assets/svg/link-icon.svg";
 import { ReactComponent as WarningIcon } from "../../../assets/svg/warning-icon.svg";
 
 import { useState, useEffect } from "react";
+import { useRef } from "react";
 
 const editorConfig = {
   namespace: "MyEditor",
@@ -53,6 +55,31 @@ const editorConfig = {
     LinkNode,
   ],
 };
+
+function InitialHtmlPlugin({ html }) {
+  const [editor] = useLexicalComposerContext();
+  const initializedRef = useRef(false);
+
+  useEffect(() => {
+    if (initializedRef.current) return;
+    if (!html) return;
+
+    initializedRef.current = true;
+
+    editor.update(() => {
+      const root = $getRoot();
+      root.clear();
+
+      const parser = new DOMParser();
+      const dom = parser.parseFromString(html, "text/html");
+      const nodes = $generateNodesFromDOM(editor, dom);
+
+      root.append(...nodes);
+    });
+  }, [editor, html]);
+
+  return null;
+}
 
 const EditorToolbar = () => {
   const [editor] = useLexicalComposerContext();
@@ -117,6 +144,7 @@ const EditorToolbar = () => {
 
 export default function TextEditor({
   value,
+  initialHtml,
   onChange,
   label,
   error,
@@ -139,9 +167,10 @@ export default function TextEditor({
       <LexicalComposer
         initialConfig={{
           ...editorConfig,
-          editorState: value
+          editorState: undefined
         }}
       >
+      <InitialHtmlPlugin html={initialHtml} />
       <EditablePlugin editable={switcherActiveIndex === 0} />
         <div className="text_editor app-transition">
           <div className={`text_editor_body ${error ? "incorrect_field" : ""} app-transition`}>
