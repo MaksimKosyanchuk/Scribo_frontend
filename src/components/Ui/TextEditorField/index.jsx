@@ -9,8 +9,8 @@ import { $getRoot } from "lexical";
 import { FORMAT_TEXT_COMMAND } from "lexical";
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { $generateNodesFromDOM } from "@lexical/html";
-import { $getSelection, $isRangeSelection } from "lexical";
-import { $patchStyleText } from "@lexical/selection";
+//import { $getSelection, $isRangeSelection } from "lexical";
+//import { $patchStyleText } from "@lexical/selection";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   INSERT_UNORDERED_LIST_COMMAND,
