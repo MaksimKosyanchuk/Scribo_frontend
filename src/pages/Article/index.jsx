@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext } from "react";
-import { AppContext } from "../../App";
+import { useState, useEffect } from "react";
 import { API_URL } from "../../config";
 import { useParams, useNavigate } from "react-router-dom";
 import Loading from "../../components/Ui/Loading";
@@ -12,7 +11,6 @@ const Article = () => {
     const navigate = useNavigate()
     
     const [isLoading, setIsLoading] = useState(false)
-    const { profile } = useContext(AppContext)
     const [article, setArticle] = useState([ ])
     
     useEffect(() => {
@@ -50,7 +48,7 @@ const Article = () => {
                 article ?
                 <div className="article">
                         <h1 className="article_title">{article.title}</h1>
-                        <ArticleTopic article={article} profile={profile}/>
+                        <ArticleTopic article={article} onDeletePost={() => navigate('/posts')} />
                         {article.featured_image ? 
                             <div className="article_featured_image">
                                 <img src={article.featured_image} alt={"featured"}/> 

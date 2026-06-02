@@ -1,6 +1,6 @@
 import { API_URL } from "../config"
 
-export const getPosts = async (query) => {
+const getPosts = async (query) => {
     let queryString = ""
 
     if(query) {
@@ -15,7 +15,9 @@ export const getPosts = async (query) => {
         }).join('&')
     }
     
-    const result = await fetch(`${API_URL}/api/posts?${queryString}&&expand=author`)
+    const token = localStorage.getItem('token')
+
+    const result = await fetch(`${API_URL}/api/posts?${queryString}&expand=author`)
     .then(res => res.json())
     .then(res => {
         res?.data?.sort((prev, next) => new Date(next.created_date) - new Date(prev.created_date));
@@ -32,3 +34,39 @@ export const getPosts = async (query) => {
 
     return result
 }
+
+const deletePost = async (id) => {
+    const token = localStorage.getItem('token')
+    const headers = token ? { Authorization: `Bearer ${token}` } : {}
+    const result = await fetch(`${API_URL}/api/posts/${id}`, { method: "DELETE", credentials: "include", headers })
+    .then(res => res.json())
+    .catch((err) => { 
+        console.log(err)
+        return ({
+            status: "error",
+            message: err,
+            data: null
+        })
+    })
+
+    return result
+}
+
+const getPostById = async (id) => {
+    const token = localStorage.getItem('token')
+
+    const result = await fetch(`${API_URL}/api/posts/${id}?expand=author`)
+        .then(res => res.json())
+        .catch((err) => {
+            console.log(err)
+            return ({
+                status: "error",
+                message: err,
+                data: null
+            })
+        })
+
+    return result
+}
+
+export { getPosts, deletePost, getPostById }

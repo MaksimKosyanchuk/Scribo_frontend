@@ -11,6 +11,7 @@ import Footer from "./components/Footer/index.jsx";
 import Login from './pages/Login/index.jsx';
 import Register from './pages/Register/index.jsx';
 import CreatePost from './pages/CreatePost/index.jsx';
+import EditPost from './pages/EditPost/index.jsx';
 import Toast from "./components/Ui/Toast/index.jsx";
 import ModalWindow from './components/ModalWindow/index.jsx';
 
@@ -32,6 +33,8 @@ function App() {
   let [ isDarkTheme, setIsDarkTheme ] = useState(lsTheme ? JSON.parse(lsTheme) : true);
   let [ toast, showToast ] = useState(false);
   let [ modalWindow, showModalWindow ] = useState(false)
+  const [ modalCloseRequest, setModalCloseRequest ] = useState(0)
+  const requestCloseModal = () => setModalCloseRequest(c => c + 1)
 
   const CssVariables = {
     '--accent-color': isDarkTheme ? '#4e93ff' : "#1b73fb",
@@ -53,8 +56,10 @@ function App() {
     '--gray-f9': '#f9f9f9',
     '--gray-ff': '#ffffff',
 
+    '--red-fd': '#fd2d2d',
     '--red-f5': '#ff4545',
     '--red-f1': '#ff5151',
+    '--red-6d': '#ff6d6d',
     '--red-34': '#312424',
     '--red-ff': '#ffefef',
 
@@ -103,8 +108,10 @@ function App() {
     '--loader-color': isDarkTheme ? 'white' : 'black',
 
     '--sticky-button-background-color': isDarkTheme ? 'rgba(22, 22, 22, .8)' : 'rgba(241, 241, 241, .8)',
-    '--red-button-primary-color': isDarkTheme ? 'var(--red-f1)' : 'var(--red-f1)',
-    '--red-button-secondary-color': isDarkTheme ? 'var(--gray-f1)' : 'var(--main-background)',
+    '--red-button-primary-color': isDarkTheme ? 'var(--red-fd)' : 'var(--red-fd)',
+    '--red-button-secondary-color': isDarkTheme ? 'var(--gray-fd)' : 'var(--main-background)',
+    '--red-button-third-color': isDarkTheme ? 'var(--red-f1)' : 'var(--red-f1)',
+
     '--blue-button-primary-color': isDarkTheme ? 'var(--blue-8f)' : 'var(--blue-39)',
     '--header-text-color': isDarkTheme ? '--gray-b5' : '#6b6b6b',
     '--header-background': isDarkTheme ? 'rgba(0,0,0, .8)' : 'rgba(255,255,255, .8)',
@@ -116,6 +123,7 @@ function App() {
     '--modal-window-background-color': isDarkTheme ? 'rgb(0, 0, 0, .8)' : 'rgb(0, 0, 0, .4)',
     '--modal-window-button-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-63)',
     '--modal-window-button-hover-color': isDarkTheme ? 'var(--gray-f1)' : 'var(--gray-1e)',
+    '--modal-window-title-text-color': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-1e)',
     '--post-card-background': isDarkTheme ? 'var(--gray-25)' : 'white',
     '--post-card-description-color': isDarkTheme ? 'var(--gray-b5)' : "#6b6b6b",
     '--article-date-color': isDarkTheme ? 'var(--gray-79)' : "var(--gray-79)",
@@ -184,13 +192,14 @@ function App() {
   }, [isDarkTheme])
 
   return (
-    <AppContext.Provider value={{profile, setProfile, isDarkTheme, setIsDarkTheme, profileLoading, setProfileLoading, toast, showToast, modalWindow, showModalWindow }}>
+    <AppContext.Provider value={{profile, setProfile, isDarkTheme, setIsDarkTheme, profileLoading, setProfileLoading, toast, showToast, modalWindow, showModalWindow, requestCloseModal }}>
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <div className={`App ${isDarkTheme ? 'App_dark' : ''}`} style={CssVariables}>
 
           <ModalWindow
             modalWindow={modalWindow}
             showModalWindow={showModalWindow}
+            modalCloseRequest={modalCloseRequest}
           />
           <Header/>
           <StartScreen>
@@ -205,6 +214,7 @@ function App() {
                 element={<Navigate to="/posts" replace />} />
 
               <Route path="/api" Component={ApiDocs}/>
+              <Route path="posts/:id/edit" Component={EditPost}/>
               <Route path="/auth/login" Component={Login}/>
               <Route path="/auth/register" Component={Register}/>
               <Route path="/404" Component={PageNotFound}/>

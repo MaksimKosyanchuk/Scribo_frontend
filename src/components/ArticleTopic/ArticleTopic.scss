@@ -88,6 +88,105 @@
 
         @include screen(){
             font-size: 12px;
+            margin-right: auto;
         }
+    }
+
+    &_three_dots {
+        width: 18px;
+        height: 18px;
+        display: flex;
+
+        color: var(--article-topic-button-color);
+    }
+
+    &_three_dots:hover {
+        color: var(--article-topic-button-hover-color);
+    }
+
+    &.article_topic_popup_open {
+        z-index: 10000;
+    }
+}
+
+.modal_window_body {
+    .modal_delete_post_content {
+        display: flex;
+        gap: 24px;
+        flex-direction: column;
+        justify-content: space-between;
+        
+        &_post{
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            &_title {
+                font-size: 18px;
+            }
+
+            &_topic {
+                width: 100%;
+                flex-wrap: wrap;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                
+                .author {
+                    margin-right: auto;
+                }
+                
+                &_date {
+                    color: var(--article-date-color);
+                    font-weight: 14px;
+                }
+
+                &_category {
+                    .chip_button {
+                        font-size: 14px;
+                        color: var(--article-topic-category-color);
+                        background-color: var(--article-topic-category-background-color);
+                    }
+
+                    a {
+                        height: 100%;
+                        width: 100%;
+                    }
+
+                    @include screen() {
+                        .chip_button {
+                            font-size: 14px;
+                        }
+                    }
+                }
+
+                &_category:hover {
+                    .chip_button {
+                        color: var(--article-topic-category-hover-color);
+                        background-color: var(--article-topic-category-background-hover-color);
+                    }
+                }
+            }
+
+
+            &_image{
+                width: 100%;
+                max-height: 500px;
+                border-radius: 6px;
+                object-fit: cover;
+                background-size: cover;
+                background-position: center;
+            }
+        }
+            &_bottom {
+                display: flex;
+                justify-content: flex-end;
+                gap: 24px;
+            }
+        }
+
+    button {
+        font-size: 12px;
+        padding: 8px 12px;
     }
 }
