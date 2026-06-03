@@ -148,7 +148,11 @@ const EditorToolbar = () => {
         onClick={() => {
           const url = prompt("Введите ссылку");
           if (url) {
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
+            editor.dispatchCommand(TOGGLE_LINK_COMMAND, {
+              url,
+              target: "_blank",
+              rel: "noopener noreferrer"
+            });
           }
         }}
       >
