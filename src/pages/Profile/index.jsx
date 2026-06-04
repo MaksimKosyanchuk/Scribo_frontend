@@ -56,6 +56,7 @@ const Profile = () => {
                 followers: followAnotherUser?.follower?.followers
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [followAnotherUser])
 
     useEffect(() => {
