@@ -15,14 +15,14 @@ const PostComments = ({ postId, comments, setComments }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { profile } = useContext(AppContext);
 
-    const doComment = async () => {
+    const doComment = async (e) => {
+        e.preventDefault();
         setIsLoading(true);
         await commentPost(postId, {
             content_text: text
         }).then((result) => {
             if(result.status === true) {
                 setText('');
-                console.log(result)
                 setComments(result.data.comments);
             }
             setIsLoading(false);
@@ -41,9 +41,9 @@ const PostComments = ({ postId, comments, setComments }) => {
         <div className="post_comments">
             {
                 profile ? 
-                <form className="post_comments_form">
+                <form className="post_comments_form" onSubmit={ (e) => doComment(e) }>
                     <InpuField placeholder="Напишите комментарий..." class_name="post_comments_input" value={text} onChange={(text) => { setText(text.target.value) }} />
-                    <PrimaryButton text="Отправить" class_name="post_comments_submit" disabled={isDisabled} is_loading={isLoading} onClick={() => { doComment() }}>
+                    <PrimaryButton type="submit" text="Отправить" class_name="post_comments_submit" disabled={isDisabled} is_loading={isLoading} >
                         Отправить
                     </PrimaryButton>
                 </form>

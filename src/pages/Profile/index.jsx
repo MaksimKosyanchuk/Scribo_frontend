@@ -25,32 +25,38 @@ const Profile = () => {
     const [posts, setPosts] = useState([]);
     const [activePosts, setActivePosts] = useState([]);
     const [user, setUser] = useState(null);
-    const [newData, setNewData] = useState(null);
+    const [followThisUser, setFollowThisUser] = useState(null);
+    const [followAnotherUser, setFollowAnotherUser] = useState(null);
 
     const posts_filters = useMemo( () => [], [])
 
     useEffect(() => {
         setProfile({
             ...profile,
-            follows: newData?.follower?.follows,
-            notifications: newData?.follower?.notifications
+            follows: followThisUser?.follower?.follows
         })
-        if(profile?._id !== user?._id) {
-            setUser({
-                ...user,
-                followers: newData?.followed?.followers,
-                follows: newData?.followed?.follows
-            })
-        }
-        else {
-            setUser({
-                ...user,
-                followers: newData?.follower?.followers,
-                follows: newData?.follower?.follows
-            })
-        }
+        setUser({
+            ...user,
+            followers: followThisUser?.followed?.followers,
+            follows: followThisUser?.followed?.follows
+        })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [newData])
+    }, [followThisUser])
+
+    useEffect(() => {
+        setProfile({
+            ...profile,
+            follows: followAnotherUser?.follower?.follows
+        })
+        
+        if(user?._id === profile?._id) {
+            setUser({
+                ...user,
+                follows: followAnotherUser?.follower?.follows,
+                followers: followAnotherUser?.follower?.followers
+            })
+        }
+    }, [followAnotherUser])
 
     useEffect(() => {
         const getUser = async () => {
@@ -131,7 +137,7 @@ const Profile = () => {
                             profile && profile._id === authorData._id ?
                                 <></>
                             :
-                                <FollowButton setNewData={setNewData} author_id={authorData._id}/>
+                                <FollowButton setNewData={setFollowAnotherUser} author_id={authorData._id}/>
                         }
                     </div>
                   ))
@@ -153,7 +159,7 @@ const Profile = () => {
                             profile && profile._id === authorData._id ?
                                 <></>
                             :
-                                <FollowButton setNewData={setNewData} author_id={authorData._id}/>
+                                <FollowButton setNewData={setFollowAnotherUser} author_id={authorData._id}/>
                         }
                     </div>
                   ))
@@ -205,7 +211,7 @@ const Profile = () => {
                             </ActionButton>
                         ) 
                         :
-                            <FollowButton setNewData={setNewData} author_id={user?._id} class_name={"profile_info_top_right_side_button"}/> 
+                            <FollowButton setNewData={setFollowThisUser} author_id={user?._id} class_name={"profile_info_top_right_side_button"}/> 
                         }
                     </div>
                 </div>
