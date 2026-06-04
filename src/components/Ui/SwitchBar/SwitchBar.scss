@@ -11,6 +11,7 @@
         border-radius: 4px;
         padding: 8px;
         font-size: 14px;
+        width: 50%;
 
         @include screen() {
             width: 50%;

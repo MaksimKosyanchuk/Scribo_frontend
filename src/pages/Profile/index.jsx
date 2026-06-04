@@ -14,13 +14,13 @@ import { ReactComponent as Calendar } from "../../assets/svg/calendar-icon.svg";
 import FollowButton from "../../components/FollowButton";
 import ActionButton from "../../components/Ui/ActionButton";
 import ChipButton from "../../components/Ui/ChipButton";
+import SwitchBar from "../../components/Ui/SwitchBar";
 
 const Profile = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    let tabs = ["Посты", "Сохранённые"];
     const { profile, setProfile, showModalWindow } = useContext(AppContext);
-    const [activeTab, setActiveTab] = useState(tabs[0]);
+    const [activeTab, setActiveTab] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [posts, setPosts] = useState([]);
     const [activePosts, setActivePosts] = useState([]);
@@ -63,7 +63,7 @@ const Profile = () => {
             try {
                 let response = await fetch(`${API_URL}/api/users/${id}`);
                 let findNeededUser = await response.json();
-                setActiveTab(tabs[0]);
+                setActiveTab(0);
 
                 if (findNeededUser.status === false) {
                     navigate('/404');
@@ -87,9 +87,9 @@ const Profile = () => {
     }, [user?._id]);
 
     useEffect(() => {
-        if (activeTab === "Посты") {
+        if (activeTab === 0) {
             setActivePosts(posts);
-        } else if (activeTab === "Сохранённые") {
+        } else if (activeTab === 1) {
             if(profile && user?._id === profile?._id) {
                 fetchPosts({ _id: profile?.saved_posts }).then((posts) => setActivePosts(posts));
             }
@@ -105,13 +105,6 @@ const Profile = () => {
         const response = await getPosts(query);
         setIsLoading(false);
         return response.status === true ? response.data : [];
-    };
-
-    const handleTabClick = async (item) => {
-        if (item === "Сохранённые" && (!profile || profile._id !== user._id) && (user.is_saved_posts_public !== true)) {
-            return;
-        }
-        setActiveTab(item);
     };
 
     const open_settings = () => {
@@ -252,17 +245,11 @@ const Profile = () => {
                 </div>
             </div>
             <div className="profile_tab_list app-transition">
-                {tabs.map((item, index) => (
-                    <div
-                        key={index}
-                        onClick={() => handleTabClick(item)}
-                        className={`${
-                            activeTab === item ? "profile_tab_list_active" : ""
-                        } ${item === "Сохранённые" && (!profile || profile._id !== user._id) && (user.is_saved_posts_public !== true) ? "not_allowed" : ""}`}
-                    >
-                        <p>{item}</p>
-                    </div>
-                ))}
+                <SwitchBar
+                    items={["Посты", "Сохранённые"]}
+                    active_index={activeTab}
+                    setActiveIndex={setActiveTab}
+                />
             </div>
             <div className="profile_posts">
                 <Posts posts_filters={posts_filters} posts={activePosts} isLoading={isLoading} />
