@@ -17,6 +17,7 @@ const EditPost = () => {
     const [ initialized, setInitialized ] = useState(false);
     const [ createResult, setCreateResult ] = useState({})
     const [errors, setErrors] = useState({ });
+    const [featuredImage, setFeaturedImage] = useState(null)
 
     const { id } = useParams()
 
@@ -41,18 +42,19 @@ const EditPost = () => {
                 setFields({
                     title: post.title ?? '',
                     content_text: post.content_text ?? '',
-                    featured_image: post.featured_image ?? null,
-                    category: post.category ?? ''
+                    category: post.category ?? '',
+                    featured_image: post.featured_image ?? null
                 })
+                setFeaturedImage(post.featured_image)
             }
         }
 
         loadPost()
     }, [id])
 
-    useEffect(() => {
-        console.log(fields)
-    }, [fields])
+    // useEffect(() => {
+    //     console.log(fields)
+    // }, [fields])
 
     const add_errors_to_image = (new_errors) => {
         const updated_errors = { ...errors };
@@ -84,7 +86,6 @@ const EditPost = () => {
             }
         }
         else {
-            
             setInitialized(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,17 +115,24 @@ const EditPost = () => {
         }));
     };
 
-    const create_post = async (title, mainText) => {
+    const create_post = async () => {
         const formData = new FormData();
-        formData.append('title', title)
+        formData.append('title', fields.title)
         formData.append('content_text', fields.content_text)
-        formData.append('featured_image', fields.featured_image)
+
+        const isImageChanged = fields.featured_image instanceof File ||
+            fields.featured_image !== (featuredImage ?? null);
+        if (isImageChanged) {
+            formData.append('featured_image', fields.featured_image);
+        }
+        
         formData.append('category', fields.category)
 
         const headers = {
             'Authorization': `Bearer ${localStorage.getItem("token")}`
         }
-        try{
+
+        try {
             const creating = await fetch(`${API_URL}/api/posts/${id}`, { method: "PATCH", body: formData, headers: headers})
             const result = await creating.json()
             if(result.status === true) {

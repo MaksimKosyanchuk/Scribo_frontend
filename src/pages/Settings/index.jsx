@@ -199,7 +199,7 @@ const Settings = () => {
 
     return (
         <div className='settings'>
-            <form className='form_input app-transition'>
+            <form className='form_input app-transition' onSubmit={(e) => save_settings(e) }>
                 <>
                     <div className='top_side'>
                         <DropFile

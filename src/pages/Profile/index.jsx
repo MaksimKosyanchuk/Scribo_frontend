@@ -14,50 +14,57 @@ import { ReactComponent as Calendar } from "../../assets/svg/calendar-icon.svg";
 import FollowButton from "../../components/FollowButton";
 import ActionButton from "../../components/Ui/ActionButton";
 import ChipButton from "../../components/Ui/ChipButton";
+import SwitchBar from "../../components/Ui/SwitchBar";
 
 const Profile = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    let tabs = ["Посты", "Сохранённые"];
     const { profile, setProfile, showModalWindow } = useContext(AppContext);
-    const [activeTab, setActiveTab] = useState(tabs[0]);
+    const [activeTab, setActiveTab] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [posts, setPosts] = useState([]);
     const [activePosts, setActivePosts] = useState([]);
     const [user, setUser] = useState(null);
-    const [newData, setNewData] = useState(null);
+    const [followThisUser, setFollowThisUser] = useState(null);
+    const [followAnotherUser, setFollowAnotherUser] = useState(null);
 
     const posts_filters = useMemo( () => [], [])
 
     useEffect(() => {
         setProfile({
             ...profile,
-            follows: newData?.follower?.follows,
-            notifications: newData?.follower?.notifications
+            follows: followThisUser?.follower?.follows
         })
-        if(profile?._id !== user?._id) {
+        setUser({
+            ...user,
+            followers: followThisUser?.followed?.followers,
+            follows: followThisUser?.followed?.follows
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [followThisUser])
+
+    useEffect(() => {
+        setProfile({
+            ...profile,
+            follows: followAnotherUser?.follower?.follows
+        })
+        
+        if(user?._id === profile?._id) {
             setUser({
                 ...user,
-                followers: newData?.followed?.followers,
-                follows: newData?.followed?.follows
-            })
-        }
-        else {
-            setUser({
-                ...user,
-                followers: newData?.follower?.followers,
-                follows: newData?.follower?.follows
+                follows: followAnotherUser?.follower?.follows,
+                followers: followAnotherUser?.follower?.followers
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [newData])
+    }, [followAnotherUser])
 
     useEffect(() => {
         const getUser = async () => {
             try {
                 let response = await fetch(`${API_URL}/api/users/${id}`);
                 let findNeededUser = await response.json();
-                setActiveTab(tabs[0]);
+                setActiveTab(0);
 
                 if (findNeededUser.status === false) {
                     navigate('/404');
@@ -81,9 +88,9 @@ const Profile = () => {
     }, [user?._id]);
 
     useEffect(() => {
-        if (activeTab === "Посты") {
+        if (activeTab === 0) {
             setActivePosts(posts);
-        } else if (activeTab === "Сохранённые") {
+        } else if (activeTab === 1) {
             if(profile && user?._id === profile?._id) {
                 fetchPosts({ _id: profile?.saved_posts }).then((posts) => setActivePosts(posts));
             }
@@ -99,13 +106,6 @@ const Profile = () => {
         const response = await getPosts(query);
         setIsLoading(false);
         return response.status === true ? response.data : [];
-    };
-
-    const handleTabClick = async (item) => {
-        if (item === "Сохранённые" && (!profile || profile._id !== user._id) && (user.is_saved_posts_public !== true)) {
-            return;
-        }
-        setActiveTab(item);
     };
 
     const open_settings = () => {
@@ -131,7 +131,7 @@ const Profile = () => {
                             profile && profile._id === authorData._id ?
                                 <></>
                             :
-                                <FollowButton setNewData={setNewData} author_id={authorData._id}/>
+                                <FollowButton setNewData={setFollowAnotherUser} author_id={authorData._id}/>
                         }
                     </div>
                   ))
@@ -153,7 +153,7 @@ const Profile = () => {
                             profile && profile._id === authorData._id ?
                                 <></>
                             :
-                                <FollowButton setNewData={setNewData} author_id={authorData._id}/>
+                                <FollowButton setNewData={setFollowAnotherUser} author_id={authorData._id}/>
                         }
                     </div>
                   ))
@@ -205,7 +205,7 @@ const Profile = () => {
                             </ActionButton>
                         ) 
                         :
-                            <FollowButton setNewData={setNewData} author_id={user?._id} class_name={"profile_info_top_right_side_button"}/> 
+                            <FollowButton setNewData={setFollowThisUser} author_id={user?._id} class_name={"profile_info_top_right_side_button"}/> 
                         }
                     </div>
                 </div>
@@ -246,17 +246,11 @@ const Profile = () => {
                 </div>
             </div>
             <div className="profile_tab_list app-transition">
-                {tabs.map((item, index) => (
-                    <div
-                        key={index}
-                        onClick={() => handleTabClick(item)}
-                        className={`${
-                            activeTab === item ? "profile_tab_list_active" : ""
-                        } ${item === "Сохранённые" && (!profile || profile._id !== user._id) && (user.is_saved_posts_public !== true) ? "not_allowed" : ""}`}
-                    >
-                        <p>{item}</p>
-                    </div>
-                ))}
+                <SwitchBar
+                    items={["Посты", "Сохранённые"]}
+                    active_index={activeTab}
+                    setActiveIndex={setActiveTab}
+                />
             </div>
             <div className="profile_posts">
                 <Posts posts_filters={posts_filters} posts={activePosts} isLoading={isLoading} />
