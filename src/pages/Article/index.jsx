@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { API_URL } from "../../config";
 import { useParams, useNavigate } from "react-router-dom";
+import PostComment from "../../components/PostComments/index";
 import Loading from "../../components/Ui/Loading";
 import { ArticleTopic } from "../../components/ArticleTopic";
 import "./Article.scss";
@@ -13,6 +14,13 @@ const Article = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [article, setArticle] = useState([ ])
     
+    const setComments = (comments) => {
+        setArticle({
+            ...article,
+            comments: comments
+        })
+    }
+
     useEffect(() => {
         getArticle()
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -22,7 +30,7 @@ const Article = () => {
         try {
             setIsLoading(true)
             
-            await fetch(`${API_URL}/api/posts/${id}?expand=author`)
+            await fetch(`${API_URL}/api/posts/${id}?expand=author,comments`)
             .then(res => res.json())
             .then(res => {
                 if (res.status === true) {
@@ -47,18 +55,20 @@ const Article = () => {
             {
                 article ?
                 <div className="article">
-                        <h1 className="article_title">{article.title}</h1>
-                        <ArticleTopic article={article} onDeletePost={() => navigate('/posts')} />
-                        {article.featured_image ? 
-                            <div className="article_featured_image">
-                                <img src={article.featured_image} alt={"featured"}/> 
-                            </div>
-                        : 
-                            <></>
-                        }
-                        <div className="article_content" dangerouslySetInnerHTML={{__html: article.content_text}}>
+                    <h1 className="article_title">{article.title}</h1>
+                    <ArticleTopic article={article} onDeletePost={() => navigate('/posts')} />
+                    {article.featured_image ? 
+                        <div className="article_featured_image">
+                            <img src={article.featured_image} alt={"featured"}/> 
                         </div>
-                    </div>:
+                    : 
+                        <></>
+                    }
+                    <div className="article_content" dangerouslySetInnerHTML={{__html: article.content_text}}>
+                    </div>
+                    <PostComment postId={article._id} comments={article.comments} setComments={setComments} />
+                </div>
+                :
                 <></>     
             }
             </div>

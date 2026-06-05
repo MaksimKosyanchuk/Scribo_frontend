@@ -65,4 +65,26 @@ const getPostById = async (id) => {
     return result
 }
 
-export { getPosts, deletePost, getPostById }
+const commentPost = async (id, data) => {
+    const token = localStorage.getItem('token')
+    const headers = {
+        "Content-Type": "application/json",
+        ...(token && {
+            Authorization: `Bearer ${token}`
+        })
+    };
+    const result = await fetch(`${API_URL}/api/posts/${id}/comments?expand=comments`, { method: "POST", credentials: "include", headers, body: JSON.stringify(data) })
+    .then(res => res.json())
+    .catch((err) => { 
+        console.log(err)
+        return ({
+            status: "error",
+            message: err,
+            data: null
+        })
+    })
+
+    return result
+}
+
+export { getPosts, deletePost, getPostById, commentPost }

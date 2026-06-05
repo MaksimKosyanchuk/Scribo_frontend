@@ -1,6 +1,7 @@
 import "./PostComments.scss";
 import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from "../../config";
 import Author from "../Author";
 import { AppContext } from "../../App.js";
 import { format_date } from "../../utils/format";
@@ -41,9 +42,9 @@ const PostComments = ({ postId, comments, setComments }) => {
         <div className="post_comments">
             {
                 profile ? 
-                <form className="post_comments_form" onSubmit={ (e) => doComment(e) }>
+                <form className="post_comments_form">
                     <InpuField placeholder="Напишите комментарий..." class_name="post_comments_input" value={text} onChange={(text) => { setText(text.target.value) }} />
-                    <PrimaryButton type="submit" text="Отправить" class_name="post_comments_submit" disabled={isDisabled} is_loading={isLoading} >
+                    <PrimaryButton text="Отправить" class_name="post_comments_submit" disabled={isDisabled} is_loading={isLoading} onClick={() => { doComment() }}>
                         Отправить
                     </PrimaryButton>
                 </form>

@@ -1,0 +1,52 @@
+.post_comments {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &_form {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .input_field_label .input span {
+            margin-bottom: 0;
+        }
+
+        .action_button {
+            align-self: flex-start;
+            font-size: 14px;
+        }
+    }
+
+    &_list{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .comment {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            
+            &_top_side {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+                
+                &_date {
+                    font-size: 12px;
+                    color: var(--light-text-color);
+                }
+            }
+            
+            &_bottom_side {
+                &_text {
+                    font-size: 16px;
+                    color: var(--post-text-color);
+                    margin-left: 30px;
+                }
+            }
+        }
+    }
+}
