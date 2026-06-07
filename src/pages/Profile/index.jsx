@@ -3,18 +3,20 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext, useMemo } from "react";
 import { AppContext } from "../../App.js";
 import { API_URL } from "../../config";
-import { getPosts } from "../../api/posts.api.js";
-import { getUsers } from "../../api/users.api.js";
+import { ReactComponent as Verified } from "../../assets/svg/verified-icon.svg";
+import { ReactComponent as Calendar } from "../../assets/svg/calendar-icon.svg";
 import Posts from "../../components/Posts/index.jsx"
 import Loading from "../../components/Ui/Loading/index.jsx";
 import Author from "../../components/Author"
 import DefaultProfileAvatar from "../../assets/images/default-profile-avatar.png"
-import { ReactComponent as Verified } from "../../assets/svg/verified-icon.svg";
-import { ReactComponent as Calendar } from "../../assets/svg/calendar-icon.svg";
 import FollowButton from "../../components/FollowButton";
 import ActionButton from "../../components/Ui/ActionButton";
 import ChipButton from "../../components/Ui/ChipButton";
 import SwitchBar from "../../components/Ui/SwitchBar";
+import { getPosts } from "../../api/posts.api.js";
+import { getUsers } from "../../api/users.api.js";
+import { format_date } from "../../utils/format.js";
+
 
 const Profile = () => {
     const { id } = useParams();

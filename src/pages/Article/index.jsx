@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { API_URL } from "../../config";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import PostComment from "../../components/PostComments/index";
 import Loading from "../../components/Ui/Loading";
 import { ArticleTopic } from "../../components/ArticleTopic";
@@ -9,22 +9,21 @@ import "./Article.scss";
 
 const Article = () => {
     const {id} = useParams()
+    let [searchParams] = useSearchParams();
+    const [comment, setComment] = useState(searchParams.get('comment') || null)
+    const location = useLocation()
     const navigate = useNavigate()
     
     const [isLoading, setIsLoading] = useState(false)
     const [article, setArticle] = useState([ ])
-    
-    const setComments = (comments) => {
-        setArticle({
-            ...article,
-            comments: comments
-        })
-    }
 
     useEffect(() => {
         getArticle()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])    
+        if(location.state?.comment) {
+            setComment(location.state.comment)
+        }
+        // eslint-disable-next-line
+    }, [location.state?.time])
 
     const getArticle = async () => {
         try {
@@ -66,7 +65,7 @@ const Article = () => {
                     }
                     <div className="article_content" dangerouslySetInnerHTML={{__html: article.content_text}}>
                     </div>
-                    <PostComment postId={article._id} comments={article.comments} setComments={setComments} />
+                    <PostComment postId={article._id} navigateTo={comment}/>
                 </div>
                 :
                 <></>     
