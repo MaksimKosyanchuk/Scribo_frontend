@@ -1,0 +1,124 @@
+.post_comments {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &_form {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--post-card-background);
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--line-color);
+        
+        &_top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            padding-bottom: 12px;
+
+            &_left {
+                .post_comments_form_top_left_comment_text {
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+            }
+
+            .danger_button {
+                font-size: 12px;
+                padding: 6px;
+            }
+        }
+
+        &_bottom {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .input_field_label .input span {
+            margin-bottom: 0;
+        }
+    }
+
+    &_list{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .comment {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px 24px;
+            padding-bottom: 0;
+            border-left: 1px solid var(--line-color);
+            background-color: var(--post-card-background);
+
+            &_top_side {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+                
+                &_date {
+                    font-size: 12px;
+                    color: var(--light-text-color);
+                }
+
+                .author_info_name {
+                    font-size: 14px;
+                }
+            }
+            
+            
+            &_middle_side {
+                &_text {
+                    border-radius: 4px;
+                    width: fit-content;
+                    font-size: 14px;
+                    color: var(--post-text-color);
+                    word-break: break-word;
+                }
+            }
+            
+            &_bottom_side {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                .input {
+                    span {
+                        margin-bottom: 0;
+                    }
+
+                    .input_field {
+                        font-size: 12px;
+                    }
+                }
+
+                .action_button {
+                    font-size: 10px;
+                    padding: 6px;
+                }
+            }
+        }
+
+        .comment_highlight {
+            color: var(--main-text-selection-color);
+            background-color: var(--main-text-selection-background-color);
+        }
+
+        .comment_replies {
+            display: flex;
+        }
+
+        .comment_root {
+            margin: 0;
+            border: 1px solid var(--line-color);
+            border-radius: 8px;
+            padding: 12px;
+        }
+    }
+}

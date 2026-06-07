@@ -28,3 +28,18 @@
 .primary_button:hover {
     background-color: var(--submit-button-primary-hover-color);
 }
+
+.primary_button_disabled {
+    cursor: not-allowed;
+    background-color: var(--submit-button-disabled-background-color);
+    p {
+        color: var(--submit-button-disabled-color);
+    }
+}
+
+.primary_button_disabled:hover {
+    background-color: var(--submit-button-disabled-background-color);
+    p{
+        color: var(--submit-button-disabled-color);
+    }
+}

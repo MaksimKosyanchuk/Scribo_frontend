@@ -1,20 +1,22 @@
+import "./Profile.scss"
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext, useMemo } from "react";
 import { AppContext } from "../../App.js";
 import { API_URL } from "../../config";
-import { getPosts } from "../../api/posts.api.js";
-import { getUsers } from "../../api/users.api.js";
+import { ReactComponent as Verified } from "../../assets/svg/verified-icon.svg";
+import { ReactComponent as Calendar } from "../../assets/svg/calendar-icon.svg";
 import Posts from "../../components/Posts/index.jsx"
 import Loading from "../../components/Ui/Loading/index.jsx";
 import Author from "../../components/Author"
-import "./Profile.scss"
 import DefaultProfileAvatar from "../../assets/images/default-profile-avatar.png"
-import { ReactComponent as Verified } from "../../assets/svg/verified-icon.svg";
-import { ReactComponent as Calendar } from "../../assets/svg/calendar-icon.svg";
 import FollowButton from "../../components/FollowButton";
 import ActionButton from "../../components/Ui/ActionButton";
 import ChipButton from "../../components/Ui/ChipButton";
 import SwitchBar from "../../components/Ui/SwitchBar";
+import { getPosts } from "../../api/posts.api.js";
+import { getUsers } from "../../api/users.api.js";
+import { format_date } from "../../utils/format.js";
+
 
 const Profile = () => {
     const { id } = useParams();
@@ -163,22 +165,6 @@ const Profile = () => {
 
     if (!user) {
         return <Loading />;
-    }
-
-    const format_date = (date) => {
-        date = new Date(date);
-
-        const months = [
-            "января", "февраля", "марта", "апреля", 
-            "мая", "июня", "июля", "августа", 
-            "сентября", "октября", "ноября", "декабря"
-          ];
-
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = months[date.getMonth()];
-        const year = date.getFullYear();
-
-        return `${day} ${month} ${year} года`
     }
 
     return (

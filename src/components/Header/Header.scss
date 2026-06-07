@@ -97,6 +97,7 @@
               width: 4px;
               border-radius: 50%;
             }
+
           }
         }
       }
@@ -173,6 +174,10 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        &_post_link {
+          text-decoration: underline;
+        }
 
         @include screen() {
           grid-column: 1 / span 2;

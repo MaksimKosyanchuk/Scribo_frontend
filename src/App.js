@@ -104,6 +104,8 @@ function App() {
     '--submit-button-primary-hover-color': isDarkTheme ? 'var(--gray-e7)' :'var(--gray-1e)',
     '--submit-button-secondary-color': 'var(--main-background)',
     '--submit-button-loading-background-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-d7)',
+    '--submit-button-disabled-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-e1)',
+    '--submit-button-disabled-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-99)',
 
     '--loader-color': isDarkTheme ? 'white' : 'black',
 
