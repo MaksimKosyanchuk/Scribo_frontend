@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom';
 import { AppContext } from '../../App';
 import './Header.scss';
 import { getUsers, read_notifications } from '../../api/users.api';
-import { ReactComponent as HomeIcon } from "../../assets/svg/home-icon.svg";
 import { ReactComponent as SunIcon } from "../../assets/svg/sun-icon.svg";
 import { ReactComponent as MoonIcon } from "../../assets/svg/moon-icon.svg";
-import { ReactComponent as MainLogo } from "../../assets/svg/main-logo-icon.svg";
+import { ReactComponent as MainLogo } from "../../assets/svg/full-logo-icon.svg";
 import { ReactComponent as DefaultProfileIcon } from "../../assets/svg/profile-icon.svg";
 import { ReactComponent as NotificationIcon } from "../../assets/svg/notification-icon.svg";
 import Author from "../Author"
@@ -79,6 +78,18 @@ function Header() {
                   return "Подписался(-ась) на ваши обновления"
                 case "unfollow":
                   return "Отписался(-ась) от вас"
+                case "comment_post":
+                  return (
+                    <>
+                      Прокомментировал(-а) ваш <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>пост</Link>
+                    </>
+                  )
+                case "reply_comment":
+                  return (
+                    <>
+                      Ответил(-а) на <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`} state={{ comment: item.comment, time: Date.now() }}>ваш комментарий</Link>
+                    </>
+                  )
                 default:
                   return ""
                 }
@@ -119,12 +130,9 @@ function Header() {
       <div className="container">
         <div className="header_content">
           <div className="header_side header_left_side">
-            <Link to={'/posts'} className='header_item header-button'>
-              <HomeIcon className='header_icon app-transition'/>
+            <Link to={'/posts'} className='header_main_logo'>
+              <MainLogo className='header_icon app-transition'/>
             </Link>
-          </div>
-          <div  className="header_main_logo">
-            <MainLogo className='app-transition'/>
           </div>
           <div className="header_side header_right_side">
             <button type='button' onClick={() => { open_notifications() }} className='header_item header_notification'>
@@ -143,8 +151,8 @@ function Header() {
               {isDarkTheme ? <SunIcon className='app-transition'></SunIcon> : <MoonIcon className='app-transition'></MoonIcon>}
             </button> 
             {
-              profile ? 
-                <Author author_data={ profile } class_name={"header_profile_author"}/> 
+              profile ?
+                <Author author_data={ profile } className="header_profile_author"/> 
               :
                 <div className='header_profile header_item'>
                   <Link to={"auth/login"} className='header_item'>

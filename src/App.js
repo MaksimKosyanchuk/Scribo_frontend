@@ -104,6 +104,8 @@ function App() {
     '--submit-button-primary-hover-color': isDarkTheme ? 'var(--gray-e7)' :'var(--gray-1e)',
     '--submit-button-secondary-color': 'var(--main-background)',
     '--submit-button-loading-background-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-d7)',
+    '--submit-button-disabled-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-e1)',
+    '--submit-button-disabled-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-99)',
 
     '--loader-color': isDarkTheme ? 'white' : 'black',
 
@@ -165,7 +167,8 @@ function App() {
 
     '--switcher-bar-border-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
     '--switcher-bar-item-color': isDarkTheme ? 'var(--gray-f9)' : 'var(--gray-16)',
-    '--switcher-bar-active-item-background-color': isDarkTheme ? 'var(--gray-2f)' : 'var(--gray-e1)',
+    '--switcher-bar-active-item-background-color': isDarkTheme ? 'var(--gray-99)' : 'var(--gray-33)',
+    '--switcher-bar-active-item-color': isDarkTheme ? 'var(--gray-16)' : 'var(--gray-e7)',
 
     '--chip-button-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-e7)',
     '--chip-button-text-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-25)',
