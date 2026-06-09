@@ -6,7 +6,7 @@
     left: 0;
     width: 100%;
     background-color: var(--header-background);
-    z-index: 100;
+    z-index: 1000;
     box-shadow: 0 0 10px 1px rgba(0,0,0, .3);
 
     &_content {
@@ -23,20 +23,21 @@
     
     &_main_logo {
       display: flex;
-      display: none;
+      height: 32px;
+      width: auto;
 
-      @include screen {
-        display: none;
-      }
-
-      .header-icon {
+      svg {
         color: var(--header-button-color);
-        height: 30px;
+        height: 100%;
+        width: 100%;
 
         path{
           fill: currentColor;
         }
+      }
 
+      @include screen() {
+        height: 18px;
       }
     }
 
@@ -51,8 +52,8 @@
       
       .header_item{
         display: flex;
-        height: 24px;
-        width: 24px;
+        height: 20px;
+        width: 20px;
         transition: .2s ease-out;
 
         svg {
@@ -84,7 +85,7 @@
       &.header_right_side {
         display: flex;
         justify-content: center;
-        gap: 20px;
+        gap: 24px;
         right: 0;
 
         .header_notification {
@@ -98,6 +99,13 @@
               border-radius: 50%;
             }
 
+          }
+        }
+
+        .header_profile_author {
+          .author_avatar {
+            width: 24px;
+            height: 24px;
           }
         }
       }

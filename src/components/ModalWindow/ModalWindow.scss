@@ -9,7 +9,7 @@
     left: 0;
     height: 100%;
     width: 100%;
-    z-index: 1000;
+    z-index: 2000;
     pointer-events: none;
     opacity: 0; 
     visibility: hidden;
@@ -43,6 +43,7 @@
 
         &_title {
             display: flex;
+            align-items: center;
             padding: 20px;
             flex-shrink: 0;
             
