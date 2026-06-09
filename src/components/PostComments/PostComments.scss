@@ -1,3 +1,5 @@
+@import "../../styles/helpers.scss";
+
 .post_comments {
     margin-top: 36px;
     display: flex;
@@ -11,13 +13,28 @@
         padding: 12px;
         border-radius: 8px;
         border: 1px solid var(--line-color);
-        
+
+        @include screen() {
+            padding: 8px;
+        }
+
         &_top {
             display: flex;
             justify-content: space-between;
             gap: 10px;
             align-items: center;
             padding-bottom: 12px;
+
+            @include screen() {
+                &_left{
+                    font-size: 12px;
+                }
+
+                .danger_button{
+                    padding: 8px;
+                    font-size: 12px;
+                }
+            }
 
             &_left {
                 .post_comments_form_top_left_comment_text {
@@ -36,10 +53,39 @@
             display: flex;
             gap: 8px;
             align-items: center;
-        }
+            
+            .input_field_label{
+                .input span {
+                    margin-bottom: 0;
+                }
+                .input_field {
+                    font-size: 14px;
+                    padding: 10px;
+                }
+                .input_field::placeholder {
+                    font-size: 14px;
+                }
+            }
 
-        .input_field_label .input span {
-            margin-bottom: 0;
+            @include screen() {
+                .input_field_label {
+                    .input_field::placeholder {   
+                        font-size: 12px;
+                    }
+    
+                    .input_field {
+                        padding: 8px;
+                        font-size: 12px;
+                    }
+                }
+
+                .primary_button {
+                    padding: 8px;
+                    p {
+                        font-size: 12px;
+                    }
+                }
+            }
         }
     }
 
@@ -56,6 +102,11 @@
             padding-bottom: 0;
             border-left: 1px solid var(--line-color);
             background-color: var(--post-card-background);
+
+            @include screen() {
+                padding: 8px;
+                padding-bottom: 0;
+            }
 
             &_top_side {
                 display: flex;
@@ -96,6 +147,7 @@
                     .input_field {
                         font-size: 12px;
                     }
+
                 }
 
                 .action_button {

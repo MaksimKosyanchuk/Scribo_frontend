@@ -85,6 +85,7 @@
         color: var(--article-date-color);
         font-weight: 500;
         display: block;
+        font-size: 14px;
 
         @include screen(){
             font-size: 12px;
@@ -105,11 +106,11 @@
     }
 
     &.article_topic_popup_open {
-        z-index: 10000;
+        z-index: 200;
     }
 }
 
-.modal_window_body {
+.modal_window_body_content {
     .modal_delete_post_content {
         display: flex;
         gap: 24px;
@@ -143,7 +144,6 @@
 
                 &_category {
                     .chip_button {
-                        font-size: 14px;
                         color: var(--article-topic-category-color);
                         background-color: var(--article-topic-category-background-color);
                     }
@@ -181,7 +181,7 @@
             &_bottom {
                 display: flex;
                 justify-content: flex-end;
-                gap: 24px;
+                gap: 10px;
             }
         }
 

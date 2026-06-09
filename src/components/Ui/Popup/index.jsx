@@ -45,7 +45,7 @@ function PopupMenu({ anchorRef, children, onClose, z_index }) {
                 ...floatingStyles,
                 zIndex: z_index,
             }}
-            className="popup"
+            className="popup blurred"
         >
             {children}
         </div>
