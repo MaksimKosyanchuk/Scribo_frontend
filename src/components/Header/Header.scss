@@ -24,12 +24,11 @@
     &_main_logo {
       display: flex;
       height: 32px;
-      width: auto;
 
       svg {
         color: var(--header-button-color);
-        height: 100%;
-        width: 100%;
+        height: 32px;
+        width: auto;
 
         path{
           fill: currentColor;
