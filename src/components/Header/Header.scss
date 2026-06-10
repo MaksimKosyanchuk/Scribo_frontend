@@ -36,7 +36,9 @@
       }
 
       @include screen() {
-        height: 18px;
+        svg{
+          height: 18px;
+        }
       }
     }
 
