@@ -67,21 +67,26 @@ const PostActions = memo(({ article }) => {
 
     return (
         <div className="post_actions">
+            <Tooltip text="Комментарии">
                 <Link className="post_actions_button app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
-
                     <CommentIcon/>
                     <p>{article.comments?.length > 0 ? article.comments.length : ""}</p>
                 </Link>
+            </Tooltip>
+            <Tooltip text={isSaved ? "Убрать из сохранённых" : "Сохранить"}>
                 <button type="button" className="post_actions_button app-transition" onClick={save_post} disabled={isSavingProcess}>
                     {isSaved ? <BookMarkFilled /> : <BookMarkBorder />}
                 </button>
+            </Tooltip>
+            <Tooltip text="Поделиться">
                 <button className="post_actions_button app-transition" onClick={() => { share(article._id, showToast) }}>
                     <ShareIcon />
                 </button>
+            </Tooltip>
             <div className="post_actions_right_side">
-                    <Link className="post_actions_category app-transition" to={`/posts?filter=${article.category}`}>
-                        <Category name={article.category} />
-                    </Link>
+                <Link className="post_actions_category app-transition" to={`/posts?filter=${article.category}`}>
+                    <Category name={article.category} />
+                </Link>
             </div>
         </div>
     )

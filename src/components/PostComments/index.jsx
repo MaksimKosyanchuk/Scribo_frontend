@@ -6,6 +6,7 @@ import "./PostComments.scss";
 
 import { commentPost, getComments } from "../../api/posts.api";
 import { format_back, format_date_time } from "../../utils/format";
+import { scrollTo } from "../../utils/navigation";
 
 import { ReactComponent as ReplyIcon } from "../../assets/svg/reply-icon.svg";
 
@@ -37,10 +38,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                         className="comment_reply_button app-transition"
                         onClick={() => { 
                         setReplyCommentText({ comment_id: comment._id, comment_text: comment.comment_text })
-                        document.getElementById("post_comments_submit")?.scrollIntoView({
-                            behavior: "smooth",
-                            block: "center"
-                        });
+                        scrollTo("post_comments_submit");
                     }}>
                         <ReplyIcon className="comment_reply_icon app-transition"/>
                     </div>
@@ -143,10 +141,7 @@ const PostComments = ({ postId, navigateTo }) => {
         if(comments.length > 0 && navigateTo) {
             const element = document.getElementById(`comment_${navigateTo}`);
             if(element) {
-                element.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
+                scrollTo(`comment_${navigateTo}`);
                 element.classList.add("comment_highlight");
                 setTimeout(() => {
                     element.classList.remove("comment_highlight");
@@ -170,10 +165,7 @@ const PostComments = ({ postId, navigateTo }) => {
                                     onClick={() => {
                                         const element = document.getElementById(`comment_${replyCommentText.comment_id}`)
                                         if (element) {
-                                            element.scrollIntoView({
-                                                behavior: "smooth",
-                                                block: "center"
-                                            });
+                                            scrollTo(`comment_${replyCommentText.comment_id}`);
 
                                             element.classList.add("comment_highlight");
                                             setTimeout(() => {

@@ -1,11 +1,10 @@
 .tooltip_wrapper {
     position: relative;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     height: inherit;
     width: fit-content;
     height: fit-content;
-
 
     .tooltip {
         position: absolute;
@@ -25,9 +24,7 @@
         transition:
             opacity 0.2s ease,
             transform 0.2s ease,
-            visibility 0.2s,
-            background-color 0.3s ease,
-            border-color 0.3s ease;
+            visibility 0.2s;
 
         &_text {
             font-size: 12px;

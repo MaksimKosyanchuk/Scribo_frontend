@@ -1,12 +1,17 @@
 import { useContext, memo } from "react";
 import { Link, useNavigate } from 'react-router-dom';
+
 import { AppContext } from "../../App";
+
 import "./PostHeader.scss";
+
+import { deletePost } from "../../api/posts.api";
+
 import { ReactComponent as ThreeDotsIcon} from "../../assets/svg/three-dots.svg";
 import { ReactComponent as EditIcon} from "../../assets/svg/edit.svg";
 import { ReactComponent as DeleteIcon} from "../../assets/svg/delete.svg";
-import { deletePost } from "../../api/posts.api";
 import { format_back, format_date_time } from "../../utils/format";
+
 import UserBadge from "../UserBadge";
 import ChipButton from "../Ui/ChipButton";
 import Popup from "../Ui/Popup";
@@ -55,11 +60,7 @@ const PostHeader = memo(({ post, onDeletePost }) => {
         });
     };
 
-    // Формируем body для попапа без самовызывающейся функции
-    const popupBody = [{
-        title: "Поделиться",
-        onclick: () => { /* share логика, если нужна тут */ }
-    }];
+    const popupBody = [];
 
     if (profile?.is_admin) {
         popupBody.push(
@@ -72,7 +73,9 @@ const PostHeader = memo(({ post, onDeletePost }) => {
         <div className="post_header">
             <div className="post_header_left">
                 <UserBadge data={post.author} />
-                    <p className="post_header_left_date">{format_back(post.created_date)}</p>
+                    <Tooltip text={format_date_time(post.created_date)}>
+                        <p className="post_header_left_date">{format_back(post.created_date)}</p>
+                    </Tooltip>
             </div>
             <div className="post_header_right app-transition">
                     <Popup body={popupBody}>

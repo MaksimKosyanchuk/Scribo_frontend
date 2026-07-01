@@ -18,7 +18,6 @@ import { ReactComponent as LogoutIcon } from "../../assets/svg/logout.svg";
 import { ReactComponent as ArrowDownIcon } from '../../assets/svg/arrow-down.svg';
 
 import CurrentUserBadge from "../CurrentUserBadge/index"
-import Tooltip from "../Ui/Tooltip/index"
 import PrimaryButton from '../Ui/PrimaryButton/index';
 import Popup from '../Ui/Popup/index';
 
@@ -168,21 +167,15 @@ function Header() {
                   :
                     <></>
               }
-              <Tooltip text="Уведомления" position="bottom">
-                <NotificationIcon className="header_item_icon app-transition"/>
-              </Tooltip>
+              <NotificationIcon className="header_item_icon app-transition"/>
             </button>
             <button type='button' onClick={() => setIsDarkTheme(!isDarkTheme)} className='header_item'>
               {
                 isDarkTheme ?
-                  <Tooltip text="Темная тема" position="bottom">
-                    <MoonIcon className='header_item_icon app-transition'></MoonIcon>
-                  </Tooltip>
+                  <MoonIcon className='header_item_icon app-transition'></MoonIcon>
                 :
-                  <Tooltip text="Светлая тема" position="bottom">
-                    <SunIcon className='header_item_icon app-transition'>
-                    </SunIcon>
-                  </Tooltip>
+                  <SunIcon className='header_item_icon app-transition'>
+                  </SunIcon>
               }
             </button> 
             {

@@ -1,12 +1,15 @@
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "../../App";
 import { Link } from "react-router-dom";
+
+import { AppContext } from "../../App";
+
+import "./Posts.scss";
+
 import PostActions from "../PostActions";
 import PostHeader from "../PostHeader";
 import PostsFilters from "../../components/PostsFilters";
 import Loading from "../Ui/Loading";
 import NoPosts from "../NoPosts";
-import "./Posts.scss";
 
 
 const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
