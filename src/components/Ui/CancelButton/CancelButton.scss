@@ -1,0 +1,27 @@
+.cancel_button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+    color: var(--cancel-button-primary-color);
+}
+
+.cancel_button_icon {
+    width: 18px;
+    height: 18px;
+}
+
+.cancel_button:hover {
+    background: var(--cancel-button-hover-background-color);
+}
+
+.cancel_button_active {
+    color: var(--cancel-button-secondary-color);
+    background: var(--cancel-button-hover-background-color);
+}
+
+.cancel_button:hover {
+    background: var(--cancel-button-hover-background-color);
+}

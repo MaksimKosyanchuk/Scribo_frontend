@@ -1,56 +1,33 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 import { AppContext } from '../../App';
+
 import './Header.scss';
+
 import { getUsers, read_notifications } from '../../api/users.api';
-import { ReactComponent as SunIcon } from "../../assets/svg/sun-icon.svg";
-import { ReactComponent as MoonIcon } from "../../assets/svg/moon-icon.svg";
+import { format_back } from "../../utils/format";
+
+import { ReactComponent as SunIcon } from "../../assets/svg/sun.svg";
+import { ReactComponent as MoonIcon } from "../../assets/svg/moon.svg";
 import { ReactComponent as MainLogo } from "../../assets/svg/full-logo-icon.svg";
-import { ReactComponent as DefaultProfileIcon } from "../../assets/svg/profile-icon.svg";
-import { ReactComponent as NotificationIcon } from "../../assets/svg/notification-icon.svg";
-import Author from "../Author"
+import { ReactComponent as DefaultProfileIcon } from "../../assets/svg/profile.svg";
+import { ReactComponent as NotificationIcon } from "../../assets/svg/notification.svg";
+import { ReactComponent as PlusIcon } from "../../assets/svg/plus-icon.svg";
+import { ReactComponent as SettingsIcon } from "../../assets/svg/settings.svg";
+import { ReactComponent as LogoutIcon } from "../../assets/svg/logout.svg";
+import { ReactComponent as ArrowDownIcon } from '../../assets/svg/arrow-down.svg';
+
+import CurrentUserBadge from "../CurrentUserBadge/index"
+import PrimaryButton from '../Ui/PrimaryButton/index';
+import Popup from '../Ui/Popup/index';
 
 function Header() {
   const { showToast, profile, setProfile, setIsDarkTheme, isDarkTheme, showModalWindow } = useContext(AppContext)
 
+  const navigate = useNavigate();
+
   const get_notification = async (notifications) => {
-    const get_time = (time) => {
-      if(!time) {
-        return ""
-      }
-      
-      const now = new Date();
-      const past = new Date(time);
-      const diffInSeconds = Math.floor((now - past) / 1000);
-
-      if (diffInSeconds < 60) {
-          return `${diffInSeconds} секунд назад`;
-      }
-
-      const diffInMinutes = Math.floor(diffInSeconds / 60);
-      if (diffInMinutes < 60) {
-          return `${diffInMinutes} минут назад`;
-      }
-
-      const diffInHours = Math.floor(diffInMinutes / 60);
-      if (diffInHours < 24) {
-          return `${diffInHours} часов назад`;
-      }
-
-      const diffInDays = Math.floor(diffInHours / 24);
-      if (diffInDays < 31) {
-          return `${diffInDays} дней назад`;
-      }
-
-      const diffInMonths = Math.floor(diffInDays / 30);
-      if (diffInMonths < 12) {
-          return `${diffInMonths} месяцев назад`;
-      }
-
-      const diffInYears = Math.floor(diffInMonths / 12);
-      return `${diffInYears} лет назад`;
-    }
-
     let users = await getUsers(
       notifications.map(item => ({ _id: item.user }))
     );
@@ -69,7 +46,7 @@ function Header() {
               :
                 <></>
           }
-          <Author author_data={userMap[item.user]} />
+          <CurrentUserBadge data={userMap[item.user]} />
         </div>
         <p className='modal_window_body_content_notification_message'>
           {(() => {
@@ -95,7 +72,7 @@ function Header() {
                 }
             })()}
         </p>
-        <p className='modal_window_body_content_notification_time'>{get_time(item.time)}</p>
+        <p className='modal_window_body_content_notification_time'>{format_back(item.time)}</p>
       </div>
     ));
   };
@@ -135,6 +112,15 @@ function Header() {
             </Link>
           </div>
           <div className="header_side header_right_side">
+            {
+              profile?.is_admin ? 
+              <PrimaryButton className="header_create_post_button" onClick={() => { navigate('/create-post') }}>
+                <PlusIcon/>
+                Создать пост
+                </PrimaryButton>
+              :
+              <></>
+            }
             <button type='button' onClick={() => { open_notifications() }} className='header_item header_notification'>
               {
                 profile?.notifications?.some(item => item.is_read === false ) 
@@ -145,20 +131,49 @@ function Header() {
                   :
                     <></>
               }
-              <NotificationIcon className="app-transition"/>
+              <NotificationIcon className="header_item_icon app-transition"/>
             </button>
             <button type='button' onClick={() => setIsDarkTheme(!isDarkTheme)} className='header_item'>
-              {isDarkTheme ? <SunIcon className='app-transition'></SunIcon> : <MoonIcon className='app-transition'></MoonIcon>}
+              {
+                isDarkTheme ?
+                  <MoonIcon className='header_item_icon app-transition'></MoonIcon>
+                :
+                  <SunIcon className='header_item_icon app-transition'>
+                  </SunIcon>
+              }
             </button> 
             {
               profile ?
-                <Author author_data={ profile } className="header_profile_author"/> 
+
+              <Popup className="header_user_badge_popup" z_index={3000}
+                body={[
+                  {
+                    "title": "В профиль",
+                    icon: <DefaultProfileIcon/>,
+                    onclick: () => { navigate(`/users/${profile.nick_name}`) }
+                  },
+                  {
+                    "title": "Настройки",
+                    icon: <SettingsIcon/>,
+                    onclick: () => { navigate(`/settings`) }
+                  },
+                  {
+                    "title": "Выйти с акаунта",
+                    icon: <LogoutIcon/>,
+                    type: "danger",
+                    onclick: () => { 
+                      localStorage.removeItem("token");
+                      setProfile(null);
+                      showToast({type: "success", message: "Вы вышли из аккаунта!"})
+                    }
+                  }
+                ]}
+              >
+                <CurrentUserBadge as_link={false} className={"header_item"} DefaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
+                <ArrowDownIcon className="header_item_icon header_user_badge_popup_arrow app-transition"/>
+              </Popup>
               :
-                <div className='header_profile header_item'>
-                  <Link to={"auth/login"} className='header_item'>
-                    <DefaultProfileIcon className='app-transition' />
-                  </Link>
-                </div>
+                <CurrentUserBadge as_link={true} className={"header_item"} DefaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
             }
           </div>
         </div>

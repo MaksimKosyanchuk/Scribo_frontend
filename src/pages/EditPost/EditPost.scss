@@ -1,130 +1,130 @@
-@import "../../styles/helpers.scss";
+// @import "../../styles/helpers.scss";
 
-.create_post{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+// .create_post{
+//     display: flex;
+//     flex-direction: column;
+//     gap: 20px;
 
-    .drop_file{
-        min-height: 230px;
-        border-radius: 8px;
+//     .drop_file{
+//         min-height: 230px;
+//         border-radius: 8px;
 
-        @include screen() {
-            min-height: 140px;
-        }
+//         @include screen() {
+//             min-height: 140px;
+//         }
 
-        .remove_image {
-            position: absolute;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            bottom: 20px;
-            padding: 8px;
-            width: 96%;
-            background-color: var(--sticky-button-background-color);
-            border: 1px solid var(--line-color);
+//         .remove_image {
+//             position: absolute;
+//             display: flex;
+//             justify-content: space-between;
+//             align-items: center;
+//             bottom: 20px;
+//             padding: 8px;
+//             width: 96%;
+//             background-color: var(--sticky-button-background-color);
+//             border: 1px solid var(--line-color);
             
-            .remove_image_button {
-                cursor: pointer;
+//             .remove_image_button {
+//                 cursor: pointer;
     
-                svg{
-                    color: red;
-                    height: 20px;
-                }
-            }
-        }
+//                 svg{
+//                     color: red;
+//                     height: 20px;
+//                 }
+//             }
+//         }
 
-        &_info {
-            &_upload_icon {
-                height: 50px;
-                width: 50px;
+//         &_info {
+//             &_upload_icon {
+//                 height: 50px;
+//                 width: 50px;
 
-                @include screen() {
-                    display: none;
-                }
-            }
+//                 @include screen() {
+//                     display: none;
+//                 }
+//             }
 
-            &_main_text {
-                @include screen() {
-                    font-size: 12px;
-                }
-            }
+//             &_main_text {
+//                 @include screen() {
+//                     font-size: 12px;
+//                 }
+//             }
 
-            &_help_text{
-                @include screen() {
-                    font-size: 12px;
-                }
-            }
+//             &_help_text{
+//                 @include screen() {
+//                     font-size: 12px;
+//                 }
+//             }
 
-            &_select {
-                margin-top: 16px;
-            }
-        }
-    }
+//             &_select {
+//                 margin-top: 16px;
+//             }
+//         }
+//     }
 
-    .drop_file_error_messages {
-        align-items: flex-start;
-    }
+//     .drop_file_error_messages {
+//         align-items: flex-start;
+//     }
 
-    .input_field {
-        width: 100%;
-        height: 100%;
-        padding: 18px;
+//     .input_field {
+//         width: 100%;
+//         height: 100%;
+//         padding: 18px;
 
-        @include screen() {
-            padding: 12px;
-        }
+//         @include screen() {
+//             padding: 12px;
+//         }
         
-    }
+//     }
     
-    .input_field::placeholder {
-        color: var(--input-placeholder-color);
-        transition: .3s;    
-    }    
+//     .input_field::placeholder {
+//         color: var(--input-placeholder-color);
+//         transition: .3s;    
+//     }    
 
-    .input_field_label {
-        span {
-            margin: 0;
-        }
-    }
+//     .input_field_label {
+//         span {
+//             margin: 0;
+//         }
+//     }
 
-    .create_post_title{
-        font-size: 24px;
-        font-weight: bold;
+//     // .create_post_title{
+//     //     font-size: 24px;
+//     //     font-weight: bold;
 
-        @include screen(){
-            font-size: 18px;
-        }
-    }
+//     //     @include screen(){
+//     //         font-size: 18px;
+//     //     }
+//     // }
 
-    .create_post_title::placeholder{
-        font-size: 24px;
-        font-weight: bold;
-        color: var(--input-placeholder-color);
-        transition: .3s;
+//     // .create_post_title::placeholder{
+//     //     font-size: 24px;
+//     //     font-weight: bold;
+//     //     color: var(--input-placeholder-color);
+//     //     transition: .3s;
 
-        @include screen(){
-            font-size: 18px;
-        }
-    }
+//     //     @include screen(){
+//     //         font-size: 18px;
+//     //     }
+//     // }
 
-    &_main_text{
-        height: 300px;
-        font-size: 24px;
+//     &_main_text{
+//         height: 300px;
+//         font-size: 24px;
 
-        @include screen() {
-            font-size: 14px;
-            height: 150px;
-        }
-    }
+//         @include screen() {
+//             font-size: 14px;
+//             height: 150px;
+//         }
+//     }
 
-    .create_post_buttons {
-        display: flex;
-        justify-content: space-between;
+//     .create_post_buttons {
+//         display: flex;
+//         justify-content: space-between;
         
-        @include screen() {
-            flex-direction: column;
-            gap: 10px;
-        }
-    }
-}
+//         @include screen() {
+//             flex-direction: column;
+//             gap: 10px;
+//         }
+//     }
+// }

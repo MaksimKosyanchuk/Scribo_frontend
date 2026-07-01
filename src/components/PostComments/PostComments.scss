@@ -4,15 +4,10 @@
     margin-top: 36px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
 
     &_form {
         display: flex;
         flex-direction: column;
-        background-color: var(--post-card-background);
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid var(--line-color);
 
         @include screen() {
             padding: 8px;
@@ -29,31 +24,30 @@
                 &_left{
                     font-size: 12px;
                 }
-
-                .danger_button{
-                    padding: 8px;
-                    font-size: 12px;
-                }
             }
 
             &_left {
+                font-size: 14px;
+
                 .post_comments_form_top_left_comment_text {
-                    text-decoration: underline;
+                    font-weight: 700;
+                    color: var(--primary-text-color);
                     cursor: pointer;
                 }
-            }
 
-            .danger_button {
-                font-size: 12px;
-                padding: 6px;
+                .post_comments_form_top_left_comment_text:hover {
+                    text-decoration: underline;
+                }
+
+
             }
         }
 
-        &_bottom {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            
+        &_content {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+
             .input_field_label{
                 .input span {
                     margin-bottom: 0;
@@ -64,6 +58,22 @@
                 }
                 .input_field::placeholder {
                     font-size: 14px;
+                }
+            }
+            
+            .primary_button {
+                grid-column: 2;
+                justify-self: end;
+                padding: 10px 12px;
+
+                font-size: 12px;
+            }
+
+            .user_badge {
+                align-self: start;
+
+                .user_badge_info {
+                    display: none;
                 }
             }
 
@@ -92,16 +102,15 @@
     &_list{
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 40px;
 
         .comment {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            padding: 12px 24px;
+            padding: 12px 0 12px 35px;
             padding-bottom: 0;
             border-left: 1px solid var(--line-color);
-            background-color: var(--post-card-background);
 
             @include screen() {
                 padding: 8px;
@@ -134,26 +143,22 @@
                 }
             }
             
-            &_bottom_side {
+            &_reply_button {
                 display: flex;
-                align-items: center;
-                gap: 8px;
+                padding: 10px;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+            
+            &_reply_button:hover {
+                background-color: var(--reply-button-background-color);
+            }
 
-                .input {
-                    span {
-                        margin-bottom: 0;
-                    }
+            &_reply_icon {
+                width: 12px;
+                height: 12px;
 
-                    .input_field {
-                        font-size: 12px;
-                    }
-
-                }
-
-                .action_button {
-                    font-size: 10px;
-                    padding: 6px;
-                }
+                color: var(--reply-button-color);
             }
         }
 
@@ -168,9 +173,8 @@
 
         .comment_root {
             margin: 0;
-            border: 1px solid var(--line-color);
-            border-radius: 8px;
-            padding: 12px;
+            border: none;
+            padding: 0;
         }
     }
 }

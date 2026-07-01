@@ -10,24 +10,43 @@
 
     &_item {
         display: flex;
+        align-items: center;
         white-space: nowrap;
-        text-align: start;
+        gap: 14px;
         padding: 12px;
         border-radius: 6px;
-        font-size: 14px;
         color: var(--popup-text-color);
+        
+        &_title{
+            text-align: start;
+            font-size: 14px;
+            color: var(--popup-text-color);
+        }
+
+        svg {
+            color: inherit;
+            width: 16px;
+            height: 16px;
+        }
     }
     
+    &_trigger{
+        display: flex;
+    }
+
     &_item:hover {
         background-color: var(--popup-item-hover-background-color);
     }
 
     &_item_danger {
         color: var(--red-f5);
+        
+        .popup_item_title {
+            color: var(--red-f5);
+        }
     }
 
     &_item_danger:hover {
         background-color: var(--popup-danger-item-hover-background-color);
     }
-
 }

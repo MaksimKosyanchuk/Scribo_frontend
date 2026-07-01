@@ -11,13 +11,17 @@
         }
     }
 
-    .article_topic {
+    .post_actions {
         margin-top: 64px;
 
         @include screen() {
             margin-top: 20px;
             flex-wrap: wrap;
             justify-content: flex-end;
+        }
+
+        &_comment {
+            display: none;
         }
     }
 

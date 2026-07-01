@@ -47,12 +47,11 @@
                     padding: 6px 8px;
         
                     svg{
-                        color: red;
+                        color: var(--red-button-third-color);
                         height: 12px;
                         width: 12px;
                         
                         @include screen() {
-                            color: red;
                             height: 16px;
                             width: 16px;
                         }
@@ -179,16 +178,6 @@
                 padding: 12px 24px;
                 border-radius: 8px;
                 font-size: 14px;
-            }
-            
-            .logout_button{
-                color: var(--red-button-primary-color);
-                border: 1px solid var(--red-button-primary-color);
-            }
-
-            .logout_button:hover {
-                background-color:var(--red-button-primary-color);
-                color: white;
             }
         }
 

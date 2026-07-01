@@ -1,6 +1,6 @@
 @import "../../styles/helpers.scss";
 
-.author {
+.user_badge {
     display: flex;
     align-items: center;
     box-sizing: content-box;
@@ -32,7 +32,8 @@
 
         &_name  {
             font-size: 16px;
-            color: var(--author-name-color);
+            line-height: 1;
+            color: var(--user-badge-name-color);
 
             @include screen(){
                 font-size: 16px;
@@ -51,8 +52,8 @@
     }
 }
 
-.author:hover {
-    .author_info_name {
-        color: var(--author-name-hover-color);
+.user_badge:hover {
+    .user_badge_info_name {
+        color: var(--user-badge-name-hover-color);
     }
 }
