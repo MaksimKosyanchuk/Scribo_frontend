@@ -8,7 +8,6 @@ import { ReactComponent as BookMarkFilled} from "../../assets/svg/bookmark-fille
 import { ReactComponent as ShareIcon} from "../../assets/svg/share.svg";
 import { ReactComponent as CommentIcon} from "../../assets/svg/comment.svg";
 import Category from "../Category/index";
-import Tooltip from "../Ui/Tooltip/index";
 
 function isMobile() {
     return navigator.maxTouchPoints > 0;
@@ -31,14 +30,14 @@ async function share(id, showToast) {
     }
 }
 
-const PostActions = memo(({ article }) => {
+const PostActions = memo(({ article, categoryIcon }) => {
     const { profile, setProfile, showToast } = useContext(AppContext)
     const [isSaved, setIsSaved] = useState(!!(profile?.saved_posts?.includes(article?._id)));
     const [isSavingProcess, setSavingProcess] = useState(false)
 
     useEffect(() => {
         setIsSaved(!!(profile?.saved_posts?.includes(article?._id)));
-    }, [profile, article?._id]) // Добавили id в депенденси для точности
+    }, [profile, article?._id])
 
     const save_post = async () => {
         setSavingProcess(true)
@@ -67,27 +66,21 @@ const PostActions = memo(({ article }) => {
 
     return (
         <div className="post_actions">
-            <Tooltip className="post_actions_comment" text="Комментарии">
                 <Link className="post_actions_button app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
                     <CommentIcon/>
                     <p>{article.comments?.length > 0 ? article.comments.length : ""}</p>
                 </Link>
-            </Tooltip>
-            <Tooltip text={isSaved ? "Убрать из сохранённых" : "Сохранить"}>
                 <button type="button" className="post_actions_button app-transition" onClick={save_post} disabled={isSavingProcess}>
                     {isSaved ? <BookMarkFilled /> : <BookMarkBorder />}
                 </button>
-            </Tooltip>
-            <Tooltip text="Поделиться">
                 <button className="post_actions_button app-transition" onClick={() => { share(article._id, showToast) }}>
                     <ShareIcon />
                 </button>
-            </Tooltip>
             <div className="post_actions_right_side">
                 <Link className="post_actions_category app-transition" to={`/posts?filter=${article.category}`}>
-                    <Category name={article.category} />
+                    <Category name={article.category} icon={categoryIcon} is_active={true} />
                 </Link>
-            </div>
+            </div>     
         </div>
     )
 });

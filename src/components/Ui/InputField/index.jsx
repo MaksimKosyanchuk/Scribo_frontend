@@ -10,6 +10,7 @@ const Input = forwardRef(
     onChange,
     onFocus,
     onMouseDown,
+    onKeyDown,
     error,
     type,
     value,
@@ -40,6 +41,7 @@ const Input = forwardRef(
             onChange={onChange}
             onFocus={onFocus}
             onMouseDown={onMouseDown}
+            onKeyDown={onKeyDown}
             required={required}
             placeholder={placeholder}
             rows={multiline_rows}
@@ -48,7 +50,8 @@ const Input = forwardRef(
             value={value}
             readOnly={confirmed}
             {...props}
-          />
+          >
+          </InputComponent>
 
           {confirmed && (
             <ConfirmedIcon className="inpuut_confirmed_icon app-transition" />

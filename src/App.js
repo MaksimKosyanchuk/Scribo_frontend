@@ -206,6 +206,11 @@ function App() {
     '--popup-text-color': 'var(--main-text-color)',
     '--popup-item-hover-background-color': isDarkTheme ? 'rgba(160,160,160, .1)' : 'rgba(139, 139, 139, .1)',
     '--popup-danger-item-hover-background-color': isDarkTheme ? 'rgba(235, 114, 114, .1)' : 'rgba(255, 120, 120, .1)',
+
+    '--category-color-1': isDarkTheme ? '#00a58e': "#008d7a",
+    '--category-color-2': isDarkTheme ? '#ffc219': "#d99600",
+    '--category-color-3': isDarkTheme ? '#5a9cff': "#0072ff",
+    '--category-color-4': isDarkTheme ? '#a32aff': "#6b00f9",
   }
 
 

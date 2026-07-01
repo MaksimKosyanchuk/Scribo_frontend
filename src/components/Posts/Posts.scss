@@ -38,6 +38,12 @@
                 z-index: 1;
             }
 
+            &_content {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
             &_bottom {
                 display: flex;
                 z-index: 1;
@@ -120,7 +126,6 @@
             &_title {
                 color: var(--post-title-color);
                 font-size: 24px;
-                line-height: 1.4;
                 display: -webkit-box; 
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical; 

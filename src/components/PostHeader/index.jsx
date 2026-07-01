@@ -1,5 +1,5 @@
 import { useContext, memo } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { AppContext } from "../../App";
 
@@ -13,19 +13,18 @@ import { ReactComponent as DeleteIcon} from "../../assets/svg/delete.svg";
 import { format_back, format_date_time } from "../../utils/format";
 
 import UserBadge from "../UserBadge";
-import ChipButton from "../Ui/ChipButton";
 import Popup from "../Ui/Popup";
 import ActionButton from "../Ui/ActionButton";
 import DangerButton from "../Ui/DangerButton";
 import Tooltip from "../Ui/Tooltip/index";
 import Catregory from "../Category";
 
-const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost) => (
+const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost, categoryIcon) => (
     <div className="modal_delete_post_content">
         <div className="modal_delete_post_content_post">
             <div className="modal_delete_post_content_post_header">
-                <PostHeader post={post} />
-                <Catregory name={post.category}/>
+                <PostHeader post={post} categoryIcon={categoryIcon} />
+                <Catregory name={post.category} icon={categoryIcon} is_active={true}/>
             </div>
             <h2 className="modal_delete_post_content_post_title">{post.title}</h2>
             {post.featured_image && (
@@ -45,14 +44,14 @@ const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost
     </div>
 );
 
-const PostHeader = memo(({ post, onDeletePost }) => {
+const PostHeader = memo(({ post, categoryIcon, onDeletePost }) => {
     const { profile, showModalWindow, requestCloseModal } = useContext(AppContext);
     const navigate = useNavigate();
     
     const delete_post = async (id) => {
         showModalWindow({
             title: `Вы уверены что хотите удалить пост?`,
-            content: getDeleteModalContent(post, requestCloseModal, deletePost, onDeletePost),
+            content: getDeleteModalContent(post, requestCloseModal, deletePost, onDeletePost, categoryIcon),
             show_close_button: false,
             close_func: () => {}
         });
@@ -75,11 +74,16 @@ const PostHeader = memo(({ post, onDeletePost }) => {
                         <p className="post_header_left_date">{format_back(post.created_date)}</p>
                     </Tooltip>
             </div>
-            <div className="post_header_right app-transition">
-                    <Popup body={popupBody}>
-                        <ThreeDotsIcon className="article_topic_three_dots"/>
-                    </Popup>
-            </div>
+            {
+                profile?.is_admin ? 
+                    <div className="post_header_right app-transition">
+                        <Popup body={popupBody}>
+                            <ThreeDotsIcon className="article_topic_three_dots"/>
+                        </Popup>
+                    </div>
+                :
+                    <></>
+            }
         </div>
     );
 });

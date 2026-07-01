@@ -2,6 +2,7 @@
 
 .chip_button {
     display: flex;
+    align-items: center;
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 12px;
@@ -21,6 +22,7 @@
 .chip_button_active {
     color: var(--chip-active-button-text-color);
     background-color: var(--chip-active-button-background-color);
+    border-color: var(--chip-active-button-background-color);
 }
 
 .chip_button_active:hover {

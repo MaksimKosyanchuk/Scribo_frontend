@@ -59,7 +59,23 @@ const format_back = (date_time) => {
     return `${diffInYears} ${pluralize(diffInYears, ["год", "года", "лет"])} назад`;
 };
 
+function getCategoryColorType(categoryName) {
+    switch (categoryName?.toLowerCase()) {
+        case "новости":
+            return 1
+        case "политика":
+            return 2
+        case "dev":
+            return 3
+        case "другое":
+            return 4
+        default:
+            return 0
+    }
+}
+
 module.exports = {
     format_date_time,
-    format_back
+    format_back,
+    getCategoryColorType
 }

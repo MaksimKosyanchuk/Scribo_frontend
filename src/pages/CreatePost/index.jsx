@@ -8,6 +8,8 @@ import TextEditorField from "../../components/Ui/TextEditorField";
 import PrimaryButton from "../../components/Ui/PrimaryButton";
 import DangerButton from "../../components/Ui/DangerButton";
 import "./CreatePost.scss"
+import SearchSelect from '../../components/Ui/SearchSelect/index';
+import { getCategories } from '../../api/categories';
 
 const CreatePost = () => {
     const navigate = useNavigate()
@@ -15,6 +17,7 @@ const CreatePost = () => {
     const [ initialized, setInitialized ] = useState(false);
     const [ createResult, setCreateResult ] = useState({})
     const [errors, setErrors] = useState({ });
+    const [allCategories, setAllCategories] = useState([])
 
     const [ isLoading, setIsLoading ] = useState(false);
 
@@ -51,14 +54,23 @@ const CreatePost = () => {
     }
 
     useEffect(() => {
-        if(initialized){
-            if(!profileLoading && (!profile || !profile.is_admin)){
-                navigate("/posts")
+        const load = async () => {
+            if(initialized){
+                if(!profileLoading && (!profile || !profile.is_admin)){
+                    navigate("/posts")
+                }
+            }
+            else{
+                setInitialized(true);
+    
+                const categories_result = await getCategories()
+                if(categories_result?.status === true) {
+                    setAllCategories(categories_result.data)
+                }
             }
         }
-        else{
-            setInitialized(true);
-        }
+
+        load()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[profileLoading, initialized])
 
@@ -131,15 +143,16 @@ const CreatePost = () => {
                 length={200}
                 error={errors?.body?.title?.message}
             />
-            <InputFiled 
-                className={"create_post_category"  + (createResult.status === false && createResult?.message?.body?.category ? " incorrect_field" : "")}
+            <SearchSelect
+                value={fields.category}
+                onSetValue={(value) =>
+                    setFields(prev => ({
+                        ...prev,
+                        category: value
+                    }))
+                }
                 input_label={"Категория"}
-                is_multiline={true}
-                multiline_rows={1}
-                onChange={(e) => setFields({ ...fields, category: e.target.value })}
-                onFocus={() => handleFocus('category')}
-                length={50}
-                error={errors?.body?.category?.message}
+                options={allCategories}
             />
             <DropFile
                 value={fields.featured_image}

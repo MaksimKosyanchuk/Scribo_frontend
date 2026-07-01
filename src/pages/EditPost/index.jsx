@@ -8,8 +8,15 @@ import InputFiled from "../../components/Ui/InputField";
 import TextEditorField from "../../components/Ui/TextEditorField";
 import PrimaryButton from "../../components/Ui/PrimaryButton";
 import DangerButton from "../../components/Ui/DangerButton";
+
+
 import { getPostById } from '../../api/posts.api';
+import { getCategories } from '../../api/categories';
+
 import "./EditPost.scss"
+
+
+import SearchSelect from '../../components/Ui/SearchSelect/index';
 
 const EditPost = () => {
     const navigate = useNavigate()
@@ -18,6 +25,7 @@ const EditPost = () => {
     const [ createResult, setCreateResult ] = useState({})
     const [errors, setErrors] = useState({ });
     const [featuredImage, setFeaturedImage] = useState(null)
+    const [allCategories, setAllCategories] = useState([])
 
     const { id } = useParams()
 
@@ -47,14 +55,15 @@ const EditPost = () => {
                 })
                 setFeaturedImage(post.featured_image)
             }
+
+            const categories_result = await getCategories()
+            if(categories_result?.status === true) {
+                setAllCategories(categories_result.data)
+            }
         }
 
         loadPost()
     }, [id])
-
-    // useEffect(() => {
-    //     console.log(fields)
-    // }, [fields])
 
     const add_errors_to_image = (new_errors) => {
         const updated_errors = { ...errors };
@@ -168,16 +177,15 @@ const EditPost = () => {
                 length={200}
                 error={errors?.body?.title?.message}
             />
-            <InputFiled 
+            <SearchSelect
                 value={fields.category}
-                className={"create_post_category"  + (createResult.status === false && createResult?.message?.body?.category ? " incorrect_field" : "")}
-                placeholder={"Укажите категорию"}
-                is_multiline={true}
-                multiline_rows={1}
-                onChange={(e) => setFields({ ...fields, category: e.target.value })}
-                onFocus={() => handleFocus('category')}
-                length={50}
-                error={errors?.body?.category?.message}
+                onSetValue={(value) =>
+                    setFields(prev => ({
+                        ...prev,
+                        category: value
+                    }))
+                }
+                options={allCategories}
             />
             <DropFile
                 value={fields.featured_image}
