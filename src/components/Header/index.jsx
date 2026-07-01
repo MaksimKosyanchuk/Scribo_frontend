@@ -6,6 +6,7 @@ import { AppContext } from '../../App';
 import './Header.scss';
 
 import { getUsers, read_notifications } from '../../api/users.api';
+import { format_back } from "../../utils/format";
 
 import { ReactComponent as SunIcon } from "../../assets/svg/sun.svg";
 import { ReactComponent as MoonIcon } from "../../assets/svg/moon.svg";
@@ -27,43 +28,6 @@ function Header() {
   const navigate = useNavigate();
 
   const get_notification = async (notifications) => {
-    const get_time = (time) => {
-      if(!time) {
-        return ""
-      }
-      
-      const now = new Date();
-      const past = new Date(time);
-      const diffInSeconds = Math.floor((now - past) / 1000);
-
-      if (diffInSeconds < 60) {
-          return `${diffInSeconds} секунд назад`;
-      }
-
-      const diffInMinutes = Math.floor(diffInSeconds / 60);
-      if (diffInMinutes < 60) {
-          return `${diffInMinutes} минут назад`;
-      }
-
-      const diffInHours = Math.floor(diffInMinutes / 60);
-      if (diffInHours < 24) {
-          return `${diffInHours} часов назад`;
-      }
-
-      const diffInDays = Math.floor(diffInHours / 24);
-      if (diffInDays < 31) {
-          return `${diffInDays} дней назад`;
-      }
-
-      const diffInMonths = Math.floor(diffInDays / 30);
-      if (diffInMonths < 12) {
-          return `${diffInMonths} месяцев назад`;
-      }
-
-      const diffInYears = Math.floor(diffInMonths / 12);
-      return `${diffInYears} лет назад`;
-    }
-
     let users = await getUsers(
       notifications.map(item => ({ _id: item.user }))
     );
@@ -108,7 +72,7 @@ function Header() {
                 }
             })()}
         </p>
-        <p className='modal_window_body_content_notification_time'>{get_time(item.time)}</p>
+        <p className='modal_window_body_content_notification_time'>{format_back(item.time)}</p>
       </div>
     ));
   };

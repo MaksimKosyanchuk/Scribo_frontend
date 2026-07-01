@@ -23,12 +23,11 @@ html, body {
 }
 
 body {
-    overflow-y: scroll;
 }
 
 body.no-scroll {
-    position: fixed;
-    width: 100%;
+    scrollbar-gutter: stable;
+    overflow-y: hidden;
 }
 
 p, h1, h2, h3, h4 ,h5, h6 {

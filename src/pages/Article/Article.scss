@@ -19,6 +19,10 @@
             flex-wrap: wrap;
             justify-content: flex-end;
         }
+
+        &_comment {
+            display: none;
+        }
     }
 
     &_featured_image{

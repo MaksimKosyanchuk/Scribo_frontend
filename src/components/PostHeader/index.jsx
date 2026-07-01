@@ -18,16 +18,14 @@ import Popup from "../Ui/Popup";
 import ActionButton from "../Ui/ActionButton";
 import DangerButton from "../Ui/DangerButton";
 import Tooltip from "../Ui/Tooltip/index";
+import Catregory from "../Category";
 
 const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost) => (
     <div className="modal_delete_post_content">
         <div className="modal_delete_post_content_post">
-            <div className="modal_delete_post_content_post_topic">
-                <UserBadge data={post.author} />
-                <p className="modal_delete_post_content_post_topic_date">{format_back(post.created_date)}</p>
-                <Link className="modal_delete_post_content_post_topic_category" to={`/posts?filter=${post.category}`}>
-                    <ChipButton>{post.category}</ChipButton>
-                </Link>
+            <div className="modal_delete_post_content_post_header">
+                <PostHeader post={post} />
+                <Catregory name={post.category}/>
             </div>
             <h2 className="modal_delete_post_content_post_title">{post.title}</h2>
             {post.featured_image && (

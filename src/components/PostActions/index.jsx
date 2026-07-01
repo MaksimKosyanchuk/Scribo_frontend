@@ -67,7 +67,7 @@ const PostActions = memo(({ article }) => {
 
     return (
         <div className="post_actions">
-            <Tooltip text="Комментарии">
+            <Tooltip className="post_actions_comment" text="Комментарии">
                 <Link className="post_actions_button app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
                     <CommentIcon/>
                     <p>{article.comments?.length > 0 ? article.comments.length : ""}</p>

@@ -36,3 +36,51 @@
         color: var(--article-topic-button-hover-color);
     }
 }
+
+.modal_window_body_content {
+    .modal_delete_post_content {
+        display: flex;
+        gap: 24px;
+        flex-direction: column;
+        justify-content: space-between;
+        
+        &_post{
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            &_title {
+                font-size: 18px;
+            }
+
+            &_header{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .post_header_right {
+                    display: none;
+                }
+            }
+
+            &_image{
+                width: 100%;
+                max-height: 500px;
+                border-radius: 6px;
+                object-fit: cover;
+                background-size: cover;
+                background-position: center;
+            }
+        }
+            &_bottom {
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+            }
+        }
+
+    button {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+}
