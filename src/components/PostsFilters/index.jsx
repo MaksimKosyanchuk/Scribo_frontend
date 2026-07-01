@@ -2,6 +2,7 @@ import "./PostsFilters.scss";
 import React from "react";
 import ChipButton from "../Ui/ChipButton";
 
+
 const PostsFilters = ({ filters, setFilters }) => {
     const handle_click = (categoryName) => {
         setFilters(prev => {
@@ -48,22 +49,23 @@ const PostsFilters = ({ filters, setFilters }) => {
     return (
         <div className="posts_filters">
             {filters.map((category, index) => {
-            if (!category) return null;
+                if (!category) return null;
 
-            return (
-                <React.Fragment key={category.name}>
-                <ChipButton
-                    is_active={category.is_active}
-                    onClick={() => handle_click(category.name)}
-                >
-                    {category.name}
-                </ChipButton>
-                {index === 0 && (
-                    <div className="post_filter post_filter_separator app-transition"></div>
-                )}
-                </React.Fragment>
-            );
-            })}
+                return (
+                    <React.Fragment key={category.name}>
+                    <ChipButton
+                        is_active={category.is_active}
+                        onClick={() => handle_click(category.name)}
+                    >
+                        {category.name}
+                    </ChipButton>
+                    {index === 0 && (
+                        <div className="post_filter post_filter_separator app-transition"></div>
+                    )}
+                    </React.Fragment>
+                );
+                })
+            }
         </div>
     );
 }

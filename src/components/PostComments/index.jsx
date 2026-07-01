@@ -1,13 +1,21 @@
-import "./PostComments.scss";
 import { useEffect, useState, useContext } from "react";
-import Author from "../Author";
 import { AppContext } from "../../App.js";
-import { format_date } from "../../utils/format";
+import { useNavigate } from "react-router-dom";
+
+import "./PostComments.scss";
+
+import { commentPost, getComments } from "../../api/posts.api";
+import { format_back, format_date_time } from "../../utils/format";
+
+import { ReactComponent as ReplyIcon } from "../../assets/svg/reply-icon.svg";
+
+import CurrentUserBadge from "../CurrentUserBadge/index.jsx";
+import UserBadge from "../UserBadge/index.jsx";
 import InputField from "../Ui/InputField/index";
 import PrimaryButton from "../../components/Ui/PrimaryButton/index";
-import { commentPost, getComments } from "../../api/posts.api";
-import ActionButton from "../../components/Ui/ActionButton/index";
-import DangerButton from "../../components/Ui/DangerButton/index";
+import CancelButton from "../../components/Ui/CancelButton/index";
+import Tooltip from "../Ui/Tooltip/index";
+
 
 const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, profile }) => {
     return (
@@ -15,13 +23,28 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
             className={`comment app-transition ${level === 0 ? `comment_root` : ''}`}
         >
             <div className="comment_top_side">
-                <Author
-                    author_data={comment.author}
+                <UserBadge
+                    data={comment.author}
                     class_name="comment_author"
                 />
-                <p className="comment_top_side_date">
-                    {format_date(comment.created_date)}
-                </p>
+                <Tooltip text={format_date_time(comment.created_date)}>
+                    <p className="comment_top_side_date">
+                            {format_back(comment.created_date)}
+                    </p>
+                </Tooltip>
+                <Tooltip text="Ответить">
+                    <div
+                        className="comment_reply_button app-transition"
+                        onClick={() => { 
+                        setReplyCommentText({ comment_id: comment._id, comment_text: comment.comment_text })
+                        document.getElementById("post_comments_submit")?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center"
+                        });
+                    }}>
+                        <ReplyIcon className="comment_reply_icon app-transition"/>
+                    </div>
+                </Tooltip>
             </div>
 
             <div className="comment_middle_side">
@@ -29,22 +52,6 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                     {comment.comment_text}
                 </p>
             </div>
-            {
-                profile ?
-                    <div className="comment_bottom_side">
-                        <ActionButton onClick={() => { 
-                            setReplyCommentText({ comment_id: comment._id, comment_text: comment.comment_text })
-                            document.getElementById("post_comments_submit")?.scrollIntoView({
-                                behavior: "smooth",
-                                block: "center"
-                            });
-                        }}>
-                            Ответить
-                        </ActionButton>
-                    </div>
-                :
-                    <></>
-            }
             {comment.replies?.length > 0 && (
                 <div className="comment_replies">
                     <div className="comment_replies_list">
@@ -71,7 +78,8 @@ const PostComments = ({ postId, navigateTo }) => {
     const [replyCommentText, setReplyCommentText] = useState(null);
     const [isDisabled, setIsDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const { profile } = useContext(AppContext);
+    const { profile, showModalWindow } = useContext(AppContext);
+    const navigate = useNavigate();
 
     const doComment = async (e) => {
         e.preventDefault();
@@ -98,6 +106,20 @@ const PostComments = ({ postId, navigateTo }) => {
             setIsLoading(false);
         });
     }
+
+    const handleInputMouseDown = (e) => {
+        if (!profile) {
+            e.preventDefault();
+            showModalWindow({
+                title: `Войдите в аккаунт, чтобы оставить комментарий`,
+                content: (
+                    <PrimaryButton onClick={() => { navigate("/auth/login") }} className="modal_login_link" is_loading={true}>
+                        Войти
+                    </PrimaryButton>
+                )
+            });
+        }
+    };
 
     useEffect(() => {
         if(commentText.length > 0){
@@ -136,15 +158,15 @@ const PostComments = ({ postId, navigateTo }) => {
     return (
         <div className="post_comments">
             {
-                profile ? 
+                
                 <form className="post_comments_form app-transition" onSubmit={doComment}>
                     {
                         replyCommentText ? 
                         <div className="post_comments_form_top">
-                           <p className="post_comments_form_top_left">
+                            <p className="post_comments_form_top_left">
                                 Ответ на комментарий:{" "}
                                 <span
-                                    className="post_comments_form_top_left_comment_text"
+                                    className="post_comments_form_top_left_comment_text app-transition"
                                     onClick={() => {
                                         const element = document.getElementById(`comment_${replyCommentText.comment_id}`)
                                         if (element) {
@@ -163,14 +185,17 @@ const PostComments = ({ postId, navigateTo }) => {
                                     {replyCommentText.comment_text}
                                 </span>
                             </p>
-                            <DangerButton onClick={() => setReplyCommentText(null)}>Отмена</DangerButton>
+                            <CancelButton onClick={() => setReplyCommentText(null)}>Отмена</CancelButton>
                         </div>
                         :
                         <></>
                     }
-                    <div className="post_comments_form_bottom">
+                    <div className="post_comments_form_content">
+                        <CurrentUserBadge as_link={false} />
                         <InputField class_name="post_comments_input"
+                            is_multiline={true} multiline_rows={3} length={500} type="text" input_label=""
                             value={commentText} placeholder="Напишите комментарий..."
+                            onMouseDown={ (e) => { handleInputMouseDown(e) } }
                             onChange={(e) => {
                                 setCommentText(e.target.value);
                             }
@@ -180,8 +205,7 @@ const PostComments = ({ postId, navigateTo }) => {
                         </PrimaryButton>
                     </div>
                 </form>
-                :
-                <></>
+              
             }
             <div className="post_comments_list">
                 {comments?.map((comment) => (

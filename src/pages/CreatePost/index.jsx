@@ -122,8 +122,8 @@ const CreatePost = () => {
     return (
         <form className='create_post' onSubmit={handleSubmit}>
             <InputFiled 
+                input_label={"Заголовок"}
                 className={"create_post_title"  + (createResult.status === "error" && createResult.message === "Incorrect 'title'" ? " incorrect_field" : "")}
-                placeholder={"Введите заголовок"}
                 is_multiline={true}
                 multiline_rows={1}
                 onChange={(e) => setFields({ ...fields, title: e.target.value })}
@@ -133,7 +133,7 @@ const CreatePost = () => {
             />
             <InputFiled 
                 className={"create_post_category"  + (createResult.status === false && createResult?.message?.body?.category ? " incorrect_field" : "")}
-                placeholder={"Укажите категорию"}
+                input_label={"Категория"}
                 is_multiline={true}
                 multiline_rows={1}
                 onChange={(e) => setFields({ ...fields, category: e.target.value })}

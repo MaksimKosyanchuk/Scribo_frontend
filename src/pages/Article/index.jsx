@@ -3,7 +3,7 @@ import { API_URL } from "../../config";
 import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import PostComment from "../../components/PostComments/index";
 import Loading from "../../components/Ui/Loading";
-import { ArticleTopic } from "../../components/ArticleTopic";
+import PostActions from "../../components/PostActions";
 import "./Article.scss";
 
 
@@ -21,6 +21,11 @@ const Article = () => {
         getArticle()
         if(location.state?.comment) {
             setComment(location.state.comment)
+        }
+        else {
+            if(searchParams.get('comment')) {
+                setComment(searchParams.get('comment'))
+            }
         }
         // eslint-disable-next-line
     }, [location.state?.time])
@@ -54,8 +59,9 @@ const Article = () => {
             {
                 article ?
                 <div className="article">
+                
                     <h1 className="article_title">{article.title}</h1>
-                    <ArticleTopic article={article} onDeletePost={() => navigate('/posts')} />
+                    <PostActions article={article} onDeletePost={() => navigate('/posts')} />
                     {article.featured_image ? 
                         <div className="article_featured_image">
                             <img src={article.featured_image} alt={"featured"}/> 

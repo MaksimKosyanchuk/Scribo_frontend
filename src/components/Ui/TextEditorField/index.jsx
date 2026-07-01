@@ -9,8 +9,6 @@ import { $getRoot } from "lexical";
 import { FORMAT_TEXT_COMMAND } from "lexical";
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { $generateNodesFromDOM } from "@lexical/html";
-//import { $getSelection, $isRangeSelection } from "lexical";
-//import { $patchStyleText } from "@lexical/selection";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   INSERT_UNORDERED_LIST_COMMAND,
@@ -23,9 +21,10 @@ import { TextNode } from "lexical";
 
 import "./TextEditorField.scss";
 import SwitchBar from "../SwitchBar";
+import Tooltip from "../Tooltip/index"
 
-import { ReactComponent as BoldText } from "../../../assets/svg/bold-text-icon.svg";
-import { ReactComponent as ItalicText } from "../../../assets/svg/italic-text-icon.svg";
+import { ReactComponent as BoldText } from "../../../assets/svg/bold-text.svg";
+import { ReactComponent as ItalicText } from "../../../assets/svg/italic-text.svg";
 import { ReactComponent as MarkList } from "../../../assets/svg/mark-list-icon.svg";
 import { ReactComponent as NumList } from "../../../assets/svg/num-list-icon.svg";
 import { ReactComponent as LinkText } from "../../../assets/svg/link-icon.svg";
@@ -102,62 +101,73 @@ const EditorToolbar = () => {
 
   return (
     <div className="text_editor_body_top_side_toolbar app-transition">
-      <button
-        type="button"
-        className="text_editor_body_top_side_toolbar_bold app-transition"
-        onClick={() =>
-          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")
-        }
-      >
-        <BoldText />
-      </button>
 
-      <button
-        type="button"
-        className="app-transition"
-        onClick={() =>
-          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")
-        }
-      >
-        <ItalicText />
-      </button>
-
-      <button
-        type="button"
-        className="app-transition"
-        onClick={() =>
-          editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND)
-        }
-      >
-        <MarkList />
-      </button>
-
-      <button
-        type="button"
-        className="app-transition"
-        onClick={() =>
-          editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND)
-        }
-      >
-        <NumList />
-      </button>
-
-      <button
-        type="button"
-        className="app-transition"
-        onClick={() => {
-          const url = prompt("Введите ссылку");
-          if (url) {
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, {
-              url,
-              target: "_blank",
-              rel: "noopener noreferrer"
-            });
+      <Tooltip text="Жирный">
+        <button
+          type="button"
+          className="text_editor_body_top_side_toolbar_bold app-transition"
+          onClick={() =>
+            editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")
           }
-        }}
-      >
-        <LinkText />
-      </button>
+          >
+          <BoldText />
+        </button>
+      </Tooltip>
+
+      <Tooltip text="Курсив">
+        <button
+          type="button"
+          className="app-transition"
+          onClick={() =>
+            editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")
+          }
+        >
+          <ItalicText />
+        </button>
+      </Tooltip>
+
+      <Tooltip text="Маркированный список">
+        <button
+          type="button"
+          className="app-transition"
+          onClick={() =>
+            editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND)
+          }
+        >
+          <MarkList />
+        </button>
+      </Tooltip>
+
+      <Tooltip text="Нумерованный список">
+        <button
+          type="button"
+          className="app-transition"
+          onClick={() =>
+            editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND)
+          }
+        >
+          <NumList />
+        </button>
+      </Tooltip>
+
+      <Tooltip text="Добавить ссылку">
+        <button
+          type="button"
+          className="app-transition"
+          onClick={() => {
+            const url = prompt("Введите ссылку");
+            if (url) {
+              editor.dispatchCommand(TOGGLE_LINK_COMMAND, {
+                url,
+                target: "_blank",
+                rel: "noopener noreferrer"
+              });
+            }
+          }}
+        >
+          <LinkText />
+        </button>
+      </Tooltip>
       {/* <button
         type="button"
         onClick={() => colorInputRef.current?.click()}

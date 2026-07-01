@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../App";
 import { Link } from "react-router-dom";
-import { ArticleTopic } from "../../components/ArticleTopic";
+import PostActions from "../PostActions";
+import PostHeader from "../PostHeader";
 import PostsFilters from "../../components/PostsFilters";
 import Loading from "../Ui/Loading";
 import NoPosts from "../NoPosts";
 import "./Posts.scss";
+
 
 const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
     const { profile } = useContext(AppContext)
@@ -85,16 +87,19 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
                         ) : (
                         filteredPosts.map(post => (
                             <div key={post._id} className="posts_item app-transition">
-                            <ArticleTopic article={post} onDeletePost={() => setFilteredPosts(prev => prev.filter(p => p._id !== post._id))} />
+                                <PostHeader post={post}  onDeletePost={() => setFilteredPosts(prev => prev.filter(p => p._id !== post._id))}/>                                    
                             <div>
                                 <h2 className="posts_item_title">{post.title}</h2>
                             </div>
                             {post.featured_image && (
                                 <div className="posts_item_img">
-                                <img src={post.featured_image} alt="" />
+                                    <img src={post.featured_image} alt="" />
                                 </div>
                             )}
-                            <Link to={`/posts/${post._id}`} className="posts_item_link"></Link>
+                            <div className={"posts_item_bottom"}>
+                                <PostActions article={post}/>
+                            </div>
+                                <Link to={`/posts/${post._id}`} className="posts_item_link"></Link>
                             </div>
                         ))
                         )}

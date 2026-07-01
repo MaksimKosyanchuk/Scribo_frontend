@@ -15,7 +15,7 @@
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px);
 
     &_background {
         cursor: default;
@@ -35,6 +35,7 @@
         max-width: 80vw;
         border-radius: 8px;
         background-color: var(--modal-window-body-background-color);
+        border: 1px solid var(--line-color);
 
         @include screen() {
             max-width: 90%;
@@ -43,7 +44,6 @@
 
         &_title {
             display: flex;
-            align-items: center;
             padding: 20px;
             flex-shrink: 0;
             
