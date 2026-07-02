@@ -5,6 +5,7 @@ import {
   flip,
   shift,
   autoUpdate,
+  FloatingPortal,
 } from "@floating-ui/react";
 import "./Popup.scss";
 
@@ -16,6 +17,7 @@ function PopupMenu({ anchorRef, children, onClose, z_index }) {
             reference: anchorRef.current,
         },
         placement: "bottom-start",
+        strategy: "fixed",
         middleware: [offset(8), flip(), shift({ padding: 8 })],
         whileElementsMounted: autoUpdate,
     });
@@ -36,46 +38,32 @@ function PopupMenu({ anchorRef, children, onClose, z_index }) {
     }, [onClose, anchorRef]);
 
     return (
-        <div
-            ref={(node) => {
-            refs.setFloating(node);
-            popupRef.current = node;
-            }}
-            style={{
-                ...floatingStyles,
-                zIndex: z_index,
-            }}
-            className="popup blurred"
-        >
-            {children}
-        </div>
+        <FloatingPortal root={document.getElementById("app-root")}>
+            <div
+                ref={(node) => {
+                    refs.setFloating(node);
+                    popupRef.current = node;
+                }}
+                style={{
+                    ...floatingStyles,
+                    zIndex: z_index,
+                }}
+                className="popup blurred"
+            >
+                {children}
+            </div>
+        </FloatingPortal>
     );
 }
 
-function Popup({ children, body, z_index = 99 }) {
+function Popup({ children, body, z_index = 99, className }) {
     const buttonRef = useRef(null);
     const [open, setOpen] = useState(false);
-    
-        // when popup opens, raise z-index of closest article container to avoid other elements painting above
-        useEffect(() => {
-            const node = buttonRef.current
-            if (!node) return
-            const article = node.closest('.article_topic')
-            if (!article) return
-
-            if (open) {
-                article.classList.add('article_topic_popup_open')
-            } else {
-                article.classList.remove('article_topic_popup_open')
-            }
-
-            return () => article.classList.remove('article_topic_popup_open')
-        }, [open])
     
     return (
         <div style={{ position: "relative" }}>
             {
-                <div ref={buttonRef} onClick={() => setOpen(o => !o)} style={{ cursor: "pointer" }}>
+                <div className={`popup_trigger ${className || ""}`} ref={buttonRef} onClick={() => setOpen(o => !o)} style={{ cursor: "pointer" }}>
                     {children}
                 </div>
             }
@@ -97,7 +85,10 @@ function Popup({ children, body, z_index = 99 }) {
                                     setOpen(false);
                                 }}
                             >
-                                {item.title}
+                                {item.icon}
+                                <p className="popup_item_title">
+                                    {item.title}
+                                </p>
                             </button>
                         ))
                     }

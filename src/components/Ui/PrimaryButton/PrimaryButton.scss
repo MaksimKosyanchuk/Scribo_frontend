@@ -6,11 +6,8 @@
     padding: 12px 24px;
     border-radius: 8px;
     background-color: var(--submit-button-primary-color);
-    
-    p {
-        font-size: 14px;
-        color: var(--submit-button-secondary-color);
-    }
+    font-size: 14px;
+    color: var(--submit-button-secondary-color);
 
     &.primary_button_loading {
         .loader {
@@ -32,14 +29,10 @@
 .primary_button_disabled {
     cursor: not-allowed;
     background-color: var(--submit-button-disabled-background-color);
-    p {
-        color: var(--submit-button-disabled-color);
-    }
+    color: var(--submit-button-disabled-color);
 }
 
 .primary_button_disabled:hover {
     background-color: var(--submit-button-disabled-background-color);
-    p{
-        color: var(--submit-button-disabled-color);
-    }
+    color: var(--submit-button-disabled-color);
 }

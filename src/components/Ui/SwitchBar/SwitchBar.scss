@@ -9,7 +9,7 @@
     button {
         color: var(--switcher-bar-item-color);
         border-radius: 4px;
-        padding: 8px;
+        padding: 8px 14px;
         font-size: 14px;
         width: 50%;
 
@@ -19,7 +19,16 @@
         }
     }
 
+    button:hover {
+        background: var(--switcher-bar-item-hover-background-color);
+    }
+
     .switcher_bar_item_active{
+        background-color: var(--switcher-bar-active-item-background-color);
+        color: var(--switcher-bar-active-item-color);
+    }
+
+    .switcher_bar_item_active:hover {
         background-color: var(--switcher-bar-active-item-background-color);
         color: var(--switcher-bar-active-item-color);
     }

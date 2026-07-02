@@ -13,10 +13,11 @@
 
 .danger_button_active {
     color: var(--red-button-secondary-color);
-    background: var(--red-button-primary-color);
+    background: var(--red-button-third-color);
+    border-color: var(--red-button-third-color);
 }
 
 .danger_button:hover {
-    background: var(--red-button-third-color);
-    border-color: var(--red-button-third-color);
+    background: var(--red-button-primary-color);
+    border-color: var(--red-button-primary-color);
 }

@@ -1,16 +1,24 @@
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "../../App";
 import { Link } from "react-router-dom";
-import { ArticleTopic } from "../../components/ArticleTopic";
+
+import { AppContext } from "../../App";
+
+import "./Posts.scss";
+
+import { getCategories } from "../../api/categories";
+
+import PostActions from "../PostActions";
+import PostHeader from "../PostHeader";
 import PostsFilters from "../../components/PostsFilters";
 import Loading from "../Ui/Loading";
 import NoPosts from "../NoPosts";
-import "./Posts.scss";
+
 
 const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
     const { profile } = useContext(AppContext)
     const [ filters, setFilters ] = useState([])
     const [ filteredPosts, setFilteredPosts ] = useState()
+    const [ categories, setCategories ] = useState([])
 
     useEffect(() => {
         const isPostsFiltersEmpty = posts_filters.length === 0;
@@ -44,8 +52,7 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [posts, posts_filters ]);
 
-    useEffect(() => {
-        
+    useEffect(() => { 
         const subscriptionFilterActive = filters.find(f => f.name.toLowerCase() === "по подписке")?.is_active;
 
         let updated_posts = posts.filter(post =>
@@ -58,9 +65,20 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
         }
         
         setFilteredPosts(updated_posts)
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters])
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const result = await getCategories();
+
+            if (result.status) {
+                setCategories(result.data);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     if(!posts) {
         return <NoPosts/>
@@ -78,23 +96,26 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
                         <NoPosts />
                     :
                     <>
-                        <PostsFilters filters={filters} setFilters={setFilters} />
+                        <PostsFilters filters={filters} setFilters={setFilters} categories={categories} />
 
                         {filteredPosts.length === 0 ? (
                             <NoPosts />
                         ) : (
                         filteredPosts.map(post => (
                             <div key={post._id} className="posts_item app-transition">
-                            <ArticleTopic article={post} onDeletePost={() => setFilteredPosts(prev => prev.filter(p => p._id !== post._id))} />
-                            <div>
+                                <PostHeader post={post} categoryIcon={categories.find(cat => cat.name === post.category)?.icon} onDeletePost={() => setFilteredPosts(prev => prev.filter(p => p._id !== post._id))}/>                                    
+                            <div className="posts_item_content">
                                 <h2 className="posts_item_title">{post.title}</h2>
                             </div>
                             {post.featured_image && (
                                 <div className="posts_item_img">
-                                <img src={post.featured_image} alt="" />
+                                    <img src={post.featured_image} alt="" />
                                 </div>
                             )}
-                            <Link to={`/posts/${post._id}`} className="posts_item_link"></Link>
+                            <div className={"posts_item_bottom"}>
+                                <PostActions article={post} categoryIcon={categories.find(cat => cat.name === post.category)?.icon}/>
+                            </div>
+                                <Link to={`/posts/${post._id}`} className="posts_item_link"></Link>
                             </div>
                         ))
                         )}

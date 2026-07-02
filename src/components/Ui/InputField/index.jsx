@@ -9,6 +9,8 @@ const Input = forwardRef(
     className,
     onChange,
     onFocus,
+    onMouseDown,
+    onKeyDown,
     error,
     type,
     value,
@@ -29,7 +31,7 @@ const Input = forwardRef(
   return (
     <div className="input_field_label">
       <div className="input">
-        <span>{input_label ? input_label + ":" : ""}</span>
+        <p className="input_label_text">{input_label ?? ""}</p>
 
         <div className="input_wrapper">
           <InputComponent
@@ -38,6 +40,8 @@ const Input = forwardRef(
             type={type}
             onChange={onChange}
             onFocus={onFocus}
+            onMouseDown={onMouseDown}
+            onKeyDown={onKeyDown}
             required={required}
             placeholder={placeholder}
             rows={multiline_rows}
@@ -46,7 +50,8 @@ const Input = forwardRef(
             value={value}
             readOnly={confirmed}
             {...props}
-          />
+          >
+          </InputComponent>
 
           {confirmed && (
             <ConfirmedIcon className="inpuut_confirmed_icon app-transition" />

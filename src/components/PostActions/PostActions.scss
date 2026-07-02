@@ -1,0 +1,53 @@
+@import '../../styles/common.scss';
+@import '../../styles/helpers.scss';
+
+.post_actions {        
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    width: 100%;
+    gap: 0px 16px;
+
+    @include screen() {
+        gap: 20px;
+    }
+
+    &_right_side {
+        display: flex;
+        gap: 0 16px;
+        align-items: center;
+        margin-left: auto;
+    }
+
+    &_button {
+        display: flex;
+        align-items: center;
+        color: var(--article-topic-button-color);
+        cursor: pointer;
+        gap: 4px;
+
+        p {
+            color: var(--article-topic-button-color);
+        }
+
+        svg {
+            height: 18px;
+            width: 18px;
+
+            @include screen() {
+                height: 22px;
+                width: 22px;
+            }
+        }
+    }
+    
+    &_button:hover {
+        color: var(--article-topic-button-hover-color);
+
+        p {
+            color: var(--article-topic-button-hover-color);
+        }
+    }
+}

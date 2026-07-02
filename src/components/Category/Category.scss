@@ -1,0 +1,47 @@
+.category_content {
+    display: flex;
+    align-items: center;
+
+    .chip_button {
+        gap: 4px;
+    }
+
+    .category_svg_icon{
+        display: flex;
+        
+        svg {
+            width: 16px;
+            height: 16px;
+        }
+    }
+}
+
+.category_type_1 {
+    .chip_button_active{
+        color: var(--category-color-1);
+        border-color: var(--category-color-1);
+        background: rgb(from var(--category-color-1) r g b / 0.1);
+    }
+}
+.category_type_2 {
+    .chip_button_active{
+        color: var(--category-color-2);
+        border-color: var(--category-color-2);
+        background: rgb(from var(--category-color-2) r g b / 0.1);
+    }
+}
+.category_type_3 {
+    .chip_button_active{
+        color: var(--category-color-3);
+        border-color: var(--category-color-3);
+        background: rgb(from var(--category-color-3) r g b / 0.1);
+    }
+}
+.category_type_4 {
+    .chip_button_active{
+        color: var(--category-color-4);
+        border-color: var(--category-color-4);
+        background: rgb(from var(--category-color-4) r g b / 0.1);
+    }
+}
+

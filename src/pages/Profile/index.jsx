@@ -1,22 +1,30 @@
-import "./Profile.scss"
+import { API_URL } from "../../config";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext, useMemo } from "react";
+
 import { AppContext } from "../../App.js";
-import { API_URL } from "../../config";
-import { ReactComponent as Verified } from "../../assets/svg/verified-icon.svg";
+
+import "./Profile.scss"
+
+import { getPosts } from "../../api/posts.api.js";
+import { getUsers } from "../../api/users.api.js";
+import { format_date_time, format_back } from "../../utils/format.js";
+
+import { ReactComponent as Verified } from "../../assets/svg/verified.svg";
 import { ReactComponent as Calendar } from "../../assets/svg/calendar-icon.svg";
+import { ReactComponent as PostIcon } from "../../assets/svg/post.svg";
+import { ReactComponent as BookmarkOutline } from "../../assets/svg/bookmark-outline.svg";
+import { ReactComponent as SettingsIcon } from "../../assets/svg/settings.svg";
+import { ReactComponent as ProtectedIcon } from "../../assets/svg/protected-icon.svg";
+
 import Posts from "../../components/Posts/index.jsx"
 import Loading from "../../components/Ui/Loading/index.jsx";
-import Author from "../../components/Author"
+import UserBadge from "../../components/UserBadge/index.jsx"
 import DefaultProfileAvatar from "../../assets/images/default-profile-avatar.png"
 import FollowButton from "../../components/FollowButton";
 import ActionButton from "../../components/Ui/ActionButton";
-import ChipButton from "../../components/Ui/ChipButton";
 import SwitchBar from "../../components/Ui/SwitchBar";
-import { getPosts } from "../../api/posts.api.js";
-import { getUsers } from "../../api/users.api.js";
-import { format_date } from "../../utils/format.js";
-
+import Tooltip from "../../components/Ui/Tooltip/index";
 
 const Profile = () => {
     const { id } = useParams();
@@ -128,7 +136,7 @@ const Profile = () => {
                 title: `Подписки`,
                 content: result.map(authorData => (
                     <div key={authorData._id} className="modal_window_body_content_user">
-                        <Author author_data={authorData} />
+                        <UserBadge data={authorData} />
                         {
                             profile && profile._id === authorData._id ?
                                 <></>
@@ -150,7 +158,7 @@ const Profile = () => {
                 title: `Подписчики`,
                 content: result.map(authorData => (
                     <div key={authorData?._id } className="modal_window_body_content_user">
-                        <Author author_data={authorData} />
+                        <UserBadge data={authorData} />
                         {
                             profile && profile._id === authorData._id ?
                                 <></>
@@ -169,33 +177,16 @@ const Profile = () => {
 
     return (
         <div className="profile">
-            <div className="profile_info">
-                <div className="profile_info_top">
-                    <div className="profile_info_top_avatar">
+            <div className="profile_info app-transition">
+                <div className="profile_info_left">
+                    <div className="profile_info_left_avatar">
                         <img src={user?.avatar ?? DefaultProfileAvatar} alt="img" />
                     </div>
-                    <div className="profile_info_top_right_side">
-                        <div></div>
-                        <div className="profile_info_top_right_side_elements">
-                            <p>{posts?.length ?? "0"} постов</p>
-                            <ChipButton onClick={ open_followers }>
-                                {user?.followers?.length ?? "0"} подписчиков
-                            </ChipButton>
-                            <ChipButton onClick={ open_follows }>
-                                {user?.follows?.length ?? "0"} подписок
-                            </ChipButton>
-                        </div>
-                        {profile && profile._id === user._id ? (
-                            <ActionButton className="profile_info_top_right_side_button" onClick={open_settings}>
-                                Настройки
-                            </ActionButton>
-                        ) 
-                        :
-                            <FollowButton setNewData={setFollowThisUser} author_id={user?._id} class_name={"profile_info_top_right_side_button"}/> 
-                        }
+                    <div className="profile_info_middle">
+                        
                     </div>
                 </div>
-                <div className="profile_info_bottom">
+                <div className="profile_info_middle">
                     <div className="profile_info_bottom_nick">
                         <p
                             className={
@@ -205,16 +196,28 @@ const Profile = () => {
                         >
                             {user.nick_name}
                         </p>
-                        {user && user.is_verified ? <Verified className="profile_info_bottom_nick_verified verified-icon" /> : null}
-                    </div>
-                    <div className="profile_info_bottom_administrator">
                         {
-                            user?.is_admin ? 
-                                <p>Administrator</p>
+                            user && user.is_verified ?
+                                <Tooltip text="Подтвержденный аккаунт">
+                                    <Verified className="profile_info_bottom_nick_verified verified-icon" />
+                                </Tooltip>
                             :
-                                <></>
+                                null
                         }
                     </div>
+                    <Tooltip text={"Администратор"}>
+                        <div className="profile_info_bottom_administrator app-transition">
+                            {
+                                user?.is_admin ?
+                                <>
+                                    <ProtectedIcon />
+                                    <p>Administrator</p>
+                                </>
+                                :
+                                    <></>
+                            }
+                        </div>
+                    </Tooltip>
                     {user?.is_email_public && (
                         <div className="profile_info_bottom_email">
                             <p>{user.email}</p>
@@ -227,13 +230,62 @@ const Profile = () => {
                     )}
                     <div className="profile_info_bottom_registration_date">
                         <Calendar className="app-transition" />
-                        <p>Регистрация: {format_date(user.created_date)}.</p>
+                            <p>
+                                {'Регистрация: '}
+                                    <Tooltip text={ format_date_time(user?.created_date) }>
+                                        {format_back(user.created_date)}
+                                    </Tooltip>
+                            </p>
                     </div>
+                </div>
+                <div className="profile_info_right">
+                    <div className="profile_info_right_top">
+                        <div className="profile_info_right_top_item app-transition">
+                            <h1>{posts?.length ?? "0"}</h1>
+                            <p>постов</p>
+                        </div>
+                        <div className="profile_info_right_top_item app-transition" onClick={ open_followers }>
+                            <h1>
+                                {user?.followers?.length ?? "0"}
+                            </h1>
+                            <p>
+                                подписчиков
+                            </p>
+                        </div>
+                        <div className="profile_info_right_top_item app-transition" onClick={ open_follows }>
+                            <h1>
+                                {user?.follows?.length ?? "0"}
+                            </h1>
+                            <p>
+                                подписок
+                            </p>
+                        </div>
+                    </div>
+                    {profile && profile._id === user._id ? (
+                        <ActionButton className="profile_info_right_top_button" onClick={open_settings}>
+                            <SettingsIcon className="profile_info_right_side_button_icon" />
+                            Настройки
+                        </ActionButton>
+                    ) 
+                    :
+                        <FollowButton setNewData={setFollowThisUser} author_id={user?._id} class_name={"profile_info_top_right_side_button"}/> 
+                    }
                 </div>
             </div>
             <div className="profile_tab_list app-transition">
                 <SwitchBar
-                    items={["Посты", "Сохранённые"]}
+                    items={[
+                        
+                        <>
+                            <PostIcon />
+                            Посты
+                        </>
+                        ,
+                        <>
+                            <BookmarkOutline />
+                            Избранные
+                        </>
+                    ]}
                     active_index={activeTab}
                     setActiveIndex={setActiveTab}
                 />

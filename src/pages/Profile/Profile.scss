@@ -7,7 +7,20 @@
     overflow: visible;
 
     &_info{
-        &_top{
+        display: flex;
+        padding: 30px;
+        gap: 20px;
+        background: var(--post-card-background);
+        border-radius: 12px;
+        border: 1px solid var(--line-color);
+
+        @include screen() {
+            padding: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        &_left{
             display: flex;
     
             &_avatar {
@@ -18,8 +31,8 @@
                 flex-shrink: 0;
                 
                 @include screen() {
-                    width: 45px;
-                    height: 45px;
+                    width: 60px;
+                    height: 60px;
                     margin-bottom: auto;
                 }
                 
@@ -72,17 +85,93 @@
                 }
             }
         }
-    
+        
+        &_middle {
+            display: flex;
+            flex-direction: column;
+        }
+
+        &_right {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            margin-left: auto;
+
+            @include screen() {
+                margin-left: 0;
+                width: 100%;
+                gap: 14px;
+            }
+
+            &_top {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+
+                &_button {
+                    display: flex;
+                    justify-content: center;
+                    gap: 10px;
+                    align-items: center;
+
+                    @include screen() {
+                        svg {
+                            width: 14px;
+                            height: 14px;
+                        }
+                    }
+                }
+
+                &_item {
+                    display: flex;
+                    flex: 1;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    background: var(--profile-badge-background-color);
+                    border-radius: 8px;
+                    padding: 20px;
+                    gap: 4px;
+                    cursor: pointer;
+
+                    @include screen() {
+                        padding: 10px;
+                    }
+
+                    p{
+                        font-size: 12px;
+                        color: var(--primary-text-color);
+
+                        @include screen() {
+                            font-size: 10px;
+                        }
+                    }
+                    
+                    h1 {
+                        font-weight: 400;
+                        font-size: 22px;
+                        color: var(--primary-text-color);
+
+                        @include screen() {
+                            font-size: 16px;
+                        }
+                    }
+                }
+
+                &_item:hover{
+                    background: var(--profile-badge-hover-background-color);
+                }
+            }
+        }
+
         &_bottom {
             &_nick {
                 display: flex;
-                margin-top: 20px;
                 align-items: center;
                 gap: 10px;
                 
                 @include screen() {
                     gap: 6px;
-                    margin-top: 10px;
                 }
                 
                 &_name  {
@@ -93,16 +182,12 @@
                         font-size: 20px;
                     }
 
-                    &_admin {
-                        text-shadow: 0 0 16px var(--red-f1);
-                        color: var(--administrator-color);
-                    }
                 }
                 
 
                 &_verified{
-                    width: 24px;
-                    height: 24px;
+                    width: 20px;
+                    height: 20px;
                     
                     @include screen() {
                         width: 18px;
@@ -114,13 +199,35 @@
 
             &_administrator {
                 margin-top: 6px;
+                color: var(--administrator-badge-color);
+                background: var(--administrator-badge-background-color);
+                display: flex;
+                align-items: center;
+                width: fit-content;
+                border-radius: 8px;
+                padding: 6px 14px;
+                gap: 6px;
+
+                @include screen() {
+                    padding: 4px 10px;
+                }
+
+                svg {
+                    height: 14px;
+                    width: 14px;
+
+                    @include screen (){
+                        height: 12px;
+                        width: 12px;
+                    }
+                }
+
                 p {
-                    font-size: 14px;
-                    color: var(--administrator-color);
-                    text-shadow: 0 0 16px var(--red-f1);
+                    font-size: 12px;
+                    color: var(--administrator-badge-color);
 
                     @include screen() {
-                        font-size: 12px;
+                        font-size: 10px;
                     }
                 }
             }
@@ -155,6 +262,7 @@
                 align-items: center;
 
                 p {
+                    display: flex;
                     margin-left: 4px;
                     color: var(--light-text-color);
                     font-size: 16px;
@@ -175,11 +283,39 @@
     &_tab_list {
         display: flex;
         justify-content: center;
+        align-self: center;
         margin: 20px 0;
         padding: 10px 0;
+        width: fit-content;
 
         @include screen() {
             margin-top: 20px;
+            width: 100%;
+        }
+
+        .switcher_bar {
+            border-radius: 999px;
+
+
+            &_item {
+                border-radius: 999px;
+                width: 200px;
+                color: var(--switcher-bar-item-color);
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 5px;
+                font-size: 14px;
+
+                @include screen() {
+                    width: 50%;
+                }
+
+                svg {
+                    height: 16px;
+                }
+            }
         }
 
         p {
@@ -201,6 +337,10 @@
         flex: 1;
         display: flex;
         justify-content: center;
+
+        @include screen() {
+            justify-content: space-between;
+        }
     }
 }
 

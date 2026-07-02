@@ -1,32 +1,35 @@
 @import "../../styles/helpers.scss";
 
 .modal_window {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: 2000;
-    pointer-events: none;
-    opacity: 0; 
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+        position: fixed; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: 2000;
+        pointer-events: none;
+        opacity: 0; 
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(5px);
 
-    &_background {
-        cursor: default;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        background: var(--modal-window-background-color);
-        transition: backdrop-filter;
-    }
+        &_background {
+            cursor: default;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: var(--modal-window-background-color);
+            border: none;
+            padding: 0;
+        }
 
-    &_body {
+        &_body {
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -35,6 +38,7 @@
         max-width: 80vw;
         border-radius: 8px;
         background-color: var(--modal-window-body-background-color);
+        border: 1px solid var(--line-color);
 
         @include screen() {
             max-width: 90%;
@@ -43,7 +47,6 @@
 
         &_title {
             display: flex;
-            align-items: center;
             padding: 20px;
             flex-shrink: 0;
             
@@ -68,7 +71,6 @@
 
         &_content {
             padding: 20px;
-            overflow-y: auto;
             flex-grow: 1;
         }
         
