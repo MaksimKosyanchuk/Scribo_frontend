@@ -68,7 +68,15 @@ const PostActions = memo(({ article, categoryIcon }) => {
         <div className="post_actions">
                 <Link className="post_actions_button app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
                     <CommentIcon/>
-                    <p>{article.comments?.length > 0 ? article.comments.length : ""}</p>
+                    {
+                        article.comments?.length > 0 ?
+                            <p>
+                                {article.comments?.length}
+
+                            </p>
+                        :
+                            <></>
+                    }
                 </Link>
                 <button type="button" className="post_actions_button app-transition" onClick={save_post} disabled={isSavingProcess}>
                     {isSaved ? <BookMarkFilled /> : <BookMarkBorder />}
