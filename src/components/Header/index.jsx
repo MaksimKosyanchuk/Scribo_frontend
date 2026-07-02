@@ -18,6 +18,7 @@ import { ReactComponent as SettingsIcon } from "../../assets/svg/settings.svg";
 import { ReactComponent as LogoutIcon } from "../../assets/svg/logout.svg";
 import { ReactComponent as ArrowDownIcon } from '../../assets/svg/arrow-down.svg';
 
+import UserBadge from '../UserBadge/index';
 import CurrentUserBadge from "../CurrentUserBadge/index"
 import PrimaryButton from '../Ui/PrimaryButton/index';
 import Popup from '../Ui/Popup/index';
@@ -46,7 +47,7 @@ function Header() {
               :
                 <></>
           }
-          <CurrentUserBadge data={userMap[item.user]} />
+          <UserBadge data={userMap[item.user]} />
         </div>
         <p className='modal_window_body_content_notification_message'>
           {(() => {
