@@ -10,6 +10,8 @@ import { getPosts } from "../../api/posts.api.js";
 import { getUsers } from "../../api/users.api.js";
 import { format_date_time, format_back } from "../../utils/format.js";
 
+import { scrollTo } from "../../utils/navigation.js"
+
 import { ReactComponent as Verified } from "../../assets/svg/verified.svg";
 import { ReactComponent as Calendar } from "../../assets/svg/calendar-icon.svg";
 import { ReactComponent as PostIcon } from "../../assets/svg/post.svg";
@@ -206,17 +208,17 @@ const Profile = () => {
                         }
                     </div>
                     <Tooltip text={"Администратор"}>
-                        <div className="profile_info_bottom_administrator app-transition">
-                            {
-                                user?.is_admin ?
-                                <>
-                                    <ProtectedIcon />
-                                    <p>Administrator</p>
-                                </>
-                                :
-                                    <></>
-                            }
-                        </div>
+                        {
+                            user?.is_admin ?
+                                <div className="profile_info_bottom_administrator app-transition">
+                                        <>
+                                            <ProtectedIcon />
+                                            <p>Administrator</p>
+                                        </>
+                                </div>
+                            :
+                                <></>
+                        }
                     </Tooltip>
                     {user?.is_email_public && (
                         <div className="profile_info_bottom_email">
@@ -240,7 +242,7 @@ const Profile = () => {
                 </div>
                 <div className="profile_info_right">
                     <div className="profile_info_right_top">
-                        <div className="profile_info_right_top_item app-transition">
+                        <div className="profile_info_right_top_item app-transition" onClick={ () => scrollTo("posts_column", "start") }>
                             <h1>{posts?.length ?? "0"}</h1>
                             <p>постов</p>
                         </div>

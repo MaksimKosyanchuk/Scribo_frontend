@@ -6,7 +6,6 @@ import Loading from "../../components/Ui/Loading";
 import PostActions from "../../components/PostActions";
 import "./Article.scss";
 
-
 const Article = () => {
     const {id} = useParams()
     let [searchParams] = useSearchParams();
