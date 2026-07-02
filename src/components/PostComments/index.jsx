@@ -111,7 +111,7 @@ const PostComments = ({ postId, navigateTo }) => {
             showModalWindow({
                 title: `Войдите в аккаунт, чтобы оставить комментарий`,
                 content: (
-                    <PrimaryButton onClick={() => { navigate("/auth/login") }} className="modal_login_link" is_loading={true}>
+                    <PrimaryButton onClick={() => { navigate("/auth/login") }} className="modal_login_link">
                         Войти
                     </PrimaryButton>
                 )

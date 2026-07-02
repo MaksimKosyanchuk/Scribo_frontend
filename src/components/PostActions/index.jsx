@@ -66,7 +66,7 @@ const PostActions = memo(({ article, categoryIcon }) => {
 
     return (
         <div className="post_actions">
-                <Link className="post_actions_button app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
+                <Link className="post_actions_button post_actions_comment app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
                     <CommentIcon/>
                     {
                         article.comments?.length > 0 ?

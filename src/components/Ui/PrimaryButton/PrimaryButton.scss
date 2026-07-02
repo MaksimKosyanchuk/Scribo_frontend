@@ -10,9 +10,6 @@
     color: var(--submit-button-secondary-color);
 
     &.primary_button_loading {
-        .loader {
-            position: absolute;
-        }
         cursor: not-allowed;
         background-color: var(--submit-button-loading-background-color);
     }

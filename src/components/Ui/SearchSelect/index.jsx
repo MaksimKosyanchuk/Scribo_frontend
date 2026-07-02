@@ -3,8 +3,10 @@ import "./SearchSelect.scss";
 
 import InputField from "../InputField";
 import { ReactComponent as ArrowDownUpIcon } from "../../../assets/svg/arrow-down-up.svg";
+import { ReactComponent as CloseIcon } from "../../../assets/svg/cross-icon.svg";
 
 import { getCategoryColorType } from "../../../utils/format";
+
 
 const SearchSelect = ({
     options = [],
@@ -17,123 +19,239 @@ const SearchSelect = ({
 
     const [isOpen, setIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState("");
+    const [isSearching, setIsSearching] = useState(false);
+    const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
     const wrapperRef = useRef(null);
     const optionRefs = useRef([]);
+    const inputRef = useRef(null);
+
+    const closeSelect = () => {
+        setIsOpen(false);
+        inputRef.current?.blur();
+        resetValue();
+    };
 
     const selectedOption = useMemo(() => {
         return options.find(
-            c => c.name?.toLowerCase() === value?.toLowerCase()
+            option =>
+                option.name.toLowerCase() === (value ?? "").toLowerCase()
         );
     }, [options, value]);
 
     const filteredOptions = useMemo(() => {
+
         const search = inputValue.trim().toLowerCase();
 
-        if (!search) return options;
+        if (!search)
+            return options;
 
         return options.filter(option =>
             option.name.toLowerCase().includes(search)
         );
+
     }, [options, inputValue]);
 
-    useEffect(() => {
-        const opt = options.find(
-            c => c.name?.toLowerCase() === value?.toLowerCase()
+    const resetValue = () => {
+        const exactOption = options.find(
+            option =>
+                option.name.trim().toLowerCase() ===
+                inputValue.trim().toLowerCase()
         );
 
-        setInputValue(opt?.name || value || "");
-    }, [value, options]);
+        if (exactOption) {
+            onSetValue(exactOption.name);
+            setInputValue(exactOption.name);
+        } else {
+            onSetValue("");
+            setInputValue("");
+        }
+
+        setIsSearching(false);
+        setHighlightedIndex(-1);
+    };
+
+    useEffect(() => {
+        setInputValue(value);
+    }, [value]);
 
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-                setIsOpen(false);
 
-                const opt = options.find(
-                    c => c.name?.toLowerCase() === value?.toLowerCase()
-                );
-
-                setInputValue(opt?.name || value || "");
+            if (!wrapperRef.current?.contains(e.target)) {
+                closeSelect();
             }
+
         };
 
         document.addEventListener("mousedown", handleClickOutside);
+
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [options, value]);
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inputValue]);
+
+    useEffect(() => {
+
+        if (!isOpen) {
+            setHighlightedIndex(-1);
+            return;
+        }
+
+        setHighlightedIndex(filteredOptions.length ? 0 : -1);
+
+    }, [isOpen, filteredOptions]);
+
+    useEffect(() => {
+
+        if (highlightedIndex < 0) return;
+
+        optionRefs.current[highlightedIndex]?.scrollIntoView({
+            block: "nearest"
+        });
+
+    }, [highlightedIndex]);
 
     const handleChange = (e) => {
         setInputValue(e.target.value);
-        setIsOpen(true);
+        setIsSearching(true);
+
+        if (!isOpen)
+            setIsOpen(true);
     };
 
     const handleSelect = (option) => {
-        onSetValue?.(option.name);
+        onSetValue(option.name);
         setInputValue(option.name);
+        setIsSearching(false);
+        setHighlightedIndex(-1);
         setIsOpen(false);
     };
 
     const handleKeyDown = (e) => {
-        if (e.key === "Escape") {
-            setIsOpen(false);
 
-            const opt = options.find(
-                c => c.name?.toLowerCase() === value?.toLowerCase()
-            );
+        switch (e.key) {
 
-            setInputValue(opt?.name || value || "");
+            case "ArrowDown":
+                e.preventDefault();
+
+                if (!isOpen) {
+                    setIsOpen(true);
+                    return;
+                }
+
+                setHighlightedIndex(prev =>
+                    prev >= filteredOptions.length - 1 ? 0 : prev + 1
+                );
+
+                break;
+
+            case "ArrowUp":
+                e.preventDefault();
+
+                if (!isOpen) {
+                    setIsOpen(true);
+                    return;
+                }
+
+                setHighlightedIndex(prev =>
+                    prev <= 0 ? filteredOptions.length - 1 : prev - 1
+                );
+
+                break;
+
+            case "Enter":
+
+                if (
+                    isOpen &&
+                    highlightedIndex >= 0 &&
+                    filteredOptions[highlightedIndex]
+                ) {
+                    e.preventDefault();
+                    handleSelect(filteredOptions[highlightedIndex]);
+                }
+
+                break;
+
+            case "Escape":
+                closeSelect();
+                break;
+
+            default:
+                break;
         }
+
     };
 
+    const showSelected = !isSearching && selectedOption;
+
     return (
-        <div ref={wrapperRef} className={`search_select search_select_type_${getCategoryColorType(selectedOption?.name)} app-transition`}>
-            <p className="search_select_label">{input_label}</p>
+        <div
+            ref={wrapperRef}
+            className={`search_select ${showSelected ? `search_select_type_${getCategoryColorType(showSelected.name)}` : ""} app-transition`}
+        >
+            <p className="search_select_label">
+                {input_label}
+            </p>
 
-            <div className="search_select_input">
+            <div className="search_select_input app-transition">
 
-                {selectedOption?.icon && (
+                {showSelected?.icon && (
                     <div
-                        className={`search_select_icon category_type_${getCategoryColorType(selectedOption?.name)}`}
+                        className={`search_select_icon category_type_${getCategoryColorType(showSelected.name)}`}
                         dangerouslySetInnerHTML={{
-                            __html: selectedOption.icon
+                            __html: showSelected.icon
                         }}
                     />
                 )}
 
                 <InputField
+                    ref={inputRef}
                     value={inputValue}
                     placeholder={placeholder}
                     error={error}
-                    onChange={handleChange}
                     onFocus={() => setIsOpen(true)}
+                    onChange={handleChange}
                     onKeyDown={handleKeyDown}
                 />
 
                 <button
                     type="button"
-                    className="search_select_arrow"
+                    className={`search_select_right_icon ${isOpen ? 'search_select_right_icon_close' : ''} app-transition`}
                     onMouseDown={(e) => {
                         e.preventDefault();
-                        setIsOpen(prev => !prev);
+
+                        if (isOpen) {
+                            onSetValue("");
+                            setInputValue("");
+                            setIsSearching(false);
+                        } else {
+                            setIsOpen(true);
+                        }
                     }}
                 >
-                    <ArrowDownUpIcon />
+                    {isOpen ? <CloseIcon/> : <ArrowDownUpIcon />}
                 </button>
+
             </div>
 
             {isOpen && (
-                <div className="search_select_list app-transition blurred">
+                <div className="search_select_list blurred app-transition">
+
                     {filteredOptions.length ? (
+
                         filteredOptions.map((option, index) => (
+
                             <button
                                 key={option._id}
                                 ref={el => optionRefs.current[index] = el}
                                 type="button"
-                                className={`search_select_item category_type_${getCategoryColorType(option.name)} app-transition`}
+                                className={`search_select_item category_type_${getCategoryColorType(option.name)} ${highlightedIndex === index ? "search_select_item_selected" : ""} app-transition`}
                                 onMouseDown={() => handleSelect(option)}
                             >
+
                                 {option.icon && (
                                     <div
                                         className="search_select_item_icon"
@@ -144,15 +262,22 @@ const SearchSelect = ({
                                 )}
 
                                 <p>{option.name}</p>
+
                             </button>
+
                         ))
+
                     ) : (
+
                         <div className="search_select_empty">
                             Ничего не найдено
                         </div>
+
                     )}
+
                 </div>
             )}
+
         </div>
     );
 };
