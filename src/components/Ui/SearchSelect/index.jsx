@@ -37,7 +37,6 @@ const SearchSelect = ({
         );
     }, [options, inputValue]);
 
-    // sync value -> input
     useEffect(() => {
         const opt = options.find(
             c => c.name?.toLowerCase() === value?.toLowerCase()
@@ -46,7 +45,6 @@ const SearchSelect = ({
         setInputValue(opt?.name || value || "");
     }, [value, options]);
 
-    // click outside handler
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
@@ -90,7 +88,7 @@ const SearchSelect = ({
     };
 
     return (
-        <div ref={wrapperRef} className="search_select app-transition">
+        <div ref={wrapperRef} className={`search_select search_select_type_${getCategoryColorType(selectedOption?.name)} app-transition`}>
             <p className="search_select_label">{input_label}</p>
 
             <div className="search_select_input">
@@ -111,7 +109,6 @@ const SearchSelect = ({
                     onChange={handleChange}
                     onFocus={() => setIsOpen(true)}
                     onKeyDown={handleKeyDown}
-                    className={`category_type_${getCategoryColorType(selectedOption?.name)}`}
                 />
 
                 <button

@@ -141,30 +141,104 @@
 }
 
 
+.search_select_type_1{
+    color: var(--category-color-1);
+    
+    .search_select_input {
+        border: 1px solid var(--category-color-1);
+        background: rgb(from var(--category-color-1) r g b / 0.1);
+    }
+
+    .input_field{
+        color: var(--category-color-1);
+    }
+    
+}
+
+.search_select_type_2{
+    color: var(--category-color-2);
+
+    .search_select_input {
+        border: 1px solid var(--category-color-2);
+        background: rgb(from var(--category-color-2) r g b / 0.1);
+    }
+
+    .input_field {
+        color: var(--category-color-2);
+    }
+
+}
+
+.search_select_type_3 {
+    color: var(--category-color-3);
+
+    .search_select_input {
+        border: 1px solid var(--category-color-3);
+        background: rgb(from var(--category-color-3) r g b / 0.1);
+    }
+
+    .input_field {
+        color: var(--category-color-3);
+    }
+}
+
+.search_select_type_4 {
+    color: var(--category-color-4);
+
+    .search_select_input {
+        border: 1px solid var(--category-color-4);
+        background: rgb(from var(--category-color-4) r g b / 0.1);
+    }
+
+    .input_field {
+        color: var(--category-color-4);
+    }
+}
+
 .category_type_1 {
     color: var(--category-color-1);
-    P{
+
+    &:hover{
+        background: rgb(from var(--category-color-1) r g b / 0.1);
+    }
+
+    p {
         color: var(--category-color-1);
     }
 }
 
 .category_type_2 {
     color: var(--category-color-2);
-    P{
+
+    &:hover{
+        background: rgb(from var(--category-color-2) r g b / 0.1);
+    }
+
+    p {
         color: var(--category-color-2);
     }
 }
 
 .category_type_3 {
     color: var(--category-color-3);
-    P{
+    
+    &:hover{
+        background: rgb(from var(--category-color-3) r g b / 0.1);
+    }
+
+    p {
         color: var(--category-color-3);
     }
 }
 
 .category_type_4 {
     color: var(--category-color-4);
-    P{
+    
+    &:hover{
+        background: rgb(from var(--category-color-4) r g b / 0.1);
+    }
+
+    p {
         color: var(--category-color-4);
     }
 }
