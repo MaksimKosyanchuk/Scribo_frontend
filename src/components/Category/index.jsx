@@ -5,7 +5,7 @@ import { getCategoryColorType } from "../../utils/format";
 const Category = ({ name, icon, is_active, onClick}) => {
 
     return (
-        <div className={`category_content category_type_${getCategoryColorType(name)}`}>
+        <div className={`category_content app-transition category_type_${getCategoryColorType(name)}`}>
             <ChipButton is_active={is_active} onClick={onClick}>
                     {icon ? (
                         <div 

@@ -8,7 +8,7 @@
     flex-wrap: wrap;
     align-items: flex-end;
     width: 100%;
-    gap: 0px 16px;
+    gap: 0px 12px;
 
     @include screen() {
         gap: 20px;
@@ -30,6 +30,7 @@
 
         p {
             color: var(--article-topic-button-color);
+            align-items: flex-start;
         }
 
         svg {
