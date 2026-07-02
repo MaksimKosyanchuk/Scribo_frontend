@@ -1,7 +1,7 @@
-const scrollTo = (object) => {
+const scrollTo = (object, block="center") => {
     document.getElementById(object)?.scrollIntoView({
         behavior: "smooth",
-        block: "center"
+        block: block
     });
 }
 

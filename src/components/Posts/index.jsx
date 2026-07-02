@@ -85,7 +85,7 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
     }
     
     return (
-        <div className="posts posts_columns">
+        <div className="posts posts_columns" id="posts_column">
             { 
                 isLoading ?
                     <div className="posts_loader">
