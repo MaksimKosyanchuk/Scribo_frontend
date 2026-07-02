@@ -175,9 +175,11 @@ const EditPost = () => {
                 onChange={(e) => setFields({ ...fields, title: e.target.value })}
                 onFocus={() => handleFocus('title')}
                 length={200}
+                input_label={"Заголовок"}
                 error={errors?.body?.title?.message}
             />
             <SearchSelect
+                input_label={"Категория"}
                 value={fields.category}
                 onSetValue={(value) =>
                     setFields(prev => ({
