@@ -11,19 +11,35 @@
         }
     }
 
-    .post_actions {
+    .article_topic {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
         margin-top: 64px;
 
-        @include screen() {
-            margin-top: 20px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
+        &_header_1 {
+            .post_header_right{
+                display: none;
+            }
         }
 
-        &_comment {
-            display: none;
+        .post_actions {
+            align-items: center;
+
+            @include screen() {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+    
+            &_comment {
+                display: none;
+            }
+        }
+
+        .post_header {
         }
     }
+
 
     &_featured_image{
         width: 100%;

@@ -5,8 +5,6 @@ import InputField from "../InputField";
 import { ReactComponent as ArrowDownUpIcon } from "../../../assets/svg/arrow-down-up.svg";
 import { ReactComponent as CloseIcon } from "../../../assets/svg/cross-icon.svg";
 
-import { getCategoryColorType } from "../../../utils/format";
-
 
 const SearchSelect = ({
     options = [],
@@ -14,6 +12,7 @@ const SearchSelect = ({
     onSetValue,
     error,
     input_label,
+    className = "",
     placeholder = "Выбрать"
 }) => {
 
@@ -190,7 +189,7 @@ const SearchSelect = ({
     return (
         <div
             ref={wrapperRef}
-            className={`search_select ${showSelected ? `search_select_type_${getCategoryColorType(showSelected.name)}` : ""} app-transition`}
+            className={`search_select ${showSelected ? className : ""} app-transition`}
         >
             <p className="search_select_label">
                 {input_label}
@@ -200,7 +199,7 @@ const SearchSelect = ({
 
                 {showSelected?.icon && (
                     <div
-                        className={`search_select_icon category_type_${getCategoryColorType(showSelected.name)}`}
+                        className={`search_select_icon ${className}`}
                         dangerouslySetInnerHTML={{
                             __html: showSelected.icon
                         }}
@@ -248,7 +247,7 @@ const SearchSelect = ({
                                 key={option._id}
                                 ref={el => optionRefs.current[index] = el}
                                 type="button"
-                                className={`search_select_item category_type_${getCategoryColorType(option.name)} ${highlightedIndex === index ? "search_select_item_selected" : ""} app-transition`}
+                                className={`search_select_item ${option.className ?? ""} ${highlightedIndex === index ? "search_select_item_selected" : ""} app-transition`}
                                 onMouseDown={() => handleSelect(option)}
                             >
 
@@ -270,7 +269,9 @@ const SearchSelect = ({
                     ) : (
 
                         <div className="search_select_empty">
-                            Ничего не найдено
+                            <p>
+                                Ничего не найдено
+                            </p>
                         </div>
 
                     )}

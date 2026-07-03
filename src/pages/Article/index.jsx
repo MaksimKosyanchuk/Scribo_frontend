@@ -5,6 +5,7 @@ import PostComment from "../../components/PostComments/index";
 import Loading from "../../components/Ui/Loading";
 import PostActions from "../../components/PostActions";
 import "./Article.scss";
+import PostHeader from "../../components/PostHeader";
 
 const Article = () => {
     const {id} = useParams()
@@ -60,7 +61,10 @@ const Article = () => {
                 <div className="article">
                 
                     <h1 className="article_title">{article.title}</h1>
-                    <PostActions article={article} onDeletePost={() => navigate('/posts')} />
+                    <div className="article_topic">
+                        <PostHeader post={article} categoryIcon={article.category_icon} onDeletePost={() => navigate('/posts')} />
+                        <PostActions article={article} onDeletePost={() => navigate('/posts')} />
+                    </div>
                     {article.featured_image ? 
                         <div className="article_featured_image">
                             <img src={article.featured_image} alt={"featured"}/> 

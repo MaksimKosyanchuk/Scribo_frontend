@@ -1,130 +1,46 @@
-// @import "../../styles/helpers.scss";
+.create_post {
 
-// .create_post{
-//     display: flex;
-//     flex-direction: column;
-//     gap: 20px;
+    .search_select {
 
-//     .drop_file{
-//         min-height: 230px;
-//         border-radius: 8px;
+        &.category_type_1 { color: var(--category-color-1); }
+        &.category_type_2 { color: var(--category-color-2); }
+        &.category_type_3 { color: var(--category-color-3); }
+        &.category_type_4 { color: var(--category-color-4); }
 
-//         @include screen() {
-//             min-height: 140px;
-//         }
+        &.category_type_1,
+        &.category_type_2,
+        &.category_type_3,
+        &.category_type_4 {
 
-//         .remove_image {
-//             position: absolute;
-//             display: flex;
-//             justify-content: space-between;
-//             align-items: center;
-//             bottom: 20px;
-//             padding: 8px;
-//             width: 96%;
-//             background-color: var(--sticky-button-background-color);
-//             border: 1px solid var(--line-color);
-            
-//             .remove_image_button {
-//                 cursor: pointer;
-    
-//                 svg{
-//                     color: red;
-//                     height: 20px;
-//                 }
-//             }
-//         }
+            .search_select_input {
+                border-color: currentColor;
+                background: rgb(from currentColor r g b / 0.1);
+            }
 
-//         &_info {
-//             &_upload_icon {
-//                 height: 50px;
-//                 width: 50px;
+            .search_select_icon,
+            .input_field {
+                color: currentColor;
+            }
+        }
+    }
 
-//                 @include screen() {
-//                     display: none;
-//                 }
-//             }
+    .item_category_type_1 { color: var(--category-color-1); }
+    .item_category_type_2 { color: var(--category-color-2); }
+    .item_category_type_3 { color: var(--category-color-3); }
+    .item_category_type_4 { color: var(--category-color-4); }
 
-//             &_main_text {
-//                 @include screen() {
-//                     font-size: 12px;
-//                 }
-//             }
+    .item_category_type_1,
+    .item_category_type_2,
+    .item_category_type_3,
+    .item_category_type_4 {
 
-//             &_help_text{
-//                 @include screen() {
-//                     font-size: 12px;
-//                 }
-//             }
+        p {
+            color: currentColor;
+        }
 
-//             &_select {
-//                 margin-top: 16px;
-//             }
-//         }
-//     }
-
-//     .drop_file_error_messages {
-//         align-items: flex-start;
-//     }
-
-//     .input_field {
-//         width: 100%;
-//         height: 100%;
-//         padding: 18px;
-
-//         @include screen() {
-//             padding: 12px;
-//         }
-        
-//     }
-    
-//     .input_field::placeholder {
-//         color: var(--input-placeholder-color);
-//         transition: .3s;    
-//     }    
-
-//     .input_field_label {
-//         span {
-//             margin: 0;
-//         }
-//     }
-
-//     // .create_post_title{
-//     //     font-size: 24px;
-//     //     font-weight: bold;
-
-//     //     @include screen(){
-//     //         font-size: 18px;
-//     //     }
-//     // }
-
-//     // .create_post_title::placeholder{
-//     //     font-size: 24px;
-//     //     font-weight: bold;
-//     //     color: var(--input-placeholder-color);
-//     //     transition: .3s;
-
-//     //     @include screen(){
-//     //         font-size: 18px;
-//     //     }
-//     // }
-
-//     &_main_text{
-//         height: 300px;
-//         font-size: 24px;
-
-//         @include screen() {
-//             font-size: 14px;
-//             height: 150px;
-//         }
-//     }
-
-//     .create_post_buttons {
-//         display: flex;
-//         justify-content: space-between;
-        
-//         @include screen() {
-//             flex-direction: column;
-//             gap: 10px;
-//         }
-//     }
-// }
+        &.search_select_item_selected,
+        &:not(.search_select_item_selected):hover {
+            background: rgb(from currentColor r g b / 0.1);
+        }
+    }
+}

@@ -44,7 +44,7 @@ const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost
     </div>
 );
 
-const PostHeader = memo(({ post, categoryIcon, onDeletePost }) => {
+const PostHeader = memo(({ post, categoryIcon, onDeletePost, className }) => {
     const { profile, showModalWindow, requestCloseModal } = useContext(AppContext);
     const navigate = useNavigate();
     
@@ -67,7 +67,7 @@ const PostHeader = memo(({ post, categoryIcon, onDeletePost }) => {
     }
 
     return (
-        <div className="post_header">
+        <div className={`post_header ${className ?? ""}`}>
             <div className="post_header_left">
                 <UserBadge data={post.author} />
                     <Tooltip text={format_date_time(post.created_date)}>
