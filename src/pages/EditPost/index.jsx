@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useParams } from "react-router"
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useMemo } from 'react';
 import { AppContext } from '../../App';
 import { API_URL } from '../../config';
 import DropFile from '../../components/Ui/DropFile/index';
@@ -12,6 +12,7 @@ import DangerButton from "../../components/Ui/DangerButton";
 
 import { getPostById } from '../../api/posts.api';
 import { getCategories } from '../../api/categories';
+import { getCategoryColorType } from "../../utils/format";
 
 import "./EditPost.scss"
 
@@ -40,6 +41,24 @@ const EditPost = () => {
         }
     )
 
+    const titlePlaceholder = useMemo(() => {
+        const titleExamples = [
+            "Экстренная нехватка бензина в россии",
+            "5 способов отмыва денег через криптовалюту",
+            "На Марсе снова ничего не нашли, но все довольны",
+            "Колосальные потери под Малой Токмачкой - ВС рф",
+            "Отряд бабок в россии отменил сам себя",
+            "Токсис стал настолько популярным, что его стали узнавать собственные родители",
+            "Учёные нашли кореляцию между походом за хлебом и рождением ребенка в молодых семьях",
+            "В россии импортозаместили импортозамещение",
+            "В россии нашли виноватого. Им оказался предыдущий виноватый",
+            "На дне Марианской впадины наконец-то обнаружили дно российской экономики, но снизу снова постучали",
+            "По опросам 90% жителей согласны с тем, о чем их еще не спрашивали"
+        ];
+
+        return titleExamples[Math.floor(Math.random() * titleExamples.length)];
+    }, []);
+
     useEffect(() => {
         const loadPost = async () => {
             if (!id) return
@@ -57,7 +76,11 @@ const EditPost = () => {
             }
 
             const categories_result = await getCategories()
+
             if(categories_result?.status === true) {
+                for(const category of categories_result.data) {
+                    category.className = `item_category_type_${getCategoryColorType(category.name)}`
+                }
                 setAllCategories(categories_result.data)
             }
         }
@@ -168,8 +191,8 @@ const EditPost = () => {
         <form className='create_post' onSubmit={handleSubmit}>
             <InputFiled
                 value={fields.title}
+                placeholder={titlePlaceholder}
                 className={"create_post_title"  + (createResult.status === "error" && createResult.message === "Incorrect 'title'" ? " incorrect_field" : "")}
-                placeholder={"Введите заголовок"}
                 is_multiline={true}
                 multiline_rows={1}
                 onChange={(e) => setFields({ ...fields, title: e.target.value })}
@@ -187,6 +210,7 @@ const EditPost = () => {
                         category: value
                     }))
                 }
+                className={`category_type_${getCategoryColorType(fields.category)}`}
                 options={allCategories}
             />
             <DropFile

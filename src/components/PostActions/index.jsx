@@ -30,7 +30,7 @@ async function share(id, showToast) {
     }
 }
 
-const PostActions = memo(({ article, categoryIcon }) => {
+const PostActions = memo(({ className, article, categoryIcon }) => {
     const { profile, setProfile, showToast } = useContext(AppContext)
     const [isSaved, setIsSaved] = useState(!!(profile?.saved_posts?.includes(article?._id)));
     const [isSavingProcess, setSavingProcess] = useState(false)
@@ -64,15 +64,27 @@ const PostActions = memo(({ article, categoryIcon }) => {
         }
     };
 
+    const getCommentsCount = (comments) => {
+        if (!Array.isArray(comments)) return 0;
+
+        return comments.reduce((count, comment) => {
+            return count + 1 + getCommentsCount(comment.replies);
+        }, 0);
+    };
+
+    if(article._id === "684c94a0f74b9357aedf4fdc") {
+        console.log(getCommentsCount(article.comments))
+        console.log(article.comments)
+    } 
+
     return (
-        <div className="post_actions">
+        <div className={`post_actions ${className ?? ""}`}>
                 <Link className="post_actions_button post_actions_comment app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
                     <CommentIcon/>
                     {
                         article.comments?.length > 0 ?
                             <p>
-                                {article.comments?.length}
-
+                                {getCommentsCount(article.comments)}
                             </p>
                         :
                             <></>

@@ -42,22 +42,6 @@
         border: 1px solid var(--input-outline-active-color);
     }
 
-    .input_field.category_type_1 {
-        color: var(--category-color-1);
-    }
-
-    .input_field.category_type_2 {
-        color: var(--category-color-2);
-    }
-
-    .input_field.category_type_3 {
-        color: var(--category-color-3);
-    }
-
-    .input_field.category_type_4 {
-        color: var(--category-color-4);
-    }
-
     .input_field:focus {
         border: none;
     }
@@ -146,116 +130,6 @@
 
     &.search_select_item_selected {
         background-color: var(--dropdown-selected-background-color);
-    }
-}
-
-.search_select_type_1 {
-    color: var(--category-color-1);
-
-    .search_select_input {
-        border: 1px solid var(--category-color-1);
-        background: rgb(from var(--category-color-1) r g b / 0.1);
-    }
-
-    .input_field {
-        color: var(--category-color-1);
-    }
-}
-
-.search_select_type_2 {
-    color: var(--category-color-2);
-
-    .search_select_input {
-        border: 1px solid var(--category-color-2);
-        background: rgb(from var(--category-color-2) r g b / 0.1);
-    }
-
-    .input_field {
-        color: var(--category-color-2);
-    }
-}
-
-.search_select_type_3 {
-    color: var(--category-color-3);
-
-    .search_select_input {
-        border: 1px solid var(--category-color-3);
-        background: rgb(from var(--category-color-3) r g b / 0.1);
-    }
-
-    .input_field {
-        color: var(--category-color-3);
-    }
-}
-
-.search_select_type_4 {
-    color: var(--category-color-4);
-
-    .search_select_input {
-        border: 1px solid var(--category-color-4);
-        background: rgb(from var(--category-color-4) r g b / 0.1);
-    }
-
-    .input_field {
-        color: var(--category-color-4);
-    }
-}
-
-.category_type_1 {
-    color: var(--category-color-1);
-
-    &:not(.search_select_item_selected):hover {
-        background: rgb(from var(--category-color-1) r g b / 0.1);
-    }
-
-    p {
-        color: var(--category-color-1);
-    }
-}
-
-.category_type_2 {
-    color: var(--category-color-2);
-
-    &:not(.search_select_item_selected):hover {
-        background: rgb(from var(--category-color-2) r g b / 0.1);
-    }
-
-    p {
-        color: var(--category-color-2);
-    }
-}
-
-.category_type_3 {
-    color: var(--category-color-3);
-
-    &:not(.search_select_item_selected):hover {
-        background: rgb(from var(--category-color-3) r g b / 0.1);
-    }
-
-    p {
-        color: var(--category-color-3);
-    }
-}
-
-.category_type_4 {
-    color: var(--category-color-4);
-
-    &:not(.search_select_item_selected):hover {
-        background: rgb(from var(--category-color-4) r g b / 0.1);
-    }
-
-    p {
-        color: var(--category-color-4);
-    }
-}
-
-.category_type_1,
-.category_type_2,
-.category_type_3,
-.category_type_4 {
-    &.search_select_item_selected,
-    &:not(.search_select_item_selected):hover {
-        background: rgb(from currentColor r g b / 0.1);
     }
 }
 
