@@ -56,6 +56,10 @@ function Header() {
                   return "Подписался(-ась) на ваши обновления"
                 case "unfollow":
                   return "Отписался(-ась) от вас"
+                case "like_post":
+                  return (
+                    <>Поставил лайк на ваш <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>пост</Link></>
+                  )
                 case "comment_post":
                   return (
                     <>

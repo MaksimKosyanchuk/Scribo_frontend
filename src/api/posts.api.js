@@ -101,4 +101,26 @@ const getComments = async (id) => {
     return result
 }
 
-export { getPosts, deletePost, getPostById, commentPost, getComments }
+const likePost = async (id, method="POST") => {
+    const token = localStorage.getItem('token')
+    const headers = {
+        "Content-Type": "application/json",
+        ...(token && {
+            Authorization: `Bearer ${token}`
+        })
+    };
+    const result = await fetch(`${API_URL}/api/posts/${id}/like`, { method, credentials: "include", headers })
+    .then(res => res.json())
+    .catch((err) => { 
+        console.log(err)
+        return ({
+            status: "error",
+            message: err,
+            data: null
+        })
+    })
+
+    return result
+}
+
+export { getPosts, deletePost, getPostById, commentPost, getComments, likePost }

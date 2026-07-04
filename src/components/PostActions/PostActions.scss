@@ -8,7 +8,7 @@
     flex-wrap: wrap;
     align-items: flex-end;
     width: 100%;
-    gap: 0px 12px;
+    gap: 0px 16px;
 
     @include screen() {
         gap: 20px;
@@ -26,21 +26,19 @@
         align-items: center;
         color: var(--article-topic-button-color);
         cursor: pointer;
-        gap: 4px;
+        gap: 2px;
+        height: 18px;
 
         p {
             color: var(--article-topic-button-color);
-            align-items: flex-start;
+            align-items: center;
+            line-height: 1;
+            font-size: 14px;
         }
 
         svg {
             height: 18px;
             width: 18px;
-
-            @include screen() {
-                height: 22px;
-                width: 22px;
-            }
         }
     }
     
