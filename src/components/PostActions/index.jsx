@@ -1,12 +1,21 @@
-import { useContext, useEffect, useState, memo } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { AppContext } from "../../App";
+
 import { API_URL } from "../../config";
+
+import { AppContext } from "../../App";
+
+import { likePost } from "../../api/posts.api";
+
 import "./PostActions.scss";
+
 import { ReactComponent as BookMarkBorder} from "../../assets/svg/bookmark-outline.svg";
 import { ReactComponent as BookMarkFilled} from "../../assets/svg/bookmark-filled.svg";
 import { ReactComponent as ShareIcon} from "../../assets/svg/share.svg";
 import { ReactComponent as CommentIcon} from "../../assets/svg/comment.svg";
+import { ReactComponent as LikeIcon} from "../../assets/svg/like-outline.svg";
+import { ReactComponent as FilledLikeIcon} from "../../assets/svg/like-filled.svg";
+
 import Category from "../Category/index";
 
 function isMobile() {
@@ -30,7 +39,7 @@ async function share(id, showToast) {
     }
 }
 
-const PostActions = memo(({ className, article, categoryIcon }) => {
+const PostActions = ({ className, article, setArticle, categoryIcon }) => {
     const { profile, setProfile, showToast } = useContext(AppContext)
     const [isSaved, setIsSaved] = useState(!!(profile?.saved_posts?.includes(article?._id)));
     const [isSavingProcess, setSavingProcess] = useState(false)
@@ -72,13 +81,25 @@ const PostActions = memo(({ className, article, categoryIcon }) => {
         }, 0);
     };
 
-    if(article._id === "684c94a0f74b9357aedf4fdc") {
-        console.log(getCommentsCount(article.comments))
-        console.log(article.comments)
-    } 
+
+    async function doLike(nethod) {
+        const result = await likePost(article._id, nethod)
+        if (result.status === true) {
+            setArticle({ ...article, likes: result.data.likes });
+        }   
+    }
 
     return (
         <div className={`post_actions ${className ?? ""}`}>
+                <button className="post_actions_button app-transition" onClick={() => { doLike(article.likes?.includes(profile?._id) ? "DELETE" : "POST") }}>
+                    {
+                        article.likes?.includes(profile?._id) ?
+                            <FilledLikeIcon />
+                        :
+                            <LikeIcon />
+                    }
+                    <p>{article.likes?.length > 0 ? article.likes.length : ""}</p>
+                </button>
                 <Link className="post_actions_button post_actions_comment app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
                     <CommentIcon/>
                     {
@@ -103,6 +124,6 @@ const PostActions = memo(({ className, article, categoryIcon }) => {
             </div>     
         </div>
     )
-});
+};
 
 export default PostActions;
