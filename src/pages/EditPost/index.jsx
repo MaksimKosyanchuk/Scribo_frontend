@@ -9,15 +9,14 @@ import TextEditorField from "../../components/Ui/TextEditorField";
 import PrimaryButton from "../../components/Ui/PrimaryButton";
 import DangerButton from "../../components/Ui/DangerButton";
 
-
 import { getPostById } from '../../api/posts.api';
 import { getCategories } from '../../api/categories';
 import { getCategoryColorType } from "../../utils/format";
 
 import "./EditPost.scss"
 
-
 import SearchSelect from '../../components/Ui/SearchSelect/index';
+
 
 const EditPost = () => {
     const navigate = useNavigate()

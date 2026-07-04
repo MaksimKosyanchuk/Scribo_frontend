@@ -14,7 +14,7 @@ import Loading from "../Ui/Loading";
 import NoPosts from "../NoPosts";
 
 
-const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
+const Posts =  ( { posts, setPosts, isLoading, posts_filters = [] } ) => {
     const { profile } = useContext(AppContext)
     const [ filters, setFilters ] = useState([])
     const [ filteredPosts, setFilteredPosts ] = useState()
@@ -80,6 +80,10 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
         fetchCategories();
     }, []);
 
+    useEffect(() => {
+        
+    }, [posts])
+
     if(!posts) {
         return <NoPosts/>
     }
@@ -113,7 +117,16 @@ const Posts =  ( { posts, isLoading, posts_filters = [] } ) => {
                                 </div>
                             )}
                             <div className={"posts_item_bottom"}>
-                                <PostActions article={post} categoryIcon={categories.find(cat => cat.name === post.category)?.icon}/>
+                                <PostActions
+                                    article={post}
+                                    setArticle={(updatedPost) => {
+                                        setPosts(prev =>
+                                            prev.map(p =>
+                                                p._id === updatedPost._id ? updatedPost : p
+                                            )
+                                        );
+                                    }}
+                                categoryIcon={categories.find(cat => cat.name === post.category)?.icon}/>
                             </div>
                                 <Link to={`/posts/${post._id}`} className="posts_item_link"></Link>
                             </div>

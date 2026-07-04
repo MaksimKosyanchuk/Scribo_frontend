@@ -1,3 +1,5 @@
+@import "../../../styles/helpers.scss";
+
 .search_select {
     display: flex;
     flex-direction: column;
@@ -22,34 +24,39 @@
             height: 18px;
         }
     }
+
+    &_input {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        border: 1px solid var(--input-outline-color);
+        border-radius: 8px;
+        padding: 10px 16px;
+    
+        .input_field {
+            border: none;
+            padding: 0;
+            border-radius: 0;    
+            @include screen() {
+                padding: 0;
+            }
+        }
+    
+        &:focus-within {
+            border: 1px solid var(--input-outline-active-color);
+        }
+    
+        .input_field:focus {
+            border: none;
+        }
+    
+        .input_label_text {
+            display: none;
+        }
+    }
 }
 
-.search_select_input {
-    position: relative;
-    display: flex;
-    width: 100%;
-    border: 1px solid var(--input-outline-color);
-    border-radius: 8px;
-    padding: 10px 16px;
-
-    .input_field {
-        border: none;
-        padding: 0;
-        border-radius: 0;
-    }
-
-    &:focus-within {
-        border: 1px solid var(--input-outline-active-color);
-    }
-
-    .input_field:focus {
-        border: none;
-    }
-
-    .input_label_text {
-        display: none;
-    }
-}
 
 .search_select_right_icon {
     display: flex;
@@ -57,7 +64,7 @@
     justify-content: center;
     margin-left: auto;
     color: var(--input-text-color);
-    padding: 6px;
+    padding: 4px;
     border-radius: 6px;
     cursor: default;
     

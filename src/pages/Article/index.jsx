@@ -63,7 +63,7 @@ const Article = () => {
                     <h1 className="article_title">{article.title}</h1>
                     <div className="article_topic">
                         <PostHeader post={article} categoryIcon={article.category_icon} onDeletePost={() => navigate('/posts')} />
-                        <PostActions article={article} onDeletePost={() => navigate('/posts')} />
+                        <PostActions article={article} setArticle={setArticle} onDeletePost={() => navigate('/posts')} />
                     </div>
                     {article.featured_image ? 
                         <div className="article_featured_image">
