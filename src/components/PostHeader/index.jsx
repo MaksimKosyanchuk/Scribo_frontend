@@ -70,7 +70,9 @@ const PostHeader = memo(({ post, categoryIcon, onDeletePost, className }) => {
         <div className={`post_header ${className ?? ""}`}>
             <div className="post_header_left">
                 <UserBadge data={post.author} />
-                    <p className="post_header_left_date">{format_back(post.created_date)}</p>
+                    <Tooltip text={format_date_time(post.created_date)} position="bottom">
+                        <p className="post_header_left_date">{format_back(post.created_date)}</p>
+                    </Tooltip>
             </div>
             {
                 profile?.is_admin ? 

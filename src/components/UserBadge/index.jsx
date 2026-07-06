@@ -18,7 +18,9 @@ const UserBadge = ( { data, class_name, asLink = true } ) => {
                 </p>
                 {
                     data?.is_verified ?
-                        <Verified key={`verified-${data._id}`} className="user_badge_info_verified verified-icon"/>
+                        <Tooltip text="Подтвержденный пользователь" position="bottom">
+                            <Verified key={`verified-${data._id}`} className="user_badge_info_verified verified-icon"/>
+                        </Tooltip>
                     :
                         <></>
                 }
