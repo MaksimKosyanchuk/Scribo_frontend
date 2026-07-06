@@ -23,6 +23,10 @@
     color: var(--chip-active-button-text-color);
     background-color: var(--chip-active-button-background-color);
     border-color: var(--chip-active-button-background-color);
+    
+    p{
+        color: var(--chip-active-button-text-color);
+    }
 }
 
 .chip_button_active:hover {

@@ -91,6 +91,10 @@ img, svg {
     -o-user-select: none;
 }
 
+svg {
+    will-change: transform;
+}
+
 textarea:focus-visible{
     outline: none;
 }

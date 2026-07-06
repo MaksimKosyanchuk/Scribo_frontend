@@ -2,47 +2,30 @@
     display: flex;
     align-items: center;
     border-radius: 999px;
+    gap: 4px;
 
-    .chip_button {
-        gap: 4px;
+    .category_svg_icon {
+        display: flex;
+        height: 16px;
+        width: 16px;
+
+        svg {
+            height: 100%;
+            width: 100%;
+        }
     }
 
-    .category_svg_icon{
-        display: flex;
-        
-        svg {
-            width: 16px;
-            height: 16px;
+    @for $i from 1 through 4 {
+        &.category_type_#{$i} {
+            &.chip_button_active {
+                color: var(--category-color-#{$i});
+                border-color: var(--category-color-#{$i});
+                background: rgb(from var(--category-color-#{$i}) r g b / 0.1);
+                
+                p {
+                    color: var(--category-color-#{$i});
+                }
+            }
         }
     }
 }
-
-.category_type_1 {
-    .chip_button_active{
-        color: var(--category-color-1);
-        border-color: var(--category-color-1);
-        background: rgb(from var(--category-color-1) r g b / 0.1);
-    }
-}
-.category_type_2 {
-    .chip_button_active{
-        color: var(--category-color-2);
-        border-color: var(--category-color-2);
-        background: rgb(from var(--category-color-2) r g b / 0.1);
-    }
-}
-.category_type_3 {
-    .chip_button_active{
-        color: var(--category-color-3);
-        border-color: var(--category-color-3);
-        background: rgb(from var(--category-color-3) r g b / 0.1);
-    }
-}
-.category_type_4 {
-    .chip_button_active{
-        color: var(--category-color-4);
-        border-color: var(--category-color-4);
-        background: rgb(from var(--category-color-4) r g b / 0.1);
-    }
-}
-

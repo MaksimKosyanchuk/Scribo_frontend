@@ -1,23 +1,43 @@
-import React, { useMemo } from "react";
-import SwaggerUI from "swagger-ui-react";
-import "swagger-ui-react/swagger-ui.css";
-import swaggerDocument from "./swagger.json";
-import "./swagger.scss"
+import { useEffect } from 'react'
+import { ApiReferenceReact } from '@scalar/api-reference-react'
+import '@scalar/api-reference-react/style.css'
+import "./Api.scss";
 
-const ApiDocs = () => {
-  const swaggerWithServer = useMemo(() => ({
-    ...swaggerDocument,
-    servers: [
-      { url: `${process.env.REACT_APP_API_URL}/api` }
-    ]
-  }), []);
+function Api() {
+
+  useEffect(() => {
+    const checkAndAddBadge = () => {
+      const badges = document.querySelectorAll('.badge');
+      
+      badges.forEach((badge) => {
+        if (badge.textContent.trim() === 'v3.4.x' && !badge.innerHTML.includes('outdated-label')) {
+          badge.innerHTML += ` <p class="outdated-label"
+          ">Outdated</p>`;
+        }
+      });
+    };
+
+    const observer = new MutationObserver(() => {
+      checkAndAddBadge();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+
+    checkAndAddBadge();
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="swagger-wrapper" style={{ margin: "2rem" }}>
-      <h1>API Documentation</h1>
-      <SwaggerUI spec={swaggerWithServer} />
-    </div>
-  );
-};
+    <ApiReferenceReact
+      configuration={{
+        url: `${process.env.REACT_APP_API_URL}/api/docs`
+      }}
+    />
+  )
+}
 
-export default ApiDocs;
+export default Api;
