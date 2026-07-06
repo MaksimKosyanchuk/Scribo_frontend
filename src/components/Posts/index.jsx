@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { AppContext } from "../../App";
@@ -12,7 +12,7 @@ import PostHeader from "../PostHeader";
 import PostsFilters from "../../components/PostsFilters";
 import Loading from "../Ui/Loading";
 import NoPosts from "../NoPosts";
-
+import PostCard from "../PostCard/index";
 
 const Posts =  ( { posts, setPosts, isLoading, posts_filters = [] } ) => {
     const { profile } = useContext(AppContext)
@@ -80,9 +80,14 @@ const Posts =  ( { posts, setPosts, isLoading, posts_filters = [] } ) => {
         fetchCategories();
     }, []);
 
-    useEffect(() => {
-        
-    }, [posts])
+    const categoriesMap = useMemo(() => {
+        return Object.fromEntries(
+            categories.map(category => [
+                category.name,
+                category.icon
+            ])
+        );
+    }, [categories]);
 
     if(!posts) {
         return <NoPosts/>
@@ -106,30 +111,12 @@ const Posts =  ( { posts, setPosts, isLoading, posts_filters = [] } ) => {
                             <NoPosts />
                         ) : (
                         filteredPosts.map(post => (
-                            <div key={post._id} className="posts_item app-transition">
-                                <PostHeader post={post} categoryIcon={categories.find(cat => cat.name === post.category)?.icon} onDeletePost={() => setFilteredPosts(prev => prev.filter(p => p._id !== post._id))}/>                                    
-                            <div className="posts_item_content">
-                                <h2 className="posts_item_title">{post.title}</h2>
-                            </div>
-                            {post.featured_image && (
-                                <div className="posts_item_img">
-                                    <img src={post.featured_image} alt="" />
-                                </div>
-                            )}
-                            <div className={"posts_item_bottom"}>
-                                <PostActions
-                                    article={post}
-                                    setArticle={(updatedPost) => {
-                                        setPosts(prev =>
-                                            prev.map(p =>
-                                                p._id === updatedPost._id ? updatedPost : p
-                                            )
-                                        );
-                                    }}
-                                categoryIcon={categories.find(cat => cat.name === post.category)?.icon}/>
-                            </div>
-                                <Link to={`/posts/${post._id}`} className="posts_item_link"></Link>
-                            </div>
+                            <PostCard
+                                key={post._id}
+                                post={post}
+                                categoryIcon={categoriesMap[post.category]}
+                                setPosts={setPosts}
+                            />
                         ))
                         )}
                     </>

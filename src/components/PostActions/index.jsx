@@ -118,8 +118,8 @@ const PostActions = ({ className, article, setArticle, categoryIcon }) => {
                     <ShareIcon />
                 </button>
             <div className="post_actions_right_side">
-                <Link className="post_actions_category app-transition" to={`/posts?filter=${article.category}`}>
-                    <Category name={article.category} icon={categoryIcon} is_active={true} />
+                <Link className="post_actions_category" to={`/posts?filter=${article.category}`}>
+                    <Category name={article.category} icon={categoryIcon} is_active={true}/>
                 </Link>
             </div>     
         </div>

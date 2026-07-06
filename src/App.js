@@ -1,5 +1,5 @@
 import { useEffect, useState, createContext } from 'react';
-import ApiDocs from './pages/Api';
+import ApiDocs from './pages/Api/index.jsx';
 import Header from './components/Header/index.jsx';
 import StartScreen from './components/StartScreen/index.jsx';
 import HomePage from './pages/HomePage/index.jsx';
