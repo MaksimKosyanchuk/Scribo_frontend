@@ -10,7 +10,7 @@ import PrimaryButton from "../../components/Ui/PrimaryButton";
 import DangerButton from "../../components/Ui/DangerButton";
 
 import { getPostById } from '../../api/posts.api';
-import { getCategories } from '../../api/categories';
+import { getCategories } from '../../api/categories.api';
 import { getCategoryColorType } from "../../utils/format";
 
 import "./EditPost.scss"

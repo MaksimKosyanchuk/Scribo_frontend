@@ -38,7 +38,7 @@ function PopupMenu({ anchorRef, children, onClose, z_index }) {
     }, [onClose, anchorRef]);
 
     return (
-        <FloatingPortal root={document.getElementById("app-root")}>
+        <FloatingPortal root={document.getElementById("app-layout")}>
             <div
                 ref={(node) => {
                     refs.setFloating(node);
@@ -48,7 +48,7 @@ function PopupMenu({ anchorRef, children, onClose, z_index }) {
                     ...floatingStyles,
                     zIndex: z_index,
                 }}
-                className="popup blurred"
+                className="popup_menu blurred"
             >
                 {children}
             </div>
@@ -61,9 +61,9 @@ function Popup({ children, body, z_index = 99, className }) {
     const [open, setOpen] = useState(false);
     
     return (
-        <div style={{ position: "relative" }}>
+        <div className="popup">
             {
-                <div className={`popup_trigger ${className || ""}`} ref={buttonRef} onClick={() => setOpen(o => !o)} style={{ cursor: "pointer" }}>
+                <div className={`popup_trigger ${className || ""}`} ref={buttonRef} onClick={() => setOpen(o => !o)}>
                     {children}
                 </div>
             }
@@ -79,14 +79,14 @@ function Popup({ children, body, z_index = 99, className }) {
                         body.map((item, index) => (
                             <button 
                                 key={index} 
-                                className={`popup_item app-transition ${item?.type === "danger" ? "popup_item_danger" : ""}`}
+                                className={`popup_menu_item app-transition ${item.className ?? ""} ${item?.type === "danger" ? "popup_menu_item_danger" : ""}`}
                                 onClick={() => {
                                     item.onclick();
                                     setOpen(false);
                                 }}
                             >
                                 {item.icon}
-                                <p className="popup_item_title">
+                                <p className="popup_menu_item_title">
                                     {item.title}
                                 </p>
                             </button>

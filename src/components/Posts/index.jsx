@@ -4,7 +4,7 @@ import { AppContext } from "../../App";
 
 import "./Posts.scss";
 
-import { getCategories } from "../../api/categories";
+import { getCategories } from "../../api/categories.api";
 
 import PostsFilters from "../../components/PostsFilters";
 import Loading from "../Ui/Loading";
@@ -77,19 +77,10 @@ const Posts =  ( { posts, setPosts, isLoading, posts_filters = [] } ) => {
         fetchCategories();
     }, []);
 
-    const categoriesMap = useMemo(() => {
-        return Object.fromEntries(
-            categories.map(category => [
-                category.name,
-                category.icon
-            ])
-        );
-    }, [categories]);
-
     if(!posts) {
         return <NoPosts/>
     }
-    
+
     return (
         <div className="posts posts_columns" id="posts_column">
             { 
@@ -111,7 +102,7 @@ const Posts =  ( { posts, setPosts, isLoading, posts_filters = [] } ) => {
                             <PostCard
                                 key={post._id}
                                 post={post}
-                                categoryIcon={categoriesMap[post.category]}
+                                category={categories.find((cat) => cat.name === post.category)}
                                 setPosts={setPosts}
                             />
                         ))

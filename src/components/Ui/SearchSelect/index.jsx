@@ -186,12 +186,12 @@ const SearchSelect = ({
 
     };
 
-    const showSelected = !isSearching && selectedOption;
+    const ShowSelected = !isSearching && selectedOption;
 
     return (
         <div
             ref={wrapperRef}
-            className={`search_select ${showSelected ? className : ""} app-transition`}
+            className={`search_select ${ShowSelected ? className : ""} app-transition`}
         >
             <p className="search_select_label">
                 {input_label}
@@ -199,14 +199,15 @@ const SearchSelect = ({
 
             <div className="search_select_input app-transition">
 
-                {showSelected?.icon && (
-                    <div
-                        className={`search_select_icon ${className}`}
-                        dangerouslySetInnerHTML={{
-                            __html: showSelected.icon
-                        }}
-                    />
-                )}
+                {
+                    ShowSelected?.iconObject ?
+
+                        <div className={`search_select_icon ${className}`}>
+                            <ShowSelected.iconObject/>
+                        </div>
+                    :
+                        <></>
+                }
 
                 <InputField
                     ref={inputRef}
@@ -253,14 +254,11 @@ const SearchSelect = ({
                                 onMouseDown={() => handleSelect(option)}
                             >
 
-                                {option.icon && (
-                                    <div
-                                        className="search_select_item_icon"
-                                        dangerouslySetInnerHTML={{
-                                            __html: option.icon
-                                        }}
-                                    />
-                                )}
+                                {
+                                    <div className={`search_select_icon ${option.className ?? ""}`}>
+                                        <option.iconObject/>
+                                    </div>
+                                }
 
                                 <p>{option.name}</p>
 

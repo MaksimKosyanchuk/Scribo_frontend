@@ -12,7 +12,7 @@ import PrimaryButton from "../../components/Ui/PrimaryButton";
 import DangerButton from "../../components/Ui/DangerButton";
 import SearchSelect from '../../components/Ui/SearchSelect/index';
 
-import { getCategories } from '../../api/categories';
+import { getCategories } from '../../api/categories.api';
 import { getCategoryColorType } from "../../utils/format";
 
 import "./CreatePost.scss"

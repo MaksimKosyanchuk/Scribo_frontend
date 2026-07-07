@@ -1,7 +1,9 @@
 import { useEffect, useState, createContext } from 'react';
+
+import DefaultContainer from './layouts/DefaultContainer/index';
+
 import ApiDocs from './pages/Api/index.jsx';
 import Header from './components/Header/index.jsx';
-import StartScreen from './components/StartScreen/index.jsx';
 import HomePage from './pages/HomePage/index.jsx';
 import Article from './pages/Article';
 import Profile from "./pages/Profile";
@@ -14,6 +16,12 @@ import CreatePost from './pages/CreatePost/index.jsx';
 import EditPost from './pages/EditPost/index.jsx';
 import Toast from "./components/Ui/Toast/index.jsx";
 import ModalWindow from './components/ModalWindow/index.jsx';
+import AdminPanel from './pages/AdminPanel/index.jsx';
+
+import AppLayout from './layouts/AppLayout/index.jsx';
+import FullContainer from './layouts/FullContainer/index.jsx';
+import PageLayout from './layouts/PageLayout/index.jsx';
+
 
 import "./styles/common.scss";
 
@@ -37,6 +45,9 @@ function App() {
   const requestCloseModal = () => setModalCloseRequest(c => c + 1)
 
   const CssVariables = {
+    '--header-height': '80px',
+    '--header-height-mobile': '60px',
+
     '--accent-color': isDarkTheme ? '#4e93ff' : "#1b73fb",
     '--gray-16': '#161616',
     '--gray-1e': '#1e1e1e',
@@ -213,7 +224,6 @@ function App() {
     '--category-color-4': isDarkTheme ? '#a32aff': "#6b00f9",
   }
 
-
   useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(isDarkTheme))
     const metaThemeColor = document.querySelector("meta[name=theme-color]");
@@ -226,38 +236,45 @@ function App() {
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <div className={`App ${isDarkTheme ? 'App_dark' : ''}`} id="app-root" style={CssVariables}>
 
-          <ModalWindow
-            modalWindow={modalWindow}
-            showModalWindow={showModalWindow}
-            modalCloseRequest={modalCloseRequest}
-          />
-          <Header/>
-          <StartScreen>
-            <Routes>
-              
-              <Route
-                path="*"
-                element={<Navigate to="/404" replace />} />
-              
-              <Route
-                path="/"
-                element={<Navigate to="/posts" replace />} />
-
-              <Route path="/api" Component={ApiDocs}/>
-              <Route path="posts/:id/edit" Component={EditPost}/>
-              <Route path="/auth/login" Component={Login}/>
-              <Route path="/auth/register" Component={Register}/>
-              <Route path="/404" Component={PageNotFound}/>
-              <Route path="/posts/" Component={HomePage}/>
-              <Route path="/create-post" Component={CreatePost}/>
-              <Route path="/users/:id" Component={Profile}/>
-              <Route path="/posts/:id" Component={Article}/>
-              <Route path="/settings" Component={Settings}/>
-            </Routes>
+          <AppLayout>
+            <ModalWindow
+              modalWindow={modalWindow}
+              showModalWindow={showModalWindow}
+              modalCloseRequest={modalCloseRequest}
+            />
+            <Header/>
             
-          </StartScreen>
-          <Footer></Footer>
-          <Toast toast={toast} showToast={showToast}/>
+              <Routes>
+                <Route element={<PageLayout/>}>
+                  <Route element={<DefaultContainer/>}>
+                        
+                        <Route
+                          path="*"
+                          element={<Navigate to="/404" replace />} />
+                        
+                        <Route
+                          path="/"
+                          element={<Navigate to="/posts" replace />} />
+
+                        <Route path="posts/:id/edit" Component={EditPost}/>
+                        <Route path="/auth/login" Component={Login}/>
+                        <Route path="/api" Component={ApiDocs}/>
+                        <Route path="/auth/register" Component={Register}/>
+                        <Route path="/404" Component={PageNotFound}/>
+                        <Route path="/posts/" Component={HomePage}/>
+                        <Route path="/create-post" Component={CreatePost}/>
+                        <Route path="/users/:id" Component={Profile}/>
+                        <Route path="/posts/:id" Component={Article}/>
+                        <Route path="/settings" Component={Settings}/>
+                  </Route>
+                  <Route element={<FullContainer/>}>
+                    <Route path="admin-panel" Component={AdminPanel}/>
+                  </Route>
+                </Route>
+              </Routes>              
+            <Footer></Footer>
+            <Toast toast={toast} showToast={showToast}/>
+          </AppLayout>
         </div>
       </Router>
     </AppContext.Provider>

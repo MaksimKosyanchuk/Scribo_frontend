@@ -8,7 +8,7 @@ import PostActions from "../PostActions";
 
 const PostCard = ({
     post,
-    categoryIcon,
+    category,
     setPosts,
 }) => {
 
@@ -32,7 +32,6 @@ const PostCard = ({
         <div className="posts_item app-transition">
             <PostHeader
                 post={post}
-                categoryIcon={categoryIcon}
                 onDeletePost={deletePost}
             />
 
@@ -54,7 +53,7 @@ const PostCard = ({
             <div className="posts_item_bottom">
                 <PostActions
                     article={post}
-                    categoryIcon={categoryIcon}
+                    category={category}
                     setArticle={updatePost}
                 />
             </div>

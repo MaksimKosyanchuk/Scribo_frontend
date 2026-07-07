@@ -7,11 +7,7 @@
 }
 
 :root {
-    --container-padding: 60px;
     
-    @include screen() {
-        --container-padding: 16px;
-    }
 }
 
 html, body {
@@ -19,6 +15,7 @@ html, body {
     //font-family: "Google Sans", roboto, "Noto Sans Myanmar UI", arial, sans-serif;
     margin: 0;
     height: 100%;
+    width: 100%;
     scroll-behavior: smooth;
 }
 
@@ -34,7 +31,7 @@ p, h1, h2, h3, h4 ,h5, h6 {
     margin: 0;
     padding: 0;
     color: var(--main-text-color);
-}
+} 
 
 p::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::selection, h6::selection {
     color: var(--main-text-selection-color);
@@ -66,22 +63,10 @@ button {
     -webkit-backdrop-filter: blur(20px);
 }
 
-.container {
-    width: 100%;
-    max-width: 992px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: var(--container-padding);
-    padding-right: var(--container-padding);
-}
-
 .App {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     color: var(--main-text-color);
-    background-color: var(--main-background);
-    transition: background-color .3s ease;
 }
 
 img, svg {

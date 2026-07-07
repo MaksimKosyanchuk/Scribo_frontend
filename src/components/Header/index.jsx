@@ -109,7 +109,7 @@ function Header() {
 
   return (
     <header className="header blurred app-transition">
-      <div className="container">
+      <div className="default-container">
         <div className="header_content">
           <div className="header_side header_left_side">
             <Link to={'/posts'} className='header_main_logo'>
@@ -121,7 +121,7 @@ function Header() {
               profile?.is_admin ? 
               <PrimaryButton className="header_create_post_button" onClick={() => { navigate('/create-post') }}>
                 <PlusIcon/>
-                Создать пост
+                  Создать пост
                 </PrimaryButton>
               :
               <></>
@@ -174,7 +174,7 @@ function Header() {
                   }
                 ]}
               >
-                <CurrentUserBadge as_link={false} className={"header_item"} DefaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
+                <CurrentUserBadge as_link={false} DefaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
                 <ArrowDownIcon className="header_item_icon header_user_badge_popup_arrow app-transition"/>
               </Popup>
               :

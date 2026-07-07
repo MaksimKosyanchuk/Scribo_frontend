@@ -1,4 +1,15 @@
 .popup {
+    display: flex;
+    
+    &_trigger{
+        cursor: pointer;
+        overflow: hidden;
+        display: flex;
+        position: relative;
+    }
+}
+
+.popup_menu {
     border-radius: 8px;
     padding: 6px;
     border: 1px solid var(--popup-border-color);
@@ -30,9 +41,6 @@
         }
     }
     
-    &_trigger{
-        display: flex;
-    }
 
     &_item:hover {
         background-color: var(--popup-item-hover-background-color);
@@ -41,7 +49,7 @@
     &_item_danger {
         color: var(--red-f5);
         
-        .popup_item_title {
+        .popup_menu_item_title {
             color: var(--red-f5);
         }
     }

@@ -4,6 +4,10 @@ import Category from "../Category";
 
 
 const PostsFilters = ({ filters, setFilters, categories }) => {
+
+    categories.push({ name: "Все" })
+    categories.push({ name: "По подписке" })
+
     const handle_click = (categoryName) => {
         setFilters(prev => {
             let updated = prev.map(f => {
@@ -11,11 +15,11 @@ const PostsFilters = ({ filters, setFilters, categories }) => {
                 const isAllActive = prev.find(f => f.name === "Все")?.is_active;
 
                 if (f.name !== "Все" && f.name !== "По подписке") {
-                return { ...f, is_active: !isAllActive };
+                    return { ...f, is_active: !isAllActive };
                 }
 
                 if (f.name === "Все") {
-                return { ...f, is_active: !isAllActive };
+                    return { ...f, is_active: !isAllActive };
                 }
 
                 return f;
@@ -30,16 +34,16 @@ const PostsFilters = ({ filters, setFilters, categories }) => {
             }
 
             return f;
-            });
+        });
 
-            const allExceptAllAndSubActive = updated
+        const allExceptAllAndSubActive = updated
             .filter(f => f.name !== "Все" && f.name !== "По подписке")
             .every(f => f.is_active);
 
-            if (allExceptAllAndSubActive) {
-            updated = updated.map(f =>
-                f.name === "Все" ? { ...f, is_active: true } : f
-            );
+                if (allExceptAllAndSubActive) {
+                    updated = updated.map(f =>
+                    f.name === "Все" ? { ...f, is_active: true } : f
+                );
             }
 
             return updated;
@@ -56,8 +60,7 @@ const PostsFilters = ({ filters, setFilters, categories }) => {
                     <Category
                         is_active={category.is_active}
                         onClick={() => handle_click(category.name)}
-                        name={category.name}
-                        icon={categories.find(c => c.name === category.name)?.icon}
+                        category={  categories.find(c => c.name === category.name)}
                     >
                     </Category>
                     {index === 0 && (
