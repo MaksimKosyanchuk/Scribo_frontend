@@ -24,16 +24,17 @@
     &_button {
         display: flex;
         align-items: center;
-        color: var(--article-topic-button-color);
         cursor: pointer;
         gap: 2px;
         height: 18px;
+        color: var(--light-text-color);
 
         p {
-            color: var(--article-topic-button-color);
             align-items: center;
             line-height: 1;
             font-size: 14px;
+
+            color: var(--light-text-color);
         }
 
         svg {
@@ -43,10 +44,10 @@
     }
     
     &_button:hover {
-        color: var(--article-topic-button-hover-color);
+        color: var(--text-color);
 
         p {
-            color: var(--article-topic-button-hover-color);
+            color: var(--text-color);
         }
     }
 }

@@ -23,7 +23,6 @@
                 display: flex;
                 flex-direction: column;
                 line-height: 0.85;
-                color: var(--main-text-color);
                 font-size: 38px;
                 
                 @include screen() {
@@ -35,9 +34,10 @@
                 width: 152px;
                 height: 32px;
                 fill: none;
+                color: var(--text-color);
 
                 path {
-                    stroke: var(--main-text-color);
+                    stroke: var(--text-color);
                     stroke-width: 4px;
             
                     stroke-dasharray: 520;

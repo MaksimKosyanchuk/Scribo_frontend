@@ -29,7 +29,7 @@ const PostCard = ({
     }, [setPosts]);
 
     return (
-        <div className="posts_item app-transition">
+        <div className="posts_item section app-transition">
             <PostHeader
                 post={post}
                 onDeletePost={deletePost}

@@ -13,6 +13,11 @@ import { getPostById } from '../../api/posts.api';
 import { getCategories } from '../../api/categories.api';
 import { getCategoryColorType } from "../../utils/format";
 
+import { ReactComponent as CategoryIcon1 } from "../../assets/svg/categories/1.svg";
+import { ReactComponent as CategoryIcon2 } from "../../assets/svg/categories/2.svg";
+import { ReactComponent as CategoryIcon3 } from "../../assets/svg/categories/3.svg";
+import { ReactComponent as CategoryIcon4 } from "../../assets/svg/categories/4.svg";
+
 import "./EditPost.scss"
 
 import SearchSelect from '../../components/Ui/SearchSelect/index';
@@ -79,6 +84,26 @@ const EditPost = () => {
             if(categories_result?.status === true) {
                 for(const category of categories_result.data) {
                     category.className = `item_category_type_${getCategoryColorType(category.name)}`
+                    
+                    switch (category.icon) {
+                        case 1:
+                            category.iconObject = CategoryIcon1;
+                            break;
+
+                        case 2:
+                            category.iconObject = CategoryIcon2;
+                            break;
+
+                        case 3:
+                            category.iconObject = CategoryIcon3;
+                            break;
+                        case 4:
+                            category.iconObject = CategoryIcon4;
+                            break;
+
+                        default:
+                            category.iconObject = null;
+                    }
                 }
                 setAllCategories(categories_result.data)
             }

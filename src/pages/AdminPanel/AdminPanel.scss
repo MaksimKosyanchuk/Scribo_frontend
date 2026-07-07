@@ -9,15 +9,12 @@
         flex-direction: column;
         align-items: flex-start;
         padding: 18px;
-        width: 20%;
-        border: 1px solid var(--line-color);
-        border-radius: 12px;
-        background-color: var(--post-card-background);
+        flex: 0 1 20%;
         
         h1 {
             font-size: 20px;
-            color: var(--main-text-color);
         }
+
         &_list {
             display: flex;
             flex-direction: column;
@@ -29,23 +26,37 @@
                 display: flex;
                 align-items: center;
                 gap: 8px;
-                color: var(--article-topic-button-color);
+                color: var(--section-light-color);
                 padding: 8px;
                 border-radius: 8px;
                 width: 100%;
                 
+                &:hover{
+                    background: var(--section-item-hover-background-color);
+                    color: var(--section-light-hover-color);
+
+                    p {
+                        color: var(--section-light-hover-color);
+                    }
+                }
+
                 svg {
                     width: 16px;
                     height: 16px;
                 }
                 
                 p {
-                    color: var(--article-topic-button-color);
                     font-size: 14px;
+                    color: var(--section-light-color);
                 }
 
                 &_active {
-                    background: rgb(236, 236, 236);
+                    background: var(--section-item-hover-background-color);
+                    color: var(--section-light-hover-color);
+
+                    p {
+                        color: var(--section-light-hover-color);
+                    }
                 }
             }
         }
@@ -54,11 +65,8 @@
     &_content {
         display: flex;
         justify-content: center;
-        border: 1px solid var(--line-color);
-        border-radius: 12px;
         padding: 18px;
         flex: 1;
-        background: var(--post-card-background);
 
         &_categories_page {
             display: flex;
@@ -173,7 +181,7 @@
                                 align-items: center;
                                 justify-content: center;
                                 border-radius: 8px;
-                                color: var(--article-topic-button-color);
+                                color: var(--section-light-color);
     
                                 .category_svg_icon {
                                     height: 24px;
@@ -186,14 +194,9 @@
                             }
 
                             &_active{
-                                .chip_button{
-                                    border: 1px solid var(--primary-text-color);
-                                    color: var(--primary-text-color);
-                                    
-                                    .category_svg_icon {
-                                        color: var(--primary-text-color);
-                                    }
-
+                                .category_content{
+                                    color: var(--section-light-hover-color);
+                                    border-color: var(--section-light-hover-color);
                                 }
                             }
                         }
