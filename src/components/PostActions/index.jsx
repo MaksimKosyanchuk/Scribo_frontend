@@ -39,11 +39,11 @@ async function share(id, showToast) {
     }
 }
 
-const PostActions = ({ className, article, setArticle, category }) => {
+const PostActions = ({ className, article, setArticle }) => {
     const { profile, setProfile, showToast } = useContext(AppContext)
     const [isSaved, setIsSaved] = useState(!!(profile?.saved_posts?.includes(article?._id)));
     const [isSavingProcess, setSavingProcess] = useState(false)
-
+    
     useEffect(() => {
         setIsSaved(!!(profile?.saved_posts?.includes(article?._id)));
     }, [profile, article?._id])
@@ -118,9 +118,7 @@ const PostActions = ({ className, article, setArticle, category }) => {
                     <ShareIcon />
                 </button>
             <div className="post_actions_right_side">
-                <Link className="post_actions_category" to={`/posts?filter=${article.category}`}>
-                    <Category category={category} is_active={true}/>
-                </Link>
+                <Category category={article.category} is_active={true}/>
             </div>     
         </div>
     )

@@ -84,7 +84,8 @@ const EditPost = () => {
             if(categories_result?.status === true) {
                 for(const category of categories_result.data) {
                     category.className = `item_category_type_${getCategoryColorType(category.name)}`
-                    
+                    category.value = category._id
+
                     switch (category.icon) {
                         case 1:
                             category.iconObject = CategoryIcon1;
@@ -226,15 +227,15 @@ const EditPost = () => {
                 error={errors?.body?.title?.message}
             />
             <SearchSelect
-                input_label={"Категория"}
                 value={fields.category}
                 onSetValue={(value) =>
                     setFields(prev => ({
                         ...prev,
-                        category: value
+                        category: allCategories.find(category => category._id === value)?._id
                     }))
                 }
-                className={`category_type_${getCategoryColorType(fields.category)}`}
+                input_label={"Категория"}
+                className={`category_type_${allCategories.find(category => category._id === fields.category)?.color}`}
                 options={allCategories}
             />
             <DropFile

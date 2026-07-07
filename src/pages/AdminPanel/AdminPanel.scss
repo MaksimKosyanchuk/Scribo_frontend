@@ -39,7 +39,7 @@
                         color: var(--section-light-hover-color);
                     }
                 }
-
+                
                 svg {
                     width: 16px;
                     height: 16px;
@@ -48,6 +48,7 @@
                 p {
                     font-size: 14px;
                     color: var(--section-light-color);
+                    white-space: nowrap;
                 }
 
                 &_active {

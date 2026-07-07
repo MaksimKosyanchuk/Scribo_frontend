@@ -34,10 +34,7 @@ const SearchSelect = ({
     };
 
     const selectedOption = useMemo(() => {
-        return options.find(
-            option =>
-                option.name.toLowerCase() === (value ?? "").toLowerCase()
-        );
+        return options.find(option => option.value === value);
     }, [options, value]);
 
     const filteredOptions = useMemo(() => {
@@ -61,7 +58,7 @@ const SearchSelect = ({
         );
 
         if (exactOption) {
-            onSetValue(exactOption.name);
+            onSetValue(exactOption.value);
             setInputValue(exactOption.name);
         } else {
             onSetValue("");
@@ -73,8 +70,9 @@ const SearchSelect = ({
     };
 
     useEffect(() => {
-        setInputValue(value);
-    }, [value]);
+        const option = options.find(o => o.value === value);
+        setInputValue(option?.name ?? "");
+    }, [value, options]);
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -124,7 +122,7 @@ const SearchSelect = ({
     };
 
     const handleSelect = (option) => {
-        onSetValue(option.name);
+        onSetValue(option.value);
         setInputValue(option.name);
         setIsSearching(false);
         setHighlightedIndex(-1);
@@ -198,7 +196,6 @@ const SearchSelect = ({
             </p>
 
             <div className="search_select_input app-transition">
-
                 {
                     ShowSelected?.iconObject ?
 
@@ -255,9 +252,12 @@ const SearchSelect = ({
                             >
 
                                 {
-                                    <div className={`search_select_icon ${option.className ?? ""}`}>
-                                        <option.iconObject/>
-                                    </div>
+                                    option?.iconObject ?
+                                        <div className={`search_select_icon ${option.className ?? ""}`}>
+                                            <option.iconObject />
+                                        </div>
+                                    :
+                                        <></>
                                 }
 
                                 <p>{option.name}</p>

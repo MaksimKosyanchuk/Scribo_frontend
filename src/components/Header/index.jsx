@@ -119,10 +119,16 @@ function Header() {
           <div className="header_side header_right_side">
             {
               profile?.is_admin ? 
-              <PrimaryButton className="header_create_post_button" onClick={() => { navigate('/create-post') }}>
-                <PlusIcon/>
-                  Создать пост
-                </PrimaryButton>
+              <>
+                <PrimaryButton className="header_create_post_button" onClick={() => { navigate('/admin-panel') }}>
+                  <PlusIcon/>
+                    В админ панель
+                  </PrimaryButton>
+                <PrimaryButton className="header_create_post_button" onClick={() => { navigate('/create-post') }}>
+                  <PlusIcon/>
+                    Создать пост
+                  </PrimaryButton>
+              </>
               :
               <></>
             }

@@ -2,49 +2,77 @@ import "./PostsFilters.scss";
 import React from "react";
 import Category from "../Category";
 
+const PostsFilters = ({ filters, setFilters }) => {
 
-const PostsFilters = ({ filters, setFilters, categories }) => {
-
-    categories.push({ name: "Все" })
-    categories.push({ name: "По подписке" })
-
-    const handle_click = (categoryName) => {
+    const handleClick = (categoryId) => {
         setFilters(prev => {
-            let updated = prev.map(f => {
-            if (categoryName === "Все") {
-                const isAllActive = prev.find(f => f.name === "Все")?.is_active;
+            // Кнопка "Все"
+            if (categoryId === "all") {
+                const isAllActive = prev.find(f => f._id === "all")?.is_active;
 
-                if (f.name !== "Все" && f.name !== "По подписке") {
-                    return { ...f, is_active: !isAllActive };
-                }
+                return prev.map(filter => {
+                    if (filter._id === "subscription") {
+                        return filter;
+                    }
 
-                if (f.name === "Все") {
-                    return { ...f, is_active: !isAllActive };
-                }
+                    if (filter._id === "all") {
+                        return {
+                            ...filter,
+                            is_active: !isAllActive
+                        };
+                    }
 
-                return f;
+                    return {
+                        ...filter,
+                        is_active: !isAllActive
+                    };
+                });
             }
 
-            if (f.name === categoryName) {
-                return { ...f, is_active: !f.is_active };
-            }
-
-            if (f.name === "Все") {
-                return { ...f, is_active: false };
-            }
-
-            return f;
-        });
-
-        const allExceptAllAndSubActive = updated
-            .filter(f => f.name !== "Все" && f.name !== "По подписке")
-            .every(f => f.is_active);
-
-                if (allExceptAllAndSubActive) {
-                    updated = updated.map(f =>
-                    f.name === "Все" ? { ...f, is_active: true } : f
+            // Кнопка "По подписке"
+            if (categoryId === "subscription") {
+                return prev.map(filter =>
+                    filter._id === "subscription"
+                        ? {
+                            ...filter,
+                            is_active: !filter.is_active
+                        }
+                        : filter
                 );
             }
+
+            // Обычная категория
+            let updated = prev.map(filter => {
+                if (filter._id === categoryId) {
+                    return {
+                        ...filter,
+                        is_active: !filter.is_active
+                    };
+                }
+
+                if (filter._id === "all") {
+                    return {
+                        ...filter,
+                        is_active: false
+                    };
+                }
+
+                return filter;
+            });
+
+            // Если все категории активны — автоматически активируем "Все"
+            const allCategoriesActive = updated
+                .filter(f => !["all", "subscription"].includes(f._id))
+                .every(f => f.is_active);
+
+            updated = updated.map(filter =>
+                filter._id === "all"
+                    ? {
+                        ...filter,
+                        is_active: allCategoriesActive
+                    }
+                    : filter
+            );
 
             return updated;
         });
@@ -52,26 +80,21 @@ const PostsFilters = ({ filters, setFilters, categories }) => {
 
     return (
         <div className="posts_filters">
-            {filters.map((category, index) => {
-                if (!category) return null;
-
-                return (
-                    <React.Fragment key={category.name}>
+            {filters.map((category, index) => (
+                <React.Fragment key={category._id ?? category.name}>
                     <Category
                         is_active={category.is_active}
-                        onClick={() => handle_click(category.name)}
-                        category={  categories.find(c => c.name === category.name)}
-                    >
-                    </Category>
+                        onClick={() => handleClick(category._id)}
+                        category={category}
+                    />
+
                     {index === 0 && (
-                        <div className="post_filter post_filter_separator app-transition"></div>
+                        <div className="post_filter post_filter_separator app-transition" />
                     )}
-                    </React.Fragment>
-                );
-                })
-            }
+                </React.Fragment>
+            ))}
         </div>
     );
-}
+};
 
 export default PostsFilters;

@@ -19,12 +19,12 @@ import DangerButton from "../Ui/DangerButton";
 import Tooltip from "../Ui/Tooltip/index";
 import Catregory from "../Category";
 
-const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost, categoryIcon) => (
+const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost) => (
     <div className="modal_delete_post_content">
         <div className="modal_delete_post_content_post">
             <div className="modal_delete_post_content_post_header">
-                <PostHeader post={post} categoryIcon={categoryIcon} />
-                <Catregory name={post.category} icon={categoryIcon} is_active={true}/>
+                <PostHeader post={post} />
+                <Catregory category={post.category} is_active={true}/>
             </div>
             <h2 className="modal_delete_post_content_post_title">{post.title}</h2>
             {post.featured_image && (
@@ -44,14 +44,14 @@ const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost
     </div>
 );
 
-const PostHeader = memo(({ post, categoryIcon, onDeletePost, className }) => {
+const PostHeader = memo(({ post, onDeletePost, className }) => {
     const { profile, showModalWindow, requestCloseModal } = useContext(AppContext);
     const navigate = useNavigate();
     
     const delete_post = async (id) => {
         showModalWindow({
             title: `Вы уверены что хотите удалить пост?`,
-            content: getDeleteModalContent(post, requestCloseModal, deletePost, onDeletePost, categoryIcon),
+            content: getDeleteModalContent(post, requestCloseModal, deletePost, onDeletePost),
             show_close_button: false,
             close_func: () => {}
         });

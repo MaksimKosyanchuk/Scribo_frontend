@@ -136,7 +136,7 @@ function App() {
 
     '--sticky-button-background-color': isDarkTheme ? 'rgba(22, 22, 22, .8)' : 'rgba(241, 241, 241, .8)',
     '--red-button-primary-color': isDarkTheme ? 'var(--red-f1)' : 'var(--red-f1)',
-    '--red-button-secondary-color': isDarkTheme ? 'var(--gray-fd)' : 'var(--main-background)',
+    '--red-button-secondary-color': isDarkTheme ? 'var(--gray-ff)' : 'var(--gray-ff)',
     '--red-button-third-color': isDarkTheme ? 'var(--red-fd)' : 'var(--red-fd)',
 
     '--profile-badge-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-f1)',

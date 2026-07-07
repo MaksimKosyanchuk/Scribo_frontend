@@ -7,6 +7,8 @@ import PostActions from "../../components/PostActions";
 import "./Article.scss";
 import PostHeader from "../../components/PostHeader";
 
+import { getPostById } from "../../api/posts.api";
+
 import { getCategories } from "../../api/categories.api";
 
 const Article = () => {
@@ -40,27 +42,26 @@ const Article = () => {
     }, [location.state?.time])
 
     const getArticle = async () => {
+
         try {
             setIsLoading(true)
             
-            await fetch(`${API_URL}/api/posts/${id}?expand=author,comments`)
-            .then(res => res.json())
-            .then(res => {
-                if (res.status === true) {
-                    setArticle(res.data)
-                }
-                else {
-                    navigate('/404')
-                }
-            })
-            .finally(() => {
-                setIsLoading(false)
-            })
+            const result = await getPostById(id)
+            setIsLoading(false)
+
+            if(result.status) {
+                setArticle(result.data)
+            } else {
+                navigate('/404')
+            }
             
         } catch(e) {
             navigate('/404')
         }
     }
+
+    useEffect(() => {
+    }, [article])
 
     return (
         (!isLoading) ?
@@ -72,7 +73,7 @@ const Article = () => {
                     <h1 className="article_title">{article.title}</h1>
                     <div className="article_topic">
                         <PostHeader post={article} onDeletePost={() => navigate('/posts')} />
-                        <PostActions article={article} category={categories.find(c => c.name === article.category)} setArticle={setArticle} onDeletePost={() => navigate('/posts')} />
+                        <PostActions article={article} setArticle={setArticle} onDeletePost={() => navigate('/posts')} />
                     </div>
                     {article.featured_image ? 
                         <div className="article_featured_image">

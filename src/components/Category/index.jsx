@@ -30,8 +30,8 @@ const Category = memo(({ category, is_active, onClick, className }) => {
     return (
         <ChipButton 
             is_active={is_active} 
-            onClick={ onClick ??  (() => { nagivate('/posts?filter=' + category?.name) } )  } 
-            className={`category_content category_type_${getCategoryColorType(category?.name)} ${className || ''}`}
+            onClick={ onClick ??  (() => { nagivate('/posts?filter=' + category?._id) } )  } 
+            className={`category_content category_type_${category?.color} ${className || ''}`}
         >
         {
             getCategoryIcon(category?.icon)

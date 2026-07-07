@@ -93,9 +93,11 @@ const CreatePost = () => {
                 setInitialized(true);
     
                 const categories_result = await getCategories()
+
                 if(categories_result?.status === true) {
                     for(const category of categories_result.data) {
                         category.className = `item_category_type_${getCategoryColorType(category.name)}`
+                        category.value = category._id
 
                         switch (category.icon) {
                             case 1:
@@ -205,7 +207,7 @@ const CreatePost = () => {
                     }))
                 }
                 input_label={"Категория"}
-                className={`category_type_${getCategoryColorType(fields.category)}`}
+                className={`category_type_${allCategories.find(category => category._id === fields.category)?.color}`}
                 options={allCategories}
             />
             <DropFile
