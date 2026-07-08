@@ -18,7 +18,9 @@ import { ReactComponent as PlusIcon } from "../../assets/svg/plus-icon.svg";
 import { ReactComponent as Redirect } from "../../assets/svg/redirect.svg";
 import { ReactComponent as ArrowLeftIcon } from "../../assets/svg/arrow-left.svg";
 
-import { getCategories, editCategory } from "../../api/categories.api";
+import { ReactComponent as AlertIcon } from "../../assets/svg/alert.svg";
+
+import { getCategories, editCategory, deleteCategory, createCategory } from "../../api/categories.api";
 
 import Popup from "../../components/Ui/Popup/index";
 import Loading from "../../components/Ui/Loading/index";
@@ -48,6 +50,13 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
         {
             id: 4,
         }
+    ];
+
+    const colors = [
+        { id: 1, name: "Зеленый" },
+        { id: 2, name: "Желтый" },
+        { id: 3, name: "Синий" },
+        { id: 4, name: "Фиолетовый" },
     ];
 
     const [category, setCategory] = useState({
@@ -89,7 +98,8 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                         category.iconObject = CategoryIcon4;
                         break;
                     default:
-                        category.iconObject = null;
+                        category.iconObject = AlertIcon;
+                        break;
                 }
 
                 return category;
@@ -152,7 +162,8 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                     updatedCategory.iconObject = CategoryIcon4;
                     break;
                 default:
-                    updatedCategory.iconObject = null;
+                    updatedCategory.iconObject = AlertIcon;
+                    break;
             }
 
             setCategory(updatedCategory);
@@ -208,39 +219,24 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                     />
                                     <div classneame="admin_panel_content_edit_categories_page_settings_color">
                                         <Popup
-                                            body={[
-                                                {
-                                                    title: "Зеленый",
-                                                    onclick: () => setFields({...fields, color: 1}),
-                                                    className: "admin_panel_content_edit_categories_page_settings_color_category_1",
-                                                    icon: <RectRoundedIcon className="admin_panel_content_edit_categories_page_settings_color_icon" />
-                                                },
-                                                {
-                                                    title: "Желтый",
-                                                    onclick: () => setFields({...fields, color: 2}),
-                                                    className: "admin_panel_content_edit_categories_page_settings_color_category_2",
-                                                    icon: <RectRoundedIcon className="admin_panel_content_edit_categories_page_settings_color_icon admin_panel_content_edit_categories_page_settings_color_icon_red" />
-                                                },
-                                                {
-                                                    title: "Синий",
-                                                    onclick: () => setFields({...fields, color: 3}),
-                                                    className: "admin_panel_content_edit_categories_page_settings_color_category_3",
-                                                    icon: <RectRoundedIcon className="admin_panel_content_edit_categories_page_settings_color_icon admin_panel_content_edit_categories_page_settings_color_icon_red" />
-                                                },
-                                                {
-                                                    title: "Фиолетовый",
-                                                    onclick: () => setFields({...fields, color: 4}),
-                                                    className: "admin_panel_content_edit_categories_page_settings_color_category_4",
-                                                    icon: <RectRoundedIcon className="admin_panel_content_edit_categories_page_settings_color_icon admin_panel_content_edit_categories_page_settings_color_icon_red" />
-                                                },
-                                                
-                                            ]} 
-                                            >
+                                            body={colors.map(({ id, name }) => ({
+                                                title: name,
+                                                onclick: () => setFields({ ...fields, color: id }),
+                                                className: `admin_panel_content_edit_categories_page_settings_color_category_${id}`,
+                                                icon: (
+                                                    <RectRoundedIcon
+                                                        className={`admin_panel_content_edit_categories_page_settings_color_icon${
+                                                            id !== 1 ? " admin_panel_content_edit_categories_page_settings_color_icon_red" : ""
+                                                        }`}
+                                                    />
+                                                ),
+                                            }))}
+                                        >
                                             <div className={`admin_panel_content_edit_categories_page_settings_color category_color_${fields.color}`}>
                                                 <p>Цвет</p>
-                                                <div className={`admin_panel_content_edit_categories_page_settings_color_content app-transition`}>
-                                                    <RectRoundedIcon className={`admin_panel_content_edit_categories_page_settings_color_content_icon`} />
-                                                    <p>{fields?.color === 1 ? "Зеленый" : fields?.color === 2 ? "Желтый" : fields?.color === 3 ? "Синий" : "Фиолетовый"}</p>
+                                                <div className="admin_panel_content_edit_categories_page_settings_color_content app-transition">
+                                                    <RectRoundedIcon className="admin_panel_content_edit_categories_page_settings_color_content_icon" />
+                                                    <p>{colors.find((c) => c.id === fields.color)?.name ?? "Не установлен"}</p>
                                                 </div>
                                             </div>
                                         </Popup>
@@ -310,6 +306,18 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
             .trim();
     }
 
+    const doDeleteCategory = async (categoryId) => {
+        const result = await deleteCategory(categoryId);
+
+        if (result.status) {
+            setCategories(prev => prev.filter(category => category._id !== categoryId));
+        }
+        showToast({
+            type: result.status ? "success" : "error",
+            message: result.message
+        });
+    }
+
     return (
         <>
             <div className="admin_panel_content_categories_page">
@@ -358,7 +366,7 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
                                                     title: "Удалить",
                                                     icon: <DeleteIcon />,
                                                     type: "danger",
-                                                    onclick: () => { showToast({ type: "error", message: "Функция удаления категории пока не доступна!" }) },
+                                                    onclick: () => { doDeleteCategory(category._id) },
                                                 }
                                             ]}
                                         >

@@ -7,6 +7,7 @@ import { ReactComponent as Icon1 } from "../../assets/svg/categories/1.svg";
 import { ReactComponent as Icon2 } from "../../assets/svg/categories/2.svg";
 import { ReactComponent as Icon3 } from "../../assets/svg/categories/3.svg";
 import { ReactComponent as Icon4 } from "../../assets/svg/categories/4.svg";
+import { ReactComponent as AlertIcon } from "../../assets/svg/alert.svg";
 
 const Category = memo(({ category, is_active, onClick, className }) => {
     const nagivate = useNavigate();
@@ -22,7 +23,7 @@ const Category = memo(({ category, is_active, onClick, className }) => {
             case 4:
                 return ( <Icon4 className="category_svg_icon"/> )
             default:
-                return(<></>)
+                return(<AlertIcon className="category_svg_icon"/>)
         }
     }
 

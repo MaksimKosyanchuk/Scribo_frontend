@@ -18,6 +18,7 @@
         margin-right: 10px;
         display: flex;
         align-items: center;
+        color: var(--text-color);
 
         svg {
             width: 18px;
@@ -77,7 +78,7 @@
         cursor: pointer;
 
         &:hover {
-            background-color: var(--popup-item-hover-background-color);
+            background-color: var(--section-item-hover-background-color);
         }
     }
 
@@ -131,11 +132,11 @@
         }
     
         &:not(.search_select_item_selected):hover {
-            background-color: var(--popup-item-hover-background-color);
+            background-color: var(--section-item-hover-background-color);
         }
     
         &.search_select_item_selected {
-            background-color: var(--dropdown-selected-background-color);
+            background-color: var(--section-item-selected-background-color);
         }
     }
 }

@@ -2,7 +2,7 @@ import { API_URL } from "../config";
 
 const getCategories = async () => {
     try {
-        const res = await fetch(`${API_URL}/api/posts/categories?expand=category`);
+        const res = await fetch(`${API_URL}/api/categories?expand=category`);
         const result = await res.json();
 
         return result;
@@ -17,11 +17,14 @@ const getCategories = async () => {
 };
 
 const editCategory = async (id, data) => {
+    const token = localStorage.getItem('token');
+
     try {
-        const res = await fetch(`${API_URL}/api/posts/categories/${id}`, {
+        const res = await fetch(`${API_URL}/api/categories/${id}`, {
             method: 'PATCH',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(data)
         });
@@ -38,4 +41,53 @@ const editCategory = async (id, data) => {
     }
 }
 
-export { getCategories, editCategory };
+const createCategory = async (data) => {
+    const token = localStorage.getItem('token');
+    
+    try {
+        const res = await fetch(`${API_URL}/api/categories`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        });
+        const result = await res.json();
+
+        return result;
+    } catch (err) {
+        console.log(err);
+        return {
+            status: "error",
+            message: err,
+            data: null
+        };
+    }
+}
+
+const deleteCategory = async (id) => {
+    const token = localStorage.getItem('token');
+
+    try {
+        const res = await fetch(`${API_URL}/api/categories/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const result = await res.json();
+
+        return result;
+    } catch (err) {
+        console.log(err);
+        return {
+            status: "error",
+            message: err,
+            data: null
+        };
+    }
+}
+
+export { getCategories, editCategory, createCategory, deleteCategory };
