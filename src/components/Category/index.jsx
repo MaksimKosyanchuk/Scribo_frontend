@@ -1,8 +1,7 @@
 import { memo } from "react";
 import ChipButton from "../Ui/ChipButton";
-import { getCategoryColorType } from "../../utils/format";
 import "./Category.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as Icon1 } from "../../assets/svg/categories/1.svg";
 import { ReactComponent as Icon2 } from "../../assets/svg/categories/2.svg";

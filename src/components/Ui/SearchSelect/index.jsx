@@ -185,6 +185,7 @@ const SearchSelect = ({
     };
 
     const ShowSelected = !isSearching && selectedOption;
+    const Icon = ShowSelected?.iconObject;
 
     return (
         <div
@@ -200,7 +201,7 @@ const SearchSelect = ({
                     ShowSelected?.iconObject ?
 
                         <div className={`search_select_icon ${className}`}>
-                            <ShowSelected.iconObject/>
+                            <Icon/>
                         </div>
                     :
                         <></>

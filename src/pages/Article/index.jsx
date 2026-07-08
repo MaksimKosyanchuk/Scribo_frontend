@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { API_URL } from "../../config";
 import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import PostComment from "../../components/PostComments/index";
 import Loading from "../../components/Ui/Loading";
@@ -9,24 +8,15 @@ import PostHeader from "../../components/PostHeader";
 
 import { getPostById } from "../../api/posts.api";
 
-import { getCategories } from "../../api/categories.api";
-
 const Article = () => {
     const {id} = useParams()
     let [searchParams] = useSearchParams();
     const [comment, setComment] = useState(searchParams.get('comment') || null)
     const location = useLocation()
     const navigate = useNavigate()
-    const [categories, setCategories] = useState([])
 
     const [isLoading, setIsLoading] = useState(false)
     const [article, setArticle] = useState([ ])
-
-    useEffect(() => {
-        const result = getCategories().then((res) => {
-            setCategories(res.data)
-        })
-    },[])
 
     useEffect(() => {
         getArticle()
