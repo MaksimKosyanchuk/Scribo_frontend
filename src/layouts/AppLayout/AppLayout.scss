@@ -1,37 +1,30 @@
-@import "../../styles/helpers.scss";
+@import "../../styles//helpers.scss";
 
-.start_screen {
+.app-layout {
     display: flex;
     flex-direction: column;
     min-height: 100dvh;
+    background-color: var(--main-background);
 
     .create_post_button {
         display: none;
-        position: sticky;
+        position: fixed;
+        width: 100%;
+        padding: 15px;
         z-index: 3;
         bottom: 0;
         margin-bottom: 0px;
-        margin-right: 20px;
-        margin-left: auto;
-        margin-top: auto;
-        padding-bottom: 20px;
         font-size: 16px;
         
         @include screen() {
             display: flex;
-            left: 10px;
-            right: 10px;
-            width: 100%;
-
-            width: 100%;
-            padding-right: var(--container-padding);
-            padding-left: var(--container-padding);
-            padding-bottom: var(--container-padding);
         }
 
         button {
             padding: 12px 24px;
             font-size: 16px;
+            align-items: center;
+            justify-content: center;
             color: var(--submit-button-primary-color);
             background-color: var(--sticky-button-background-color);
             border: 1px solid var(--submit-button-primary-color);
@@ -48,16 +41,4 @@
         }
 
     }
-}
-
-.main_div {
-    padding-top: 60px;
-    padding-bottom: 60px;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-
-    @media screen and (max-width: 768px) {
-        padding-top: 40px;
-    }   
 }

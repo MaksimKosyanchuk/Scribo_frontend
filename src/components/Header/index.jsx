@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { AppContext } from '../../App';
 
@@ -17,16 +17,19 @@ import { ReactComponent as PlusIcon } from "../../assets/svg/plus-icon.svg";
 import { ReactComponent as SettingsIcon } from "../../assets/svg/settings.svg";
 import { ReactComponent as LogoutIcon } from "../../assets/svg/logout.svg";
 import { ReactComponent as ArrowDownIcon } from '../../assets/svg/arrow-down.svg';
+import { ReactComponent as RedirectIcon } from '../../assets/svg/redirect.svg';
 
 import UserBadge from '../UserBadge/index';
 import CurrentUserBadge from "../CurrentUserBadge/index"
 import PrimaryButton from '../Ui/PrimaryButton/index';
+import ActionButton from '../Ui/ActionButton/index';
 import Popup from '../Ui/Popup/index';
 
 function Header() {
   const { showToast, profile, setProfile, setIsDarkTheme, isDarkTheme, showModalWindow } = useContext(AppContext)
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const get_notification = async (notifications) => {
     let users = await getUsers(
@@ -109,7 +112,7 @@ function Header() {
 
   return (
     <header className="header blurred app-transition">
-      <div className="container">
+      <div className="default-container">
         <div className="header_content">
           <div className="header_side header_left_side">
             <Link to={'/posts'} className='header_main_logo'>
@@ -119,10 +122,24 @@ function Header() {
           <div className="header_side header_right_side">
             {
               profile?.is_admin ? 
-              <PrimaryButton className="header_create_post_button" onClick={() => { navigate('/create-post') }}>
-                <PlusIcon/>
-                Создать пост
-                </PrimaryButton>
+              <>
+                  {
+                    location.pathname === '/admin-panel' ?
+                      <ActionButton className="header_admin_button" onClick={() => { navigate('/posts') }}>
+                        <RedirectIcon/>
+                        Домой
+                      </ActionButton>
+                    : 
+                      <ActionButton className="header_admin_button" onClick={() => { navigate('/admin-panel') }}>
+                        <RedirectIcon/>
+                        В админ панель
+                      </ActionButton>
+                  }
+                <PrimaryButton className="header_admin_button header_admin_button_create" onClick={() => { navigate('/create-post') }}>
+                  <PlusIcon/>
+                    Создать пост
+                  </PrimaryButton>
+              </>
               :
               <></>
             }
@@ -162,6 +179,19 @@ function Header() {
                     icon: <SettingsIcon/>,
                     onclick: () => { navigate(`/settings`) }
                   },
+                  ...(profile?.is_admin
+                    ? [{
+                        title: location.pathname.startsWith("/admin-panel")
+                          ? "Домой"
+                          : "В админ панель",
+                        icon: <RedirectIcon />,
+                        onclick: () => navigate(
+                          location.pathname.startsWith("/admin-panel")
+                            ? "/posts"
+                            : "/admin-panel"
+                        )
+                      }]
+                    : []),
                   {
                     "title": "Выйти с акаунта",
                     icon: <LogoutIcon/>,
@@ -174,7 +204,7 @@ function Header() {
                   }
                 ]}
               >
-                <CurrentUserBadge as_link={false} className={"header_item"} DefaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
+                <CurrentUserBadge as_link={false} DefaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
                 <ArrowDownIcon className="header_item_icon header_user_badge_popup_arrow app-transition"/>
               </Popup>
               :

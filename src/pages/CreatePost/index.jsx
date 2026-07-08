@@ -12,8 +12,13 @@ import PrimaryButton from "../../components/Ui/PrimaryButton";
 import DangerButton from "../../components/Ui/DangerButton";
 import SearchSelect from '../../components/Ui/SearchSelect/index';
 
-import { getCategories } from '../../api/categories';
+import { getCategories } from '../../api/categories.api';
 import { getCategoryColorType } from "../../utils/format";
+
+import { ReactComponent as CategoryIcon1 } from "../../assets/svg/categories/1.svg";
+import { ReactComponent as CategoryIcon2 } from "../../assets/svg/categories/2.svg";
+import { ReactComponent as CategoryIcon3 } from "../../assets/svg/categories/3.svg";
+import { ReactComponent as CategoryIcon4 } from "../../assets/svg/categories/4.svg";
 
 import "./CreatePost.scss"
 
@@ -88,9 +93,31 @@ const CreatePost = () => {
                 setInitialized(true);
     
                 const categories_result = await getCategories()
+
                 if(categories_result?.status === true) {
                     for(const category of categories_result.data) {
                         category.className = `item_category_type_${getCategoryColorType(category.name)}`
+                        category.value = category._id
+
+                        switch (category.icon) {
+                            case 1:
+                                category.iconObject = CategoryIcon1;
+                                break;
+
+                            case 2:
+                                category.iconObject = CategoryIcon2;
+                                break;
+
+                            case 3:
+                                category.iconObject = CategoryIcon3;
+                                break;
+                            case 4:
+                                category.iconObject = CategoryIcon4;
+                                break;
+
+                            default:
+                                category.iconObject = null;
+                        }
                     }
                     setAllCategories(categories_result.data)
                 }
@@ -180,7 +207,7 @@ const CreatePost = () => {
                     }))
                 }
                 input_label={"Категория"}
-                className={`category_type_${getCategoryColorType(fields.category)}`}
+                className={`category_type_${allCategories.find(category => category._id === fields.category)?.color}`}
                 options={allCategories}
             />
             <DropFile

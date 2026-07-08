@@ -1,5 +1,6 @@
 .primary_button {
     display: flex;
+    position: relative;
     align-items: center;
     justify-content: center;
     gap: 10px;
@@ -9,9 +10,22 @@
     font-size: 14px;
     color: var(--submit-button-secondary-color);
 
+    .loader {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .2s;
+    }
+
     &.primary_button_loading {
-        cursor: not-allowed;
+        color: transparent;
         background-color: var(--submit-button-loading-background-color);
+        cursor: not-allowed;
+
+        .loader {
+            opacity: 1;
+            color: var(--submit-button-primary-color);
+        }
     }
 
     &.primary_button_loading:hover {

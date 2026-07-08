@@ -1,0 +1,105 @@
+@import "../../styles/helpers.scss";
+
+.sidebar_page {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+
+    &_navigation {
+        display: flex;
+        gap: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px;
+        flex: 0 1 20%;
+        min-width: fit-content;
+        
+        @include screen() {
+            display: none;
+        }
+
+        h1 {
+            font-size: 18px;
+        }
+
+        &_list {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            gap: 12px;
+
+            &_item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: var(--section-light-color);
+                padding: 12px;
+                border-radius: 8px;
+                width: 100%;
+                
+                &:hover{
+                    background: var(--section-item-hover-background-color);
+                    color: var(--section-light-hover-color);
+
+                    p {
+                        color: var(--section-light-hover-color);
+                    }
+                }
+                
+                svg {
+                    width: 16px;
+                    height: 16px;
+                }
+                
+                p {
+                    font-size: 14px;
+                    color: var(--section-light-color);
+                    white-space: nowrap;
+                }
+
+                &_active {
+                    background: var(--section-item-hover-background-color);
+                    color: var(--section-light-hover-color);
+
+                    p {
+                        color: var(--section-light-hover-color);
+                    }
+                }
+            }
+        }
+    }
+
+    
+    &_content {
+        width: 100%;
+        
+        &_item {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+
+            &_menu {
+                color: var(--text-color);
+                width: 24px;
+                height: 24px;
+                display: none;
+                cursor: pointer;
+
+                svg {
+                    height: 100%;
+                    width: 100%;
+                }
+
+                @include screen() {
+                    display: block;
+                }
+            }
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+    }
+}

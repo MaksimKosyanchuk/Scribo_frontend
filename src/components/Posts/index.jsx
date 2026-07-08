@@ -1,125 +1,120 @@
-import { useContext, useEffect, useState, useMemo } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { AppContext } from "../../App";
 
 import "./Posts.scss";
 
-import { getCategories } from "../../api/categories";
-
 import PostsFilters from "../../components/PostsFilters";
 import Loading from "../Ui/Loading";
 import NoPosts from "../NoPosts";
-import PostCard from "../PostCard/index";
+import PostCard from "../PostCard";
 
-const Posts =  ( { posts, setPosts, isLoading, posts_filters = [] } ) => {
-    const { profile } = useContext(AppContext)
-    const [ filters, setFilters ] = useState([])
-    const [ filteredPosts, setFilteredPosts ] = useState()
-    const [ categories, setCategories ] = useState([])
+const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
+    const { profile } = useContext(AppContext);
+
+    const [filters, setFilters] = useState([]);
+    const [filteredPosts, setFilteredPosts] = useState([]);
 
     useEffect(() => {
         const isPostsFiltersEmpty = posts_filters.length === 0;
 
         let uniqueFilters = [
-            ...new Set(posts.map(post => post.category).filter(Boolean))
+            ...new Map(
+                posts
+                    .filter(post => post.category)
+                    .map(post => [post.category._id, post.category])
+            ).values()
         ].map(category => ({
-            name: category,
+            ...category,
             is_active: isPostsFiltersEmpty
-                ? 
-                    true
-                : 
-                    (posts_filters.includes("все") ? true : posts_filters.includes(category.toLowerCase())),
+                ? true
+                : (
+                    posts_filters.includes("все") ||
+                    posts_filters.includes(category._id)
+                ),
         }));
 
         if(profile){
             uniqueFilters.unshift({
+                _id: "subscription",
                 name: "По подписке",
-                is_active: posts_filters.includes("по подписке")
+                is_active: posts_filters.includes("по подписке"),
+                color: null,
+                iconObject: null,
             });
         }
-        
+
         uniqueFilters.unshift({
+            _id: "all",
             name: "Все",
-            is_active: isPostsFiltersEmpty
-                ? true
-                : posts_filters.includes("все")
+            is_active: isPostsFiltersEmpty || posts_filters.includes("все"),
+            color: null,
+            iconObject: null,
         });
+
         setFilters(uniqueFilters);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [posts, posts_filters ]);
-
-    useEffect(() => { 
-        const subscriptionFilterActive = filters.find(f => f.name.toLowerCase() === "по подписке")?.is_active;
-
-        let updated_posts = posts.filter(post =>
-            filters.some(f => f.name?.toLowerCase() === post.category?.toLowerCase() && f?.is_active)
-        );
-        if (subscriptionFilterActive) {
-            updated_posts = updated_posts.filter(post =>
-                profile?.follows?.map(id => id?.toLowerCase())?.includes(post.author._id.toLowerCase())
-            );
-        }
-        
-        setFilteredPosts(updated_posts)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filters])
+    }, [posts, posts_filters]);
 
     useEffect(() => {
-        const fetchCategories = async () => {
-            const result = await getCategories();
+        const subscriptionFilterActive =
+            filters.find(f => f._id === "subscription")?.is_active;
 
-            if (result.status) {
-                setCategories(result.data);
-            }
-        };
-
-        fetchCategories();
-    }, []);
-
-    const categoriesMap = useMemo(() => {
-        return Object.fromEntries(
-            categories.map(category => [
-                category.name,
-                category.icon
-            ])
+        let updatedPosts = posts.filter(post =>
+            filters.some(f =>
+                f._id === post.category?._id && f.is_active
+            )
         );
-    }, [categories]);
 
-    if(!posts) {
-        return <NoPosts/>
+        if (subscriptionFilterActive) {
+            updatedPosts = updatedPosts.filter(post =>
+                profile?.follows
+                    ?.map(id => id.toLowerCase())
+                    ?.includes(post.author._id.toLowerCase())
+            );
+        }
+
+        setFilteredPosts(updatedPosts);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filters]);
+
+    if (!posts) {
+        return <NoPosts />;
     }
-    
+
     return (
         <div className="posts posts_columns" id="posts_column">
-            { 
-                isLoading ?
-                    <div className="posts_loader">
-                        <Loading size={50} />
-                    </div>
-                : 
-                    posts.length === 0 ?
-                        <NoPosts />
-                    :
-                    <>
-                        <PostsFilters filters={filters} setFilters={setFilters} categories={categories} />
+            {isLoading ? (
+                <div className="posts_loader">
+                    <Loading size={50} />
+                </div>
+            ) : posts.length === 0 ? (
+                <NoPosts />
+            ) : (
+                <>
+                    <PostsFilters
+                        filters={filters}
+                        setFilters={setFilters}
+                    />
 
-                        {filteredPosts.length === 0 ? (
-                            <NoPosts />
-                        ) : (
+                    {filteredPosts.length === 0 ? (
+                        <NoPosts />
+                    ) : (
                         filteredPosts.map(post => (
                             <PostCard
                                 key={post._id}
                                 post={post}
-                                categoryIcon={categoriesMap[post.category]}
+                                category={post.category}
                                 setPosts={setPosts}
                             />
                         ))
-                        )}
-                    </>
-            }
+                    )}
+                </>
+            )}
         </div>
     );
-}
+};
 
 export default Posts;

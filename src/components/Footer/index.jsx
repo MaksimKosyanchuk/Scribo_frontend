@@ -10,7 +10,7 @@ import { ReactComponent as MainLogo } from "../../assets/svg/full-logo-icon.svg"
 function Footer(){
     return(
         <footer className="blurred app-transition">
-            <div className="container">
+            <div className="default-container">
                 <div className="footer_top_content">
                     <div className="footer_links">
                         <Link to={'/posts'}><p>Домой</p></Link>

@@ -1,7 +1,9 @@
 import { useEffect, useState, createContext } from 'react';
+
+import DefaultContainer from './layouts/DefaultContainer/index';
+
 import ApiDocs from './pages/Api/index.jsx';
 import Header from './components/Header/index.jsx';
-import StartScreen from './components/StartScreen/index.jsx';
 import HomePage from './pages/HomePage/index.jsx';
 import Article from './pages/Article';
 import Profile from "./pages/Profile";
@@ -14,6 +16,12 @@ import CreatePost from './pages/CreatePost/index.jsx';
 import EditPost from './pages/EditPost/index.jsx';
 import Toast from "./components/Ui/Toast/index.jsx";
 import ModalWindow from './components/ModalWindow/index.jsx';
+import AdminPanel from './pages/AdminPanel/index.jsx';
+
+import AppLayout from './layouts/AppLayout/index.jsx';
+import FullContainer from './layouts/FullContainer/index.jsx';
+import PageLayout from './layouts/PageLayout/index.jsx';
+
 
 import "./styles/common.scss";
 
@@ -29,7 +37,7 @@ const AppContext = createContext()
 function App() {
   let lsTheme = localStorage.getItem('theme');
   const [ profile, setProfile ] = useState(null)
-  const [ profileLoading, setProfileLoading ] = useState(false)
+  const [ profileLoading, setProfileLoading ] = useState(true)
   let [ isDarkTheme, setIsDarkTheme ] = useState(lsTheme ? JSON.parse(lsTheme) : true);
   let [ toast, showToast ] = useState(false);
   let [ modalWindow, showModalWindow ] = useState(false)
@@ -37,6 +45,9 @@ function App() {
   const requestCloseModal = () => setModalCloseRequest(c => c + 1)
 
   const CssVariables = {
+    '--header-height': '80px',
+    '--header-height-mobile': '60px',
+
     '--accent-color': isDarkTheme ? '#4e93ff' : "#1b73fb",
     '--gray-16': '#161616',
     '--gray-1e': '#1e1e1e',
@@ -83,12 +94,11 @@ function App() {
     '--administrator-color': isDarkTheme ? 'var(--red-f5)' : 'red',
     '--line-color': isDarkTheme ? 'var(--gray-4f)' : "#afafaf",
     
-    '--main-text-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-25)',
-    '--main-text-selection-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-f1)',
-    '--main-text-selection-background-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-33)',
-    '--primary-text-color': isDarkTheme ? 'var(--gray-ff)' : 'var(--gray-16)',
-
+    '--text-color': isDarkTheme ? 'var(--gray-e1)' : 'var(--gray-25)',
     '--light-text-color': isDarkTheme ? 'var(--gray-63)' : 'var(--gray-79)',
+    '--text-selection-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-f1)',
+    '--text-selection-background-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-33)',
+
     '--background-text-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-e7)',
     '--post-text-color': isDarkTheme ? 'var(--gray-e7)': 'var(--gray-25)',
     '--link-text-color': isDarkTheme? '#c583ff' : '#80f',
@@ -109,15 +119,24 @@ function App() {
     '--submit-button-primary-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-33)',
     '--submit-button-primary-hover-color': isDarkTheme ? 'var(--gray-e7)' :'var(--gray-1e)',
     '--submit-button-secondary-color': 'var(--main-background)',
-    '--submit-button-loading-background-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-d7)',
+    '--submit-button-loading-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-d7)',
     '--submit-button-disabled-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-e1)',
     '--submit-button-disabled-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-99)',
+
+    '--section-background-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-ff)',
+    '--section-light-color': isDarkTheme ? 'var(--gray-79)' : 'var(--gray-99)',
+    '--section-light-hover-color': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-25)',
+
+    '--float-section-background-color': isDarkTheme ? 'rgba(22,22,22, .8)' : 'rgba(255,255,255, .8)',
+    '--float-section-line-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
+
+    '--section-item-hover-background-color': isDarkTheme ? 'rgba(160,160,160, .1)' : 'rgba(139, 139, 139, .1)',
 
     '--loader-color': isDarkTheme ? 'white' : 'black',
 
     '--sticky-button-background-color': isDarkTheme ? 'rgba(22, 22, 22, .8)' : 'rgba(241, 241, 241, .8)',
     '--red-button-primary-color': isDarkTheme ? 'var(--red-f1)' : 'var(--red-f1)',
-    '--red-button-secondary-color': isDarkTheme ? 'var(--gray-fd)' : 'var(--main-background)',
+    '--red-button-secondary-color': isDarkTheme ? 'var(--gray-ff)' : 'var(--gray-ff)',
     '--red-button-third-color': isDarkTheme ? 'var(--red-fd)' : 'var(--red-fd)',
 
     '--profile-badge-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-f1)',
@@ -138,16 +157,7 @@ function App() {
     '--modal-window-button-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-63)',
     '--modal-window-button-hover-color': isDarkTheme ? 'var(--gray-f1)' : 'var(--gray-1e)',
     '--modal-window-title-text-color': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-1e)',
-    '--post-card-background': isDarkTheme ? 'var(--gray-25)' : 'white',
     '--post-card-description-color': isDarkTheme ? 'var(--gray-b5)' : "#6b6b6b",
-    '--article-date-color': isDarkTheme ? 'var(--gray-79)' : "var(--gray-79)",
-    '--article-topic-button-color': isDarkTheme ? 'var(--gray-79)' : 'var(--gray-79)',
-    '--article-topic-button-hover-color': isDarkTheme ? 'var(--gray-d7)' : '#1e1e1e',
-    '--article-topic-button-hover-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-f1)',
-    '--article-topic-category-background-color': isDarkTheme ? 'var(--gray-2f)' : 'var(--gray-f1)',
-    '--article-topic-category-background-hover-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-d7)',
-    '--article-topic-category-color': isDarkTheme ? 'var(--gray-99)' : 'var(--gray-4f)',
-    '--article-topic-category-hover-color': isDarkTheme ? 'var(--gray-e7)' : 'var(--gray-33)',
     '--footer-background': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-ff)',
     '--footer-line-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-e7)',
     '--footer-content-color': isDarkTheme ? 'var(--gray-79)' : 'var(--gray-b5)',
@@ -186,7 +196,7 @@ function App() {
     
     '--chip-button-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-e7)',
     '--chip-button-text-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-25)',
-    '--chip-button-hover-background-color': isDarkTheme ? 'var(--gray-2f)' : 'var(--gray-d7)',
+    '--chip-button-hover-background-color': isDarkTheme ? 'var(--gray-2f)' : 'var(--gray-f1)',
     
     '--reply-button-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-63)',
     '--reply-button-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-e7)',
@@ -204,7 +214,6 @@ function App() {
     '--popup-button-background-hover-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-b5)',
     '--popup-border-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
     '--popup-text-color': 'var(--main-text-color)',
-    '--popup-item-hover-background-color': isDarkTheme ? 'rgba(160,160,160, .1)' : 'rgba(139, 139, 139, .1)',
     '--popup-danger-item-hover-background-color': isDarkTheme ? 'rgba(235, 114, 114, .1)' : 'rgba(255, 120, 120, .1)',
 
     '--category-color-1': isDarkTheme ? '#00a58e': "#008d7a",
@@ -212,7 +221,6 @@ function App() {
     '--category-color-3': isDarkTheme ? '#5a9cff': "#0072ff",
     '--category-color-4': isDarkTheme ? '#a32aff': "#6b00f9",
   }
-
 
   useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(isDarkTheme))
@@ -226,38 +234,45 @@ function App() {
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <div className={`App ${isDarkTheme ? 'App_dark' : ''}`} id="app-root" style={CssVariables}>
 
-          <ModalWindow
-            modalWindow={modalWindow}
-            showModalWindow={showModalWindow}
-            modalCloseRequest={modalCloseRequest}
-          />
-          <Header/>
-          <StartScreen>
-            <Routes>
-              
-              <Route
-                path="*"
-                element={<Navigate to="/404" replace />} />
-              
-              <Route
-                path="/"
-                element={<Navigate to="/posts" replace />} />
-
-              <Route path="/api" Component={ApiDocs}/>
-              <Route path="posts/:id/edit" Component={EditPost}/>
-              <Route path="/auth/login" Component={Login}/>
-              <Route path="/auth/register" Component={Register}/>
-              <Route path="/404" Component={PageNotFound}/>
-              <Route path="/posts/" Component={HomePage}/>
-              <Route path="/create-post" Component={CreatePost}/>
-              <Route path="/users/:id" Component={Profile}/>
-              <Route path="/posts/:id" Component={Article}/>
-              <Route path="/settings" Component={Settings}/>
-            </Routes>
+          <AppLayout>
+            <ModalWindow
+              modalWindow={modalWindow}
+              showModalWindow={showModalWindow}
+              modalCloseRequest={modalCloseRequest}
+            />
+            <Header/>
             
-          </StartScreen>
-          <Footer></Footer>
-          <Toast toast={toast} showToast={showToast}/>
+              <Routes>
+                <Route element={<PageLayout/>}>
+                  <Route element={<DefaultContainer/>}>
+                        
+                        <Route
+                          path="*"
+                          element={<Navigate to="/404" replace />} />
+                        
+                        <Route
+                          path="/"
+                          element={<Navigate to="/posts" replace />} />
+
+                        <Route path="posts/:id/edit" Component={EditPost}/>
+                        <Route path="/auth/login" Component={Login}/>
+                        <Route path="/api" Component={ApiDocs}/>
+                        <Route path="/auth/register" Component={Register}/>
+                        <Route path="/404" Component={PageNotFound}/>
+                        <Route path="/posts/" Component={HomePage}/>
+                        <Route path="/create-post" Component={CreatePost}/>
+                        <Route path="/users/:id" Component={Profile}/>
+                        <Route path="/posts/:id" Component={Article}/>
+                        <Route path="/settings" Component={Settings}/>
+                  </Route>
+                  <Route element={<FullContainer/>}>
+                    <Route path="admin-panel" Component={AdminPanel}/>
+                  </Route>
+                </Route>
+              </Routes>              
+            <Footer></Footer>
+            <Toast toast={toast} showToast={showToast}/>
+          </AppLayout>
         </div>
       </Router>
     </AppContext.Provider>

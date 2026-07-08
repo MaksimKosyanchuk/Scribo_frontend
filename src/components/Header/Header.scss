@@ -13,11 +13,11 @@
       display: flex;
       justify-content: center; 
       align-items: center;
-      height: 80px; 
+      height: var(--header-height); 
       position: relative;
 
       @include screen() {
-        height: 60px;
+        height: var(--header-height-mobile);
       }
     }
     
@@ -89,12 +89,20 @@
         gap: 24px;
         right: 0;
 
-        .header_create_post_button {
+        .header_admin_button {
           padding: 8px 20px;
           display: flex;
           justify-content: center;
           align-items: center;
           gap: 8px;
+          font-size: 12px;
+          border-radius: 6px;
+
+          svg {
+            height: 16px;
+            width: 16px;
+          }
+
 
           @include screen() {
             display: none;

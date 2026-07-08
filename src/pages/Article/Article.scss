@@ -71,7 +71,6 @@
     &_content{
         font-size: 18px;
         margin-top: 36px;
-        color: var(--post-text-color);
         white-space: pre-wrap;
 
         img{
@@ -80,10 +79,6 @@
 
         a{
             color: var(--link-text-color);
-        }
-
-        p {
-            color: var(--post-text-color)
         }
 
         @include screen(){

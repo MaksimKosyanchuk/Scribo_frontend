@@ -15,7 +15,7 @@ const getPosts = async (query) => {
         }).join('&')
     }
     
-    const result = await fetch(`${API_URL}/api/posts?${queryString}&expand=author`)
+    const result = await fetch(`${API_URL}/api/posts?${queryString}&expand=author,category`)
     .then(res => res.json())
     .then(res => {
         res?.data?.sort((prev, next) => new Date(next.created_date) - new Date(prev.created_date));
@@ -51,7 +51,7 @@ const deletePost = async (id) => {
 }
 
 const getPostById = async (id) => {
-    const result = await fetch(`${API_URL}/api/posts/${id}?expand=author`)
+    const result = await fetch(`${API_URL}/api/posts/${id}?expand=author,category`)
         .then(res => res.json())
         .catch((err) => {
             console.log(err)

@@ -1,0 +1,16 @@
+@import "../../styles/helpers.scss";
+
+.full-container{
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 30px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+
+    @include screen() {
+        padding: 0 16px;
+    }
+}
