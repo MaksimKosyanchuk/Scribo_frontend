@@ -6,6 +6,8 @@
     border-radius: 8px;
     color: var(--submit-button-primary-color);
     border: 1px solid var(--submit-button-primary-color);
+    display: flex;
+    align-items: center;
 
     @include screen() {
         font-size: 12px;

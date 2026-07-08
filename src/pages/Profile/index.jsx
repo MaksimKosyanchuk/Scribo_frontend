@@ -179,7 +179,7 @@ const Profile = () => {
 
     return (
         <div className="profile">
-            <div className="profile_info app-transition">
+            <div className="profile_info section app-transition">
                 <div className="profile_info_left">
                     <div className="profile_info_left_avatar">
                         <img src={user?.avatar ?? DefaultProfileAvatar} alt="img" />
@@ -232,12 +232,12 @@ const Profile = () => {
                     )}
                     <div className="profile_info_bottom_registration_date">
                         <Calendar className="app-transition" />
+                        <Tooltip text={ format_date_time(user?.created_date) }>
                             <p>
                                 {'Регистрация: '}
-                                    <Tooltip text={ format_date_time(user?.created_date) }>
-                                        {format_back(user.created_date)}
-                                    </Tooltip>
+                                {format_back(user.created_date)}
                             </p>
+                        </Tooltip>
                     </div>
                 </div>
                 <div className="profile_info_right">

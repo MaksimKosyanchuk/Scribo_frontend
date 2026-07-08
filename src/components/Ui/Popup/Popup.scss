@@ -1,11 +1,20 @@
 .popup {
+    display: flex;
+    
+    &_trigger{
+        cursor: pointer;
+        overflow: hidden;
+        display: flex;
+        position: relative;
+    }
+}
+
+.popup_menu {
     border-radius: 8px;
     padding: 6px;
-    border: 1px solid var(--popup-border-color);
     display: flex;
     flex-direction: column;
     min-width: 200px;
-    background: var(--popup-background-color);
     box-shadow: 0px 0px 11px 3px rgba(0, 0, 0, 0.1);
 
     &_item {
@@ -15,12 +24,11 @@
         gap: 14px;
         padding: 12px;
         border-radius: 6px;
-        color: var(--popup-text-color);
+        color: var(--text-color);
         
         &_title{
             text-align: start;
             font-size: 14px;
-            color: var(--popup-text-color);
         }
 
         svg {
@@ -30,18 +38,15 @@
         }
     }
     
-    &_trigger{
-        display: flex;
-    }
 
     &_item:hover {
-        background-color: var(--popup-item-hover-background-color);
+        background-color: var(--section-item-hover-background-color);
     }
 
     &_item_danger {
         color: var(--red-f5);
         
-        .popup_item_title {
+        .popup_menu_item_title {
             color: var(--red-f5);
         }
     }

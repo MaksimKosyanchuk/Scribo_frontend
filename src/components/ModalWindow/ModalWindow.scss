@@ -30,65 +30,66 @@
         }
 
         &_body {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        max-height: 80vh;
-        width: 600px;
-        max-width: 80vw;
-        border-radius: 8px;
-        background-color: var(--modal-window-body-background-color);
-        border: 1px solid var(--line-color);
-
-        @include screen() {
-            max-width: 90%;
-            max-height: 90%;
-        }
-
-        &_title {
             display: flex;
-            padding: 20px;
-            flex-shrink: 0;
-            
-            &_close_button {
-                margin-left: auto;
-                color: var(--modal-window-button-color);
-                width: 24px;
-                height: 24px;
-            }
-            
-            &_close_button:hover {
-                cursor: pointer;
-                color: var(--modal-window-button-hover-color);
-            }
-            
-            p {
-                color: var(--modal-window-title-text-color);
-                position: relative;
-                font-size: 24px;
-            }
-        }
+            flex-direction: column;
+            overflow: hidden;
+            max-height: 80vh;
+            width: 600px;
+            max-width: 80vw;
+            border-radius: 8px;
+            background-color: var(--modal-window-body-background-color);
+            border: 1px solid var(--line-color);
 
-        &_content {
-            padding: 20px;
-            flex-grow: 1;
-        }
-        
-        /* small variant: don't force fixed size, allow content to size naturally */
-        &._small, &.modal_window_body_small {
-            height: auto;
-            max-width: 95vw;
-            width: 400px;
-        }
+            @include screen() {
+                max-width: 90%;
+                max-height: 90%;
+            }
 
-        /* explicit large variant mirrors default fixed size */
-        &._large, &.modal_window_body_large {
-            height: 600px;
-            max-height: 600px;
-            width: 400px;
-            max-width: 400px;
+            &_title {
+                display: flex;
+                padding: 20px;
+                flex-shrink: 0;
+                
+                &_close_button {
+                    margin-left: auto;
+                    color: var(--modal-window-button-color);
+                    width: 24px;
+                    height: 24px;
+                }
+                
+                &_close_button:hover {
+                    cursor: pointer;
+                    color: var(--modal-window-button-hover-color);
+                }
+                
+                p {
+                    color: var(--modal-window-title-text-color);
+                    position: relative;
+                    font-size: 24px;
+                }
+            }
+
+            &_content {
+                padding: 20px;
+                flex-grow: 1;
+                overflow-y: auto;
+            }
+            
+            /* small variant: don't force fixed size, allow content to size naturally */
+            &._small, &.modal_window_body_small {
+                height: auto;
+                max-width: 95vw;
+                width: 400px;
+            }
+
+            /* explicit large variant mirrors default fixed size */
+            &._large, &.modal_window_body_large {
+                height: 600px;
+                max-height: 600px;
+                width: 400px;
+                max-width: 400px;
+            }
         }
-    }
 
     &.visible {
         pointer-events: all;

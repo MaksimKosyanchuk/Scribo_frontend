@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { API_URL } from "../../config";
 import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import PostComment from "../../components/PostComments/index";
 import Loading from "../../components/Ui/Loading";
@@ -7,13 +6,15 @@ import PostActions from "../../components/PostActions";
 import "./Article.scss";
 import PostHeader from "../../components/PostHeader";
 
+import { getPostById } from "../../api/posts.api";
+
 const Article = () => {
     const {id} = useParams()
     let [searchParams] = useSearchParams();
     const [comment, setComment] = useState(searchParams.get('comment') || null)
     const location = useLocation()
     const navigate = useNavigate()
-    
+
     const [isLoading, setIsLoading] = useState(false)
     const [article, setArticle] = useState([ ])
 
@@ -31,27 +32,26 @@ const Article = () => {
     }, [location.state?.time])
 
     const getArticle = async () => {
+
         try {
             setIsLoading(true)
             
-            await fetch(`${API_URL}/api/posts/${id}?expand=author,comments`)
-            .then(res => res.json())
-            .then(res => {
-                if (res.status === true) {
-                    setArticle(res.data)
-                }
-                else {
-                    navigate('/404')
-                }
-            })
-            .finally(() => {
-                setIsLoading(false)
-            })
+            const result = await getPostById(id)
+            setIsLoading(false)
+
+            if(result.status) {
+                setArticle(result.data)
+            } else {
+                navigate('/404')
+            }
             
         } catch(e) {
             navigate('/404')
         }
     }
+
+    useEffect(() => {
+    }, [article])
 
     return (
         (!isLoading) ?
@@ -62,7 +62,7 @@ const Article = () => {
                 
                     <h1 className="article_title">{article.title}</h1>
                     <div className="article_topic">
-                        <PostHeader post={article} categoryIcon={article.category_icon} onDeletePost={() => navigate('/posts')} />
+                        <PostHeader post={article} onDeletePost={() => navigate('/posts')} />
                         <PostActions article={article} setArticle={setArticle} onDeletePost={() => navigate('/posts')} />
                     </div>
                     {article.featured_image ? 

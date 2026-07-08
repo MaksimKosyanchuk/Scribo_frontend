@@ -1,0 +1,19 @@
+@import "../../styles/helpers.scss";
+
+.default-container {
+    width: 100%;
+    max-width: 992px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-left: auto;
+    margin-right: auto;
+    --container-padding: 60px;
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
+
+    
+    @include screen() {
+        --container-padding: 16px;
+    }
+}
