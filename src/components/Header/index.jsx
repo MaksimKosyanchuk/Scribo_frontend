@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { AppContext } from '../../App';
 
@@ -17,16 +17,19 @@ import { ReactComponent as PlusIcon } from "../../assets/svg/plus-icon.svg";
 import { ReactComponent as SettingsIcon } from "../../assets/svg/settings.svg";
 import { ReactComponent as LogoutIcon } from "../../assets/svg/logout.svg";
 import { ReactComponent as ArrowDownIcon } from '../../assets/svg/arrow-down.svg';
+import { ReactComponent as RedirectIcon } from '../../assets/svg/redirect.svg';
 
 import UserBadge from '../UserBadge/index';
 import CurrentUserBadge from "../CurrentUserBadge/index"
 import PrimaryButton from '../Ui/PrimaryButton/index';
+import ActionButton from '../Ui/ActionButton/index';
 import Popup from '../Ui/Popup/index';
 
 function Header() {
   const { showToast, profile, setProfile, setIsDarkTheme, isDarkTheme, showModalWindow } = useContext(AppContext)
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const get_notification = async (notifications) => {
     let users = await getUsers(
@@ -120,11 +123,19 @@ function Header() {
             {
               profile?.is_admin ? 
               <>
-                <PrimaryButton className="header_create_post_button" onClick={() => { navigate('/admin-panel') }}>
-                  <PlusIcon/>
-                    В админ панель
-                  </PrimaryButton>
-                <PrimaryButton className="header_create_post_button" onClick={() => { navigate('/create-post') }}>
+                  {
+                    location.pathname === '/admin-panel' ?
+                      <ActionButton className="header_admin_button" onClick={() => { navigate('/posts') }}>
+                        <RedirectIcon/>
+                        Домой
+                      </ActionButton>
+                    : 
+                      <ActionButton className="header_admin_button" onClick={() => { navigate('/admin-panel') }}>
+                        <RedirectIcon/>
+                        В админ панель
+                      </ActionButton>
+                  }
+                <PrimaryButton className="header_admin_button header_admin_button_create" onClick={() => { navigate('/create-post') }}>
                   <PlusIcon/>
                     Создать пост
                   </PrimaryButton>
@@ -168,6 +179,19 @@ function Header() {
                     icon: <SettingsIcon/>,
                     onclick: () => { navigate(`/settings`) }
                   },
+                  ...(profile?.is_admin
+                    ? [{
+                        title: location.pathname.startsWith("/admin-panel")
+                          ? "Домой"
+                          : "В админ панель",
+                        icon: <RedirectIcon />,
+                        onclick: () => navigate(
+                          location.pathname.startsWith("/admin-panel")
+                            ? "/posts"
+                            : "/admin-panel"
+                        )
+                      }]
+                    : []),
                   {
                     "title": "Выйти с акаунта",
                     icon: <LogoutIcon/>,

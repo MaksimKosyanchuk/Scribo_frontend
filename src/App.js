@@ -37,7 +37,7 @@ const AppContext = createContext()
 function App() {
   let lsTheme = localStorage.getItem('theme');
   const [ profile, setProfile ] = useState(null)
-  const [ profileLoading, setProfileLoading ] = useState(false)
+  const [ profileLoading, setProfileLoading ] = useState(true)
   let [ isDarkTheme, setIsDarkTheme ] = useState(lsTheme ? JSON.parse(lsTheme) : true);
   let [ toast, showToast ] = useState(false);
   let [ modalWindow, showModalWindow ] = useState(false)
@@ -119,7 +119,7 @@ function App() {
     '--submit-button-primary-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-33)',
     '--submit-button-primary-hover-color': isDarkTheme ? 'var(--gray-e7)' :'var(--gray-1e)',
     '--submit-button-secondary-color': 'var(--main-background)',
-    '--submit-button-loading-background-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-d7)',
+    '--submit-button-loading-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-d7)',
     '--submit-button-disabled-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-e1)',
     '--submit-button-disabled-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-99)',
 
