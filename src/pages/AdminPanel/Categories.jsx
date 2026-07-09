@@ -20,10 +20,9 @@ import { ReactComponent as PlusIcon } from "../../assets/svg/plus-icon.svg";
 import { ReactComponent as Redirect } from "../../assets/svg/redirect.svg";
 import { ReactComponent as ArrowLeftIcon } from "../../assets/svg/arrow-left.svg";
 
-import { ReactComponent as AlertIcon } from "../../assets/svg/alert.svg";
-
 import { getCategories, editCategory, deleteCategory, createCategory } from "../../api/categories.api";
 
+import DangerButton from "../../components/Ui/DangerButton/index";
 import Popup from "../../components/Ui/Popup/index";
 import Loading from "../../components/Ui/Loading/index";
 import SearchSelect from "../../components/Ui/SearchSelect/index";
@@ -62,8 +61,8 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
     });
     const [ fields, setFields ] = useState({
         name: "",
-        icon: "",
-        color: "",
+        icon: null,
+        color: null,
         _id: ""
     });
 
@@ -93,7 +92,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                         category.iconObject = CategoryIcon4;
                         break;
                     default:
-                        category.iconObject = AlertIcon;
+                        category.iconObject = null;
                         break;
                 }
 
@@ -125,8 +124,8 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
     useEffect(() => {
         setFields({
             name: category?.name ?? "",
-            icon: category?.icon ?? "",
-            color: category?.color ?? "",
+            icon: category?.icon ?? null,
+            color: category?.color ?? null,
             _id: category?._id ?? ""
         })
     }, [category]);
@@ -136,7 +135,6 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
         const result = await editCategory(category._id, fields);
         setFetching(false);
         if (result.status) {
-
             const updatedCategory = {
                 ...result.data,
                 className: CATEGORY_COLORS[result.data.color]?.className ?? "",
@@ -157,7 +155,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                     updatedCategory.iconObject = CategoryIcon4;
                     break;
                 default:
-                    updatedCategory.iconObject = AlertIcon;
+                    updatedCategory.iconObject = null;
                     break;
             }
 
@@ -179,10 +177,26 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
         else {
             showToast({
                 type: "error",
-                message: "Ошибка при обновлении категории!"
+                message: result.message
             });
         }
     };
+
+    const popupColorBody = Object.values(CATEGORY_COLORS).map(color => ({
+        title: color.name,
+        id: color.id,
+        onclick: () => setFields({ ...fields, color: color.id }),
+        className: `${CATEGORY_COLORS[color.id].className}`,
+        icon: <RectRoundedIcon className="..." />
+    }))
+
+    popupColorBody.push({
+        title: "Без цвета",
+        id: null,
+        onclick: () => setFields({ ...fields, color: null }),
+        className: "category_color_none",
+        icon: <RectRoundedIcon className="..." />
+    })
 
     return (
         <>
@@ -213,14 +227,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                         onChange={(e) => setFields({...fields, name: e.target.value})}
                                     />
                                     <div classneame="admin_panel_content_edit_categories_page_settings_color">
-                                        <Popup
-                                            body={Object.values(CATEGORY_COLORS).map(color => ({
-                                            title: color.name,
-                                            onclick: () => setFields({ ...fields, color: color.id }),
-                                            className: `${CATEGORY_COLORS[color.id].className}`,
-                                            icon: <RectRoundedIcon className="..." />
-                                        }))}
-                                        >
+                                        <Popup body={popupColorBody}>
                                             <div className={`admin_panel_content_edit_categories_page_settings_color`}>
                                                 <p>Цвет</p>
                                                 <div className="admin_panel_content_edit_categories_page_settings_color_content app-transition">
@@ -228,7 +235,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
 
                                                         <RectRoundedIcon/>
                                                     </div>
-                                                    <p>{Object.values(CATEGORY_COLORS).find((c) => c.id === fields.color)?.name ?? "Другой"}</p>
+                                                    <p>{popupColorBody.find((c) => c.id === fields.color)?.title}</p>
                                                 </div>
                                             </div>
                                         </Popup>
@@ -246,7 +253,12 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                                             ? "admin_panel_content_edit_categories_page_settings_icon_content_item_active"
                                                             : ""
                                                     }`}
-                                                    onClick={() => setFields({ ...fields, icon: categoryItem.id })}
+                                                    onClick={() =>
+                                                        setFields({
+                                                            ...fields,
+                                                            icon: fields.icon === categoryItem.id ? null : categoryItem.id
+                                                        })
+                                                    }
                                                 >
                                                     <Category category={{ icon: categoryItem.id }} onClick={() => {}} />
                                                 </div>
@@ -263,18 +275,173 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
 }
 
 const CreateCategoryPage = ({ setActivePage }) => {
+    const { showToast } = useContext(AppContext);
+    const [fetching, setFetching] = useState(false);
+    const [errors, setErrors] = useState({});
+
+    const icons = [
+        { id: 1 },
+        { id: 2 },
+        { id: 3 },
+        { id: 4 }
+    ];
+
+    const [fields, setFields] = useState({
+        name: "",
+        icon: null,
+        color: null
+    });
+
+    const popupColorBody = [
+        ...Object.values(CATEGORY_COLORS).map(color => ({
+            id: color.id,
+            title: color.name,
+            className: color.className,
+            icon: <RectRoundedIcon />,
+            onclick: () =>
+                setFields(prev => ({
+                    ...prev,
+                    color: color.id
+                }))
+        })),
+        {
+            id: null,
+            title: "Без цвета",
+            className: "category_color_none",
+            icon: <RectRoundedIcon />,
+            onclick: () =>
+                setFields(prev => ({
+                    ...prev,
+                    color: null
+                }))
+        }
+    ];
+
+    const doCreate = async () => {
+        setFetching(true);
+
+        const result = await createCategory(fields);
+
+        setFetching(false);
+
+        if (result.status) {
+            showToast({
+                type: "success",
+                message: "Категория успешно создана!"
+            });
+
+            setActivePage("");
+        } else {
+            setErrors(result.errors ?? {});
+            showToast({
+                type: "error",
+                message: result.message
+            });
+        }
+    };
+
     return (
         <>
-            <ActionButton className="admin_panel_content_categories_page_back" onClick={() => setActivePage('')}><ArrowLeftIcon className="app-transition" /> Назад</ActionButton>
-            <p>Недоступно</p>
+            <ActionButton
+                className="admin_panel_content_categories_page_back"
+                onClick={() => setActivePage("")}
+            >
+                <ArrowLeftIcon className="app-transition" />
+                Назад
+            </ActionButton>
+
+            <div className="admin_panel_content_edit_categories_page">
+
+                <div className="admin_panel_content_edit_categories_page_settings app-transition">
+
+                    <InputField
+                        input_label="Название"
+                        placeholder="Введите название категории"
+                        onMouseDown={() => setErrors(prev => ({ ...prev, body: { ...prev.body, name: null } }))}
+                        value={fields.name}
+                        error={errors?.body?.name?.message}
+                        onChange={(e) =>
+                            setFields(prev => ({
+                                ...prev,
+                                name: e.target.value
+                            }))
+                        }
+                    />
+
+                    <Popup body={popupColorBody}>
+                        <div className="admin_panel_content_edit_categories_page_settings_color">
+
+                            <p>Цвет</p>
+
+                            <div className="admin_panel_content_edit_categories_page_settings_color_content app-transition">
+
+                                <div
+                                    className={`admin_panel_content_edit_categories_page_settings_color_content_rect ${CATEGORY_COLORS[fields.color]?.className ?? ""}`}
+                                >
+                                    <RectRoundedIcon />
+                                </div>
+
+                                <p>
+                                    {popupColorBody.find(c => c.id === fields.color)?.title}
+                                </p>
+
+                            </div>
+
+                        </div>
+                    </Popup>
+
+                    <div className="admin_panel_content_edit_categories_page_settings_icon">
+
+                        <p>Иконка</p>
+
+                        <div className="admin_panel_content_edit_categories_page_settings_icon_content app-transition">
+
+                            {icons.map(icon => (
+                                <div
+                                    key={icon.id}
+                                    className={`admin_panel_content_edit_categories_page_settings_icon_content_item ${
+                                        fields.icon === icon.id
+                                            ? "admin_panel_content_edit_categories_page_settings_icon_content_item_active"
+                                            : ""
+                                    }`}
+                                    onClick={() =>
+                                        setFields(prev => ({
+                                            ...prev,
+                                            icon: prev.icon === icon.id
+                                                ? null
+                                                : icon.id
+                                        }))
+                                    }
+                                >
+                                    <Category
+                                        category={{ icon: icon.id }}
+                                        onClick={() => {}}
+                                    />
+                                </div>
+                            ))}
+
+                        </div>
+
+                    </div>
+
+                    <PrimaryButton
+                        is_loading={fetching}
+                        onClick={doCreate}
+                    >
+                        Создать
+                    </PrimaryButton>
+
+                </div>
+
+            </div>
         </>
-    )
-}
+    );
+};
 
 const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
     const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const { showToast } = useContext(AppContext);
+    const { showToast, showModalWindow, requestCloseModal } = useContext(AppContext);
     const navigate = useNavigate();
 
     const fetchCategories = async () => {
@@ -293,21 +460,53 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
     const appRoot = document.getElementById("app-root");
 
     const getCategoryColor = (color) => {
-        return getComputedStyle(appRoot)
+        const variable = getComputedStyle(appRoot)
             .getPropertyValue(`--category-color-${color}`)
             .trim();
+        if(variable === "") return "Без цвета";
+
+        return variable;
     }
 
-    const doDeleteCategory = async (categoryId) => {
-        const result = await deleteCategory(categoryId);
+    const getDeleleteCategoryModalContent = (category, close_func) => {
+        const requestDelete = async () => {
+            const result = await deleteCategory(category._id);
 
-        if (result.status) {
-            setCategories(prev => prev.filter(category => category._id !== categoryId));
+
+            if (result.status) {
+                showToast({
+                    type: "success",
+                    message: "Категория успешно удалена!"
+                });
+                requestCloseModal();
+                fetchCategories();  
+            }
+            else {
+                showToast({
+                    type: "error",
+                    message: result.message
+                });
+            }
         }
-        showToast({
-            type: result.status ? "success" : "error",
-            message: result.message
-        });
+
+        return (
+            <div className="admin_panel_content_categories_page_modal_window">
+                <Category category={category} is_active={true} />
+                <div className="admin_panel_content_categories_page_modal_window_bottom">
+                    <ActionButton onClick={close_func}>Отмена</ActionButton>
+                    <DangerButton onClick={() => { requestDelete(); }} is_active={true}>Удалить</DangerButton>
+                </div>
+            </div>
+        )
+    }
+
+    const doDeleteCategory = async (category) => {
+        showModalWindow({
+            "title": "Вы уверены что хотите удалить категорию?",
+            content: getDeleleteCategoryModalContent(category, requestCloseModal),
+            show_close_button: false,
+            close_func: () => {}
+        })
     }
 
     return (
@@ -327,7 +526,7 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
                                         <div className="admin_panel_content_categories_page_category_data_content">
                                             <p className="admin_panel_content_categories_page_category_data_content_name">{category?.name}</p>
                                             <div className="admin_panel_content_categories_page_category_data_content_color">
-                                                <div className={`admin_panel_content_categories_page_category_data_content_color_circle ${`admin_panel_content_categories_page_category_data_content_color_circle_${category?.color}`} app-transition `}>
+                                                <div className={`admin_panel_content_categories_page_category_data_content_color_circle ${CATEGORY_COLORS[category?.color]?.className} app-transition `}>
                                                 </div>
                                                 <p>
                                                     {getCategoryColor(category?.color)}
@@ -358,7 +557,7 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
                                                     title: "Удалить",
                                                     icon: <DeleteIcon />,
                                                     type: "danger",
-                                                    onclick: () => { doDeleteCategory(category._id) },
+                                                    onclick: () => { doDeleteCategory(categories.find(c => c._id === category._id)) },
                                                 }
                                             ]}
                                         >

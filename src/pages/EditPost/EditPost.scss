@@ -1,46 +1,55 @@
+@import "../../styles/categoryColors.scss";
+
 .create_post {
 
+    .search_select_input {
+        border-color: var(--line-color);
+        color: var(--text-color);
+
+        .input_field {
+            color: inherit;
+        }
+    }
+
     .search_select {
+        .search_select_item_selected {
+            background: var(--section-item-hover-background-color);
+        }
 
-        &.category_type_1 { color: var(--category-color-1); }
-        &.category_type_2 { color: var(--category-color-2); }
-        &.category_type_3 { color: var(--category-color-3); }
-        &.category_type_4 { color: var(--category-color-4); }
-
-        &.category_type_1,
-        &.category_type_2,
-        &.category_type_3,
-        &.category_type_4 {
-
+        @include category-colors {
             .search_select_input {
-                border-color: currentColor;
-                background: rgb(from currentColor r g b / 0.1);
+                background: rgb(from var(--category-color) r g b / .1);;
+                border-color: var(--category-color);
+
+                .input_field {
+                    color: var(--category-color);
+                }
             }
 
-            .search_select_icon,
-            .input_field {
-                color: currentColor;
+            .search_select_icon{
+                color: var(--category-color);
             }
         }
     }
 
-    .item_category_type_1 { color: var(--category-color-1); }
-    .item_category_type_2 { color: var(--category-color-2); }
-    .item_category_type_3 { color: var(--category-color-3); }
-    .item_category_type_4 { color: var(--category-color-4); }
+    .search_select_item {
+        @include category-colors {
 
-    .item_category_type_1,
-    .item_category_type_2,
-    .item_category_type_3,
-    .item_category_type_4 {
+            p {
+                color: var(--category-color);
+            }
 
-        p {
-            color: currentColor;
-        }
+            .search_select_icon {
+                color: var(--category-color);
+            }
 
-        &.search_select_item_selected,
-        &:not(.search_select_item_selected):hover {
-            background: rgb(from currentColor r g b / 0.1);
+            &:hover {
+                background-color: rgb(from var(--category-color) r g b / .1);
+            }
+
+            &.search_select_item_selected {
+                background-color: rgb(from var(--category-color) r g b / .1);
+            }
         }
     }
 }

@@ -103,6 +103,7 @@
                         &_rect {
                             display: flex;
                             align-items: center;
+                            color: var(--text-color);
 
                             
                             svg {
@@ -191,7 +192,7 @@
                 padding: 8px 14px;
             }
 
-            .admin_panel_content_categories_page_category{
+            .admin_panel_content_categories_page_category {
                 display: flex;
                 align-items: center;
                 width: 100%;
@@ -215,19 +216,19 @@
                     &_icon {
                         padding: 12px;
                         cursor: auto;
+                        height: 44px;
+                        width: 44px;
     
                         @include screen() {
-                            padding: 8px;
+                            height: 32px;
+                            width: 32px;
+                            padding: 6px;
+
                         }
 
                         svg {
-                            height: 18px;
-                            width: 18px;
-                            
-                            @include screen() {
-                                height: 12px;
-                                width: 12px;
-                            }
+                            height: 100%;
+                            width: 100%;
                         }
     
                         p {
@@ -263,26 +264,18 @@
                                 width: 12px;
                                 height: 12px;
                                 border-radius: 50%;
-                                background-color: currentColor;
-                                
+                                background-color: var(--chip-active-button-background-color);
+
+                                @include category-colors {
+                                    background: var(--category-color);
+                                }
+
                                 @include screen() {
                                     width: 8px;
                                     height: 8px;
                                 }
-
-                                &_1{
-                                    color: var(--category-color-1);
-                                }
-                                &_2{
-                                    color: var(--category-color-2);
-                                }
-                                &_3{
-                                    color: var(--category-color-3);
-                                }
-                                &_4{
-                                    color: var(--category-color-4);
-                                }
                             }
+
                         }
                     }
                 }
@@ -313,6 +306,25 @@
                     }
                 }
             }
+        }
+    }
+}
+
+.modal_window_body_content {
+    .admin_panel_content_categories_page_modal_window {
+        display: flex;
+        flex-direction: column;
+
+        .category_content {
+            width: fit-content;
+            align-self: center;
+        }
+
+        &_bottom {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            margin-left: auto;
         }
     }
 }
