@@ -97,6 +97,21 @@ svg {
     will-change: transform;
 }
 
+.category_color_1 {
+    --category-color: var(--category-color-1);
+}
+
+.category_color_2 {
+    --category-color: var(--category-color-2);
+}
+
+.category_color_3 {
+    --category-color: var(--category-color-3);
+}
+
+.category_color_4 {
+    --category-color: var(--category-color-4);
+}
 
 textarea:focus-visible{
     outline: none;

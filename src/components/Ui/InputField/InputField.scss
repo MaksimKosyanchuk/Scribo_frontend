@@ -59,8 +59,8 @@
     }
 
     .input_field::selection {
-        color: var(--main-text-selection-color);
-        background-color: var(--main-text-selection-background-color);
+        color: var(--text-selection-color);
+        background-color: var(--text-selection-background-color);
     }
 
     .input_field:focus {
@@ -69,8 +69,6 @@
 
     .input_field.confirmed{
         border: 1px solid var(--input-outline-color);
-        //pointer-events: none;
-        //cursor: not-allowed;
     }
 
     .input_field::placeholder {

@@ -51,18 +51,20 @@ const SearchSelect = ({
     }, [options, inputValue]);
 
     const resetValue = () => {
+        const search = inputValue.trim().toLowerCase();
+
         const exactOption = options.find(
-            option =>
-                option.name.trim().toLowerCase() ===
-                inputValue.trim().toLowerCase()
+            option => option.name.trim().toLowerCase() === search
         );
 
-        if (exactOption) {
+        if (!exactOption) {
+            onSetValue("");
+            setInputValue("");
+        } else if (exactOption.value !== value) {
             onSetValue(exactOption.value);
             setInputValue(exactOption.name);
         } else {
-            onSetValue("");
-            setInputValue("");
+            setInputValue(exactOption.name);
         }
 
         setIsSearching(false);
