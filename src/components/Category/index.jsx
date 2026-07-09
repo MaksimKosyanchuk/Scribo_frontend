@@ -8,6 +8,8 @@ import { ReactComponent as Icon2 } from "../../assets/svg/categories/2.svg";
 import { ReactComponent as Icon3 } from "../../assets/svg/categories/3.svg";
 import { ReactComponent as Icon4 } from "../../assets/svg/categories/4.svg";
 
+import { CATEGORY_COLORS } from "../../styles/constants";
+
 const Category = memo(({ category, is_active, onClick, className }) => {
     const nagivate = useNavigate();
 
@@ -27,15 +29,18 @@ const Category = memo(({ category, is_active, onClick, className }) => {
     }
 
     return (
-        <ChipButton 
-            is_active={is_active} 
-            onClick={ onClick ??  (() => { nagivate('/posts?filter=' + category?._id) } )  } 
-            className={`category_content category_type_${category?.color} ${className || ''}`}
+        <ChipButton
+            is_active={is_active}
+            onClick={
+                onClick ??
+                (() => {
+                    nagivate("/posts?filter=" + category?._id);
+                })
+            }
+            className={`category_content ${CATEGORY_COLORS[category?.color]?.className ?? ""} ${className || ""}`}
         >
-        {
-            getCategoryIcon(category?.icon)
-        }
-        <p>{category?.name}</p>
+            {getCategoryIcon(category?.icon)}
+            <p>{category?.name}</p>
         </ChipButton>
     );
 });

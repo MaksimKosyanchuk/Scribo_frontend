@@ -1,0 +1,9 @@
+@mixin category-colors($count: 20) {
+    @for $i from 1 through $count {
+        &.category_color_#{$i} {
+            --category-color: var(--category-color-#{$i});
+
+            @content;
+        }
+    }
+}

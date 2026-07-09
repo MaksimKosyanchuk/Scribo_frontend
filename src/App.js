@@ -22,6 +22,7 @@ import AppLayout from './layouts/AppLayout/index.jsx';
 import FullContainer from './layouts/FullContainer/index.jsx';
 import PageLayout from './layouts/PageLayout/index.jsx';
 
+import { CATEGORY_COLORS } from "./styles/constants.js";
 
 import "./styles/common.scss";
 
@@ -215,11 +216,13 @@ function App() {
     '--popup-border-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
     '--popup-text-color': 'var(--main-text-color)',
     '--popup-danger-item-hover-background-color': isDarkTheme ? 'rgba(235, 114, 114, .1)' : 'rgba(255, 120, 120, .1)',
-
-    '--category-color-1': isDarkTheme ? '#00a58e': "#008d7a",
-    '--category-color-2': isDarkTheme ? '#ffc219': "#d99600",
-    '--category-color-3': isDarkTheme ? '#5a9cff': "#0072ff",
-    '--category-color-4': isDarkTheme ? '#a32aff': "#6b00f9",
+    
+    ...Object.fromEntries(
+        Object.values(CATEGORY_COLORS).map(color => [
+            color.variable,
+            isDarkTheme ? color.dark : color.light
+        ])
+    )
   }
 
   useEffect(() => {

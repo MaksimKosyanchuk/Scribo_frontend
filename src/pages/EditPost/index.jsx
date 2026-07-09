@@ -9,9 +9,10 @@ import TextEditorField from "../../components/Ui/TextEditorField";
 import PrimaryButton from "../../components/Ui/PrimaryButton";
 import DangerButton from "../../components/Ui/DangerButton";
 
+import { CATEGORY_COLORS } from "../../styles/constants";
+
 import { getPostById } from '../../api/posts.api';
 import { getCategories } from '../../api/categories.api';
-import { getCategoryColorType } from "../../utils/format";
 
 import { ReactComponent as CategoryIcon1 } from "../../assets/svg/categories/1.svg";
 import { ReactComponent as CategoryIcon2 } from "../../assets/svg/categories/2.svg";
@@ -83,7 +84,7 @@ const EditPost = () => {
 
             if(categories_result?.status === true) {
                 for(const category of categories_result.data) {
-                    category.className = `item_category_type_${getCategoryColorType(category.name)}`
+                    category.className = CATEGORY_COLORS[category.color]?.className
                     category.value = category._id
 
                     switch (category.icon) {
@@ -235,7 +236,7 @@ const EditPost = () => {
                     }))
                 }
                 input_label={"Категория"}
-                className={`category_type_${allCategories.find(category => category._id === fields.category)?.color}`}
+                className={CATEGORY_COLORS[allCategories.find(category => category._id === fields.category)?.color]?.className}
                 options={allCategories}
             />
             <DropFile
