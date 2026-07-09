@@ -1,0 +1,17 @@
+.admin_panel_content_logs_page{
+    &_content {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+
+        &_log {
+            display: flex;
+            gap: 6px;
+
+            a {
+                color: var(--text-color);
+                text-decoration: underline;
+            }
+        }
+    }
+}
