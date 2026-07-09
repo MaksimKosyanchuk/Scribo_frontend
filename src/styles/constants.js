@@ -1,0 +1,42 @@
+export const CATEGORY_COLORS = {
+    1: {
+        id: 1,
+        name: "Зеленый",
+        variable: "--category-color-1",
+        className: "category_color_1",
+        light: "#008d7a",
+        dark: "#00a58e",
+    },
+    2: {
+        id: 2,
+        name: "Желтый",
+        variable: "--category-color-2",
+        className: "category_color_2",
+        light: "#d99600",
+        dark: "#ffc219",
+    },
+    3: {
+        id: 3,
+        name: "Синий",
+        variable: "--category-color-3",
+        className: "category_color_3",
+        light: "#0072ff",
+        dark: "#5a9cff",
+    },
+    4: {
+        id: 4,
+        name: "Фиолетовый",
+        variable: "--category-color-4",
+        className: "category_color_4",
+        light: "#6b00f9",
+        dark: "#a32aff",
+    },
+    5: {
+        id: 5,
+        name: "Красный",
+        variable: "--category-color-5",
+        className: "category_color_5",
+        light: "#ff4949",
+        dark: "#ff5b5b",
+    },
+};

@@ -1,4 +1,5 @@
 @import "../../styles/helpers.scss";
+@import "../../styles//categoryColors.scss";
 
 .admin_panel {
     &_content{
@@ -21,27 +22,54 @@
             flex-direction: column;
             gap: 50px;
             height: 100%;
-            
+
+            .search_select_input {
+                border-color: var(--line-color);
+                color: var(--text-color);
+
+                .input_field {
+                    color: inherit;
+                }
+            }
 
             .search_select {
-                &.category_type_1 { color: var(--category-color-1); }
-                &.category_type_2 { color: var(--category-color-2); }
-                &.category_type_3 { color: var(--category-color-3); }
-                &.category_type_4 { color: var(--category-color-4); }
-    
-                &.category_type_1,
-                &.category_type_2,
-                &.category_type_3,
-                &.category_type_4 {
-    
+                .search_select_item_selected {
+                    background: var(--section-item-hover-background-color);
+                }
+
+                @include category-colors {
                     .search_select_input {
-                        border-color: currentColor;
-                        background: rgb(from currentColor r g b / 0.1);
+                        background: rgb(from var(--category-color) r g b / .1);;
+                        border-color: var(--category-color);
+
+                        .input_field {
+                            color: var(--category-color);
+                        }
                     }
-    
-                    .search_select_icon,
-                    .input_field {
-                        color: currentColor;
+
+                    .search_select_icon{
+                        color: var(--category-color);
+                    }
+                }
+            }
+
+            .search_select_item {
+                @include category-colors {
+
+                    p {
+                        color: var(--category-color);
+                    }
+
+                    .search_select_icon {
+                        color: var(--category-color);
+                    }
+
+                    &:hover {
+                        background-color: rgb(from var(--category-color) r g b / .1);
+                    }
+
+                    &.search_select_item_selected {
+                        background-color: rgb(from var(--category-color) r g b / .1);
                     }
                 }
             }
@@ -64,49 +92,31 @@
                         align-items: center;
                         gap: 10px;
                         cursor: pointer;
-    
-                        &:hover{
-                            background-color: var(--chip-button-hover-background-color);
-                        }
-    
                         padding: 8px;
                         border: 1px solid var(--line-color);
                         border-radius: 8px;
     
-                        p {
-                            color: currentColor;
+                        &:hover{
+                            background-color: var(--chip-button-hover-background-color);
                         }
-                    }
-                    
-                    &.category_color_1 {
-                        color: var(--category-color-1);
-                    }
-    
-                    &.category_color_2 {
-                        color: var(--category-color-2);
-                    }
-    
-                    &.category_color_3 {
-                        color: var(--category-color-3);
-                    }
-    
-                    &.category_color_4 {
-                        color: var(--category-color-4);
-                    }
-    
-                    &.category_color_1,
-                    &.category_color_2,
-                    &.category_color_3,
-                    &.category_color_4 {
-    
-                        &_content {
-                            border-color: currentColor;
-                            background: rgb(from currentColor r g b / 0.1);
-    
+
+                        &_rect {
+                            display: flex;
+                            align-items: center;
+
+                            
                             svg {
-                                color: currentColor;
+                                height: 18px;
+                                width: 18px;
+                            }
+
+                            @include category-colors {
+                                svg {
+                                    color: var(--category-color);
+                                }
                             }
                         }
+
                     }
                 }
     
@@ -168,27 +178,6 @@
                     margin-top: auto;
                 }
             }
-            
-            .item_category_type_1 { color: var(--category-color-1); }
-            .item_category_type_2 { color: var(--category-color-2); }
-            .item_category_type_3 { color: var(--category-color-3); }
-            .item_category_type_4 { color: var(--category-color-4); }
-    
-            .item_category_type_1,
-            .item_category_type_2,
-            .item_category_type_3,
-            .item_category_type_4 {
-    
-                p {
-                    color: currentColor;
-                }
-    
-                &.search_select_item_selected,
-                &:not(.search_select_item_selected):hover {
-                    background: rgb(from currentColor r g b / 0.1);
-                }
-            }
-    
         }
 
         &_categories_page{
@@ -329,32 +318,12 @@
 }
 
 .popup_menu {
-    .admin_panel_content_edit_categories_page_settings_color_category_1 {
-        color: var(--category-color-1);
+    .popup_menu_item {
+        @include category-colors {
+            svg, p {
+                color: var(--category-color);
+            }
 
-        p {
-            color: var(--category-color-1);
-        }
-    }
-    .admin_panel_content_edit_categories_page_settings_color_category_2 {
-        color: var(--category-color-2);
-
-        p {
-            color: var(--category-color-2);
-        }
-    }
-    .admin_panel_content_edit_categories_page_settings_color_category_3 {
-        color: var(--category-color-3);
-
-        p {
-            color: var(--category-color-3);
-        }
-    }
-    .admin_panel_content_edit_categories_page_settings_color_category_4 {
-        color: var(--category-color-4);
-
-        p {
-            color: var(--category-color-4);
         }
     }
 }

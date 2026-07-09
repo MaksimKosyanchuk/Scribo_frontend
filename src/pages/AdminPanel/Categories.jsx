@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 import { AppContext } from '../../App';
 
+import { CATEGORY_COLORS } from "../../styles/constants";
+
 import { ReactComponent as CategoryIcon1 } from "../../assets/svg/categories/1.svg";
 import { ReactComponent as CategoryIcon2 } from "../../assets/svg/categories/2.svg";
 import { ReactComponent as CategoryIcon3 } from "../../assets/svg/categories/3.svg";
@@ -52,13 +54,6 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
         }
     ];
 
-    const colors = [
-        { id: 1, name: "Зеленый" },
-        { id: 2, name: "Желтый" },
-        { id: 3, name: "Синий" },
-        { id: 4, name: "Фиолетовый" },
-    ];
-
     const [category, setCategory] = useState({
         name: "",
         icon: "",
@@ -81,7 +76,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
 
         if (result.status) {
             const preparedCategories = result.data.map((category) => {
-                category.className = `item_category_type_${category.color}`;
+                category.className = CATEGORY_COLORS[category.color]?.className ?? "";
                 category.value = category._id;
 
                 switch (category.icon) {
@@ -144,7 +139,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
 
             const updatedCategory = {
                 ...result.data,
-                className: `item_category_type_${result.data.color}`,
+                className: CATEGORY_COLORS[result.data.color]?.className ?? "",
                 value: result.data._id
             };
 
@@ -204,7 +199,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                 setCategory( categories.find((category) => category._id === value));
                             }}
                             options={categories}
-                            className={`category_type_${category?.color}`}
+                            className={CATEGORY_COLORS[category?.color]?.className}
                         />
                         {
                             !category?.name && !category?.icon && !category?.color ?
@@ -219,24 +214,21 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                     />
                                     <div classneame="admin_panel_content_edit_categories_page_settings_color">
                                         <Popup
-                                            body={colors.map(({ id, name }) => ({
-                                                title: name,
-                                                onclick: () => setFields({ ...fields, color: id }),
-                                                className: `admin_panel_content_edit_categories_page_settings_color_category_${id}`,
-                                                icon: (
-                                                    <RectRoundedIcon
-                                                        className={`admin_panel_content_edit_categories_page_settings_color_icon${
-                                                            id !== 1 ? " admin_panel_content_edit_categories_page_settings_color_icon_red" : ""
-                                                        }`}
-                                                    />
-                                                ),
-                                            }))}
+                                            body={Object.values(CATEGORY_COLORS).map(color => ({
+                                            title: color.name,
+                                            onclick: () => setFields({ ...fields, color: color.id }),
+                                            className: `${CATEGORY_COLORS[color.id].className}`,
+                                            icon: <RectRoundedIcon className="..." />
+                                        }))}
                                         >
-                                            <div className={`admin_panel_content_edit_categories_page_settings_color category_color_${fields.color}`}>
+                                            <div className={`admin_panel_content_edit_categories_page_settings_color`}>
                                                 <p>Цвет</p>
                                                 <div className="admin_panel_content_edit_categories_page_settings_color_content app-transition">
-                                                    <RectRoundedIcon className="admin_panel_content_edit_categories_page_settings_color_content_icon" />
-                                                    <p>{colors.find((c) => c.id === fields.color)?.name ?? "Не установлен"}</p>
+                                                    <div className={`admin_panel_content_edit_categories_page_settings_color_content_rect ${CATEGORY_COLORS[fields.color]?.className} app-transition`} >
+
+                                                        <RectRoundedIcon/>
+                                                    </div>
+                                                    <p>{Object.values(CATEGORY_COLORS).find((c) => c.id === fields.color)?.name ?? "Другой"}</p>
                                                 </div>
                                             </div>
                                         </Popup>
