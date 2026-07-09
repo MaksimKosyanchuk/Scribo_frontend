@@ -1,17 +1,178 @@
-.admin_panel_content_logs_page{
+.admin_panel_content_logs_page {
+    --user-color: #c38cff;
+    --post-color: #27a3ff;
+
     &_content {
         display: flex;
         flex-direction: column;
-        gap: 30px;
+        gap: 14px;
 
         &_log {
-            display: flex;
-            gap: 6px;
-
-            a {
-                color: var(--text-color);
-                text-decoration: underline;
-            }
+            width: 100%;
         }
     }
+}
+
+.logs_row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    padding: 14px 18px;
+
+    border: 1px solid var(--border-color);
+
+    border-radius: 14px;
+
+    background: var(--background-color);
+
+    transition: .18s ease;
+
+    &:hover {
+        border-color: var(--accent-color);
+    }
+}
+
+.logs_action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    width: 110px;
+    flex-shrink: 0;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+
+    &_dot {
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: currentColor;
+    }
+
+    &_create {
+        color: var(--success-color);
+    }
+
+    &_update {
+        color: var(--info-color);
+    }
+
+    &_delete {
+        color: var(--error-color);
+    }
+
+    &_register {
+        color: var(--warning-color);
+    }
+}
+
+.logs_entities {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    flex: 1;
+}
+
+.logs_entity {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 8px;
+
+    padding: 7px 12px;
+
+    border-radius: 999px;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    background: var(--background-secondary);
+
+    transition: .18s;
+
+    &:hover {
+        background: var(--hover-color);
+    }
+
+    &_icon {
+        font-size: 15px;
+        line-height: 1;
+    }
+
+    &_title {
+        white-space: nowrap;
+    }
+
+    &_user {
+        svg {
+            height: 18px;
+            width: 18px;
+            color: var(--user-color);
+        }
+        color: var(--user-color);
+    }
+
+    &_post {
+        color: var(--post-color);
+    }
+
+    &_category {
+        color: var(--category-color);
+    }
+}
+
+.logs_time {
+    flex-shrink: 0;
+
+    font-size: 13px;
+
+    color: var(--text-color);
+
+    opacity: .6;
+
+    white-space: nowrap;
+}
+
+.logs_unknown {
+    flex: 1;
+
+    opacity: .8;
+}
+
+@media (max-width: 900px) {
+
+    .logs_row {
+        flex-wrap: wrap;
+        align-items: flex-start;
+
+        gap: 12px;
+    }
+
+    .logs_action {
+        width: auto;
+    }
+
+    .logs_entities {
+        width: 100%;
+    }
+
+    .logs_time {
+        width: 100%;
+
+        text-align: right;
+    }
+
 }
