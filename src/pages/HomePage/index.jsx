@@ -22,7 +22,7 @@ const HomePage = () => {
 
     const fetchPosts = async () => {
         setIsLoading(true)
-        const response = await getPosts()
+        const response = await getPosts({expand: "author,category"})
         if(response.status === true){
             setPosts(response.data)
         }
