@@ -255,8 +255,6 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                             {Object.entries(categoryIcons).map(([id]) => {
                                                 id = Number(id);
 
-                                                const Icon = categoryIcons[id];
-
                                                 return (
                                                     <div
                                                         key={id}
@@ -405,8 +403,6 @@ const CreateCategoryPage = ({ setActivePage }) => {
 
                             {Object.entries(categoryIcons).map(([id]) => {
                                 id = Number(id);
-
-                                const Icon = categoryIcons[id];
 
                                 return (
                                     <div
