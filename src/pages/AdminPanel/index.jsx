@@ -12,6 +12,7 @@ import { AppContext } from "../../App.js";
 import SidebarPage from "../../components/SidebarPage/index";
 
 import CategoriesPage from "./Categories.jsx";
+import LogsPage from "./Logs.jsx";
 
 const AdminPanel = () => {
     const navigate = useNavigate();
@@ -41,7 +42,7 @@ const AdminPanel = () => {
                 {
                     title: "Логи",
                     icon: <LogIcon />,
-                    content: <p>Не доступно</p>
+                    content: <LogsPage />
                 }
             ]}
         />

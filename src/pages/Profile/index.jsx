@@ -115,6 +115,7 @@ const Profile = () => {
 
     const fetchPosts = async (query) => {
         setIsLoading(true);
+        query.expand = "author,category";
         const response = await getPosts(query);
         setIsLoading(false);
         return response.status === true ? response.data : [];

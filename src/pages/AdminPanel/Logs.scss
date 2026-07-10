@@ -1,0 +1,219 @@
+@import "../../styles/helpers.scss";
+
+.admin_panel_content_logs_page {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &_filter {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+        gap: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--line-color);
+        padding: 8px ;
+
+        &_icon {
+            width: 20px;
+            height: 20px;
+            color: var(--section-light-color);
+        }
+
+        p {
+            line-height: 1;
+        }
+    }
+
+    &_item {
+        width: 100%;
+
+        display: grid;
+        grid-template-columns:
+            minmax(100px, 200px)
+            minmax(0, 1fr)
+            minmax(110px, 125px);
+
+        gap: clamp(12px, 2vw, 40px);
+
+        border-radius: 8px;
+        border: 1px solid var(--line-color);
+        padding: 8px 16px;
+        align-items: center;
+
+        @include screen() {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        
+        &_left {
+            display: flex;
+        }
+
+        &_center {
+            align-items: center;
+
+            display: grid;
+            grid-template-columns:
+                minmax(180px, 200px)
+                minmax(0, 1fr);
+
+            gap: clamp(10px, 2vw, 24px);
+
+            @include screen() {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+        &_right {
+            display: flex;
+            p {
+                color: var(--section-light-color);
+            }
+        }
+
+        &_entity{
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        
+            &_deleted {
+                padding: 4px 8px;
+                border-radius: 6px;
+                --delete-color: rgb(255 89 89);
+                background: rgb(from var(--delete-color) r g b / 0.1);
+                 
+                p {
+                    font-size: 12px;
+                    color: var(--delete-color);
+                }
+            }
+
+            p {
+                line-height: 1;
+                font-size: 14px;
+
+                @include screen() {
+                        font-size: 12px;
+                }
+            }
+
+            &_post {
+                display: flex;
+                align-items: center;
+                padding: 8px 12px;
+                border-radius: 8px;
+                background: var(--section-item-hover-background-color);
+                
+
+                svg{
+                    color: var(--section-light-color);
+                    height: 18px;
+                    width: 18px;
+                }
+            }
+            
+            &_category {
+                display: flex;
+                align-items: center;
+                
+                &_deleted {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+
+                    background: var(--section-item-hover-background-color);
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                }
+
+                &_icon {
+                    display: flex;
+                    align-items: center;
+
+                    svg {
+                        color: var(--section-light-color);
+                        height: 18px;
+                        width: 18px;
+                    }
+                }
+            }
+        }
+
+        &_message {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            &_icon{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 8px;
+                width: 30px;
+                height: 30px;
+                border-radius: 8px;
+                background: rgb(from var(--action-color) r g b / 0.1);
+
+                @include screen() {
+                    width: 26px;
+                    height: 26px;
+                    padding: 6px;
+                }
+
+                svg {
+                    color: var(--action-color);
+                    height: 100%;
+                    width: 100%;
+                }
+            }
+
+            p {
+                color: var(--action-color);
+                font-size: 14px;
+
+                @include screen() {
+                    font-size: 14px;
+                }
+            }
+        }
+
+        
+        &_create_post{
+            --action-color: var(--log-create-color);
+        }
+        
+        &_update_post{
+            --action-color: var(--log-update-color);
+        }
+        
+        &_create_category{
+            --action-color: var(--log-create-color);
+        }
+
+        &_update_category{
+            --action-color: var(--log-update-color);
+        }
+
+        &_delete_category{
+            --action-color: var(--log-error-color);
+        }
+
+        &_delete_post{
+            --action-color: var(--log-error-color);
+        }
+
+        &_register {
+            --action-color: var(--log-register-color)
+        }
+
+    
+    }
+}
+

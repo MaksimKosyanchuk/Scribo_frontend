@@ -81,7 +81,7 @@ function Popup({ children, body, z_index = 99, className }) {
                                 key={index} 
                                 className={`popup_menu_item app-transition ${item.className ?? ""} ${item?.type === "danger" ? "popup_menu_item_danger" : ""}`}
                                 onClick={() => {
-                                    item.onclick();
+                                    item.onClick();
                                     setOpen(false);
                                 }}
                             >
