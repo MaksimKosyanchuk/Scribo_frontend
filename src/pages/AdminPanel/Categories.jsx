@@ -11,6 +11,29 @@ import { ReactComponent as CategoryIcon1 } from "../../assets/svg/categories/1.s
 import { ReactComponent as CategoryIcon2 } from "../../assets/svg/categories/2.svg";
 import { ReactComponent as CategoryIcon3 } from "../../assets/svg/categories/3.svg";
 import { ReactComponent as CategoryIcon4 } from "../../assets/svg/categories/4.svg";
+import { ReactComponent as CategoryIcon5 } from "../../assets/svg/categories/5.svg";
+import { ReactComponent as CategoryIcon6 } from "../../assets/svg/categories/6.svg";
+import { ReactComponent as CategoryIcon7 } from "../../assets/svg/categories/7.svg";
+import { ReactComponent as CategoryIcon8 } from "../../assets/svg/categories/8.svg";
+import { ReactComponent as CategoryIcon9 } from "../../assets/svg/categories/9.svg";
+import { ReactComponent as CategoryIcon10 } from "../../assets/svg/categories/10.svg";
+import { ReactComponent as CategoryIcon11 } from "../../assets/svg/categories/11.svg";
+import { ReactComponent as CategoryIcon12 } from "../../assets/svg/categories/12.svg";
+import { ReactComponent as CategoryIcon13 } from "../../assets/svg/categories/13.svg";
+import { ReactComponent as CategoryIcon14 } from "../../assets/svg/categories/14.svg";
+import { ReactComponent as CategoryIcon15 } from "../../assets/svg/categories/15.svg";
+import { ReactComponent as CategoryIcon16 } from "../../assets/svg/categories/16.svg";
+import { ReactComponent as CategoryIcon17 } from "../../assets/svg/categories/17.svg";
+import { ReactComponent as CategoryIcon18 } from "../../assets/svg/categories/18.svg";
+import { ReactComponent as CategoryIcon19 } from "../../assets/svg/categories/19.svg";
+import { ReactComponent as CategoryIcon20 } from "../../assets/svg/categories/20.svg";
+import { ReactComponent as CategoryIcon21 } from "../../assets/svg/categories/21.svg";
+import { ReactComponent as CategoryIcon22 } from "../../assets/svg/categories/22.svg";
+import { ReactComponent as CategoryIcon23 } from "../../assets/svg/categories/23.svg";
+import { ReactComponent as CategoryIcon24 } from "../../assets/svg/categories/24.svg";
+import { ReactComponent as CategoryIcon25 } from "../../assets/svg/categories/25.svg";
+import { ReactComponent as CategoryIcon26 } from "../../assets/svg/categories/26.svg";
+
 import { ReactComponent as RectRoundedIcon } from "../../assets/svg/rect-rounded.svg";
 
 import { ReactComponent as EditIcon } from "../../assets/svg/edit.svg";
@@ -31,6 +54,35 @@ import InputField from "../../components/Ui/InputField/index";
 import PrimaryButton from "../../components/Ui/PrimaryButton/index";
 import ActionButton from "../../components/Ui/ActionButton/index";
 
+const categoryIcons = {
+    1: CategoryIcon1,
+    2: CategoryIcon2,
+    3: CategoryIcon3,
+    4: CategoryIcon4,
+    5: CategoryIcon5,
+    6: CategoryIcon6,
+    7: CategoryIcon7,
+    8: CategoryIcon8,
+    9: CategoryIcon9,
+    10: CategoryIcon10,
+    11: CategoryIcon11,
+    12: CategoryIcon12,
+    13: CategoryIcon13,
+    14: CategoryIcon14,
+    15: CategoryIcon15,
+    16: CategoryIcon16,
+    17: CategoryIcon17,
+    18: CategoryIcon18,
+    19: CategoryIcon19,
+    20: CategoryIcon20,
+    21: CategoryIcon21,
+    22: CategoryIcon22,
+    23: CategoryIcon23,
+    24: CategoryIcon24,
+    25: CategoryIcon25,
+    26: CategoryIcon26,
+};
+
 const EditCategoryPage = ({ active_category, setActivePage }) => {
     const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -38,20 +90,6 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
     const [initialized, setInitialized] = useState(false);
     const [fetching, setFetching] = useState(false);
 
-    const icons = [
-        {
-            id: 1,
-        },
-        {
-            id: 2,
-        },
-        {
-            id: 3,
-        },
-        {
-            id: 4,
-        }
-    ];
 
     const [category, setCategory] = useState({
         name: "",
@@ -59,6 +97,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
         color: "",
         _id: ""
     });
+
     const [ fields, setFields ] = useState({
         name: "",
         icon: null,
@@ -78,23 +117,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                 category.className = CATEGORY_COLORS[category.color]?.className ?? "";
                 category.value = category._id;
 
-                switch (category.icon) {
-                    case 1:
-                        category.iconObject = CategoryIcon1;
-                        break;
-                    case 2:
-                        category.iconObject = CategoryIcon2;
-                        break;
-                    case 3:
-                        category.iconObject = CategoryIcon3;
-                        break;
-                    case 4:
-                        category.iconObject = CategoryIcon4;
-                        break;
-                    default:
-                        category.iconObject = null;
-                        break;
-                }
+                category.iconObject = categoryIcons[category.icon];
 
                 return category;
             });
@@ -141,23 +164,8 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                 value: result.data._id
             };
 
-            switch (updatedCategory.icon) {
-                case 1:
-                    updatedCategory.iconObject = CategoryIcon1;
-                    break;
-                case 2:
-                    updatedCategory.iconObject = CategoryIcon2;
-                    break;
-                case 3:
-                    updatedCategory.iconObject = CategoryIcon3;
-                    break;
-                case 4:
-                    updatedCategory.iconObject = CategoryIcon4;
-                    break;
-                default:
-                    updatedCategory.iconObject = null;
-                    break;
-            }
+            updatedCategory.iconObject = categoryIcons[updatedCategory.icon];
+
 
             setCategory(updatedCategory);
 
@@ -244,25 +252,28 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                         <p>Иконка</p>
                                         <div className={`admin_panel_content_edit_categories_page_settings_icon_content app-transition`}>
         
-                                            {
-                                            icons.map((categoryItem, index) => (
-                                                <div
-                                                    key={`${categoryItem.id}-${index}`}
-                                                    className={`admin_panel_content_edit_categories_page_settings_icon_content_item ${
-                                                        categoryItem.id === fields.icon
-                                                            ? "admin_panel_content_edit_categories_page_settings_icon_content_item_active"
-                                                            : ""
-                                                    }`}
-                                                    onClick={() =>
-                                                        setFields({
-                                                            ...fields,
-                                                            icon: fields.icon === categoryItem.id ? null : categoryItem.id
-                                                        })
-                                                    }
-                                                >
-                                                    <Category category={{ icon: categoryItem.id }} onClick={() => {}} />
-                                                </div>
-                                            ))}
+                                            {Object.entries(categoryIcons).map(([id]) => {
+                                                id = Number(id);
+
+                                                return (
+                                                    <div
+                                                        key={id}
+                                                        className={`admin_panel_content_edit_categories_page_settings_icon_content_item ${
+                                                            fields.icon === id
+                                                                ? "admin_panel_content_edit_categories_page_settings_icon_content_item_active"
+                                                                : ""
+                                                        }`}
+                                                        onClick={() =>
+                                                            setFields(prev => ({
+                                                                ...prev,
+                                                                icon: prev.icon === id ? null : id
+                                                            }))
+                                                        }
+                                                    >
+                                                        <Category category={{ icon: id }} onClick={() => {}} />
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                     <PrimaryButton is_loading={fetching} onClick={() => { doSave() }}>Сохранить</PrimaryButton>
@@ -279,12 +290,6 @@ const CreateCategoryPage = ({ setActivePage }) => {
     const [fetching, setFetching] = useState(false);
     const [errors, setErrors] = useState({});
 
-    const icons = [
-        { id: 1 },
-        { id: 2 },
-        { id: 3 },
-        { id: 4 }
-    ];
 
     const [fields, setFields] = useState({
         name: "",
@@ -396,29 +401,28 @@ const CreateCategoryPage = ({ setActivePage }) => {
 
                         <div className="admin_panel_content_edit_categories_page_settings_icon_content app-transition">
 
-                            {icons.map(icon => (
-                                <div
-                                    key={icon.id}
-                                    className={`admin_panel_content_edit_categories_page_settings_icon_content_item ${
-                                        fields.icon === icon.id
-                                            ? "admin_panel_content_edit_categories_page_settings_icon_content_item_active"
-                                            : ""
-                                    }`}
-                                    onClick={() =>
-                                        setFields(prev => ({
-                                            ...prev,
-                                            icon: prev.icon === icon.id
-                                                ? null
-                                                : icon.id
-                                        }))
-                                    }
-                                >
-                                    <Category
-                                        category={{ icon: icon.id }}
-                                        onClick={() => {}}
-                                    />
-                                </div>
-                            ))}
+                            {Object.entries(categoryIcons).map(([id]) => {
+                                id = Number(id);
+
+                                return (
+                                    <div
+                                        key={id}
+                                        className={`admin_panel_content_edit_categories_page_settings_icon_content_item ${
+                                            fields.icon === id
+                                                ? "admin_panel_content_edit_categories_page_settings_icon_content_item_active"
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            setFields(prev => ({
+                                                ...prev,
+                                                icon: prev.icon === id ? null : id
+                                            }))
+                                        }
+                                    >
+                                        <Category category={{ icon: id }} onClick={() => {}} />
+                                    </div>
+                                );
+                            })}
 
                         </div>
 
