@@ -61,8 +61,8 @@ const PostHeader = memo(({ post, onDeletePost, className }) => {
 
     if (profile?.is_admin) {
         popupBody.push(
-            { title: "Редактировать", icon: <EditIcon />, onclick: () => navigate(`/posts/${post._id}/edit`) },
-            { title: "Удалить", icon: <DeleteIcon />, type: "danger", onclick: () => delete_post(post._id) }
+            { title: "Редактировать", icon: <EditIcon />, onClick: () => navigate(`/posts/${post._id}/edit`) },
+            { title: "Удалить", icon: <DeleteIcon />, type: "danger", onClick: () => delete_post(post._id) }
         );
     }
 

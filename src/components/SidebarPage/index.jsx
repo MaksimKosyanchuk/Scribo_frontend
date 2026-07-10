@@ -36,7 +36,7 @@ const SidebarPage = ({ pages, page_title }) => {
                                             body={pages.map( (page, index) => {
                                                 return {
                                                     title: page?.title,
-                                                    onclick: () => { setActivePage(index) },
+                                                    onClick: () => { setActivePage(index) },
                                                     icon: page?.icon
                                                 }
                                             } )}

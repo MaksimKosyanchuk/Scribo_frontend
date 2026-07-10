@@ -185,7 +185,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
     const popupColorBody = Object.values(CATEGORY_COLORS).map(color => ({
         title: color.name,
         id: color.id,
-        onclick: () => setFields({ ...fields, color: color.id }),
+        onClick: () => setFields({ ...fields, color: color.id }),
         className: `${CATEGORY_COLORS[color.id].className}`,
         icon: <RectRoundedIcon className="..." />
     }))
@@ -193,7 +193,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
     popupColorBody.push({
         title: "Без цвета",
         id: null,
-        onclick: () => setFields({ ...fields, color: null }),
+        onClick: () => setFields({ ...fields, color: null }),
         className: "category_color_none",
         icon: <RectRoundedIcon className="..." />
     })
@@ -298,7 +298,7 @@ const CreateCategoryPage = ({ setActivePage }) => {
             title: color.name,
             className: color.className,
             icon: <RectRoundedIcon />,
-            onclick: () =>
+            onClick: () =>
                 setFields(prev => ({
                     ...prev,
                     color: color.id
@@ -309,7 +309,7 @@ const CreateCategoryPage = ({ setActivePage }) => {
             title: "Без цвета",
             className: "category_color_none",
             icon: <RectRoundedIcon />,
-            onclick: () =>
+            onClick: () =>
                 setFields(prev => ({
                     ...prev,
                     color: null
@@ -543,12 +543,12 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
                                                 {
                                                     title: "Перейти к постам",
                                                     icon: <Redirect />,
-                                                    onclick: () => { navigate(`/posts?filter=${category._id}`) },
+                                                    onClick: () => { navigate(`/posts?filter=${category._id}`) },
                                                 },
                                                 {
                                                     title: "Редактировать",
                                                     icon: <EditIcon />,
-                                                    onclick: () => {
+                                                    onClick: () => {
                                                         setActiveCategory(category._id)
                                                         setActivePage('edit')
                                                     },
@@ -557,7 +557,7 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
                                                     title: "Удалить",
                                                     icon: <DeleteIcon />,
                                                     type: "danger",
-                                                    onclick: () => { doDeleteCategory(categories.find(c => c._id === category._id)) },
+                                                    onClick: () => { doDeleteCategory(categories.find(c => c._id === category._id)) },
                                                 }
                                             ]}
                                         >
