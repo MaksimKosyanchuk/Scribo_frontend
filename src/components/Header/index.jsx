@@ -172,12 +172,12 @@ function Header() {
                   {
                     "title": "В профиль",
                     icon: <DefaultProfileIcon/>,
-                    onclick: () => { navigate(`/users/${profile.nick_name}`) }
+                    onClick: () => { navigate(`/users/${profile.nick_name}`) }
                   },
                   {
                     "title": "Настройки",
                     icon: <SettingsIcon/>,
-                    onclick: () => { navigate(`/settings`) }
+                    onClick: () => { navigate(`/settings`) }
                   },
                   ...(profile?.is_admin
                     ? [{
@@ -185,7 +185,7 @@ function Header() {
                           ? "Домой"
                           : "В админ панель",
                         icon: <RedirectIcon />,
-                        onclick: () => navigate(
+                        onClick: () => navigate(
                           location.pathname.startsWith("/admin-panel")
                             ? "/posts"
                             : "/admin-panel"
