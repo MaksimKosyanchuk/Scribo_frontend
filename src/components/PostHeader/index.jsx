@@ -19,7 +19,7 @@ import DangerButton from "../Ui/DangerButton";
 import Tooltip from "../Ui/Tooltip/index";
 import Catregory from "../Category";
 
-const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost) => (
+const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost, showToast) => (
     <div className="modal_delete_post_content">
         <div className="modal_delete_post_content_post">
             <div className="modal_delete_post_content_post_header">
@@ -34,7 +34,21 @@ const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost
         <div className="modal_delete_post_content_bottom">
             <ActionButton onClick={requestCloseModal} className="modal_delete_post_content_button">Отмена</ActionButton>
             <DangerButton 
-                onClick={async () => { await deletePost(post._id).then(() => onDeletePost(post._id)); requestCloseModal() }} 
+                onClick={async () => {
+                    await deletePost(post._id).then((result) => {
+                        if(result.status){
+                            onDeletePost(post._id);
+                        }
+                        else {
+                            showToast({
+                                type: "error",
+                                message: result.message
+                            })
+                        }
+                        requestCloseModal()
+                    })
+
+                }}
                 className="modal_delete_post_content_button" 
                 is_active={true}
             >
@@ -45,13 +59,13 @@ const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost
 );
 
 const PostHeader = memo(({ post, onDeletePost, className }) => {
-    const { profile, showModalWindow, requestCloseModal } = useContext(AppContext);
+    const { profile, showModalWindow, requestCloseModal, showToast } = useContext(AppContext);
     const navigate = useNavigate();
     
     const delete_post = async (id) => {
         showModalWindow({
             title: `Вы уверены что хотите удалить пост?`,
-            content: getDeleteModalContent(post, requestCloseModal, deletePost, onDeletePost),
+            content: getDeleteModalContent(post, requestCloseModal, deletePost, onDeletePost, showToast),
             show_close_button: false,
             close_func: () => {}
         });

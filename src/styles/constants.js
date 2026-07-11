@@ -76,7 +76,7 @@ export const CATEGORY_COLORS = {
         name: "Лайм",
         variable: "--category-color-10",
         className: "category_color_10",
-        light: "#c5ff00",
+        light: "#83ad00",
         dark: "#afd100",
     },
 

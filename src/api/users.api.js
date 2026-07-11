@@ -16,8 +16,6 @@ export const getUsers = async (query = []) => {
         });
     });
 
-    console.log(params.toString());
-
     try {
         const response = await fetch(`${API_URL}/api/users/?${params.toString()}`);
         const result = await response.json();
