@@ -1,0 +1,47 @@
+@import "../../styles/helpers.scss";
+
+.role_badge {
+    margin-top: 6px;
+    color: var(--role-color);
+    background: rgb(from var(--role-color) r g b / 0.1);
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    border-radius: 8px;
+    padding: 6px 14px;
+    gap: 6px;
+    cursor: default;
+
+    @include screen() {
+        padding: 4px 10px;
+    }
+
+    svg {
+        height: 14px;
+        width: 14px;
+
+        @include screen (){
+            height: 12px;
+            width: 12px;
+        }
+    }
+
+    p {
+        font-size: 12px;
+        color: var(--role-color);
+
+        @include screen() {
+            font-size: 10px;
+        }
+    }
+}
+
+.role_author {
+    --role-color: var(--author-color);
+}
+.role_admin {
+    --role-color: var(--admin-color);
+}
+.role_tech_admin {
+    --role-color: var(--tech-admin-color);
+}

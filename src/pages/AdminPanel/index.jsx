@@ -13,6 +13,7 @@ import SidebarPage from "../../components/SidebarPage/index";
 
 import CategoriesPage from "./Categories.jsx";
 import LogsPage from "./Logs.jsx";
+import AdminsPage from "./Admins.jsx";
 
 const AdminPanel = () => {
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ const AdminPanel = () => {
                 {
                     title: "Администраторы",
                     icon: <PeoplesIcon />,
-                    content: <p>Не доступно</p>
+                    content: <AdminsPage />
                 },
                 {
                     title: "Логи",

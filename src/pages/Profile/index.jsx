@@ -17,7 +17,6 @@ import { ReactComponent as Calendar } from "../../assets/svg/calendar-icon.svg";
 import { ReactComponent as PostIcon } from "../../assets/svg/post.svg";
 import { ReactComponent as BookmarkOutline } from "../../assets/svg/bookmark-outline.svg";
 import { ReactComponent as SettingsIcon } from "../../assets/svg/settings.svg";
-import { ReactComponent as ProtectedIcon } from "../../assets/svg/protected-icon.svg";
 
 import Posts from "../../components/Posts/index.jsx"
 import Loading from "../../components/Ui/Loading/index.jsx";
@@ -27,6 +26,7 @@ import FollowButton from "../../components/FollowButton";
 import ActionButton from "../../components/Ui/ActionButton";
 import SwitchBar from "../../components/Ui/SwitchBar";
 import Tooltip from "../../components/Ui/Tooltip/index";
+import RoleBadge from "../../components/RoleBadge/index";
 
 const Profile = () => {
     const { id } = useParams();
@@ -208,19 +208,7 @@ const Profile = () => {
                                 null
                         }
                     </div>
-                    <Tooltip text={"Администратор"}>
-                        {
-                            user?.is_admin ?
-                                <div className="profile_info_bottom_administrator app-transition">
-                                        <>
-                                            <ProtectedIcon />
-                                            <p>Administrator</p>
-                                        </>
-                                </div>
-                            :
-                                <></>
-                        }
-                    </Tooltip>
+                    <RoleBadge user={user} />
                     {user?.is_email_public && (
                         <div className="profile_info_bottom_email">
                             <p>{user.email}</p>
