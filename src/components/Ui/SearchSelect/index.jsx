@@ -240,7 +240,7 @@ const SearchSelect = ({
             </div>
 
             {isOpen && (
-                <div className="search_select_list blurred app-transition">
+                <div className="search_select_list blurred float_section app-transition">
 
                     {filteredOptions.length ? (
 

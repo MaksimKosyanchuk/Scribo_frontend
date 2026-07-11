@@ -252,6 +252,8 @@ export default function TextEditor({
                     return "";
                   }
 
+
+
                   return $generateHtmlFromNodes(editor);
                 });
 

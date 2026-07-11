@@ -50,8 +50,22 @@ const deletePost = async (id) => {
     return result
 }
 
-const getPostById = async (id) => {
-    const result = await fetch(`${API_URL}/api/posts/${id}?expand=author,category`)
+const getPostById = async (id, query) => {
+    let queryString = ""
+
+    if(query) {
+        queryString = Object.entries(query).map(([key, value]) => {
+            if (Array.isArray(value)) {
+                if (value.length === 0) {
+                    return `${key}=`
+                }
+                return value.map(id => `${key}=${id}`).join('&')
+            }
+            return `${key}=${value}`
+        }).join('&')
+    }
+
+    const result = await fetch(`${API_URL}/api/posts/${id}?${queryString}`)
         .then(res => res.json())
         .catch((err) => {
             console.log(err)
