@@ -192,41 +192,6 @@
                 
             }
 
-            &_administrator {
-                margin-top: 6px;
-                color: var(--administrator-badge-color);
-                background: var(--administrator-badge-background-color);
-                display: flex;
-                align-items: center;
-                width: fit-content;
-                border-radius: 8px;
-                padding: 6px 14px;
-                gap: 6px;
-
-                @include screen() {
-                    padding: 4px 10px;
-                }
-
-                svg {
-                    height: 14px;
-                    width: 14px;
-
-                    @include screen (){
-                        height: 12px;
-                        width: 12px;
-                    }
-                }
-
-                p {
-                    font-size: 12px;
-                    color: var(--administrator-badge-color);
-
-                    @include screen() {
-                        font-size: 10px;
-                    }
-                }
-            }
-
             &_email{
                 margin-top: 10px;
 

@@ -222,6 +222,10 @@ function App() {
     '--log-update-color': isDarkTheme ? 'rgb(255 222 125)' : 'rgb(214 154 0)',
     '--log-register-color': isDarkTheme ? 'rgb(72 166 255)' : 'rgb(5 134 255)',
 
+    '--author-color': isDarkTheme ? 'rgb(72 166 255)' : 'rgb(5 134 255)',
+    '--admin-color': isDarkTheme ? '#b437ff' : '#b437ff',
+    '--tech-admin-color': isDarkTheme ? 'rgb(255 89 89)' : 'rgb(255 109 109)',
+
     ...Object.fromEntries(
         Object.values(CATEGORY_COLORS).map(color => [
             color.variable,
