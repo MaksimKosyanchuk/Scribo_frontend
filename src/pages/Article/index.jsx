@@ -36,7 +36,7 @@ const Article = () => {
         try {
             setIsLoading(true)
             
-            const result = await getPostById(id)
+            const result = await getPostById(id, {expand: "author,category"})
             setIsLoading(false)
 
             if(result.status) {
