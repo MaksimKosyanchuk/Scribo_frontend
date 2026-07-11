@@ -111,8 +111,13 @@
                 border-radius: 8px;
                 background: var(--section-item-hover-background-color);
                 
+                &_deleted {
+                    p {
+                        color: var(--section-light-color);
+                    }
+                }
 
-                svg{
+                svg {
                     color: var(--section-light-color);
                     height: 18px;
                     width: 18px;
@@ -126,11 +131,21 @@
                 &_deleted {
                     display: flex;
                     align-items: center;
-                    gap: 6px;
 
-                    background: var(--section-item-hover-background-color);
-                    padding: 8px 12px;
-                    border-radius: 8px;
+                    .chip_button {
+                        p {
+                            color: var(--light-text-color);
+                        }
+
+                        svg {
+                            height: 16px;
+                            width: 16px;
+                            color: var(--light-text-color);
+                        }
+                        gap: 6px;
+                        align-items: center;
+
+                    }
                 }
 
                 &_icon {

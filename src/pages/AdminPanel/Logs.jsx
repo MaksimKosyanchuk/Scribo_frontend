@@ -24,9 +24,10 @@ import Loading from "../../components/Ui/Loading";
 import Tooltip from "../../components/Ui/Tooltip"; 
 import UserBadge from "../../components/UserBadge/index";
 import Category from "../../components/Category/index";
+import Popup from "../../components/Ui/Popup";
+import ChipButton from "../../components/Ui/ChipButton";
 
 import "./Logs.scss";
-import Popup from "../../components/Ui/Popup";
 
 
 const formatTime = (date) => {
@@ -132,13 +133,10 @@ const PostEntity = ({ id, data, setFilter }) => {
                 <PostIcon/>
                 {
                     data ? 
-                    <p>Пост | {data.title}</p> :
+                        <p>{data.title}</p> :
                     <>
-                        <p>Пост</p>
-                        <div className="admin_panel_content_logs_page_item_entity_deleted">
-                            <p>
-                                DELETED
-                            </p>
+                        <div className="admin_panel_content_logs_page_item_entity_post_deleted">
+                            <p>No longer exists</p>
                         </div>
                     </>
                 }
@@ -182,15 +180,12 @@ const CategoryEntity = ({ id, data, setFilter }) => {
                         <Category category={data} is_active={true} onClick={() => {}} /> :
                     <div className="admin_panel_content_logs_page_item_entity_category_deleted">
                     
-                        <div className="admin_panel_content_logs_page_item_entity_category_icon">
+                        <ChipButton >
                             <TagIcon/>
-                        </div>
-                        <p>Категория</p>
-                        <div className="admin_panel_content_logs_page_item_entity_deleted">
                             <p>
-                                DELETED
+                                No longer exist
                             </p>
-                        </div>
+                        </ChipButton>
                     </div>
                 }
             </div>
