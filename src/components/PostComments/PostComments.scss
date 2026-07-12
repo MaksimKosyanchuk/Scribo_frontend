@@ -2,6 +2,7 @@
 
 .post_comments {
     margin-top: 36px;
+    gap: 24px;
     display: flex;
     flex-direction: column;
 
@@ -101,64 +102,105 @@
     &_list{
         display: flex;
         flex-direction: column;
-        gap: 40px;
+        gap: 24px;
 
         .comment {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding: 12px 0 12px 35px;
-            padding-bottom: 0;
-            border-left: 1px solid var(--line-color);
+            gap: 24px;
 
             @include screen() {
                 padding: 8px;
                 padding-bottom: 0;
             }
 
-            &_top_side {
+            &_body{
                 display: flex;
-                gap: 6px;
-                align-items: center;
+                flex-direction: column;
+                gap: 12px;
+                padding: 16px;
                 
-                &_date {
-                    font-size: 12px;
+                &_top_side {
+                    display: flex;
+                    gap: 6px;
+                    align-items: center;
+                    width: 100%;
+                    
+                    &_date {
+                        font-size: 12px;
+                        color: var(--light-text-color);
+                    }
+    
+                    .author_info_name {
+                        font-size: 14px;
+                    }
+    
+                    &_more {
+                        margin-left: auto;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+    
+                        svg {
+                            width: 18px;
+                            height: 18px;
+                            color: var(--light-text-color);
+    
+                            &:hover{
+                                color: var(--text-color);
+                            }
+                        }
+                    }
+                }
+                
+                &_middle_side {
+                    &_text {
+                        border-radius: 4px;
+                        width: fit-content;
+                        font-size: 14px;
+                        color: var(--post-text-color);
+                        word-break: break-word;
+                    }
+                }
+                
+                &_bottom_side {
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    display: flex;
+                    cursor: pointer;
+                    gap: 0 16px;
                     color: var(--light-text-color);
+                    
+                    
+                    &_button{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 2px;
+                        
+                        &:hover {
+                            color: var(--text-color);
+                            
+                            p {
+                                color: var(--text-color);
+                            }
+                        }
+                        
+                        p {
+                            color: var(--light-text-color);
+                        }
+                        
+                        svg {
+                            height: 18px;
+                            width: 18px;
+    
+                        }
+    
+                    }
                 }
-
-                .author_info_name {
-                    font-size: 14px;
-                }
-            }
-            
-            
-            &_middle_side {
-                &_text {
-                    border-radius: 4px;
-                    width: fit-content;
-                    font-size: 14px;
-                    color: var(--post-text-color);
-                    word-break: break-word;
-                }
-            }
-            
-            &_reply_button {
-                display: flex;
-                padding: 10px;
-                border-radius: 6px;
-                cursor: pointer;
-            }
-            
-            &_reply_button:hover {
-                background-color: var(--reply-button-background-color);
             }
 
-            &_reply_icon {
-                width: 12px;
-                height: 12px;
-
-                color: var(--reply-button-color);
-            }
         }
 
         .comment_highlight {
@@ -168,6 +210,17 @@
 
         .comment_replies {
             display: flex;
+            width: 100%;
+            align-items: center;
+            border-left: 1px solid var(--line-color);
+            
+            &_list {
+                gap: 24px;
+                padding-left: 32px;
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+            }
         }
 
         .comment_root {

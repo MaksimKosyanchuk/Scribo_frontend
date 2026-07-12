@@ -5,10 +5,17 @@ import { useNavigate } from "react-router-dom";
 import "./PostComments.scss";
 
 import { commentPost, getComments } from "../../api/posts.api";
+import { deleteComment } from "../../api/comments.api";
+
 import { format_back, format_date_time } from "../../utils/format";
 import { scrollTo } from "../../utils/navigation";
 
-import { ReactComponent as ReplyIcon } from "../../assets/svg/reply-icon.svg";
+import { ReactComponent as ReplyIcon } from "../../assets/svg/reply.svg";
+import { ReactComponent as DeleteIcon } from "../../assets/svg/delete.svg";
+import { ReactComponent as EditIcon } from "../../assets/svg/edit.svg";
+import { ReactComponent as LikeFilledIcon } from "../../assets/svg/like-filled.svg";
+import { ReactComponent as LikeOutlineIcon } from "../../assets/svg/like-outline.svg";
+import { ReactComponent as ThreeDotsVeritcalIcon } from "../../assets/svg/three-dots-vertical.svg";
 
 import CurrentUserBadge from "../CurrentUserBadge/index.jsx";
 import UserBadge from "../UserBadge/index.jsx";
@@ -16,39 +23,105 @@ import InputField from "../Ui/InputField/index";
 import PrimaryButton from "../../components/Ui/PrimaryButton/index";
 import CancelButton from "../../components/Ui/CancelButton/index";
 import Tooltip from "../Ui/Tooltip/index";
+import Popup from "../Ui/Popup/index.jsx";
 
+const checkAccessToActions = ({ profile, comment_author_id }) => {
+    const roles = ['admin', 'tech_admin']
 
-const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, profile }) => {
+    if(profile && profile._id === comment_author_id) {
+        return true;
+    }
+
+    if(profile && roles.includes(profile.role)) {
+        return true;
+    }
+
+    return false;
+}
+
+const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, profile, fetchComments, showToast }) => {
     return (
         <div
             className={`comment app-transition ${level === 0 ? `comment_root` : ''}`}
         >
-            <div className="comment_top_side">
-                <UserBadge
-                    data={comment.author}
-                    class_name="comment_author"
-                />
-                <Tooltip text={format_date_time(comment.created_date)}>
-                    <p className="comment_top_side_date">
-                            {format_back(comment.created_date)}
-                    </p>
-                </Tooltip>
-                <Tooltip text="Ответить">
-                    <div
-                        className="comment_reply_button app-transition"
-                        onClick={() => { 
-                        setReplyCommentText({ comment_id: comment._id, comment_text: comment.comment_text })
-                        scrollTo("post_comments_submit");
-                    }}>
-                        <ReplyIcon className="comment_reply_icon app-transition"/>
-                    </div>
-                </Tooltip>
-            </div>
+            <div className="comment_body section app-transition">
 
-            <div className="comment_middle_side">
-                <p className="comment_middle_side_text" id={`comment_${comment._id}`}>
-                    {comment.comment_text}
-                </p>
+                <div className="comment_body_top_side">
+                    <UserBadge
+                        data={comment.author}
+                        class_name="comment_author"
+                    />
+                    <Tooltip text={format_date_time(comment.created_date)}>
+                        <p className="comment_body_top_side_date">
+                                {format_back(comment.created_date)}
+                        </p>
+                    </Tooltip>
+                    {
+                        checkAccessToActions({ profile, comment_author_id: comment.author._id }) ?
+
+                            <div className="comment_body_top_side_more">
+                                <Popup
+                                    body={[
+                                        {
+                                            "title": "Редактировать",
+                                            "onClick": () => {
+                                                showToast({
+                                                    type: "warning",
+                                                    message: "Функция редактирования недоступна"
+                                                });
+                                            },
+                                            icon: <EditIcon/>
+                                        },
+                                        {
+                                            "title": "Удалить",
+                                            "onClick": () => {
+                                                deleteComment(comment._id).then((result) => {
+                                                    if(result.status === true) {
+                                                        fetchComments();
+                                                    }
+                                                });
+                                            },
+                                            icon: <DeleteIcon/>,
+                                            type: "danger"
+                                        }
+                                    ]}>
+                                    <ThreeDotsVeritcalIcon className="app-transition"/>
+                                </Popup>
+                            </div>
+                        :
+                            <></>
+                    }
+                </div>
+
+                <div className="comment_body_middle_side">
+                    <p className="comment_body_middle_side_text" id={`comment_${comment._id}`}>
+                        {comment.comment_text}
+                    </p>
+                </div>
+                <div className="comment_body_bottom_side">
+                    <Tooltip text="Поставить лайк">
+                        <div className="comment_body_bottom_side_button app-transition">
+                            {
+                                comment.likes.includes(profile?._id) ?
+                                    <LikeFilledIcon className="comment_like_icon app-transition"/>
+                                :
+                                    <LikeOutlineIcon className="comment_like_icon app-transition"/>
+                            }
+                            <p>{comment.likes.length ?? 0}</p>
+                        </div>
+                    </Tooltip>
+                    <Tooltip text="Ответить">
+                        <div
+                            className="comment_body_bottom_side_button app-transition"
+                            onClick={() => { 
+                            setReplyCommentText({ comment_id: comment._id, comment_text: comment.comment_text })
+                            scrollTo("post_comments_submit");
+                        }}>
+                            <ReplyIcon className="app-transition"/>
+                            <p>{comment.replies.length ?? 0}</p>
+                        </div>
+                    </Tooltip>
+                </div>
             </div>
             {comment.replies?.length > 0 && (
                 <div className="comment_replies">
@@ -60,6 +133,8 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                                 level={level + 1}
                                 replyCommentText={replyCommentText}
                                 setReplyCommentText={setReplyCommentText}
+                                fetchComments={fetchComments}
+                                showToast={showToast}
                                 profile={profile}
                             />
                         ))}
@@ -76,8 +151,17 @@ const PostComments = ({ postId, navigateTo }) => {
     const [replyCommentText, setReplyCommentText] = useState(null);
     const [isDisabled, setIsDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const { profile, showModalWindow } = useContext(AppContext);
+    const { profile, showModalWindow, showToast } = useContext(AppContext);
     const navigate = useNavigate();
+
+    const fetchComments = async () => {
+        const result = await getComments(postId)
+        if(result.status === true) {
+            setComments(result.data);
+            setReplyCommentText(null);
+            setCommentText('');
+        }
+    };
 
     const doComment = async (e) => {
         e.preventDefault();
@@ -90,19 +174,12 @@ const PostComments = ({ postId, navigateTo }) => {
             data.parent_comment_id = replyCommentText.comment_id;
         }
 
-        await commentPost(postId, data).then((result) => {
-            if(result.status === true) {
-                setCommentText('');
-                getComments(postId).then((result) => {
-                    if(result.status === true) {
-                        setComments(result.data);
-                        setReplyCommentText(null);
-                        setCommentText('');
-                    }
-                });
-            }
-            setIsLoading(false);
-        });
+        const result = await commentPost(postId, data)
+        if(result.status === true) {
+            setCommentText('');
+            await fetchComments();
+        }
+        setIsLoading(false);
     }
 
     const handleInputMouseDown = (e) => {
@@ -206,6 +283,8 @@ const PostComments = ({ postId, navigateTo }) => {
                         comment={comment}
                         replyCommentText={replyCommentText}
                         setReplyCommentText={setReplyCommentText}
+                        fetchComments={fetchComments}
+                        showToast={showToast}
                         profile={profile}
                     />
                 ))}
