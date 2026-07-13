@@ -6,41 +6,14 @@
     display: flex;
     flex-direction: column;
 
-    &_form {
+   .comment_form {
         display: flex;
         flex-direction: column;
+        gap: 12px;
 
-        @include screen() {
-            padding: 8px;
-        }
-
-        &_top {
+        &_reply_info {
             display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            align-items: center;
-            padding-bottom: 12px;
-
-            @include screen() {
-                &_left{
-                    font-size: 12px;
-                }
-            }
-
-            &_left {
-                font-size: 14px;
-
-                .post_comments_form_top_left_comment_text {
-                    font-weight: 700;
-                    cursor: pointer;
-                }
-
-                .post_comments_form_top_left_comment_text:hover {
-                    text-decoration: underline;
-                }
-
-
-            }
+            gap: 6px;
         }
 
         &_content {
@@ -48,52 +21,62 @@
             grid-template-columns: auto 1fr;
             gap: 10px;
 
-            .input_field_label{
-                .input span {
-                    margin-bottom: 0;
-                }
-                .input_field {
-                    font-size: 14px;
-                    padding: 10px;
-                }
-                .input_field::placeholder {
-                    font-size: 14px;
-                }
-            }
-            
-            .primary_button {
-                grid-column: 2;
-                justify-self: end;
-                padding: 10px 12px;
-
-                font-size: 12px;
-            }
-
             .user_badge {
-                align-self: start;
+                align-self: flex-start;
 
                 .user_badge_info {
                     display: none;
                 }
             }
 
+            .input_field_label {
+                .input span {
+                    margin-bottom: 0;
+                }
+
+                .input_field {
+                    padding: 10px;
+                    font-size: 14px;
+                }
+
+                .input_field::placeholder {
+                    font-size: 14px;
+                }
+            }
+
             @include screen() {
                 .input_field_label {
-                    .input_field::placeholder {   
-                        font-size: 12px;
-                    }
-    
                     .input_field {
                         padding: 8px;
                         font-size: 12px;
                     }
-                }
 
-                .primary_button {
-                    padding: 8px;
-                    p {
+                    .input_field::placeholder {
                         font-size: 12px;
                     }
+                }
+            }
+        }
+
+        &_actions {
+            grid-column: 2;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+
+            .primary_button,
+            .cancel_button {
+                padding: 10px 12px;
+
+                p {
+                    font-size: 12px;
+                }
+            }
+
+            @include screen() {
+                .primary_button,
+                .cancel_button {
+                    padding: 8px;
                 }
             }
         }
@@ -114,7 +97,7 @@
                 padding-bottom: 0;
             }
 
-            &_body{
+            &_body {
                 display: flex;
                 flex-direction: column;
                 gap: 12px;
@@ -189,6 +172,7 @@
                         
                         p {
                             color: var(--light-text-color);
+                            font-size: 14px;
                         }
                         
                         svg {
@@ -201,32 +185,26 @@
                 }
             }
 
+
+            &_replies{
+                display: flex;
+                width: 100%;
+                align-items: center;
+                border-left: 1px solid var(--line-color);
+                
+                &_list {
+                    gap: 24px;
+                    padding-left: 32px;
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                }
+            }
         }
 
         .comment_highlight {
             color: var(--main-text-selection-color);
             background-color: var(--main-text-selection-background-color);
-        }
-
-        .comment_replies {
-            display: flex;
-            width: 100%;
-            align-items: center;
-            border-left: 1px solid var(--line-color);
-            
-            &_list {
-                gap: 24px;
-                padding-left: 32px;
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-            }
-        }
-
-        .comment_root {
-            margin: 0;
-            border: none;
-            padding: 0;
         }
     }
 }
