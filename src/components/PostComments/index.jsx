@@ -5,10 +5,18 @@ import { useNavigate } from "react-router-dom";
 import "./PostComments.scss";
 
 import { commentPost, getComments } from "../../api/posts.api";
+import { deleteComment, editComment, likeComment } from "../../api/comments.api";
+
 import { format_back, format_date_time } from "../../utils/format";
 import { scrollTo } from "../../utils/navigation";
 
-import { ReactComponent as ReplyIcon } from "../../assets/svg/reply-icon.svg";
+import { ReactComponent as ReplyIcon } from "../../assets/svg/reply.svg";
+import { ReactComponent as DeleteIcon } from "../../assets/svg/delete.svg";
+import { ReactComponent as EditIcon } from "../../assets/svg/edit.svg";
+import { ReactComponent as LikeFilledIcon } from "../../assets/svg/like-filled.svg";
+import { ReactComponent as LikeOutlineIcon } from "../../assets/svg/like-outline.svg";
+import { ReactComponent as ThreeDotsVeritcalIcon } from "../../assets/svg/three-dots-vertical.svg";
+import { ReactComponent as RedirectIcon } from "../../assets/svg/redirect.svg";
 
 import CurrentUserBadge from "../CurrentUserBadge/index.jsx";
 import UserBadge from "../UserBadge/index.jsx";
@@ -16,40 +24,285 @@ import InputField from "../Ui/InputField/index";
 import PrimaryButton from "../../components/Ui/PrimaryButton/index";
 import CancelButton from "../../components/Ui/CancelButton/index";
 import Tooltip from "../Ui/Tooltip/index";
+import Popup from "../Ui/Popup/index.jsx";
 
+const CommentForm = ({
+    value,
+    onChange,
+    onSubmit,
+    onCancel,
+    showModalWindow,
+    navigate,
+    profile,
+    title,
+    placeholder = "Напишите комментарий...",
+    isLoading = false
+}) => {
 
-const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, profile }) => {
+    const handleInputMouseDown = (e) => {
+        if (!profile) {
+            e.preventDefault();
+            showModalWindow({
+                title: `Войдите в аккаунт, чтобы оставить комментарий`,
+                content: (
+                    <PrimaryButton onClick={() => { navigate("/auth/login") }} className="modal_login_link">
+                        <RedirectIcon/>
+                        Войти
+                    </PrimaryButton>
+                )
+            });
+        }
+    };
+
+    return (
+        <form className="comment_form" onSubmit={onSubmit}>
+            {title}
+
+            <div className="comment_form_content">
+                <CurrentUserBadge as_link={false} />
+
+                <InputField
+                    is_multiline
+                    multiline_rows={3}
+                    length={500}
+                    value={value}
+                    onMouseDown={handleInputMouseDown}
+                    placeholder={placeholder}
+                    onChange={(e) => onChange(e.target.value)}
+                />
+
+                <div className="comment_form_actions">
+                    {onCancel && (
+                        <CancelButton
+                            type="button"
+                            onClick={onCancel}
+                        >
+                            Отмена
+                        </CancelButton>
+                    )}
+
+                    <PrimaryButton
+                        type="submit"
+                        disabled={!value.trim()}
+                        is_loading={isLoading}
+                    >
+                        Отправить
+                    </PrimaryButton>
+                </div>
+            </div>
+        </form>
+    );
+};
+
+const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, profile, fetchComments, showToast, post_id }) => {
+    const [showForm, setShowForm] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [replyText, setReplyText] = useState('');
+    const [editText, setEditText] = useState(comment.comment_text);
+    const { showModalWindow } = useContext(AppContext);
+    const navigate = useNavigate();
+
+    const doReply = async (e) => {
+        e.preventDefault();
+
+        const data = {
+            comment_text: replyText,
+            parent_comment_id: comment._id
+        }
+
+        const result = await commentPost(post_id, data)
+
+        if(result.status) {
+            await fetchComments({ onSuccessFetch: (data) => {
+                setReplyText('');
+                setShowForm(false);
+                showToast({
+                    type: "success",
+                    message: "Ответ опубликован"
+                });
+            }});
+        }
+
+    }
+
+    const doEditComment = async (e) => {
+        e.preventDefault();
+
+        const result = await editComment(comment._id, editText);
+
+        if(result.status) {
+            setEditMode(false);
+            await fetchComments({ onSuccessFetch: (data) => {
+                setReplyText('');
+                setShowForm(false);
+                showToast({
+                    type: "success",
+                    message: "Изменения сохранены"
+                });
+            }});
+        }
+        else {
+            showToast({
+                type: "error",
+                message: result.message
+            });
+        }
+    }
+
+    const doLike = async () => {
+        if(!profile) {
+            showToast({
+                type: "error",
+                message: "Войдите в аккаунт, чтобы поставить лайк"
+            });
+            return;
+        }
+        const result = await likeComment(comment._id, comment.likes.includes(profile?._id) ? "DELETE" : "POST");
+
+        if(result.status) {
+            await fetchComments({ onSuccessFetch: (data) => {
+                showToast({
+                    type: "success",
+                    message: comment.likes.includes(profile?._id) ? "Лайк снят" : "Лайк поставлен"
+                });
+            }});
+        }
+        else {
+            showToast({
+                type: "error",
+                message: result.message
+            });
+        }
+    }
+
+    const actions_body = []
+
+    if(profile && profile._id.toString() === comment.author._id.toString()) {
+        actions_body.push({
+            "title": "Редактировать",
+            "onClick": () => {
+                setEditMode(true);
+            },
+            icon: <EditIcon/>
+        });
+    }
+
+    if((profile && profile._id.toString() === comment.author._id.toString()) || (['admin', 'tech_admin'].includes(profile?.role))) {
+        actions_body.push({
+           "title": "Удалить",
+            "onClick": () => {
+                deleteComment(comment._id).then((result) => {
+                    if(result.status === true) {
+                        fetchComments({ onSuccessFetch: (data) => {
+                            showToast({
+                                type: "success",
+                                message: "Комментарий удален"
+                            });
+                        }});
+                    }
+                });
+            },
+            icon: <DeleteIcon/>,
+            type: "danger"
+        });
+    }
+
     return (
         <div
             className={`comment app-transition ${level === 0 ? `comment_root` : ''}`}
         >
-            <div className="comment_top_side">
-                <UserBadge
-                    data={comment.author}
-                    class_name="comment_author"
-                />
-                <Tooltip text={format_date_time(comment.created_date)}>
-                    <p className="comment_top_side_date">
-                            {format_back(comment.created_date)}
-                    </p>
-                </Tooltip>
-                <Tooltip text="Ответить">
-                    <div
-                        className="comment_reply_button app-transition"
-                        onClick={() => { 
-                        setReplyCommentText({ comment_id: comment._id, comment_text: comment.comment_text })
-                        scrollTo("post_comments_submit");
-                    }}>
-                        <ReplyIcon className="comment_reply_icon app-transition"/>
-                    </div>
-                </Tooltip>
-            </div>
+            <div className="comment_body section app-transition">
+                {
+                    editMode ?
+                        <CommentForm
+                            value={editText}
+                            onChange={setEditText}
+                            showModalWindow={showModalWindow}
+                            navigate={navigate}
+                            profile={profile}
+                            onSubmit={doEditComment}
+                            onCancel={() => setEditMode(false)}
+                        />
+                    :
+                        <>
+                            <div className="comment_body_top_side">
+                                <UserBadge
+                                    data={comment.author}
+                                    class_name="comment_author"
+                                />
+                                <Tooltip text={format_date_time(comment.created_date)}>
+                                    <p className="comment_body_top_side_date">
+                                            {format_back(comment.created_date)}
+                                    </p>
+                                </Tooltip>
+                                {
+                                    actions_body.length > 0 ?
 
-            <div className="comment_middle_side">
-                <p className="comment_middle_side_text" id={`comment_${comment._id}`}>
-                    {comment.comment_text}
-                </p>
+                                        <div className="comment_body_top_side_more">
+                                            <Popup
+                                                body={actions_body}   
+                                            >
+                                                <ThreeDotsVeritcalIcon className="app-transition"/>
+                                            </Popup>
+                                        </div>
+                                    :
+                                        <></>
+                                }
+                            </div>
+                            <div className="comment_body_middle_side">
+                                <p className="comment_body_middle_side_text" id={`comment_${comment._id}`}>
+                                    {comment.comment_text}
+                                </p>
+                            </div>
+                            <div className="comment_body_bottom_side">
+                                <Tooltip text="Поставить лайк">
+                                    <button
+                                        className="comment_body_bottom_side_button app-transition"
+                                        onClick={doLike}
+                                    >
+                                        {
+                                            comment.likes.includes(profile?._id) ?
+                                                <LikeFilledIcon className="comment_like_icon app-transition"/>
+                                            :
+                                                <LikeOutlineIcon className="comment_like_icon app-transition"/>
+                                        }
+                                        <p>{comment.likes.length ?? 0}</p>
+                                    </button>
+                                </Tooltip>
+                                <Tooltip text="Ответить">
+                                    <div
+                                        className="comment_body_bottom_side_button app-transition"
+                                        onClick={() => { setShowForm(true) }}>
+                                        <ReplyIcon className="app-transition"/>
+                                        <p>{comment.replies.length ?? 0}</p>
+                                    </div>
+                                </Tooltip>
+                            </div>
+                        </>
+                }
             </div>
+            {
+                showForm ?
+                    <CommentForm
+                        value={replyText}
+                        onChange={setReplyText}
+                        onSubmit={doReply}
+                        onCancel={() => setShowForm(false)}
+                        showModalWindow={showModalWindow}
+                        navigate={navigate}
+                        profile={profile}
+                        title={
+                            <div className="comment_form_reply_info">
+                                <p>
+                                    Ответ пользователю
+                                </p>
+                                    <UserBadge data={comment.author} />
+                            </div>
+                        }
+                    />
+                :
+                    <></>
+            }
             {comment.replies?.length > 0 && (
                 <div className="comment_replies">
                     <div className="comment_replies_list">
@@ -60,7 +313,10 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                                 level={level + 1}
                                 replyCommentText={replyCommentText}
                                 setReplyCommentText={setReplyCommentText}
+                                fetchComments={fetchComments}
+                                showToast={showToast}
                                 profile={profile}
+                                post_id={post_id}
                             />
                         ))}
                     </div>
@@ -73,11 +329,19 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
 const PostComments = ({ postId, navigateTo }) => {
     const [comments, setComments] = useState([]);
     const [commentText, setCommentText] = useState('');
-    const [replyCommentText, setReplyCommentText] = useState(null);
-    const [isDisabled, setIsDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const { profile, showModalWindow } = useContext(AppContext);
+    const { profile, showModalWindow, showToast } = useContext(AppContext);
     const navigate = useNavigate();
+
+    const fetchComments = async ({ onSuccessFetch }) => {
+        const result = await getComments(postId)
+        if(result.status === true) {
+
+            onSuccessFetch && onSuccessFetch(result.data);
+
+            setComments(result.data);
+        }
+    };
 
     const doComment = async (e) => {
         e.preventDefault();
@@ -86,46 +350,20 @@ const PostComments = ({ postId, navigateTo }) => {
             comment_text: commentText
         }
 
-        if(replyCommentText) {
-            data.parent_comment_id = replyCommentText.comment_id;
-        }
 
-        await commentPost(postId, data).then((result) => {
-            if(result.status === true) {
+        const result = await commentPost(postId, data)
+
+        if(result.status === true) {
+            await fetchComments({ onSuccessFetch: (data) => {
                 setCommentText('');
-                getComments(postId).then((result) => {
-                    if(result.status === true) {
-                        setComments(result.data);
-                        setReplyCommentText(null);
-                        setCommentText('');
-                    }
+                showToast({
+                    type: "success",
+                    message: "Ответ опубликован"
                 });
-            }
-            setIsLoading(false);
-        });
+            }});
+        }
+        setIsLoading(false);
     }
-
-    const handleInputMouseDown = (e) => {
-        if (!profile) {
-            e.preventDefault();
-            showModalWindow({
-                title: `Войдите в аккаунт, чтобы оставить комментарий`,
-                content: (
-                    <PrimaryButton onClick={() => { navigate("/auth/login") }} className="modal_login_link">
-                        Войти
-                    </PrimaryButton>
-                )
-            });
-        }
-    };
-
-    useEffect(() => {
-        if(commentText.length > 0){
-            setIsDisabled(false);
-        } else {
-            setIsDisabled(true);
-        }
-    }, [commentText])
 
     useEffect(() => {
         if(postId) {
@@ -153,60 +391,25 @@ const PostComments = ({ postId, navigateTo }) => {
     return (
         <div className="post_comments">
             {
-                
-                <form className="post_comments_form app-transition" onSubmit={doComment}>
-                    {
-                        replyCommentText ? 
-                        <div className="post_comments_form_top">
-                            <p className="post_comments_form_top_left">
-                                Ответ на комментарий:{" "}
-                                <span
-                                    className="post_comments_form_top_left_comment_text app-transition"
-                                    onClick={() => {
-                                        const element = document.getElementById(`comment_${replyCommentText.comment_id}`)
-                                        if (element) {
-                                            scrollTo(`comment_${replyCommentText.comment_id}`);
-
-                                            element.classList.add("comment_highlight");
-                                            setTimeout(() => {
-                                                element.classList.remove("comment_highlight");
-                                            }, 2000);
-                                        }
-                                    }}
-                                >
-                                    {replyCommentText.comment_text}
-                                </span>
-                            </p>
-                            <CancelButton onClick={() => setReplyCommentText(null)}>Отмена</CancelButton>
-                        </div>
-                        :
-                        <></>
-                    }
-                    <div className="post_comments_form_content">
-                        <CurrentUserBadge as_link={false} />
-                        <InputField class_name="post_comments_input"
-                            is_multiline={true} multiline_rows={3} length={500} type="text" input_label=""
-                            value={commentText} placeholder="Напишите комментарий..."
-                            onMouseDown={ (e) => { handleInputMouseDown(e) } }
-                            onChange={(e) => {
-                                setCommentText(e.target.value);
-                            }
-                        }/>
-                        <PrimaryButton type="submit" id={"post_comments_submit"} text="Отправить" class_name="post_comments_submit" disabled={isDisabled} is_loading={isLoading}>
-                            Отправить
-                        </PrimaryButton>
-                    </div>
-                </form>
-              
+                <CommentForm
+                    value={commentText}
+                    onChange={setCommentText}
+                    onSubmit={doComment}
+                    isLoading={isLoading}
+                    showModalWindow={showModalWindow}
+                    navigate={navigate}
+                    profile={profile}
+                /> 
             }
             <div className="post_comments_list">
                 {comments?.map((comment) => (
                     <Comment
                         key={comment._id}
                         comment={comment}
-                        replyCommentText={replyCommentText}
-                        setReplyCommentText={setReplyCommentText}
+                        fetchComments={fetchComments}
+                        showToast={showToast}
                         profile={profile}
+                        post_id={postId}
                     />
                 ))}
             </div>
