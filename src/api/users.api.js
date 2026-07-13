@@ -2,9 +2,6 @@ import { API_URL } from "../config"
 
 
 export const getUsers = async (query = []) => {
-    if (query.length === 0) {
-        return [];
-    }
 
     const params = new URLSearchParams();
 
