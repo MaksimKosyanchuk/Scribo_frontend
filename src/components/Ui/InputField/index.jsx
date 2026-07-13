@@ -31,7 +31,12 @@ const Input = forwardRef(
   return (
     <div className="input_field_label">
       <div className="input">
-        <p className="input_label_text">{input_label ?? ""}</p>
+        {
+          input_label ?
+            <p className="input_label_text">{input_label ?? ""}</p>
+          :
+            <></>
+        }
 
         <div className="input_wrapper">
           <InputComponent
