@@ -1,11 +1,8 @@
-@import "../../styles/categoryColors.scss";
+@use "../../styles/helpers.scss" as *;
+@use "../../styles/categoryColors.scss" as *;
 
 .create_post {
-
-
     .search_select {
-        
-
         @include category-colors {
             .search_select_input {
                 background: rgb(from var(--category-color) r g b / .1);;
@@ -33,7 +30,7 @@
                 color: var(--category-color);
             }
 
-            &:hover {
+            @include hover {
                 background-color: rgb(from var(--category-color) r g b / .1);
             }
 

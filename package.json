@@ -1,6 +1,6 @@
 {
   "name": "scribo-frontend",
-  "version": "3.9.2",
+  "version": "3.9.3",
   "private": true,
   "description": "Frontend for Scribo blog platform",
   "dependencies": {

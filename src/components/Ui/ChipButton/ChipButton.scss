@@ -1,4 +1,4 @@
-@import "../../../styles/helpers.scss";
+@use "../../../styles/helpers" as *;
 
 .chip_button {
     display: flex;
@@ -13,10 +13,10 @@
         padding: 6px 12px;
         font-size: 12px;
     }
-}
 
-.chip_button:hover {
-    background-color: var(--chip-button-hover-background-color);
+    @include hover {
+        background-color: var(--chip-button-hover-background-color);
+    }
 }
 
 .chip_button_active {
@@ -24,12 +24,12 @@
     background-color: var(--chip-active-button-background-color);
     border-color: var(--chip-active-button-background-color);
     
-    p{
+    p {
         color: var(--chip-active-button-text-color);
     }
-}
 
-.chip_button_active:hover {
-    background-color: var(--chip-active-button-hover-background-color);
-    border-color: var(--chip-active-button-hover-background-color);
+    @include hover {
+        background-color: var(--chip-active-button-hover-background-color);
+        border-color: var(--chip-active-button-hover-background-color);
+    }
 }

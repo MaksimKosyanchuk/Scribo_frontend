@@ -1,12 +1,12 @@
-@import "../../../styles/helpers.scss";
+@use "../../../styles/helpers" as *;
 
-.text_editor{
+.text_editor {
     &_body {
         flex-direction: column;
         border-radius: 8px;
         border: 1px solid var(--input-outline-color);
 
-        &_top_side{
+        &_top_side {
             display: flex;
             justify-content: space-between;
             width: 100%;
@@ -18,12 +18,11 @@
                 gap: 8px;
             }
 
-
             &_toolbar {
                 display: flex;
                 align-items: center;
                 gap: 6px;
-            
+
                 @include screen() {
                     justify-content: space-between;
                 }
@@ -42,10 +41,10 @@
                         width: 16px;
                         height: 16px;
                     }
-                }
 
-                button:hover {
-                    background: var(--text-editor-toolbar-item-hover-background);
+                    @include hover {
+                        background: var(--text-editor-toolbar-item-hover-background);
+                    }
                 }
 
                 &_bold {
@@ -53,13 +52,15 @@
                 }
             }
         }
-        
+
         &_input {
             padding: 18px;
             line-height: 1.12;
             min-height: calc(1.12em * 12);
-            
-            p, span,strong {
+
+            p,
+            span,
+            strong {
                 color: var(--input-text-color);
             }
 
@@ -77,25 +78,26 @@
         }
     }
 }
+
 .text_editor_body:has(.text_editor_body_input:focus) {
     border: 1px solid var(--input-outline-active-color);
 }
 
 .color_picker_button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
 }
 
 .color_picker_preview {
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
 }
 
 .text_editor_bold {

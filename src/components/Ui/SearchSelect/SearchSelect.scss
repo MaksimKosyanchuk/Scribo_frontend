@@ -1,4 +1,4 @@
-@import "../../../styles/helpers.scss";
+@use "../../../styles/helpers" as *;
 
 .search_select {
     display: flex;
@@ -78,7 +78,7 @@
     &_close{
         cursor: pointer;
 
-        &:hover {
+        @include hover {
             background-color: var(--section-item-hover-background-color);
         }
     }
@@ -132,8 +132,10 @@
             }
         }
     
-        &:not(.search_select_item_selected):hover {
-            background-color: var(--section-item-hover-background-color);
+        &:not(.search_select_item_selected) {
+            @include hover {
+                background-color: var(--section-item-hover-background-color);
+            }
         }
     
         &.search_select_item_selected {

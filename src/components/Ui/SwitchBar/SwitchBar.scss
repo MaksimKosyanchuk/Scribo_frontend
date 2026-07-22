@@ -1,3 +1,5 @@
+@use "../../../styles/helpers" as *;
+
 .switcher_bar {
     position: relative;
     display: flex;
@@ -33,7 +35,7 @@
 .switcher_bar_item {
     position: relative;
     z-index: 1;
-    flex: 0 0 auto;
+    flex: 1;
 
     border-radius: 999px;
 
@@ -60,16 +62,12 @@
         height: 16px;
     }
 
-    &:hover {
+    @include hover {
         color: var(--switcher-bar-active-item-color);
-    }
+    }    
 }
 
 
 .switcher_bar_item_active {
     color: var(--switcher-bar-active-item-color);
-}
-
-.switcher_bar_item_active:hover {
-    background: transparent;
 }

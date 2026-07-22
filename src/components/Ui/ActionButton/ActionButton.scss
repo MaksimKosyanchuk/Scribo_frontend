@@ -1,4 +1,4 @@
-@import "../../../styles/helpers.scss";
+@use "../../../styles/helpers" as *;
 
 .action_button {
     padding: 12px 24px;
@@ -14,9 +14,9 @@
         font-size: 12px;
         padding: 10px 20px;
     }
-}
 
-.action_button:hover {
-    color: var(--submit-button-secondary-color);
-    background: var(--submit-button-primary-color);
+    @include hover {
+        color: var(--submit-button-secondary-color);
+        background: var(--submit-button-primary-color);
+    }
 }

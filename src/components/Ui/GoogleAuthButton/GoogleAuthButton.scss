@@ -1,3 +1,5 @@
+@use "../../../styles/helpers" as *;
+
 .google_auth_button {
     display: flex;
     justify-content: center;
@@ -8,24 +10,24 @@
     border: 1px solid var(--submit-button-primary-color);
     color: var(--submit-button-primary-color);
     border-radius: 8px;
-}
 
-.google_auth_button:hover {
-    background-color: var(--submit-button-primary-color);
+    @include hover {
+        background-color: var(--submit-button-hover-background-color);
 
-    p {
-        color: var(--submit-button-secondary-color);
+        p {
+            color: var(--submit-button-hover-text-color);
+        }
     }
 }
 
 .google_auth_button_loading {
     cursor: not-allowed;
     
+    @include hover {
+        background-color: unset;
+    }
+
     .loader {
         position: absolute;
     }
-}
-
-.google_auth_button_loading:hover {
-    background-color: unset;
 }

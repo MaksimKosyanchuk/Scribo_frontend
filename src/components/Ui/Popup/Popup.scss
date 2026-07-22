@@ -1,3 +1,5 @@
+@use "../../../styles/helpers" as *;
+
 .popup {
     display: flex;
     
@@ -26,6 +28,10 @@
         border-radius: 6px;
         color: var(--text-color);
         
+        @include hover {
+            background-color: var(--section-item-hover-background-color);
+        }
+
         &_title{
             text-align: start;
             font-size: 14px;
@@ -37,21 +43,16 @@
             height: 16px;
         }
     }
-    
-
-    &_item:hover {
-        background-color: var(--section-item-hover-background-color);
-    }
 
     &_item_danger {
         color: var(--red-f5);
         
+        @include hover {
+            background-color: var(--popup-danger-item-hover-background-color);
+        }
+
         .popup_menu_item_title {
             color: var(--red-f5);
         }
-    }
-
-    &_item_danger:hover {
-        background-color: var(--popup-danger-item-hover-background-color);
     }
 }
