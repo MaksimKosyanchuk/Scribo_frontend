@@ -32,7 +32,6 @@
             align-items: center;
             line-height: 1;
             font-size: 14px;
-
             color: var(--light-text-color);
         }
 
@@ -40,13 +39,13 @@
             height: 18px;
             width: 18px;
         }
-    }
-    
-    &_button:hover {
-        color: var(--text-color);
 
-        p {
+        @include hover {
             color: var(--text-color);
+
+            p {
+                color: var(--text-color);
+            }
         }
     }
 }

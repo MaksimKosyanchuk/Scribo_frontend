@@ -1,4 +1,4 @@
-@import "../../styles/helpers.scss";
+@use "../../styles/helpers" as *;
 
 .admin_panel_content_logs_page {
     display: flex;

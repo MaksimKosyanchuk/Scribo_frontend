@@ -1,9 +1,15 @@
-@import "../../styles/helpers.scss";
+@use "../../styles/helpers" as *;
 
 .user_badge {
     display: flex;
     align-items: center;
     box-sizing: content-box;
+
+    @include hover {
+        .user_badge_info_name {
+            color: var(--user-badge-name-hover-color);
+        }
+    }
 
     &_avatar {
         width: 24px;
@@ -49,11 +55,5 @@
                 height: 14px;
             }
         }
-    }
-}
-
-.user_badge:hover {
-    .user_badge_info_name {
-        color: var(--user-badge-name-hover-color);
     }
 }

@@ -33,7 +33,7 @@
         }
     }
 
-    &_right:hover{
+    @include hover {
         color: var(--text-color);
     }
 }
