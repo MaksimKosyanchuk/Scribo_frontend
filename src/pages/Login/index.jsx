@@ -1,11 +1,15 @@
 import { useState, useContext, useEffect } from 'react';
 import { AppContext } from '../../App';
-import { useNavigate } from 'react-router-dom';
-import { API_URL } from '../../config';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+
 import InputField from '../../components/Ui/InputField/index';
 import PrimaryButton from '../../components/Ui/PrimaryButton';
+import Field from '../../components/Ui/Field/index';
+
+import { verificationGoogle, loginGoogle, loginUsername } from '../../api/auth.api';
+
 import "./Login.scss";
+
 import GoogleAuthButton from '../../components/Ui/GoogleAuthButton/index';
 
 const Login = () => {
@@ -23,20 +27,14 @@ const Login = () => {
    
     useEffect(() => {
         const do_login = async () => {
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ google_token: googleToken }),
-            }
-            
+
             setIsLoading(true)
-            const verification = await fetch(`${API_URL}/api/auth/verification/google`, requestOptions)
-            const result = await verification.json()
+            const result = await verificationGoogle(googleToken)
 
             if(result.status === true) {
                 if(result.data.is_registered === true) {
-                    const login = await fetch(`${API_URL}/api/auth/login/google`, requestOptions)
-                    const login_result = await login.json()
+                    const login_result = await loginGoogle(googleToken)
+
                     setIsLoading(false)
                     localStorage.setItem('token', login_result.data.token);
                     navigate('/posts');
@@ -98,66 +96,60 @@ const Login = () => {
         if(!field_validation()) {
             return
         }
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_name: fields.user_login, password: fields.password }),
-        }
-        try {
-            setIsLoading(true)
-            const login = await fetch(`${API_URL}/api/auth/login/username`, requestOptions)
-            const result = await login.json() 
-            setIsLoading(false)
-            
-            if (result.status === true) { 
-                localStorage.setItem('token', result.data.token); 
-                navigate('/posts');
-                showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
-                return result; 
-            } 
-            else { 
-                showToast({ message: 'Неверно!', type: 'error' }); 
-                if (result?.errors?.body) {
-                    const formattedErrors = Object.fromEntries(
-                        Object.entries(result.errors.body).map(
-                            ([field, obj]) => [field, obj.message]
-                        )
-                    );
-
-                    setErrors(formattedErrors);
-                }
         
-                return result; 
-            } 
-        }
-        catch (e) { 
-            console.log(e)
+        setIsLoading(true)
+        const result = await loginUsername(fields.user_login, fields.password)
+        setIsLoading(false)
+        
+        if (result.status === true) { 
+            localStorage.setItem('token', result.data.token); 
+            navigate('/posts');
+            showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
+            return result; 
         } 
+        else { 
+            showToast({ message: 'Неверно!', type: 'error' }); 
+            if (result?.errors?.body) {
+                const formattedErrors = Object.fromEntries(
+                    Object.entries(result.errors.body).map(
+                        ([field, obj]) => [field, obj.message]
+                    )
+                );
+
+                setErrors(formattedErrors);
+            }
+    
+            return result; 
+        }
     };
  
   return (
     <div className='login'>
         <form className='form_input app-transition'>
-            <InputField
-                className={`user_login`}
-                type="text"
-                onChange={(e) => setFields({ ...fields, user_login: e.target.value })}
-                onFocus={() => handleFocus('user_login')}
-                input_label="Логин"
-                placeholder="Введите имя пользователя или email"
-                value={fields.user_login}
-                error={errors?.user_login ?? null}
-            />
-            <InputField
-                className={`password`}
-                type="password"
-                onChange={(e) => setFields({ ...fields, password: e.target.value })}
-                onFocus={() => handleFocus('password')}
-                input_label="Пароль"
-                placeholder="Введите пароль"
-                value={fields.password}
-                error={errors?.password ?? null}
-            />
+            <Field title="Логин" error={errors?.user_login ?? null}>
+                <InputField
+                    className={`user_login`}
+                    type="text"
+                    onChange={(e) => setFields({ ...fields, user_login: e.target.value })}
+                    onFocus={() => handleFocus('user_login')}
+                    input_label="Логин"
+                    placeholder="Введите имя пользователя или email"
+                    value={fields.user_login}
+                    error={errors?.user_login ?? null}
+                />
+            </Field>
+            <Field title="Пароль" error={errors?.password ?? null}>
+                <InputField
+                    className={`password`}
+                    type="password"
+                    onChange={(e) => setFields({ ...fields, password: e.target.value })}
+                    onFocus={() => handleFocus('password')}
+                    input_label="Пароль"
+                    placeholder="Введите пароль"
+                    value={fields.password}
+                    error={errors?.password ?? null}
+                />
+            </Field>
             <PrimaryButton onClick={handleLogin} is_loading={isLoading}>Войти</PrimaryButton>
             <GoogleAuthButton setGoogleToken={setGoogleToken}/>
             <p className={"redirect_object"}>Нет акаунта?

@@ -137,4 +137,54 @@ const likePost = async (id, method="POST") => {
     return result
 }
 
-export { getPosts, deletePost, getPostById, commentPost, getComments, likePost }
+const savePost = async (id, method="POST") => {
+    let response = await fetch(`${API_URL}/api/posts/${id}/save`, { method, credentials: "include", headers:{ 'Authorization': `Bearer ${localStorage.getItem("token")}` } })
+    const result = await response.json();
+    const code = response.status
+
+    return {
+        statusCode: code,
+        ...result
+    }
+}
+
+const createPost = async (data) => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/posts`, { method: "POST", body: data, headers: headers})
+        const result = await response.json()
+        const code = response.status
+
+        console.log(result)
+        return {
+            statusCode: code,
+            ...result
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
+const editPost = async (id, data) => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+    }
+    try {
+        const response = await fetch(`${API_URL}/api/posts/${id}`, { method: "PATCH", body: data, headers: headers})
+        const result = await response.json()
+        const code = response.status
+        return {
+            statusCode: code,
+            ...result
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
+export { getPosts, deletePost, getPostById, commentPost, getComments, likePost, savePost, createPost, editPost }

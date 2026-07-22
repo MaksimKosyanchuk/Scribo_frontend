@@ -33,4 +33,30 @@ const getProfile = async () => {
     }
 }
 
-export { getProfile }
+const editProfile = async (data) => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        return {
+            status: false,
+            message: "No token found",
+            data: null
+        };
+    }
+
+    const headers = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    const response = await fetch(`${API_URL}/api/profile/`, { method: "PATCH", body: data, headers: headers });
+    
+    const code = response.status;
+    const result = await response.json();
+    
+    return {
+        statusCode: code,
+        ...result
+    }
+}
+
+export { getProfile, editProfile };

@@ -1,11 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 
-import { API_URL } from "../../config";
-
 import { AppContext } from "../../App";
 
-import { likePost } from "../../api/posts.api";
+import { likePost, savePost } from "../../api/posts.api";
 
 import "./PostActions.scss";
 
@@ -50,27 +48,20 @@ const PostActions = ({ className, article, setArticle }) => {
 
     const save_post = async () => {
         setSavingProcess(true)
-        const requestOptions = {
-            method: profile?.saved_posts?.some((post) => post.toString() === article._id) ? 'DELETE' : 'POST',
-            headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}`}
-        };
 
-        try {
-            let result = await fetch(`${API_URL}/api/posts/${article._id}/save`, requestOptions)
-            result = await result.json();
-            if (result.status === true) {
-                let saved_posts = isSaved ? profile.saved_posts.filter(element => element !== article._id ) : [...profile.saved_posts, article._id]
-                setProfile({ ...profile, saved_posts: saved_posts })
-                showToast({ message: isSaved ? "Убрано из сохранённых!" : "Сохранено!", type: "success" });
-                setIsSaved(!isSaved)
-            } else {
+        const result = await savePost(article._id, profile?.saved_posts?.some((post) => post.toString() === article._id) ? 'DELETE' : 'POST')
+        
+        if (result.status === true) {
+            let saved_posts = isSaved ? profile.saved_posts.filter(element => element !== article._id ) : [...profile.saved_posts, article._id]
+            setProfile({ ...profile, saved_posts: saved_posts })
+            showToast({ message: isSaved ? "Убрано из сохранённых!" : "Сохранено!", type: "success" });
+            setIsSaved(!isSaved)
+        } else {
+            if(result.statusCode === 401) {
                 showToast({ message: "Чтобы сохранить пост, войдите в аккаунт!", type: "warning" })
             }
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setSavingProcess(false)
         }
+        setSavingProcess(false)
     };
 
     const getCommentsCount = (comments) => {
