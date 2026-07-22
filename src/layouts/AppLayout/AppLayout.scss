@@ -30,15 +30,14 @@
             border: 1px solid var(--submit-button-primary-color);
             border-radius: 8px;
             
+            @include hover {
+                color: var(--submit-button-secondary-color);
+                background-color: var(--submit-button-primary-color);
+            }
+
             @include screen() {
                 width: 100%;
             }
         }
-
-        button:hover {
-            color: var(--submit-button-secondary-color);
-            background-color: var(--submit-button-primary-color);
-        }
-
     }
 }

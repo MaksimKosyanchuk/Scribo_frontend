@@ -1,4 +1,4 @@
-@import "../../styles/helpers.scss";
+@use "../../styles/helpers" as *;
 
 .admin_panel_content_amdins_page {
     display: flex;
@@ -17,7 +17,7 @@
         box-sizing: border-box;
         width: 100%;
 
-        &:hover {
+        @include hover {
             background: var(--section-item-hover-background-color);
         }
 
@@ -43,7 +43,7 @@
                 color: var(--section-light-color);
             }
 
-            &:hover {
+            @include hover {
                 svg {
                     color: var(--section-color);
                 }

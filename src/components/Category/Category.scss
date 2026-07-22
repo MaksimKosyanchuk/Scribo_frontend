@@ -1,4 +1,4 @@
-@import "../../styles/categoryColors.scss";
+@use "../../styles/categoryColors.scss" as *;
 
 .category_content {
     display: flex;

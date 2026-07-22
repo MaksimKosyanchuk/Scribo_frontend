@@ -1,3 +1,5 @@
+@use "../../../styles/helpers" as *;
+
 .dropdown {
     display: flex;
     flex-direction: column;
@@ -21,17 +23,18 @@
                 text-align: start;
                 font-size: 16px;
             }
-        }
-    
-        .dropdown_item:hover {
-            background-color: var(--dropdown-item-hover-background-color);
-        }
 
+            @include hover {
+                background-color: var(--dropdown-item-hover-background-color);
+            }
+        }
+        
         .selected {
             background-color: var(--dropdown-selected-background-color);
-        }
-        .selected:hover {
-            background-color: var(--dropdown-selected-background-color);
+
+            @include hover {
+                background-color: var(--dropdown-selected-background-color);
+            }
         }
     }
 
@@ -47,5 +50,4 @@
             font-size: 16px;
         }
     }
-
 }

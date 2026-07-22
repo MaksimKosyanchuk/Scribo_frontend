@@ -1,5 +1,5 @@
-@import "../../styles/helpers.scss";
-@import "../../styles//categoryColors.scss";
+@use "../../styles/helpers" as *;
+@use "../../styles/categoryColors.scss" as *;
 
 .admin_panel {
     &_content{
@@ -64,7 +64,7 @@
                         color: var(--category-color);
                     }
 
-                    &:hover {
+                    @include hover {
                         background-color: rgb(from var(--category-color) r g b / .1);
                     }
 
@@ -96,7 +96,7 @@
                         border: 1px solid var(--line-color);
                         border-radius: 8px;
     
-                        &:hover{
+                        @include hover {
                             background-color: var(--chip-button-hover-background-color);
                         }
 
@@ -203,7 +203,7 @@
                     padding: 8px;
                 }
 
-                &:hover{
+                @include hover {
                     background: var(--section-item-hover-background-color);
                 }
 
@@ -300,7 +300,7 @@
 
                         color: var(--section-light-color);
 
-                        &:hover{
+                        @include hover {
                             color: var(--section-light-hover-color);
                         }
                     }

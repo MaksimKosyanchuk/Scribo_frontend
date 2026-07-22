@@ -1,4 +1,4 @@
-@import "../../styles/helpers.scss";
+@use "../../styles/helpers" as *;
 
 .profile{
     display: flex;
@@ -8,6 +8,7 @@
 
     &_info{
         display: flex;
+        flex-wrap: wrap;
         padding: 30px;
         gap: 20px;
 
@@ -86,13 +87,14 @@
         &_middle {
             display: flex;
             flex-direction: column;
+            margin-right: auto;
         }
 
         &_right {
             display: flex;
             justify-content: space-between;
             flex-direction: column;
-            margin-left: auto;
+            gap: 10px;
 
             @include screen() {
                 margin-left: 0;
@@ -130,6 +132,10 @@
                     padding: 20px;
                     gap: 4px;
                     cursor: pointer;
+                    
+                    @include hover{
+                        background: var(--profile-badge-hover-background-color);
+                    }
 
                     @include screen() {
                         padding: 10px;
@@ -151,10 +157,6 @@
                             font-size: 16px;
                         }
                     }
-                }
-
-                &_item:hover{
-                    background: var(--profile-badge-hover-background-color);
                 }
             }
         }

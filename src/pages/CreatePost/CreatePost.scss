@@ -1,5 +1,5 @@
-@import "../../styles/helpers.scss";
-@import "../../styles/categoryColors.scss";
+@use "../../styles/helpers" as *;
+@use "../../styles/categoryColors" as *;
 
 .create_post{
     display: flex;
@@ -115,7 +115,7 @@
                 color: var(--category-color);
             }
 
-            &:hover {
+            @include hover {
                 background-color: rgb(from var(--category-color) r g b / .1);
             }
 

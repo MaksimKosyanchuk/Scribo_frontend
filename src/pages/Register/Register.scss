@@ -35,11 +35,11 @@
             a {
                 font-weight: bold;
                 margin-left: 5px;
-            }
-            
-            a:hover{
-                text-decoration: underline;
-            }
+
+                @include hover{
+                    text-decoration: underline;
+                }
+            }            
         }
     
         .drop_file{

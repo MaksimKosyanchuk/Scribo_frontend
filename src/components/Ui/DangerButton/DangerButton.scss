@@ -1,23 +1,21 @@
+@use "../../../styles/helpers" as *;
+
 .danger_button {
     padding: 12px 24px;
     font-size: 14px;
     border-radius: 8px;
     border: 1px solid var(--red-button-primary-color);
     color: var(--red-button-primary-color);
-}
 
-.danger_button:hover {
-    color: var(--red-button-secondary-color);
-    background: var(--red-button-primary-color);
+    @include hover {
+        color: var(--red-button-secondary-color);
+        background: var(--red-button-primary-color);
+    }
+    
 }
 
 .danger_button_active {
     color: var(--red-button-secondary-color);
     background: var(--red-button-third-color);
     border-color: var(--red-button-third-color);
-}
-
-.danger_button:hover {
-    background: var(--red-button-primary-color);
-    border-color: var(--red-button-primary-color);
 }
