@@ -1,7 +1,7 @@
 import { API_URL } from "../config"
 
 
-export const getUsers = async (query = []) => {
+const getUsers = async (query = []) => {
 
     const params = new URLSearchParams();
 
@@ -28,9 +28,35 @@ export const getUsers = async (query = []) => {
     }
 };
 
-export const read_notifications = async () => {
+const read_notifications = async () => {
     const headers = { 'Authorization': `Bearer ${localStorage.getItem("token")}`}
     
     const result = await fetch(`${API_URL}/api/profile/notifications`, { method: "PATCH", headers: headers })
     return await result.json();
+}
+
+const follow = async ({method="POST", user_id}) => {
+    try {
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+        const response = await fetch(`${API_URL}/api/users/${user_id}/follow`, { method: method,  headers: headers })
+
+        const status = response.status;
+        const result = await response.json();
+
+        return {
+            statusCode: status,
+            ...result
+        };
+    }
+    catch(e) {
+        console.log(e)
+    }
+}
+
+export {
+    getUsers,
+    read_notifications,
+    follow
 }

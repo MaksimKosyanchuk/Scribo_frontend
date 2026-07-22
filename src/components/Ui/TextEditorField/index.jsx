@@ -261,10 +261,6 @@ export default function TextEditor({
               }}
             />
         </div>
-        <div className={`input_field_label_error_message ${error ? "show" : ""}`}>
-          <WarningIcon className="input_field_label_error_message_logo" />
-          <p>{error}</p>
-        </div>
       </div>
       </LexicalComposer>
   );

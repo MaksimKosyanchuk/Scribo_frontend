@@ -1,18 +1,70 @@
 import "./SwitchBar.scss";
+import { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
 
-export default function SwitchBar({ active_index, setActiveIndex, items }) {
+export default function SwitchBar({
+    active_index,
+    setActiveIndex,
+    items,
+}) {
+    const containerRef = useRef(null);
+    const buttonsRef = useRef([]);
+
+    const [indicator, setIndicator] = useState({
+        left: 0,
+        width: 0,
+    });
+
+    const updateIndicator = useCallback(() => {
+        const button = buttonsRef.current[active_index];
+
+        if (!button) return;
+
+        setIndicator({
+            left: button.offsetLeft,
+            width: button.offsetWidth,
+        });
+
+    }, [active_index]);
+
+    useLayoutEffect(() => {
+        updateIndicator();
+    }, [active_index, items, updateIndicator]);
+
+    useEffect(() => {
+        window.addEventListener("resize", updateIndicator);
+
+        return () =>
+            window.removeEventListener("resize", updateIndicator);
+    }, [updateIndicator]);
+
     return (
-        <div className="switcher_bar app-transition">
+        <div
+            ref={containerRef}
+            className="switcher_bar app-transition"
+        >
+            <div
+                className="switcher_bar_indicator"
+                style={{
+                    width: indicator.width,
+                    transform: `translateX(${indicator.left}px)`,
+                }}
+            />
+
             {items.map((item, index) => (
                 <button
-                    key={ index }
+                    key={index}
+                    ref={(el) => (buttonsRef.current[index] = el)}
                     type="button"
-                    className={ `switcher_bar_item app-transition ${ active_index === index ? "switcher_bar_item_active" : "" }` }
-                    onClick={ () => setActiveIndex(index) }
+                    className={`switcher_bar_item ${
+                        active_index === index
+                            ? "switcher_bar_item_active"
+                            : ""
+                    }`}
+                    onClick={() => setActiveIndex(index)}
                 >
-                    { item }
+                    {item}
                 </button>
             ))}
         </div>
-    )
+    );
 }

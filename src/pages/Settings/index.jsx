@@ -1,13 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../App';
-import { API_URL } from '../../config';
+
+import { editProfile } from '../../api/profile.api';
+
 import InputField from '../../components/Ui/InputField/index';
 import DropFile from '../../components/Ui/DropFile/index';
 import Toggle from '../../components/Ui/Toggle/index';
 import PrimaryButton from '../../components/Ui/PrimaryButton';
 import DangerButton from '../../components/Ui/DangerButton';
+import Field from '../../components/Ui/Field';
+
 import "./Settings.scss";
+
 import { ReactComponent as AvatarIcon } from "../../assets/svg/avatar-icon.svg"
 
 const Settings = () => {
@@ -15,6 +20,7 @@ const Settings = () => {
     const [ initialized, setInitialized ] = useState(false);
     const navigate = useNavigate();
     const [errors, setErrors] = useState({})
+    const [isLoading, setIsLoading] = useState(false);
 
     const [ fields, setFields ] = useState(
         {
@@ -122,7 +128,9 @@ const Settings = () => {
     }
 
     const save_settings = async () => {
+        setIsLoading(true);
         if(!field_validation()) {
+            setIsLoading(false);
             return
         }
 
@@ -145,14 +153,10 @@ const Settings = () => {
             formData.append('avatar', fields.avatar ?? '');
         }
 
-        const headers = {
-            'Authorization': `Bearer ${localStorage.getItem("token")}`
-        }
-        
         try {
-            const register = await fetch(`${API_URL}/api/profile/`, { method: "PATCH", body: formData, headers: headers });
-            const result = await register.json();
-            
+            const result = await editProfile(formData);
+
+            setIsLoading(false);
             if (result.status === true) {
                 setProfile(prev => ({
                     ...prev,
@@ -243,31 +247,33 @@ const Settings = () => {
                                 </div>
                             </div>
                         </div>
-                    <InputField
-                        className={`user_name`}
-                        type="text"
-                        onChange={(e) => setFields({ ...fields, nick_name: e.target.value })}
-                        onFocus={() => handleFocus('nick_name')}
-                        input_label="Имя пользователя"
-                        placeholder="User Name"
-                        value={fields?.nick_name}
-                        error={errors?.nick_name ?? null}
-                    />
-                    <InputField
-                        className={`description`}
-                        type="text"
-                        is_multiline = {true}
-                        length={60}
-                        rows={3}
-                        onChange={(e) => setFields({ ...fields, description: e.target.value })}
-                        onFocus={() => handleFocus('description')}
-                        input_label="Описание"
-                        placeholder="Description of profile"
-                        value={fields?.description}
-                        error={errors?.description ?? null}
-                    />
+                    <Field error={errors?.nick_name ?? null} title={"Имя пользователя"}>
+                        <InputField
+                            className={`user_name`}
+                            type="text"
+                            onChange={(e) => setFields({ ...fields, nick_name: e.target.value })}
+                            onFocus={() => handleFocus('nick_name')}
+                            placeholder="User Name"
+                            value={fields?.nick_name}
+                            error={errors?.nick_name ?? null}
+                        />
+                    </Field>
+                    <Field error={errors?.description ?? null} title={"Описание"}>
+                        <InputField
+                            className={`description`}
+                            type="text"
+                            is_multiline = {true}
+                            length={60}
+                            rows={3}
+                            onChange={(e) => setFields({ ...fields, description: e.target.value })}
+                            onFocus={() => handleFocus('description')}
+                            placeholder="Description of profile"
+                            value={fields?.description}
+                            error={errors?.description ?? null}
+                        />
+                    </Field>
                     <div className='form_input_buttons'>
-                        <PrimaryButton type='button' onClick={save_settings}>Сохранить</PrimaryButton>
+                        <PrimaryButton type='button' is_loading={isLoading} onClick={save_settings}>Сохранить</PrimaryButton>
                         <DangerButton className="logout_button app-transition" type="button" onClick={logout}>Выйти с аккаунта</DangerButton>
                     </div>
                 </>

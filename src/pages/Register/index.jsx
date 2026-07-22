@@ -1,14 +1,20 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../App';
-import { API_URL } from '../../config';
+
+import { emailRegister, googleRegister, veriticationEmailConfirm, verificationGoogle, loginGoogle, verificationEmail } from '../../api/auth.api';
+
 import InputField from '../../components/Ui/InputField/index';
 import DropFile from '../../components/Ui/DropFile/index';
-import "./Register.scss";
-import { ReactComponent as AvatarIcon } from "../../assets/svg/avatar-icon.svg"
 import GoogleAuthButton from '../../components/Ui/GoogleAuthButton/index';
 import PrimaryButton from '../../components/Ui/PrimaryButton';
+import Field from '../../components/Ui/Field/index';
+import OtpInput from '../../components/Ui/OtpInput/index';
+
+
+import "./Register.scss";
+
+import { ReactComponent as AvatarIcon } from "../../assets/svg/avatar-icon.svg"
 
 const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) => {
     const navigate = useNavigate();
@@ -23,11 +29,7 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
     )
     const [errors, setErrors] = useState({});
     const { showToast } = useContext(AppContext);
-    
-    useEffect(() => {
-        console.log(errors)    
-    }
-    ,[errors])
+    const [isLoading, setIsLoading] = useState(false);
 
     if(!(google_token || (email && gmail_code))) {
         return <></>
@@ -102,7 +104,9 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
     }
 
     const handleRegister = async () => {
+        setIsLoading(true)
         if(!field_validation()) {
+            setIsLoading(false)
             return
         }
 
@@ -113,41 +117,33 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
         }
 
         formData.append("email", email)
-        var url = ""
+        var result
+
         if(google_token) {
             formData.append("google_token", google_token)
-            url = "/api/auth/register/google"
+            result = await googleRegister(formData)
         }
         else {
             formData.append("email_code", gmail_code)
-            url = "/api/auth/register/email"
+            result = await emailRegister(formData)
         }
-        try {
-            const register = await fetch(`${API_URL}${url}`, { method: "POST", body: formData });
-            const result = await register.json();
-            if (result.status === true) {
-                navigate("/auth/login");
-                showToast({ message: "Зарегистрировано!", type: "success" });
-            } else {
-                if (result?.errors?.body) {
-                    const formattedErrors = Object.fromEntries(
-                        Object.entries(result.errors.body).map(
-                            ([field, obj]) => [field, obj.message]
-                        )
-                    );
-                    setErrors(formattedErrors);
-                }
-                showToast({ message: "Ошибка!", type: "error" });
-                return result;
+
+        if (result.status === true) {
+            navigate("/auth/login");
+            showToast({ message: "Зарегистрировано!", type: "success" });
+        }
+        else {
+            if (result?.errors?.body) {
+                const formattedErrors = Object.fromEntries(
+                    Object.entries(result.errors.body).map(
+                        ([field, obj]) => [field, obj.message]
+                    )
+                );
+                setErrors(formattedErrors);
             }
-        } catch (error) {
-            console.log(error);
-            if(error instanceof TypeError && error.message === "Failed to fetch") {
-                setErrors({
-                    "avatar": [ "Max size of image is 5 mb"] 
-                })
-            }
-            return { status: "error", message: "server not found" };
+            showToast({ message: "Ошибка!", type: "error" });
+            setIsLoading(false)
+            return result;
         }
     };
 
@@ -174,50 +170,61 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                         add_new_errors={add_errors_to_image}
                         clear_errors={clear_errors_from_image}
                         onRemove={handleClick}
-                    /><InputField
-                        className={`email`}
-                        type="text"
-                        onChange={(e) => setFields({ ...fields, email: e.target.value })}
-                        onFocus={() => handleFocus('nick_name')}
-                        input_label="Почта"
-                        placeholder="Email"
-                        value={email ?? fields.email}
-                        error={errors?.email ?? null}
-                        confirmed={Boolean(email)}
                     />
-                    <InputField
-                        className={`user_name`}
-                        type="text"
-                        onChange={(e) => setFields({ ...fields, nick_name: e.target.value })}
-                        onFocus={() => handleFocus('nick_name')}
-                        input_label="Имя пользователя"
-                        placeholder="User Name"
-                        value={fields.nick_name}
-                        error={errors?.nick_name ?? null}
-                    />
-                    <InputField
-                        className={`description`}
-                        type="text"
-                        is_multiline = {true}
-                        length={30}
-                        onChange={(e) => setFields({ ...fields, description: e.target.value })}
-                        onFocus={() => handleFocus('description')}
-                        input_label="Описание"
-                        placeholder="Description of profile"
-                        value={fields.description}
-                        error={errors?.description ?? null}
-                    />
-                    <InputField
-                        className={`password`}
-                        type="password"
-                        onChange={(e) => setFields({ ...fields, password: e.target.value })}
-                        onFocus={() => handleFocus('password')}
-                        input_label="Пароль"
-                        placeholder="Password123"
-                        value={fields.password}
-                        error={errors?.password ?? null}
-                    />
-                    <PrimaryButton onClick={handleRegister}>Зарегистрироваться</PrimaryButton>
+                    <Field>
+                        <InputField
+                            className={`email`}
+                            type="text"
+                            onChange={(e) => setFields({ ...fields, email: e.target.value })}
+                            onFocus={() => handleFocus('nick_name')}
+                            input_label="Почта"
+                            placeholder="Email"
+                            value={email ?? fields.email}
+                            error={errors?.email ?? null}
+                            confirmed={Boolean(email)}
+                        />
+                    </Field>
+                    <Field title="Имя пользователя" error={errors?.nick_name ?? null}>
+                        <InputField
+                            className={`user_name`}
+                            type="text"
+                            onChange={(e) => setFields({ ...fields, nick_name: e.target.value })}
+                            onFocus={() => handleFocus('nick_name')}
+                            input_label="Имя пользователя"
+                            placeholder="User Name"
+                            value={fields.nick_name}
+                            error={errors?.nick_name ?? null}
+                        />
+                    </Field>
+                    <Field title="Описание" error={errors?.description ?? null}>
+                        <InputField
+                            className={`description`}
+                            type="text"
+                            is_multiline = {true}
+                            length={30}
+                            onChange={(e) => setFields({ ...fields, description: e.target.value })}
+                            onFocus={() => handleFocus('description')}
+                            input_label="Описание"
+                            placeholder="Description of profile"
+                            value={fields.description}
+                            error={errors?.description ?? null}
+                        />
+                    </Field>
+                    <Field title="Пароль" error={errors?.password ?? null}>
+                        <InputField
+                            className={`password`}
+                            type="password"
+                            onChange={(e) => setFields({ ...fields, password: e.target.value })}
+                            onFocus={() => handleFocus('password')}
+                            input_label="Пароль"
+                            placeholder="Password123"
+                            value={fields.password}
+                            error={errors?.password ?? null}
+                        />
+                    </Field>
+                    <PrimaryButton is_loading={isLoading} onClick={handleRegister}>
+                        Зарегистрироваться
+                    </PrimaryButton>
                     <p className={"redirect_object"}>Уже есть аккаунт?
                         <Link to={"/auth/login"}>Войти.</Link>
                     </p>
@@ -233,60 +240,28 @@ const VerifyGmailCode = ({ email }) => {
     const [code, setCode] = useState(Array(CODE_LENGTH).fill(""));
     const [errors, setErrors] = useState({});
     const [redigrectToForm, setRedigrectToForm] = useState(false)
-    const inputsRef = useRef([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     if (!email) return null;
 
-    const handleChange = (e, index) => {
-        const value = e.target.value.replace(/\D/g, "");
-        if (!value) return;
-
-        const newCode = [...code];
-        newCode[index] = value[value.length - 1];
-        setCode(newCode);
-
-        if (index < CODE_LENGTH - 1) {
-            inputsRef.current[index + 1]?.focus();
-        }
-    };
-
-    const handleKeyDown = (e, index) => {
-        if (e.key === "Backspace") {
-            const newCode = [...code];
-
-            if (code[index]) {
-                newCode[index] = "";
-                setCode(newCode);
-            } else if (index > 0) {
-                inputsRef.current[index - 1]?.focus();
-            }
-        }
-    };
-
     const handleSubmit = async () => {
+        setIsLoading(true)
         const fullCode = code.join("");
 
         if (fullCode.length !== CODE_LENGTH) {
             setErrors({ code: " " });
+            setIsLoading(false)
             return;
         }
 
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: email,
-                email_code: fullCode,
-            })
-        }
-        const verification = await fetch(`${API_URL}/api/auth/verification/email/confirm`, requestOptions)
+        const result = await veriticationEmailConfirm(email, fullCode);
+        
+        setIsLoading(false)
 
-        if(verification.status === 200) {
+        if(result.statusCode === 200) {
             setRedigrectToForm(true)
         }
-        if(verification.status === 401) {
+        if(result.statusCode === 401) {
             setErrors({ "code": " " })
         }
     };
@@ -294,33 +269,30 @@ const VerifyGmailCode = ({ email }) => {
     return (
         redigrectToForm ? <RegisterForm email={email} gmail_code={code.join("")}/> :
         <div className='register'>
-            <form className="form_input app-transition">
+            <form className="form_input app-transition"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                }}
+            >
                 <div className="otp_container">
                     <div className='otp_container_title'>
                         <p>Введите код, отправленный на </p>
                         <p className='otp_container_title_email'>{email}</p>
                     </div>
                     <div className='otp_container_content'>
-                        {code.map((digit, index) => (
-                            <InputField
-                            key={index}
-                            ref={(el) => (inputsRef.current[index] = el)}
-                            className="otp_input"
-                            type="text"
-                            inputMode="numeric"
-                            maxLength={1}
-                            value={digit}
-                            onChange={(e) => handleChange(e, index)}
-                            onKeyDown={(e) => handleKeyDown(e, index)}
+                        <OtpInput
+                            length={CODE_LENGTH}
+                            value={code}
+                            onChange={setCode}
+                            error={errors?.code}
                             onFocus={() => setErrors({})}
-                            error={errors?.code ?? null}
-                            placeholder=""
-                            input_label=""
-                            />
-                        ))}
+                        />
                     </div>
                 </div>
-                <PrimaryButton onClick={handleSubmit}>Отправить</PrimaryButton>
+                <PrimaryButton type="submit" is_loading={isLoading}>
+                    Отправить
+                </PrimaryButton>
             </form>
         </div> 
     );
@@ -335,26 +307,21 @@ const Register = () => {
     const { showToast } = useContext(AppContext);
     const [googleToken, setGoogleToken] = useState();
     const [gmailCodeSedned, setGmailCodeSedned] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const do_login = async () => {
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ google_token: googleToken }),
-            }
-            const verification = await fetch(`${API_URL}/api/auth/verification/google`, requestOptions)
-            const result = await verification.json()
+            const result = await verificationGoogle(googleToken)
             
-            if(result.status !== true) {
-                throw new Error(`Invalid google goken ${result}`)
+            if(result.statusCode !== 200) {
+                throw new Error(`Invalid google token ${result}`)
             }
             else {
                 if(result.data.is_registered) {
-                    const login_result = await fetch(`${API_URL}/api/auth/login/google`, { method: "POST", body: JSON.stringify({ google_token: googleToken }), headers: { 'Content-Type': 'application/json' } })
-                    const login_result_json = await login_result.json()
-                    if(login_result_json.status === true) {
-                        localStorage.setItem("token", login_result_json.token)
+                    const result = await loginGoogle(googleToken)
+                    
+                    if(result.statusCode === 200) {
+                        localStorage.setItem("token", result.data.token)
                         navigate("/")
                         showToast({ message: "Вход выполнен!", type: "success" });
                     }
@@ -369,6 +336,8 @@ const Register = () => {
             do_login()
         }
     }, [googleToken, navigate, showToast]);
+
+
     if (google_token) {
         return <RegisterForm google_token={google_token} email={email}/>
     }
@@ -393,26 +362,22 @@ const Register = () => {
     }
 
     const handleRegister = async () => {
+        setIsLoading(true)
+
         if(!field_validation()) {
+            setIsLoading(false)
             return
         }
 
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: fields.email
-            })
-        }
-        const verification = await fetch(`${API_URL}/api/auth/verification/email`, requestOptions)
-        const result = await verification.json()
 
-        if(verification.status === 200) {
+        const result = await verificationEmail(fields.email)
+
+        setIsLoading(false)
+
+        if(result.statusCode === 200) {
             setGmailCodeSedned(true)
         }        
-        if(verification.status === 409) {
+        if(result.statusCode === 409) {
             setErrors({
                 email: result.message
             });
@@ -422,20 +387,29 @@ const Register = () => {
     return (
         gmailCodeSedned ? <VerifyGmailCode email={fields.email}/> : 
         <div className='register'>
-            <form className='form_input app-transition'>
+            <form className='form_input app-transition'
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleRegister();
+                }}
+            >
                 <>
-                    <InputField
-                        className={`email`}
-                        type="text"
-                        onChange={(e) => setFields({ ...fields, email: e.target.value })}
-                        onFocus={() => handleFocus('email')}
-                        input_label="Почта"
-                        placeholder="Email"
-                        value={email ?? fields.email}
-                        error={errors?.email ?? null}
-                        confirmed={Boolean(email)}
-                    />
-                    <PrimaryButton onClick={handleRegister}>Зарегистрироваться</PrimaryButton>
+                    <Field title="Почта" error={errors?.email ?? null}>
+                        <InputField
+                            className={`email`}
+                            type="text"
+                            onChange={(e) => setFields({ ...fields, email: e.target.value })}
+                            onFocus={() => handleFocus('email')}
+                            input_label="Почта"
+                            placeholder="Email"
+                            value={email ?? fields.email}
+                            error={errors?.email ?? null}
+                            confirmed={Boolean(email)}
+                        />
+                    </Field>
+                    <PrimaryButton is_loading={isLoading} type="submit">
+                        Зарегистрироваться
+                    </PrimaryButton>
                     <GoogleAuthButton setGoogleToken={setGoogleToken}/>
                     <p className={"redirect_object"}>Уже есть аккаунт?
                         <Link to={"/auth/login"}>Войти.</Link>

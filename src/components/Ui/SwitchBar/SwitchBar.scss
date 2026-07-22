@@ -1,35 +1,75 @@
-@import "../../../styles/helpers.scss";
- 
- .switcher_bar{
+.switcher_bar {
+    position: relative;
     display: flex;
-    border-radius: 6px;
-    border: 1px solid var(--switcher-bar-border-color);
     padding: 4px;
-    
-    button {
-        color: var(--switcher-bar-item-color);
-        border-radius: 4px;
-        padding: 8px 14px;
-        font-size: 14px;
-        width: 50%;
 
-        @include screen() {
-            width: 50%;
-            font-size: 12px;
-        }
+    border: 1px solid var(--switcher-bar-border-color);
+    border-radius: 999px;
+
+    overflow: hidden;
+}
+
+.switcher_bar_indicator {
+    position: absolute;
+
+    top: 4px;
+    left: 0;
+
+    height: calc(100% - 8px);
+
+    border-radius: 999px;
+
+    background: var(--switcher-bar-active-item-background-color);
+
+    transition:
+        transform .3s cubic-bezier(.2,.8,.2,1),
+        width .3s cubic-bezier(.2,.8,.2,1),
+        background-color .3s ease,
+        background .3s ease;
+
+    z-index: 0;
+}
+
+.switcher_bar_item {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+
+    border-radius: 999px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+
+    padding: 8px 22px;
+
+    background: transparent;
+
+    color: var(--switcher-bar-item-color);
+
+    transition:
+        transform .3s cubic-bezier(.2,.8,.2,1),
+        width .3s cubic-bezier(.2,.8,.2,1),
+        background-color .3s ease,
+        color .3s ease,
+        background .3s ease;
+
+    svg {
+        height: 16px;
     }
 
-    button:hover {
-        background: var(--switcher-bar-item-hover-background-color);
-    }
-
-    .switcher_bar_item_active{
-        background-color: var(--switcher-bar-active-item-background-color);
+    &:hover {
         color: var(--switcher-bar-active-item-color);
     }
+}
 
-    .switcher_bar_item_active:hover {
-        background-color: var(--switcher-bar-active-item-background-color);
-        color: var(--switcher-bar-active-item-color);
-    }
+
+.switcher_bar_item_active {
+    color: var(--switcher-bar-active-item-color);
+}
+
+.switcher_bar_item_active:hover {
+    background: transparent;
 }

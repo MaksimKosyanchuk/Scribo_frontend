@@ -1,0 +1,53 @@
+.field {
+    display: flex;
+    flex-direction: column;
+    
+    &_content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        &_label{
+            font-size: 18px;
+        }
+    }
+
+    .field_error {
+        margin-top: 10px;
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows .3s ease;
+    }
+
+    .field_error_content {
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        opacity: 0;
+        transform: translateY(-6px);
+        transition:
+            opacity .3s ease,
+            transform .3s ease;
+    }
+
+    .field_error_content p {
+        color: red;
+    }
+
+    .field_error_content svg {
+        width: 16px;
+        height: 16px;
+        min-width: 16px;
+        margin-right: 5px;
+        color: red;
+    }
+
+    &.show .field_error {
+        grid-template-rows: 1fr;
+    }
+
+    &.show .field_error_content {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

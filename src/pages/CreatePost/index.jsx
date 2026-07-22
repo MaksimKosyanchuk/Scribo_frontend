@@ -3,18 +3,18 @@ import { useContext, useEffect, useState, useMemo } from 'react';
 
 import { AppContext } from '../../App';
 
-import { API_URL } from '../../config';
-
 import DropFile from '../../components/Ui/DropFile/index';
 import InputFiled from "../../components/Ui/InputField";
 import TextEditorField from "../../components/Ui/TextEditorField";
 import PrimaryButton from "../../components/Ui/PrimaryButton";
 import DangerButton from "../../components/Ui/DangerButton";
 import SearchSelect from '../../components/Ui/SearchSelect/index';
+import Field from '../../components/Ui/Field/index';
 
 import { CATEGORY_COLORS } from "../../styles/constants";
 
 import { getCategories } from '../../api/categories.api';
+import { createPost } from '../../api/posts.api';
 
 import { ReactComponent as CategoryIcon1 } from "../../assets/svg/categories/1.svg";
 import { ReactComponent as CategoryIcon2 } from "../../assets/svg/categories/2.svg";
@@ -194,57 +194,60 @@ const CreatePost = () => {
         formData.append('featured_image', fields.featured_image)
         formData.append('category', fields.category)
 
-        const headers = {
-            'Authorization': `Bearer ${localStorage.getItem("token")}`
+        const result = await createPost(formData)
+
+        if(result.status === true) {
+            navigate("/posts")
+            showToast({ message: "Опубликовано!", type: "success" })
+            return result
         }
-        try{
-            const creating = await fetch(`${API_URL}/api/posts`, { method: "POST", body: formData, headers: headers})
-            const result = await creating.json()
-            if(result.status === true) {
-                navigate("/posts")
-                showToast({ message: "Опубликовано!", type: "success" })
-                return result
+        else {
+            showToast({ message: "Ошибка при создании поста!", type: "error" })
+            if(result?.errors && Object.keys(result?.errors).length > 0) {
+                setErrors(result.errors)
             }
-            else{
-                if(result?.errors && Object.keys(result?.errors).length > 0) {
-                    setErrors(result.errors)
-                }
-                return result
-            }
-        } 
-        catch(e){
-            return {
-                status: "error",
-                message: "server not found"
-            }
+            console.log(result)
+            return result
         }
     }
 
     return (
         <form className='create_post' onSubmit={handleSubmit}>
-            <InputFiled 
-                input_label={"Заголовок"}
-                placeholder={titlePlaceholder}
-                className={"create_post_title"  + (createResult.status === "error" && createResult.message === "Incorrect 'title'" ? " incorrect_field" : "")}
-                is_multiline={true}
-                multiline_rows={1}
-                onChange={(e) => setFields({ ...fields, title: e.target.value })}
-                onFocus={() => handleFocus('title')}
-                length={200}
-                error={errors?.body?.title?.message}
-            />
-            <SearchSelect
-                value={fields.category}
-                onSetValue={(value) =>
-                    setFields(prev => ({
-                        ...prev,
-                        category: value
-                    }))
-                }
-                input_label={"Категория"}
-                className={CATEGORY_COLORS[allCategories.find(category => category._id === fields.category)?.color]?.className}
-                options={allCategories}
-            />
+            <Field error={errors?.body?.title?.message} title={"Заголовок"}>
+                <InputFiled 
+                    placeholder={titlePlaceholder}
+                    className={"create_post_title"  + (createResult.status === "error" && createResult.message === "Incorrect 'title'" ? " incorrect_field" : "")}
+                    is_multiline={true}
+                    multiline_rows={1}
+                    onChange={(e) => setFields({ ...fields, title: e.target.value })}
+                    onFocus={() => handleFocus('title')}
+                    length={200}
+                    error={errors?.body?.title?.message}
+                />
+            </Field>
+            <Field error={errors?.body?.category?.message} title={"Категория"}>
+                <SearchSelect
+                    value={fields.category}
+                    onSetValue={(value) =>
+                        setFields(prev => ({
+                            ...prev,
+                            category: value
+                        }))
+                    }
+                    onFocus={() => setErrors(prevErrors => ({
+                        ...prevErrors,
+                        body: Object.fromEntries(
+                            Object.entries(prevErrors.body || {}).filter(
+                                ([key]) => key !== 'category'
+                            )
+                        )
+                    }))}
+                    error={errors?.body?.category?.message}
+                    placeholder={"Выбрать категорию"}
+                    className={CATEGORY_COLORS[allCategories.find(category => category._id === fields.category)?.color]?.className}
+                    options={allCategories}
+                />
+            </Field>
             <DropFile
                 value={fields.featured_image}
                 setValue={(file) => setFields({ ...fields, featured_image: file })}
@@ -255,7 +258,14 @@ const CreatePost = () => {
                 clear_errors={clear_errors_from_image}
                 onRemove={handleClick}
             />
-            <TextEditorField onFocus={() => handleFocus('content_text')} onChange={(html) => setFields({ ...fields, content_text: html })} error={errors?.body?.content_text?.message}/>
+            <Field error={errors?.body?.content_text?.message} title={"Текст поста"}>
+
+                <TextEditorField
+                    onFocus={() => handleFocus('content_text')}
+                    onChange={(html) => setFields({ ...fields, content_text: html })}
+                    error={errors?.body?.content_text?.message}
+                />
+            </Field>
             <div className="create_post_buttons">
                 <PrimaryButton onClick={handleSubmit} is_loading={isLoading}>Создать пост</PrimaryButton>
                 <DangerButton onClick={() => navigate("/posts")}>Отмена</DangerButton>

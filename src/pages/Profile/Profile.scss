@@ -253,31 +253,6 @@
             width: 100%;
         }
 
-        .switcher_bar {
-            border-radius: 999px;
-
-
-            &_item {
-                border-radius: 999px;
-                width: 200px;
-                color: var(--switcher-bar-item-color);
-
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 5px;
-                font-size: 14px;
-
-                @include screen() {
-                    width: 50%;
-                }
-
-                svg {
-                    height: 16px;
-                }
-            }
-        }
-
         p {
             font-size: 14px;
         }

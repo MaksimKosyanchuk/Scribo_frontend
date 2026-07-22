@@ -83,15 +83,6 @@
         }
     }
 
-    .search_select_input {
-        border-color: var(--line-color);
-        color: var(--text-color);
-
-        .input_field {
-            color: inherit;
-        }
-    }
-
     .search_select {
         .search_select_item_selected {
             background: var(--section-item-hover-background-color);

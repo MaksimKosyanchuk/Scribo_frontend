@@ -5,7 +5,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 330px;
+        width: 450px;
         margin-left: auto;
         margin-right: auto;
         margin-bottom: 0;
@@ -16,6 +16,10 @@
             height: auto;
         }
 
+        .field {
+            width: 100%;
+        }
+        
         .redirect_object {
             display: flex;
             color: var(--text-color);
