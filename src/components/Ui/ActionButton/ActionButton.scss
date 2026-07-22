@@ -8,6 +8,7 @@
     border: 1px solid var(--submit-button-primary-color);
     display: flex;
     align-items: center;
+    justify-content: center;
 
     @include screen() {
         font-size: 12px;

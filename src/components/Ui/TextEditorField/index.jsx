@@ -28,7 +28,6 @@ import { ReactComponent as ItalicText } from "../../../assets/svg/italic-text.sv
 import { ReactComponent as MarkList } from "../../../assets/svg/mark-list-icon.svg";
 import { ReactComponent as NumList } from "../../../assets/svg/num-list-icon.svg";
 import { ReactComponent as LinkText } from "../../../assets/svg/link-icon.svg";
-import { ReactComponent as WarningIcon } from "../../../assets/svg/warning-icon.svg";
 
 import { useState, useEffect } from "react";
 import { useRef } from "react";
@@ -260,10 +259,6 @@ export default function TextEditor({
                 onChange?.(result);
               }}
             />
-        </div>
-        <div className={`input_field_label_error_message ${error ? "show" : ""}`}>
-          <WarningIcon className="input_field_label_error_message_logo" />
-          <p>{error}</p>
         </div>
       </div>
       </LexicalComposer>

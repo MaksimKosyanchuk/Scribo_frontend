@@ -1,66 +1,48 @@
 import { AppContext } from "../../App.js";
 import { useContext } from "react";
-import { API_URL } from "../../config/index.js";
+
+import { follow } from "../../api/users.api.js";
+
 import "./FollowButton.scss";
+
 import ActionButton from "../Ui/ActionButton";
 
 const FollowButton = ({ setNewData, author_id, class_name }) => {
     const { profile, showToast } = useContext(AppContext);
 
-    const follow = async () => {
-        try {
-            const headers = {
-                Authorization: `Bearer ${localStorage.getItem("token")}`
-            }
-            const follow = await fetch(`${API_URL}/api/users/${author_id}/follow`, { method: "POST",  headers: headers })
-            const result = await follow.json();
-
-            if(result.status === true) {
-                await setNewData(result.data)
-                showToast({ message: `Вы подписались на ${result.data.followed.nick_name}!`, type: "success" })
-            }
-            else {
-                if(result?.errors?.Authorization?.token){
-                    showToast({ type: "warning", message: "Чтобы подписаться нужно войти в аккаунт!" })
-                }
-            }
+    const do_follow = async () => {
+        const result = await follow({ method: "POST", user_id: author_id })
+        
+        if(result.status === true) {
+            await setNewData(result.data)
+            showToast({ message: `Вы подписались на ${result.data.followed.nick_name}!`, type: "success" })
         }
-        catch(e) {
-            console.log(e)
+        else {
+            if(result.statusCode === 401) {
+                showToast({ type: "warning", message: "Чтобы подписаться нужно войти в аккаунт!" })
+            }
         }
     }
 
-    const unfollow = async () => {
-        try {
-            const headers = {
-                Authorization: `Bearer ${localStorage.getItem("token")}`
-            }
-            const follow = await fetch(`${API_URL}/api/users/${author_id}/follow`, { method: "DELETE",  headers: headers })
-            const result = await follow.json();
-
-            if(result.status === true) {
-                await setNewData(result.data)
-                showToast({ message: `Вы отписались от ${result.data.followed.nick_name}!`, type: "success" })
-            }
-            else {
-                if(result?.errors?.token){
-                    showToast({ type: "warning", message: "Чтобы подписаться нужно войти в аккаунт!" })
-                }
-                else if(result?.errors?.nick_name) {
-                    showToast({ type: "warning", message: result?.errors?.nick_name?.message })   
-                }
-            }
+    const do_unfollow = async () => {
+        const result = await follow({ method: "DELETE", user_id: author_id })
+        
+        if(result.status === true) {
+            await setNewData(result.data)
+            showToast({ message: `Вы отписались от ${result.data.followed.nick_name}!`, type: "success" })
         }
-        catch(e) {
-            console.log(e)
+        else {
+            if(result.statusCode === 401) {
+                showToast({ type: "warning", message: "Чтобы отписаться нужно войти в аккаунт!" })
+            }
         }
     }
 
     return (
         profile?.follows?.some(item => item === author_id) ?
-            <ActionButton onClick={() => unfollow(author_id)} className={ `follow_button app-transition ${class_name ?? "" } ${ (profile?._id === author_id) ? "non_visible" : "" }` }>Отписаться</ActionButton>
+            <ActionButton onClick={() => do_unfollow(author_id)} className={ `follow_button app-transition ${class_name ?? "" } ${ (profile?._id === author_id) ? "non_visible" : "" }` }>Отписаться</ActionButton>
         :
-            <ActionButton onClick={() => follow(author_id)} className={ `follow_button app-transition ${class_name ?? "" } ${ (profile?._id === author_id) ? "non_visible" : "" }` }>Подписаться</ActionButton>
+            <ActionButton onClick={() => do_follow(author_id)} className={ `follow_button app-transition ${class_name ?? "" } ${ (profile?._id === author_id) ? "non_visible" : "" }` }>Подписаться</ActionButton>
     )
 }
 

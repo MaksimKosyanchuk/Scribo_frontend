@@ -15,6 +15,7 @@ const SearchSelect = ({
     error,
     input_label,
     className = "",
+    onFocus,
     placeholder = "Выбрать"
 }) => {
 
@@ -194,11 +195,7 @@ const SearchSelect = ({
             ref={wrapperRef}
             className={`search_select ${ShowSelected ? className : ""} app-transition`}
         >
-            <p className="search_select_label">
-                {input_label}
-            </p>
-
-            <div className="search_select_input app-transition">
+            <div className={`search_select_input ${error ? "incorrect_field" : ""} app-transition`}>
                 {
                     ShowSelected?.iconObject ?
 
@@ -213,8 +210,10 @@ const SearchSelect = ({
                     ref={inputRef}
                     value={inputValue}
                     placeholder={placeholder}
-                    error={error}
-                    onFocus={() => setIsOpen(true)}
+                    onFocus={() => {
+                        setIsOpen(true)
+                        onFocus?.()
+                    }}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
                 />

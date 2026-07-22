@@ -1,4 +1,3 @@
-import { API_URL } from "../../config";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext, useMemo } from "react";
 
@@ -73,19 +72,13 @@ const Profile = () => {
 
     useEffect(() => {
         const getUser = async () => {
-            try {
-                let response = await fetch(`${API_URL}/api/users/${id}`);
-                let findNeededUser = await response.json();
-                setActiveTab(0);
+            const findNeededUser = await getUsers([{ nick_name: id }]);
+            setActiveTab(0);
 
-                if (findNeededUser.status === false) {
-                    navigate('/404');
-                } else {
-                    setUser(findNeededUser.data);
-                }
-            } catch (e) {
-                console.log(e);
+            if (findNeededUser.status === false) {
                 navigate('/404');
+            } else {
+                setUser(findNeededUser.data[0]);
             }
         };
         getUser();

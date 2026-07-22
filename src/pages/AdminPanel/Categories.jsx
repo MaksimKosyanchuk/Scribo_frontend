@@ -53,6 +53,7 @@ import Category from "../../components/Category/index";
 import InputField from "../../components/Ui/InputField/index";
 import PrimaryButton from "../../components/Ui/PrimaryButton/index";
 import ActionButton from "../../components/Ui/ActionButton/index";
+import Field from "../../components/Ui/Field/index";
 
 const categoryIcons = {
     1: CategoryIcon1,
@@ -89,7 +90,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
     const { showToast } = useContext(AppContext);
     const [initialized, setInitialized] = useState(false);
     const [fetching, setFetching] = useState(false);
-
+    const [errors, setErrors] = useState({});
 
     const [category, setCategory] = useState({
         name: "",
@@ -183,9 +184,11 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
             });
         }
         else {
+            setErrors(result.errors ?? {});
+
             showToast({
                 type: "error",
-                message: result.message
+                message: "Ошибка при обновлении категории!"
             });
         }
     };
@@ -228,23 +231,26 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                 <></>
                             :
                                 <div className="admin_panel_content_edit_categories_page_settings app-transition">
-                                    <InputField
-                                        input_label={"Название"}
-                                        placeholder={"Введите название категории"}
-                                        value={fields?.name}
-                                        onChange={(e) => setFields({...fields, name: e.target.value})}
-                                    />
+                                    <Field error={errors?.body?.name?.message} title={"Название"}>
+                                        <InputField
+                                            placeholder={"Введите название категории"}
+                                            value={fields?.name}
+                                            error={errors?.body?.name?.message}
+                                            onMouseDown={() => setErrors(prev => ({ ...prev, body: { ...prev.body, name: null } }))}
+                                            onChange={(e) => setFields({...fields, name: e.target.value})}
+                                        />
+                                    </Field>
                                     <div classneame="admin_panel_content_edit_categories_page_settings_color">
                                         <Popup body={popupColorBody}>
                                             <div className={`admin_panel_content_edit_categories_page_settings_color`}>
-                                                <p>Цвет</p>
-                                                <div className="admin_panel_content_edit_categories_page_settings_color_content app-transition">
-                                                    <div className={`admin_panel_content_edit_categories_page_settings_color_content_rect ${CATEGORY_COLORS[fields.color]?.className} app-transition`} >
-
-                                                        <RectRoundedIcon/>
+                                                <Field title={"Цвет"} error={errors?.body?.color?.message}>
+                                                    <div className="admin_panel_content_edit_categories_page_settings_color_content app-transition">
+                                                        <div className={`admin_panel_content_edit_categories_page_settings_color_content_rect ${CATEGORY_COLORS[fields.color]?.className} app-transition`} >
+                                                            <RectRoundedIcon/>
+                                                        </div>
+                                                        <p>{popupColorBody.find((c) => c.id === fields.color)?.title}</p>
                                                     </div>
-                                                    <p>{popupColorBody.find((c) => c.id === fields.color)?.title}</p>
-                                                </div>
+                                                </Field>
                                             </div>
                                         </Popup>
                                     </div>
@@ -340,7 +346,7 @@ const CreateCategoryPage = ({ setActivePage }) => {
             setErrors(result.errors ?? {});
             showToast({
                 type: "error",
-                message: result.message
+                message: "Ошибка при создании категории!"
             });
         }
     };
@@ -359,38 +365,38 @@ const CreateCategoryPage = ({ setActivePage }) => {
 
                 <div className="admin_panel_content_edit_categories_page_settings app-transition">
 
-                    <InputField
-                        input_label="Название"
-                        placeholder="Введите название категории"
-                        onMouseDown={() => setErrors(prev => ({ ...prev, body: { ...prev.body, name: null } }))}
-                        value={fields.name}
-                        error={errors?.body?.name?.message}
-                        onChange={(e) =>
-                            setFields(prev => ({
-                                ...prev,
-                                name: e.target.value
-                            }))
-                        }
-                    />
+                    <Field error={errors?.body?.name?.message} title={"Название"}>
+                        <InputField
+                            placeholder="Введите название категории"
+                            onMouseDown={() => setErrors(prev => ({ ...prev, body: { ...prev.body, name: null } }))}
+                            value={fields.name}
+                            error={errors?.body?.name?.message}
+                            onChange={(e) =>
+                                setFields(prev => ({
+                                    ...prev,
+                                    name: e.target.value
+                                }))
+                            }
+                        />
+                    </Field>
 
                     <Popup body={popupColorBody}>
                         <div className="admin_panel_content_edit_categories_page_settings_color">
+                            <Field error={errors?.body?.color?.message} title={"Цвет"}>
+                                <div className="admin_panel_content_edit_categories_page_settings_color_content app-transition">
 
-                            <p>Цвет</p>
+                                    <div
+                                        className={`admin_panel_content_edit_categories_page_settings_color_content_rect ${CATEGORY_COLORS[fields.color]?.className ?? ""}`}
+                                    >
+                                        <RectRoundedIcon />
+                                    </div>
 
-                            <div className="admin_panel_content_edit_categories_page_settings_color_content app-transition">
+                                    <p>
+                                        {popupColorBody.find(c => c.id === fields.color)?.title}
+                                    </p>
 
-                                <div
-                                    className={`admin_panel_content_edit_categories_page_settings_color_content_rect ${CATEGORY_COLORS[fields.color]?.className ?? ""}`}
-                                >
-                                    <RectRoundedIcon />
                                 </div>
-
-                                <p>
-                                    {popupColorBody.find(c => c.id === fields.color)?.title}
-                                </p>
-
-                            </div>
+                            </Field>
 
                         </div>
                     </Popup>

@@ -1,120 +1,45 @@
 @import "../../../styles/helpers.scss";
 
-.input_field_label {
+.input_field_wrapper {
+    position: relative;
     width: 100%;
+}
+
+.input_field {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    
-    .input_label_text{ 
-        font-size: 18px;
-    }
+    font-size: 16px;
+    padding: 8px 0;
+    width: 100%;
+    padding: 10px 16px;
+    background-color: transparent;
+    border: 1px solid var(--input-outline-color);
+    border-radius: 8px;
+    color: var(--input-text-color);
+    outline: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    resize: none;
 
-    .input {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        
-        span {
-            color: var(--input-text-color);
-            transition: .3s;
-            font-size: 16px;
-            margin-bottom: 8px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        }
-
-        .description {
-           height: auto;
-        }
-
-        .input_wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .inpuut_confirmed_icon {
-            position: absolute;
-            color: #057905;
-            right: 12px;
-            width: 16px;
-            height: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
+    &.confirmed {
+        &:focus {
+            border: 1px solid var(--input-outline-color);
         }
     }
 
-    .input_field {
-        font-size: 16px;
-        padding: 8px 0;
-        width: 100%;
-        padding: 10px 16px;
-        background-color: transparent;
-        border: 1px solid var(--input-outline-color);
-        border-radius: 8px;
-        color: var(--input-text-color);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        resize: none;
-    }
-
-    .input_field::selection {
+    &::selection {
         color: var(--text-selection-color);
         background-color: var(--text-selection-background-color);
     }
 
-    .input_field:focus {
+    &:focus {
         border: 1px solid var(--input-outline-active-color);
     }
 
-    .input_field.confirmed{
-        border: 1px solid var(--input-outline-color);
-    }
-
-    .input_field::placeholder {
+    &::placeholder {
         font-size: 16px;
         color: var(--input-placeholder-color);
         transition: .3s;
-    }
-
-    &_error_message {
-        display: flex;
-        visibility: hidden;
-        opacity: 0;
-        height: 0;
-        transition: .3s ease;
-        transform: translateY(10px);
-
-        p {
-            color: red;
-            font-size: 14px;
-        }
-
-        &_logo {
-            height: 16px;
-            width: 160x;
-            min-height: 16px;
-            margin-right: 5px;
-            max-width: 16px;
-            color: red;
-        }
-    }
-
-    &_error_message.show {
-        opacity: 1;
-        visibility: visible;
-        height: 54px;
-
-        @include screen() {
-            height: 38px;
-        }
-
-        p {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
     }
 }
 
@@ -123,6 +48,14 @@
     box-shadow: 0 0 10px rgb(255 0 0 / 50%);
 }
 
-input:focus {
-    outline: none;
+
+.input_confirmed_icon{
+    color: #057905;
+    height: 16px;
+    pointer-events: none;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
 }
