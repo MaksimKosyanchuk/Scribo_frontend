@@ -87,14 +87,18 @@
         flex-direction: column;
         gap: 24px;
 
+        @include screen() {
+            gap: 12px;
+        }
+
         .comment {
             display: flex;
             flex-direction: column;
             gap: 24px;
 
             @include screen() {
-                padding: 8px;
                 padding-bottom: 0;
+                gap: 12px;
             }
 
             &_body {
@@ -103,6 +107,10 @@
                 gap: 12px;
                 padding: 16px;
                 
+                @include screen() {
+                    padding: 12px;
+                }
+
                 &_top_side {
                     display: flex;
                     gap: 6px;
@@ -114,8 +122,18 @@
                         color: var(--light-text-color);
                     }
     
-                    .author_info_name {
-                        font-size: 14px;
+                    .comment_author {
+                        .user_badge{
+                            &_info_name {
+                                font-size: 14px;
+                            }
+
+                            &_avatar {
+                                width: 18px;
+                                height: 18px;
+                            }
+
+                        }
                     }
     
                     &_more {
@@ -184,7 +202,6 @@
                 }
             }
 
-
             &_replies{
                 display: flex;
                 width: 100%;
@@ -197,6 +214,10 @@
                     display: flex;
                     flex-direction: column;
                     width: 100%;
+
+                    @include screen() {
+                        padding-left: 12px;
+                    }
                 }
             }
         }

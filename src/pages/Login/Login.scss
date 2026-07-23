@@ -1,6 +1,8 @@
 @use '../../styles/helpers' as *;
 
 .login{
+    display: flex;
+    
     .form_input{
         display: flex;
         flex-direction: column;

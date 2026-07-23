@@ -1,8 +1,11 @@
 import { useGoogleLogin } from '@react-oauth/google';
-import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-icon.svg"
-import Loader from "../Loading";
-import "./GoogleAuthButton.scss";
 import { useState } from 'react';
+
+import { ReactComponent as GoogleIcon } from "../../../assets/svg/google-icon.svg"
+
+import "./GoogleAuthButton.scss";
+
+import ActionButton from '../ActionButton/index';
 
 const GoogleAuthButton = ({ setGoogleToken }) => {
   const [ isLoading, setIsLoading ] = useState(false);
@@ -26,16 +29,10 @@ const GoogleAuthButton = ({ setGoogleToken }) => {
   }
 
   return (
-    <button type="button" className={`google_auth_button app-transition ${isLoading ? 'google_auth_button_loading' : ''}`} onClick={ !isLoading ? login : () => {}}>
-      {
-        isLoading &&
-          <Loader size={20}/>
-      }
-      <GoogleIcon style={{ visibility: isLoading ? 'hidden' : 'visible' }}/>
-      <p style={{ visibility: isLoading ? 'hidden' : 'visible' }}>
+    <ActionButton is_loading={isLoading} disabled={isLoading} onClick={login} className="google_auth_button">
+      <GoogleIcon/>
         Продолжить с Google
-      </p>
-    </button>
+    </ActionButton>
   );
 };
 
