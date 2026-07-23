@@ -19,4 +19,30 @@
         color: var(--submit-button-secondary-color);
         background: var(--submit-button-primary-color);
     }
+
+    .loader {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .2s;
+    
+    }
+    &_loading {
+        color: transparent;
+        background-color: transparent;
+        cursor: not-allowed;
+
+        svg {
+            display: none;
+        }
+
+        .loader {
+            opacity: 1;
+            color: var(--submit-button-primary-color);
+        }
+
+        @include hover {
+            background-color: transparent;
+        }
+    }
 }

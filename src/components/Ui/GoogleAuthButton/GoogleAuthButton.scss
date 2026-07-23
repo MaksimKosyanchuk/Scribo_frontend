@@ -7,27 +7,4 @@
     width: 100%;
     font-size: 14px;
     padding: 12px 14px;
-    border: 1px solid var(--submit-button-primary-color);
-    color: var(--submit-button-primary-color);
-    border-radius: 8px;
-
-    @include hover {
-        background-color: var(--submit-button-hover-background-color);
-
-        p {
-            color: var(--submit-button-hover-text-color);
-        }
-    }
-}
-
-.google_auth_button_loading {
-    cursor: not-allowed;
-    
-    @include hover {
-        background-color: unset;
-    }
-
-    .loader {
-        position: absolute;
-    }
 }

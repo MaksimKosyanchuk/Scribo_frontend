@@ -97,12 +97,14 @@ const CommentForm = ({
 const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, profile, fetchComments, showToast, post_id }) => {
     const [showForm, setShowForm] = useState(false);
     const [editMode, setEditMode] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [replyText, setReplyText] = useState('');
     const [editText, setEditText] = useState(comment.comment_text);
     const { showModalWindow } = useContext(AppContext);
     const navigate = useNavigate();
 
     const doReply = async (e) => {
+        setIsLoading(true);
         e.preventDefault();
 
         const data = {
@@ -122,10 +124,11 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                 });
             }});
         }
-
+        setIsLoading(false);
     }
 
     const doEditComment = async (e) => {
+        setIsLoading(true);
         e.preventDefault();
 
         const result = await editComment(comment._id, editText);
@@ -147,6 +150,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                 message: result.message
             });
         }
+        setIsLoading(false);
     }
 
     const doLike = async () => {
@@ -221,6 +225,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                             navigate={navigate}
                             profile={profile}
                             onSubmit={doEditComment}
+                            isLoading={isLoading}
                             onCancel={() => setEditMode(false)}
                         />
                     :
@@ -288,6 +293,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                         onChange={setReplyText}
                         onSubmit={doReply}
                         onCancel={() => setShowForm(false)}
+                        isLoading={isLoading}
                         showModalWindow={showModalWindow}
                         navigate={navigate}
                         profile={profile}

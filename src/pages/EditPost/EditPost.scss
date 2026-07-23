@@ -2,6 +2,7 @@
 @use "../../styles/categoryColors.scss" as *;
 
 .create_post {
+    display: flex;
     .search_select {
         @include category-colors {
             .search_select_input {
