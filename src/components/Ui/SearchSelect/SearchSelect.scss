@@ -99,7 +99,7 @@
     border-radius: 8px;
     border: 1px solid var(--line-color);
 
-    max-height: 240px;
+    max-height: 400px;
     overflow-y: auto;
 
     z-index: 100;
@@ -139,7 +139,7 @@
         }
     
         &.search_select_item_selected {
-            background-color: var(--section-item-selected-background-color);
+            background-color: var(--section-item-hover-background-color);
         }
     }
 }
