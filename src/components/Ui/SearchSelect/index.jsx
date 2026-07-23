@@ -55,14 +55,14 @@ const SearchSelect = ({
         const search = inputValue.trim().toLowerCase();
 
         const exactOption = options.find(
-            option => option.name.trim().toLowerCase() === search
+            option => option.name?.trim().toLowerCase() === search
         );
 
         if (!exactOption) {
-            onSetValue("");
+            onSetValue?.("");
             setInputValue("");
         } else if (exactOption.value !== value) {
-            onSetValue(exactOption.value);
+            onSetValue?.(exactOption.value);
             setInputValue(exactOption.name);
         } else {
             setInputValue(exactOption.name);
@@ -252,18 +252,18 @@ const SearchSelect = ({
                                 className={`search_select_item ${option.className ?? ""} ${highlightedIndex === index ? "search_select_item_selected" : ""} app-transition`}
                                 onMouseDown={() => handleSelect(option)}
                             >
-
                                 {
-                                    option?.iconObject ?
-                                        <div className={`search_select_icon ${option.className ?? ""}`}>
-                                            <option.iconObject />
-                                        </div>
-                                    :
-                                        <></>
+                                    option.render?.() ?? (
+                                        <>
+                                            {option.iconObject && (
+                                                <div className={`search_select_icon ${option.className ?? ""}`}>
+                                                    <option.iconObject />
+                                                </div>
+                                            )}
+                                            <p>{option.name}</p>
+                                        </>
+                                    )
                                 }
-
-                                <p>{option.name}</p>
-
                             </button>
 
                         ))

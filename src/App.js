@@ -245,7 +245,6 @@ function App() {
     <AppContext.Provider value={{profile, setProfile, isDarkTheme, setIsDarkTheme, profileLoading, setProfileLoading, toast, showToast, modalWindow, showModalWindow, requestCloseModal }}>
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <div className={`App ${isDarkTheme ? 'App_dark' : ''}`} id="app-root" style={CssVariables}>
-
           <AppLayout>
             <ModalWindow
               modalWindow={modalWindow}

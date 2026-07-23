@@ -26,26 +26,31 @@ const AdminPanel = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [profile, profileLoading]);
 
+    const pages=[
+        {
+            title: "Категории",
+            key: "categories",
+            icon: <TagIcon />,
+            content: <CategoriesPage /> 
+        },
+        {
+            title: "Администраторы",
+            key: "admins",
+            icon: <PeoplesIcon />,
+            content: <AdminsPage />
+        },
+        {
+            title: "Логи",
+            key: "logs",
+            icon: <LogIcon />,
+            content: <LogsPage />
+        }
+    ]
+
     return (
         <SidebarPage
             page_title={"Панель администратора"}
-            pages={[
-                {
-                    title: "Категории",
-                    icon: <TagIcon />,
-                    content: <CategoriesPage /> 
-                },
-                {
-                    title: "Администраторы",
-                    icon: <PeoplesIcon />,
-                    content: <AdminsPage />
-                },
-                {
-                    title: "Логи",
-                    icon: <LogIcon />,
-                    content: <LogsPage />
-                }
-            ]}
+            pages={pages}
         />
     )
 }

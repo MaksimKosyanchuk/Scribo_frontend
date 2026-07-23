@@ -19,6 +19,7 @@ import { ReactComponent as RedirectIcon } from "../../assets/svg/redirect.svg";
 import { ReactComponent as TagIcon } from "../../assets/svg/tag.svg";
 import { ReactComponent as FilterIcon } from "../../assets/svg/filter.svg";
 
+import SearchSearch from "../../components/Ui/SearchSelect";
 import CancelButton from "../../components/Ui/CancelButton";
 import Loading from "../../components/Ui/Loading";
 import Tooltip from "../../components/Ui/Tooltip"; 
@@ -88,7 +89,7 @@ const UserEntity = ({ id, data, setFilter }) => {
                         <UserBadge asLink={false} data={data} />
                         :
                         <>
-                            <UserBadge asLink={false} data={{ nick_name: "Пользователь" }} />
+                            <UserBadge asLink={false} data={{ nick_name: "" }} />
                             <div className="admin_panel_content_logs_page_item_entity_deleted">
                                 <p> 
                                     DELETED
@@ -429,6 +430,87 @@ const LogsPage = () => {
 
     }
 
+    const search_select_options = [];
+
+    logs.forEach(log => {
+        if (
+            log.data?.user &&
+            !search_select_options.some(
+                option => 
+                    option.value.type === "user" &&
+                    option.value.value === log.data.user
+            )
+        ) {
+            const user = users.find(u => u._id === log.data.user);
+
+            search_select_options.push({
+                value: {
+                    type: "user",
+                    value: log.data.user
+                },
+                name: user?.nick_name ?? log.data.user,
+                _id: log.data.user,
+                render: () => (
+                    <UserEntity
+                        id={log.data.user}
+                        data={user}
+                        setFilter={() => {}}
+                    />
+                )
+            });
+        }
+
+        else if (
+            log.data?.post &&
+            !search_select_options.some(
+                option =>
+                    option.value.type === "post" &&
+                    option.value.value === log.data.post
+            )
+        ) {
+            const post = posts.find(p => p._id === log.data.post);
+
+            search_select_options.push({
+                value: {
+                    type: "post",
+                    value: log.data.post
+                },
+                name: post?.title ?? log.data.post,
+                _id: log.data.post,
+                render: () => (
+                    <PostEntity
+                        id={log.data.post}
+                        data={post}
+                        setFilter={() => {}}
+                    />
+                )
+            });
+        }
+        else if(log.data?.category && !search_select_options.some(
+            option =>
+                option.value.type === "category" &&
+                option.value.value === log.data.category
+        )) {
+            const category = categories.find(c => c._id === log.data.category);
+
+            search_select_options.push({
+                value: {
+                    type: "category",
+                    value: log.data.category
+                },
+                name: category?.name ?? log.data.category,
+                _id: log.data.category,
+                render: () => (
+                    <CategoryEntity
+                        id={log.data.category}
+                        data={category}
+                        setFilter={() => {}}
+                    />
+                )
+            });
+        }
+    });
+
     return (
         <div className="admin_panel_content_logs_page">
             {
@@ -441,7 +523,7 @@ const LogsPage = () => {
                         <CancelButton onClick={() => setFilter({ type: null, id: null })}>Отмена</CancelButton>
                     </div>
                 :
-                    <></>
+                    <SearchSearch options={search_select_options} onSetValue={(value) => {setFilter({ type: value.type, id: value.value })}}/>
             }
             {
                 filteredLogs.map(log => {
