@@ -73,12 +73,10 @@ const PostHeader = memo(({ post, onDeletePost, className }) => {
 
     const popupBody = [];
 
-    if (profile?.is_admin) {
-        popupBody.push(
-            { title: "Редактировать", icon: <EditIcon />, onClick: () => navigate(`/posts/${post._id}/edit`) },
-            { title: "Удалить", icon: <DeleteIcon />, type: "danger", onClick: () => delete_post(post._id) }
-        );
-    }
+    popupBody.push(
+        { title: "Редактировать", icon: <EditIcon />, onClick: () => navigate(`/posts/${post._id}/edit`) },
+        { title: "Удалить", icon: <DeleteIcon />, type: "danger", onClick: () => delete_post(post._id) }
+    );
 
     return (
         <div className={`post_header ${className ?? ""}`}>
@@ -89,7 +87,7 @@ const PostHeader = memo(({ post, onDeletePost, className }) => {
                     </Tooltip>
             </div>
             {
-                profile?.is_admin ? 
+                profile?.is_admin || (profile?.role && profile?._id === post?.author?._id) ? 
                     <div className="post_header_right app-transition">
                         <Popup body={popupBody}>
                             <ThreeDotsIcon className="article_topic_three_dots"/>

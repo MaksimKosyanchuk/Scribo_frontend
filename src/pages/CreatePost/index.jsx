@@ -138,7 +138,7 @@ const CreatePost = () => {
     useEffect(() => {
         const load = async () => {
             if(initialized){
-                if(!profileLoading && (!profile || !profile.is_admin)){
+                if(!profileLoading && (!profile || !["author", "admin", "tech_admin"].includes(profile?.role))) {
                     navigate("/posts")
                 }
             }
