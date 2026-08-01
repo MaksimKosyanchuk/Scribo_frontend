@@ -4,7 +4,7 @@ import "./SearchSelect.scss";
 
 import InputField from "../InputField";
 
-import { ReactComponent as ArrowDownUpIcon } from "../../../assets/svg/arrow-down-up.svg";
+import { ReactComponent as ArrowDownUpIcon } from "../../../assets/svg/chevron-down-up.svg";
 import { ReactComponent as CloseIcon } from "../../../assets/svg/cross-icon.svg";
 
 

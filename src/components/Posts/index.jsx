@@ -8,6 +8,7 @@ import PostsFilters from "../../components/PostsFilters";
 import Loading from "../Ui/Loading";
 import NoPosts from "../NoPosts";
 import PostCard from "../PostCard";
+import Pagination from "../Ui/Pagination/index";
 
 const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
     const { profile } = useContext(AppContext);
@@ -102,14 +103,18 @@ const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
                     {filteredPosts.length === 0 ? (
                         <NoPosts />
                     ) : (
-                        filteredPosts.map(post => (
-                            <PostCard
-                                key={post._id}
-                                post={post}
-                                category={post.category}
-                                setPosts={setPosts}
-                            />
-                        ))
+                        <Pagination content={filteredPosts} limit={5}>
+                            {(visibleContent) => (
+                                visibleContent.map(post => (
+                                    <PostCard
+                                        key={post._id}
+                                        post={post}
+                                        category={post.category}
+                                        setPosts={setPosts}
+                                    />
+                                ))
+                            )}
+                        </Pagination>
                     )}
                 </>
             )}

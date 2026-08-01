@@ -28,6 +28,7 @@ import Category from "../../components/Category/index";
 import Popup from "../../components/Ui/Popup";
 import ChipButton from "../../components/Ui/ChipButton";
 
+import Pagination from "../../components/Ui/Pagination";
 import "./Logs.scss";
 
 
@@ -179,7 +180,7 @@ const CategoryEntity = ({ id, data, setFilter }) => {
                 {
                     data ? 
                         <Category category={data} is_active={true} onClick={() => {}} /> :
-                    <div className="admin_panel_content_logs_page_item_entity_category_deleted">
+                    <div className="admin_panel_content_logs_page_item_entity admin_panel_content_logs_page_item_entity_category_deleted">
                     
                         <ChipButton >
                             <TagIcon/>
@@ -526,34 +527,35 @@ const LogsPage = () => {
                     <SearchSearch options={search_select_options} onSetValue={(value) => {setFilter({ type: value.type, id: value.value })}}/>
             }
             {
-                filteredLogs.map(log => {
-                    const Renderer = LOG_RENDERERS[log.type];
-                    const action = ACTIONS[log.type];
+                <Pagination content={filteredLogs} limit={8}>
+                    {(visibleContent) => (
+                        visibleContent.map(log => {
+                            const Renderer = LOG_RENDERERS[log.type];
+                            const action = ACTIONS[log.type];
 
-                    return (
-                        <LogLayout
-                            key={log._id}
-                            action={action}
-                            setFilter={setFilter}
-                            user={users.find(user => user._id === log.data.user)}
-                            log={log}
-                            time={log.date_time}
-                        >
-                            {Renderer?.({
-                                log,
-                                users,
-                                posts,
-                                categories,
-                                setFilter
-                            })}
-                        </LogLayout>
-                    );
-                })
+                            return (
+                                <LogLayout
+                                    key={log._id}
+                                    action={action}
+                                    setFilter={setFilter}
+                                    user={users.find(user => user._id === log.data.user)}
+                                    log={log}
+                                    time={log.date_time}
+                                >
+                                    {Renderer?.({
+                                        log,
+                                        users,
+                                        posts,
+                                        categories,
+                                        setFilter
+                                    })}
+                                </LogLayout>
+                            );
+                        })
+                    )}
+                </Pagination>
             }
-
         </div>
-
-
     );
 
 };
