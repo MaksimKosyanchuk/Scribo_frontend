@@ -16,7 +16,7 @@ import { ReactComponent as NotificationIcon } from "../../assets/svg/notificatio
 import { ReactComponent as PlusIcon } from "../../assets/svg/plus-icon.svg";
 import { ReactComponent as SettingsIcon } from "../../assets/svg/settings.svg";
 import { ReactComponent as LogoutIcon } from "../../assets/svg/logout.svg";
-import { ReactComponent as ArrowDownIcon } from '../../assets/svg/arrow-down.svg';
+import { ReactComponent as ArrowDownIcon } from '../../assets/svg/chevron-down.svg';
 import { ReactComponent as RedirectIcon } from '../../assets/svg/redirect.svg';
 
 import UserBadge from '../UserBadge/index';

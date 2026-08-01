@@ -48,10 +48,13 @@ const AdminPanel = () => {
     ]
 
     return (
-        <SidebarPage
-            page_title={"Панель администратора"}
-            pages={pages}
-        />
+        <div className="admin_panel_page">
+
+            <SidebarPage
+                page_title={"Панель администратора"}
+                pages={pages}
+            />
+        </div>
     )
 }
 
