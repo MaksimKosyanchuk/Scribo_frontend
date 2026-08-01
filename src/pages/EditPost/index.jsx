@@ -126,7 +126,8 @@ const EditPost = () => {
                     title: post.title ?? '',
                     content_text: post.content_text ?? '',
                     category: post.category ?? '',
-                    featured_image: post.featured_image ?? null
+                    featured_image: post.featured_image ?? null,
+                    author: post.author ?? null
                 })
                 setFeaturedImage(post.featured_image)
             }
@@ -172,7 +173,7 @@ const EditPost = () => {
 
     useEffect(() => {
         if(initialized){
-            if(!profileLoading && (!profile || !profile.is_admin)){
+            if(!profileLoading && fields.author && (!profile || (!["admin", "tech_admin"].includes(profile?.role) &&  fields.author !== profile?._id))) {
                 navigate("/posts")
             }
         }

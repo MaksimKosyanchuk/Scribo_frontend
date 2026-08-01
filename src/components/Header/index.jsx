@@ -143,13 +143,18 @@ function Header() {
                         В админ панель
                       </ActionButton>
                   }
-                <PrimaryButton className="header_admin_button header_admin_button_create" onClick={() => { navigate('/create-post') }}>
-                  <PlusIcon/>
-                    Создать пост
-                  </PrimaryButton>
               </>
               :
               <></>
+            }
+            {
+              ["author", "admin", "tech_admin"].includes(profile?.role) ?
+                <PrimaryButton className="header_admin_button header_admin_button_create" onClick={() => { navigate('/create-post') }}>
+                  <PlusIcon/>
+                    Создать пост
+                </PrimaryButton>
+              :
+                <></>
             }
             <button type='button' onClick={() => { open_notifications() }} className='header_item header_notification'>
               {
