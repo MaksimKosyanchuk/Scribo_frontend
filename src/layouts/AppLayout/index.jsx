@@ -18,6 +18,9 @@ const AppLayout = ({ children }) => {
         if (result.status) {
             setProfile(result.data);
         }
+        else {
+            setProfile(null);
+        }
 
         setProfileLoading(false);
     }, [setProfile, setProfileLoading]);

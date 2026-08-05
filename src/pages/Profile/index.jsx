@@ -42,6 +42,7 @@ const Profile = () => {
     const posts_filters = useMemo( () => [], [])
 
     useEffect(() => {
+        if(!followThisUser) return;
         setProfile({
             ...profile,
             follows: followThisUser?.follower?.follows
@@ -55,6 +56,7 @@ const Profile = () => {
     }, [followThisUser])
 
     useEffect(() => {
+        if (!followAnotherUser) return;
         setProfile({
             ...profile,
             follows: followAnotherUser?.follower?.follows

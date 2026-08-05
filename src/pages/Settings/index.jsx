@@ -16,7 +16,7 @@ import "./Settings.scss";
 import { ReactComponent as AvatarIcon } from "../../assets/svg/avatar-icon.svg"
 
 const Settings = () => {
-    const { profile, setProfile, profileLoading,showToast } = useContext(AppContext)
+    const { profile, setProfile, profileLoading, showToast, isDarkTheme, setIsDarkTheme } = useContext(AppContext)
     const [ initialized, setInitialized ] = useState(false);
     const navigate = useNavigate();
     const [errors, setErrors] = useState({})
@@ -190,6 +190,7 @@ const Settings = () => {
 
     const logout = () => {
         localStorage.removeItem("token");
+        setProfile(null);
         showToast({ message: "Вы вышли из аккаунта!", type: "success" });
         navigate("/posts");
     }
@@ -243,6 +244,13 @@ const Settings = () => {
                                     <Toggle 
                                         checked={fields.is_saved_posts_public}
                                         onChange={set_saved_posts_visibility}
+                                    />
+                                </div>
+                                <div className='private_setting_content_item app-transition'>
+                                    <p>Темная тема</p>
+                                    <Toggle 
+                                        checked={isDarkTheme}
+                                        onChange={setIsDarkTheme}
                                     />
                                 </div>
                             </div>
