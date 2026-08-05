@@ -5,10 +5,12 @@
     position: absolute;
     align-self: center;
     justify-self: center;
-    bottom: 10px;
+    bottom: 20px;
     z-index: 100;
-    border-radius: 999px;
-    background: var(--navigation-bar-background-color);
+    
+    &.float_section{
+        border-radius: 999px;
+    }
 
     @include screen() {
         display: flex;
@@ -16,17 +18,23 @@
 
     .switcher_bar {
         width: 100%;
+        border: none;
 
         .switcher_bar_indicator {
             background: var(--navigation-bar-active-item-background-color);
         }
 
         &_item {
-            padding: 12px 24px;
+            padding: 16px 24px;
 
+            .navigation_item {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
             svg {
-                width: 16px;
-                height: 16px;
+                width: 18px;
+                height: 18px;
             }
         }
     }
