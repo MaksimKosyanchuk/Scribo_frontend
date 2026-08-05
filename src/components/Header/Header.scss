@@ -1,6 +1,7 @@
 @import '../../styles/helpers.scss';
 
 .header {
+    display: flex;
     position: sticky;
     top: 0;
     left: 0;
@@ -8,6 +9,10 @@
     background-color: var(--header-background);
     z-index: 1000;
     box-shadow: 0 0 10px 1px rgba(0,0,0, .3);
+
+    @include screen() {
+        display: none;
+    }
 
     &_content {
       display: flex;

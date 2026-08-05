@@ -50,7 +50,7 @@ export default function SwitchBar({
                 }}
             />
 
-            {items.map((item, index) => (
+            {items?.map((item, index) => (
                 <button
                     key={index}
                     ref={(el) => (buttonsRef.current[index] = el)}

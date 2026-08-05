@@ -31,67 +31,67 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
-    const get_notification = async (notifications) => {
-      const userIds = [
-        ...new Set(
-            notifications
-                .map(item => item.user)
-                .filter(Boolean)
-        )
-      ];
+  const get_notification = async (notifications) => {
+    const userIds = [
+      ...new Set(
+          notifications
+              .map(item => item.user)
+              .filter(Boolean)
+      )
+    ];
 
-      const users = await getUsers(
-          userIds.map(_id => ({ _id }))
-      );
+    const users = await getUsers(
+        userIds.map(_id => ({ _id }))
+    );
 
-      const userMap = users?.data?.reduce((acc, u) => {
-        acc[u._id] = u;
-        return acc;
-      }, {});
+    const userMap = users?.data?.reduce((acc, u) => {
+      acc[u._id] = u;
+      return acc;
+    }, {});
 
-      return [...notifications].reverse().map((item, index) => (
-        <div key={item._id} className="modal_window_body_content_notification">
-          <div className='modal_window_body_content_notification_new'>
-            {
-              !item.is_read ?
-                  <div className="modal_window_body_content_notification_new_circle"></div>
-                :
-                  <></>
-            }
-            <UserBadge data={userMap[item?.user]} />
-          </div>
-          <p className='modal_window_body_content_notification_message'>
-            {(() => {
-              switch (item.type) {
-                case "follow":
-                    return "Подписался(-ась) на ваши обновления"
-                  case "unfollow":
-                    return "Отписался(-ась) от вас"
-                  case "like_post":
-                    return (
-                      <>Поставил лайк на ваш <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>пост</Link></>
-                    )
-                  case "comment_post":
-                    return (
-                      <>
-                        Прокомментировал(-а) ваш <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>пост</Link>
-                      </>
-                    )
-                  case "reply_comment":
-                    return (
-                      <>
-                        Ответил(-а) на <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`} state={{ comment: item.comment, time: Date.now() }}>ваш комментарий</Link>
-                      </>
-                    )
-                  default:
-                    return ""
-                  }
-              })()}
-          </p>
-          <p className='modal_window_body_content_notification_time'>{format_back(item.time)}</p>
+    return [...notifications].reverse().map((item, index) => (
+      <div key={item._id} className="modal_window_body_content_notification">
+        <div className='modal_window_body_content_notification_new'>
+          {
+            !item.is_read ?
+                <div className="modal_window_body_content_notification_new_circle"></div>
+              :
+                <></>
+          }
+          <UserBadge data={userMap[item?.user]} />
         </div>
-      ));
-    };
+        <p className='modal_window_body_content_notification_message'>
+          {(() => {
+            switch (item.type) {
+              case "follow":
+                  return "Подписался(-ась) на ваши обновления"
+                case "unfollow":
+                  return "Отписался(-ась) от вас"
+                case "like_post":
+                  return (
+                    <>Поставил лайк на ваш <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>пост</Link></>
+                  )
+                case "comment_post":
+                  return (
+                    <>
+                      Прокомментировал(-а) ваш <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>пост</Link>
+                    </>
+                  )
+                case "reply_comment":
+                  return (
+                    <>
+                      Ответил(-а) на <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`} state={{ comment: item.comment, time: Date.now() }}>ваш комментарий</Link>
+                    </>
+                  )
+                default:
+                  return ""
+                }
+            })()}
+        </p>
+        <p className='modal_window_body_content_notification_time'>{format_back(item.time)}</p>
+      </div>
+    ));
+  };
     
   const open_notifications = async () => {
     if(!profile) {

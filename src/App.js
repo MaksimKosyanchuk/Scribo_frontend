@@ -22,6 +22,8 @@ import AppLayout from './layouts/AppLayout/index.jsx';
 import FullContainer from './layouts/FullContainer/index.jsx';
 import PageLayout from './layouts/PageLayout/index.jsx';
 
+import MobileNavigationBar from './components/MobileNavigationBar/index.jsx';
+
 import { CATEGORY_COLORS } from "./styles/constants.js";
 
 import "./styles/common.scss";
@@ -217,6 +219,9 @@ function App() {
     '--popup-text-color': 'var(--main-text-color)',
     '--popup-danger-item-hover-background-color': isDarkTheme ? 'rgba(235, 114, 114, .1)' : 'rgba(255, 120, 120, .1)',
 
+    '--navigation-bar-background-color': isDarkTheme ? 'rgba(15, 15, 15, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+    '--navigation-bar-active-item-background-color': isDarkTheme ? 'var(--gray-1e)' : 'rgba(80, 80, 80, .1)',
+
     '--log-create-color': isDarkTheme ? 'rgb(110 255 198)' : 'rgb(0 152 13)',
     '--log-error-color': isDarkTheme ? 'rgb(255 89 89)' : 'rgb(255 109 109)',
     '--log-update-color': isDarkTheme ? 'rgb(255 222 125)' : 'rgb(214 154 0)',
@@ -252,6 +257,7 @@ function App() {
               modalCloseRequest={modalCloseRequest}
             />
             <Header/>
+            <MobileNavigationBar/>
             
               <Routes>
                 <Route element={<PageLayout/>}>

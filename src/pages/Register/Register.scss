@@ -1,6 +1,8 @@
 @import '../../styles/helpers.scss';
 
 .register {
+    display: flex;
+    
     .form_input{
         display: flex;
         flex-direction: column;

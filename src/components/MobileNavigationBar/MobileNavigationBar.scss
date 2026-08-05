@@ -1,0 +1,33 @@
+@import "../../styles/helpers";
+
+.navigation_bar {
+    display: none;
+    position: absolute;
+    align-self: center;
+    justify-self: center;
+    bottom: 10px;
+    z-index: 100;
+    border-radius: 999px;
+    background: var(--navigation-bar-background-color);
+
+    @include screen() {
+        display: flex;
+    }
+
+    .switcher_bar {
+        width: 100%;
+
+        .switcher_bar_indicator {
+            background: var(--navigation-bar-active-item-background-color);
+        }
+
+        &_item {
+            padding: 12px 24px;
+
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
