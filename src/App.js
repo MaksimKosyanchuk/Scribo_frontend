@@ -130,7 +130,7 @@ function App() {
     '--section-light-color': isDarkTheme ? 'var(--gray-79)' : 'var(--gray-99)',
     '--section-light-hover-color': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-25)',
 
-    '--float-section-background-color': isDarkTheme ? 'rgba(22,22,22, .8)' : 'rgba(255,255,255, .8)',
+    '--float-section-background-color': isDarkTheme ? 'rgba(13,13,13, .8)' : 'rgba(255,255,255, .8)',
     '--float-section-line-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
 
     '--section-item-hover-background-color': isDarkTheme ? 'rgba(160,160,160, .1)' : 'rgba(139, 139, 139, .1)',
@@ -219,7 +219,6 @@ function App() {
     '--popup-text-color': 'var(--main-text-color)',
     '--popup-danger-item-hover-background-color': isDarkTheme ? 'rgba(235, 114, 114, .1)' : 'rgba(255, 120, 120, .1)',
 
-    '--navigation-bar-background-color': isDarkTheme ? 'rgba(15, 15, 15, 0.8)' : 'rgba(255, 255, 255, 0.8)',
     '--navigation-bar-active-item-background-color': isDarkTheme ? 'var(--gray-1e)' : 'rgba(80, 80, 80, .1)',
 
     '--log-create-color': isDarkTheme ? 'rgb(110 255 198)' : 'rgb(0 152 13)',

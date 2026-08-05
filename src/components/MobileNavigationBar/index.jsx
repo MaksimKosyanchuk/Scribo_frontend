@@ -193,7 +193,7 @@ const MobileNavigationBar = () => {
             index
         }));
 
-    }, [profile, navigate, open_notifications]);
+    }, [profile, navigate, open_notifications]); 
 
     useEffect(() => {
         const currentItem = items.find(item => item.path === location.pathname);
@@ -207,7 +207,7 @@ const MobileNavigationBar = () => {
     }
 
     return (
-        <div className="navigation_bar app-transition blurred">
+        <div className="navigation_bar float_section app-transition blurred">
             <SwitchBar 
                 items={renderItems(items)}
                 setActiveIndex={handleIndex}
