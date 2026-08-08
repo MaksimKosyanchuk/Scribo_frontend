@@ -1,7 +1,7 @@
 import { getAllLogs } from "../../api/logs.api";
 import { getUsers } from "../../api/users.api";
 
-import { useEffect, useState, useContext } from "react";
+import { Children, useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { AppContext } from "../../App";
@@ -27,6 +27,7 @@ import UserBadge from "../../components/UserBadge/index";
 import Category from "../../components/Category/index";
 import Popup from "../../components/Ui/Popup";
 import ChipButton from "../../components/Ui/ChipButton";
+import RoleBadge from "../../components/RoleBadge/index";
 
 import Pagination from "../../components/Ui/Pagination";
 import "./Logs.scss";
@@ -43,15 +44,21 @@ const formatTime = (date) => {
 
 const LogLayout = ({ action, user, time, children, setFilter, log }) => {
     return (
-        <div className={`admin_panel_content_logs_page_item admin_panel_content_logs_page_item_${action?.className}`}>
+        <div className={`admin_panel_content_logs_page_item admin_panel_content_logs_page_item_${action?.className} app-transition`}>
             <div className="admin_panel_content_logs_page_item_left">
                 <UserEntity className="test" id={log.data.user} data={user} setFilter={setFilter} />
             </div>
             <div className="admin_panel_content_logs_page_item_center">
-                {children}
+                {Children.toArray(children?.props?.children ?? children)[0]}
             </div>
-            <div className="admin_panel_content_logs_page_item_right">
-                {time && formatTime(time)}
+            <div className="admin_panel_content_logs_page_item_object">
+                {Children.toArray(children?.props?.children ?? children)[1]}
+            </div>
+            <div>
+                {Children.toArray(children?.props?.children ?? children)[2]}
+            </div>
+            <div className="admin_panel_content_logs_page_item_time">
+                {Children.toArray(children?.props?.children ?? children)[3] ?? (time && formatTime(time))}
             </div>
         </div>
     )
@@ -195,6 +202,25 @@ const CategoryEntity = ({ id, data, setFilter }) => {
     )
 }
 
+const RoleEntity = ({ id, data, setFilter }) => {
+    return (
+        
+        <div className="admin_panel_content_logs_page_item_entity admin_panel_content_logs_page_item_entity_role">
+            {
+                data ? 
+                    <RoleBadge user={data} /> :
+                    <div className="admin_panel_content_logs_page_item_entity admin_panel_content_logs_page_item_entity_role_deleted">
+                        <ChipButton >
+                            <p>
+                                No longer exist
+                            </p>
+                        </ChipButton>
+                    </div>
+            }
+        </div>
+    )
+}
+
 const LOG_RENDERERS = {
     create_post: ({ log, users, posts, setFilter }) => (
         <>
@@ -289,8 +315,8 @@ const LOG_RENDERERS = {
                 </div>
                 <p>Изменил роль пользователя</p>
             </div>
-            <UserEntity id={log.data.user} data={users.find(u => u._id === log.data.updated_user)} setFilter={setFilter} />
-            <div>{log.data.new_role}</div>
+            <UserEntity id={log.data.updated_user} data={users.find(u => u._id === log.data.updated_user)} setFilter={setFilter} />
+            <RoleEntity id={log.data.new_role} data={ { role: log.data.new_role } } setFilter={setFilter} />
         </>
     )
 };
@@ -336,6 +362,11 @@ const ACTIONS = {
         title: "Удаление категории",
         className: "delete_category",
         icon: DeleteIcon
+    },
+    update_role: {
+        title: "Role update",
+        className: "update_role",
+        icon: EditIcon
     }
 };
 
@@ -403,7 +434,7 @@ const LogsPage = () => {
             const userIds = [
                 ...new Set(
                     logs
-                        .map(log => log.data?.user)
+                        .flatMap(log => [log.data?.user, log.data?.updated_user])
                         .filter(Boolean)
                 )
             ];
@@ -534,13 +565,14 @@ const LogsPage = () => {
                         {filter.type === "user" && <UserEntity id={filter.id} data={users.find(u => u._id === filter.id)} setFilter={setFilter} />}
                         {filter.type === "post" && <PostEntity id={filter.id} data={posts.find(p => p._id === filter.id)} setFilter={setFilter} />}
                         {filter.type === "category" && <CategoryEntity id={filter.id} data={categories.find(c => c._id === filter.id)} setFilter={setFilter} />}
+                        {filter.type === "role" && <RoleEntity id={filter.id} data={ { role: filter.id } } setFilter={setFilter} />}
                         <CancelButton onClick={() => setFilter({ type: null, id: null })}>Отмена</CancelButton>
                     </div>
                 :
                     <SearchSearch options={search_select_options} onSetValue={(value) => {setFilter({ type: value.type, id: value.value })}}/>
             }
             {
-                <Pagination content={filteredLogs} limit={8}>
+                <Pagination content={filteredLogs} limit={9}>
                     {(visibleContent) => (
                         visibleContent.map(log => {
                             const Renderer = LOG_RENDERERS[log.type];

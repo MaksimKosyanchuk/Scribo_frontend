@@ -41,8 +41,10 @@ const Pagination = ({ content, limit = 5, children }) => {
     );
 
     return (
-        <>
-            {children(visibleContent)}
+        <div className="pagination">
+            <div className="pagination_content">
+                {children(visibleContent)}
+            </div>
             {
                 pagesCount === 1 ?
                     <></>
@@ -89,7 +91,7 @@ const Pagination = ({ content, limit = 5, children }) => {
                         }
                     </div>
             }
-        </>
+        </div>
     );
 };
 
