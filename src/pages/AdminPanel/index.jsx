@@ -20,7 +20,7 @@ const AdminPanel = () => {
     const { profile, profileLoading } = useContext(AppContext);
 
     useEffect(() => {
-        if (!profileLoading && (!profile || !profile.is_admin)) {
+        if (!profileLoading && (!["admin", "tech_admin"].includes(profile?.role))) {
             navigate("/");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

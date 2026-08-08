@@ -191,7 +191,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
         });
     }
 
-    if((profile && profile._id.toString() === comment.author._id.toString()) || (['admin', 'tech_admin'].includes(profile?.role))) {
+    if((profile && profile._id.toString() === comment.author._id.toString()) || (profile && profile.permissions.includes("delete_any_comment"))) {
         actions_body.push({
            "title": "Удалить",
             "onClick": () => {

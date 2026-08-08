@@ -173,7 +173,7 @@ const EditPost = () => {
 
     useEffect(() => {
         if(initialized){
-            if(!profileLoading && fields.author && (!profile || (!["admin", "tech_admin"].includes(profile?.role) &&  fields.author !== profile?._id))) {
+            if(!profileLoading && fields.author && (!profile || profile.permissions.includes("edit_any_post") || profile._id.toString() !== fields.author._id.toString())) {
                 navigate("/posts")
             }
         }

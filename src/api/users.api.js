@@ -28,6 +28,29 @@ const getUsers = async (query = []) => {
     }
 };
 
+const updateRole = async (user_id, new_role) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+    };
+
+    try {
+        const response = await fetch(`${API_URL}/api/users/${user_id}/role`, {
+            method: 'PATCH',
+            headers: headers,
+            body: JSON.stringify({ role: new_role })
+        });
+        const result = await response.json();
+        return result;
+    } catch (err) {
+        console.error(err);
+        return {
+            status: false,
+            message: err.message
+        };
+    }
+}
+
 const read_notifications = async () => {
     const headers = { 'Authorization': `Bearer ${localStorage.getItem("token")}`}
     
@@ -57,6 +80,7 @@ const follow = async ({method="POST", user_id}) => {
 
 export {
     getUsers,
+    updateRole,
     read_notifications,
     follow
 }

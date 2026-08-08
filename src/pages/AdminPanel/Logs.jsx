@@ -279,6 +279,19 @@ const LOG_RENDERERS = {
             </div>
             <CategoryEntity id={log.data.category} data={categories.find(cat => cat._id === log.data.category)} setFilter={setFilter} />
         </>
+    ),
+
+    update_role: ({ log, users, targetUser, setFilter }) => (
+        <>
+            <div className="admin_panel_content_logs_page_item_message">
+                <div className="admin_panel_content_logs_page_item_message_icon">
+                    <EditIcon/>
+                </div>
+                <p>Изменил роль пользователя</p>
+            </div>
+            <UserEntity id={log.data.user} data={users.find(u => u._id === log.data.updated_user)} setFilter={setFilter} />
+            <div>{log.data.new_role}</div>
+        </>
     )
 };
 
