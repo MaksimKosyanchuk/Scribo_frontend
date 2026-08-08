@@ -157,11 +157,10 @@ const MobileNavigationBar = () => {
                     icon: RedirectIcon,
                     onClick: () => navigate("/admin-panel")
                 });
-
             }
 
 
-            if(["author", "admin", "tech_admin"].includes(profile.role)) {
+            if(profile.permissions?.includes("create_post")) {
 
                 items.push({
                     path: "/create-post",

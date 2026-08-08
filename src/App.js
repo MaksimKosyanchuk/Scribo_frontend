@@ -227,8 +227,9 @@ function App() {
     '--log-register-color': isDarkTheme ? 'rgb(72 166 255)' : 'rgb(5 134 255)',
 
     '--author-color': isDarkTheme ? 'rgb(72 166 255)' : 'rgb(5 134 255)',
-    '--admin-color': isDarkTheme ? '#b437ff' : '#b437ff',
-    '--tech-admin-color': isDarkTheme ? 'rgb(255 89 89)' : 'rgb(255 109 109)',
+    '--moderator-color': isDarkTheme ? '#d95bff' : '#c502ff',
+    '--admin-color': isDarkTheme ? 'rgb(255 89 89)' : 'rgb(255 109 109)',
+    '--tech-admin-color': isDarkTheme ? 'rgb(146 46 255)' : 'rgb(111 0 255)',
 
     ...Object.fromEntries(
         Object.values(CATEGORY_COLORS).map(color => [

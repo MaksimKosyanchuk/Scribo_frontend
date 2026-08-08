@@ -188,8 +188,7 @@ const Profile = () => {
                     <div className="profile_info_bottom_nick">
                         <p
                             className={
-                                "profile_info_bottom_nick_name" +
-                                (user && user.is_admin ? " profile_info_bottom_nick_name_admin" : "")
+                                "profile_info_bottom_nick_name"
                             }
                         >
                             {user.nick_name}

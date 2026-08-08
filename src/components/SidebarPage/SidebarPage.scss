@@ -73,6 +73,7 @@
     
     &_content {
         width: 100%;
+        overflow: hidden;
         
         &_item {
             display: flex;
