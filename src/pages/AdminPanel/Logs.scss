@@ -29,221 +29,230 @@
         }
     }
 
-    &_item {
-        width: 100%;
+    .pagination {
+        height: 100%;
+        justify-content: space-between;
 
-        display: grid;
-        grid-template-columns:
-            minmax(100px, 200px)
-            minmax(0, 1fr)
-            minmax(110px, 125px);
-
-        gap: clamp(12px, 2vw, 40px);
-
-        border-radius: 8px;
-        border: 1px solid var(--line-color);
-        padding: 8px 16px;
-        align-items: center;
-
-        @include screen() {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 14px;
-        }
-        
-        &_left {
-            display: flex;
-        }
-
-        &_center {
-            align-items: center;
-
+        &_content {
+            gap: 20px;
             display: grid;
+
             grid-template-columns:
-                minmax(180px, 200px)
-                minmax(0, 1fr);
+                minmax(0, max-content)
+                minmax(0, max-content)
+                minmax(0, max-content)
+                minmax(0, max-content)
+                minmax(0, max-content);
 
-            gap: clamp(10px, 2vw, 24px);
+            justify-content: space-between;
+            row-gap: 10px;
 
-            @include screen() {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-        }
+            .admin_panel_content_logs_page_item {
+                display: grid;
 
-        &_right {
-            display: flex;
-            p {
-                color: var(--section-light-color);
-            }
-        }
+                grid-template-columns: subgrid;
+                grid-column: 1 / -1;
 
-        &_entity{
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-            gap: 6px;
-            
-            svg {
-                flex-shrink: 0;
-            }
+                width: 100%;
+                min-width: 0;
+                height: 50px;
 
-            &_deleted {
-                padding: 4px 8px;
-                border-radius: 6px;
-                --delete-color: rgb(255 89 89);
-                background: rgb(from var(--delete-color) r g b / 0.1);
-                 
-                p {
-                    font-size: 12px;
-                    color: var(--delete-color);
-                }
-            }
-
-            p {
-                line-height: 1;
-                font-size: 14px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-
-                @include screen() {
-                        font-size: 12px;
-                }
-            }
-
-            &_post {
-                display: flex;
-                align-items: center;
-                padding: 8px 12px;
                 border-radius: 8px;
-                background: var(--section-item-hover-background-color);
-                
-                &_deleted {
+                border: 1px solid var(--line-color);
+                padding: 8px 16px;
+
+                align-items: center;
+        
+                &_time {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--light-text-color);
+
                     p {
-                        color: var(--section-light-color);
+                        color: var(--light-text-color)
+                    }
+
+                    .tooltip_text {
+                        color: var(--tooltip-text-color);
                     }
                 }
 
-                svg {
-                    color: var(--section-light-color);
-                    height: 18px;
-                    width: 18px;
-                    flex-shrink: 0;
+                @include screen() {
+                    display: flex;
+                    flex-direction: column;
+                    height: auto;
+                    align-items: flex-start;
+                    gap: 10px;
                 }
-            }
-            
-            &_category {
-                display: flex;
-                align-items: center;
-                
-                &_deleted {
+
+                &_entity{
                     display: flex;
                     align-items: center;
+                    overflow: hidden;
+                    gap: 6px;
+                    cursor: pointer;
 
-                    .chip_button {
+
+                    svg {
+                        flex-shrink: 0;
+                    }
+        
+                    &_deleted {
+                        padding: 4px 8px;
+                        border-radius: 6px;
+                        --delete-color: rgb(255 89 89);
+                        background: rgb(from var(--delete-color) r g b / 0.1);
+                         
                         p {
-                            color: var(--light-text-color);
+                            font-size: 12px;
+                            color: var(--delete-color);
+                        }
+                    }
+        
+                    p {
+                        line-height: 1;
+                        font-size: 14px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+        
+                    }
+        
+                    &_post {
+                        display: flex;
+                        align-items: center;
+                        padding: 8px 12px;
+                        border-radius: 8px;
+                        background: var(--section-item-hover-background-color);
+                        
+                        &_deleted {
+                            p {
+                                color: var(--section-light-color);
+                            }
+                        }
+        
+                        svg {
+                            color: var(--section-light-color);
+                            height: 18px;
+                            width: 18px;
+                            flex-shrink: 0;
+                        }
+                    }
+                    
+                    &_category {
+                        display: flex;
+                        align-items: center;
+                        
+                        &_deleted {
+                            display: flex;
+                            align-items: center;
+        
+                            .chip_button {
+                                p {
+                                    color: var(--light-text-color);
+                                }
+        
+                                svg {
+                                    height: 16px;
+                                    width: 16px;
+                                    color: var(--light-text-color);
+                                }
+                                gap: 6px;
+                                align-items: center;
+        
+                            }
+                        }
+        
+                        &_icon {
+                            display: flex;
+                            align-items: center;
+        
+                            svg {
+                                color: var(--section-light-color);
+                                height: 18px;
+                                width: 18px;
+                            }
+                        }
+                    }
+                
+                    &_role {
+                        
+                    }
+                }
+        
+                &_message {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+        
+                    &_icon{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 8px;
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 8px;
+                        background: rgb(from var(--action-color) r g b / 0.1);
+        
+                        @include screen() {
+                            height: 22px;
+                            width: 22px;
+                            padding: 6px;
                         }
 
                         svg {
-                            height: 16px;
-                            width: 16px;
-                            color: var(--light-text-color);
+                            color: var(--action-color);
+                            height: 100%;
+                            width: 100%;
+
                         }
-                        gap: 6px;
-                        align-items: center;
-
+                    }
+        
+                    p {
+                        color: var(--action-color);
+                        font-size: 14px;
+        
                     }
                 }
-
-                &_icon {
-                    display: flex;
-                    align-items: center;
-
-                    svg {
-                        color: var(--section-light-color);
-                        height: 18px;
-                        width: 18px;
-                    }
-                }
-            }
-        }
-
-        &_message {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-
-            &_icon{
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 8px;
-                width: 30px;
-                height: 30px;
-                border-radius: 8px;
-                background: rgb(from var(--action-color) r g b / 0.1);
-
-                @include screen() {
-                    width: 26px;
-                    height: 26px;
-                    padding: 6px;
-                }
-
-                svg {
-                    color: var(--action-color);
-                    height: 100%;
-                    width: 100%;
-                }
-            }
-
-            p {
-                color: var(--action-color);
-                font-size: 14px;
-
-                @include screen() {
-                    font-size: 14px;
-                }
-            }
-        }
-
-        .chip_button {
-            overflow: hidden;
-        }
-
-        &_create_post{
-            --action-color: var(--log-create-color);
-        }
         
-        &_update_post{
-            --action-color: var(--log-update-color);
-        }
+                .chip_button {
+                    overflow: hidden;
+                }
         
-        &_create_category{
-            --action-color: var(--log-create-color);
+                &_create_post{
+                    --action-color: var(--log-create-color);
+                }
+                
+                &_update_post{
+                    --action-color: var(--log-update-color);
+                }
+                
+                &_create_category{
+                    --action-color: var(--log-create-color);
+                }
+        
+                &_update_category{
+                    --action-color: var(--log-update-color);
+                }
+        
+                &_delete_category{
+                    --action-color: var(--log-error-color);
+                }
+        
+                &_delete_post{
+                    --action-color: var(--log-error-color);
+                }
+        
+                &_register {
+                    --action-color: var(--log-register-color)
+                }
+        
+                &_update_role {
+                    --action-color: var(--log-update-color);
+                }
+            }
         }
-
-        &_update_category{
-            --action-color: var(--log-update-color);
-        }
-
-        &_delete_category{
-            --action-color: var(--log-error-color);
-        }
-
-        &_delete_post{
-            --action-color: var(--log-error-color);
-        }
-
-        &_register {
-            --action-color: var(--log-register-color)
-        }
-
-    
     }
 }
-

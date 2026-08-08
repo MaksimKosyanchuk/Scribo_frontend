@@ -129,7 +129,7 @@ function Header() {
           </div>
           <div className="header_side header_right_side">
             {
-              profile?.is_admin ? 
+              ["admin", "tech_admin"].includes(profile?.role) ?
               <>
                   {
                     location.pathname === '/admin-panel' ?
@@ -148,7 +148,7 @@ function Header() {
               <></>
             }
             {
-              ["author", "admin", "tech_admin"].includes(profile?.role) ?
+              profile && profile.permissions.includes("create_post") ?
                 <PrimaryButton className="header_admin_button header_admin_button_create" onClick={() => { navigate('/create-post') }}>
                   <PlusIcon/>
                     Создать пост
@@ -192,7 +192,7 @@ function Header() {
                     icon: <SettingsIcon/>,
                     onClick: () => { navigate(`/settings`) }
                   },
-                  ...(profile?.is_admin
+                  ...((["admin", "tech_admin"].includes(profile?.role))
                     ? [{
                         title: location.pathname.startsWith("/admin-panel")
                           ? "Домой"

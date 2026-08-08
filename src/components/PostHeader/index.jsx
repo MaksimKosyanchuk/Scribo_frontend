@@ -87,7 +87,11 @@ const PostHeader = memo(({ post, onDeletePost, className }) => {
                     </Tooltip>
             </div>
             {
-                profile?.is_admin || (profile?.role && profile?._id === post?.author?._id) ? 
+                (
+                    profile?.permissions.includes("DELETE_ANY_POST") &&
+                    profile?.permissions.includes("EDIT_ANY_POST")
+                ) ||
+                profile?._id === post?.author?._id ?
                     <div className="post_header_right app-transition">
                         <Popup body={popupBody}>
                             <ThreeDotsIcon className="article_topic_three_dots"/>
