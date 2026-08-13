@@ -88,8 +88,8 @@ const PostHeader = memo(({ post, onDeletePost, className }) => {
             </div>
             {
                 (
-                    profile?.permissions.includes("DELETE_ANY_POST") &&
-                    profile?.permissions.includes("EDIT_ANY_POST")
+                    profile?.permissions.includes("delete_any_post") &&
+                    profile?.permissions.includes("edit_any_post")
                 ) ||
                 profile?._id === post?.author?._id ?
                     <div className="post_header_right app-transition">
@@ -99,7 +99,7 @@ const PostHeader = memo(({ post, onDeletePost, className }) => {
                     </div>
                 :
                     <></>
-            }
+        }
         </div>
     );
 });

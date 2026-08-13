@@ -73,15 +73,47 @@ const PostActions = ({ className, article, setArticle }) => {
     };
 
 
-    async function doLike(nethod) {
-        const result = await likePost(article._id, nethod)
-        if (result.status === true) {
-            setArticle({ ...article, likes: result.data.likes });
-        }   
+    async function doLike(method) {
+        if(profile) {
+            const isLike = method === "POST";
+
+            if(isLike) {
+                setArticle({ ...article, likes: [...article.likes, profile?._id] })
+                
+                const result = await likePost(article._id, method)
+                
+                if (result.status === true) {
+                    setArticle({ ...article, likes: result.data.likes });
+                    showToast({ message: "Поставлен лайк!", type: "success" })
+                }
+                else {
+                    setArticle({ ...article, likes: article.likes.filter((like) => like !== profile?._id) });
+                }
+            }
+            else {
+                setArticle({ ...article, likes: article.likes.filter((like) => like !== profile?._id) })
+                
+                const result = await likePost(article._id, method)
+                
+                if (result.status === true) {
+                    setArticle({ ...article, likes: result.data.likes });
+                    showToast({ message: "Лайк убран!", type: "success" })
+                }
+                else {
+                    setArticle({ ...article, likes: [...article.likes, profile?._id] });
+                }
+            }
+            
+        }
+
+        else {
+            showToast({ message: "Чтобы поставить лайк, войдите в аккаунт!", type: "warning" })
+        }
     }
 
     return (
         <div className={`post_actions ${className ?? ""}`}>
+            <div className="post_actions_left_side">
                 <button className="post_actions_button app-transition" onClick={() => { doLike(article.likes?.includes(profile?._id) ? "DELETE" : "POST") }}>
                     {
                         article.likes?.includes(profile?._id) ?
@@ -108,6 +140,7 @@ const PostActions = ({ className, article, setArticle }) => {
                 <button className="post_actions_button app-transition" onClick={() => { share(article._id, showToast) }}>
                     <ShareIcon />
                 </button>
+            </div>
             <div className="post_actions_right_side">
                 <Category category={article.category} is_active={true}/>
             </div>     

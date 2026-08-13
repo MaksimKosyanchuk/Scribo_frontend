@@ -46,213 +46,213 @@
 
             justify-content: space-between;
             row-gap: 10px;
+        }
+    }
 
-            .admin_panel_content_logs_page_item {
-                display: grid;
+    .admin_panel_content_logs_page_item {
+        display: grid;
 
-                grid-template-columns: subgrid;
-                grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
 
-                width: 100%;
-                min-width: 0;
-                height: 50px;
+        width: 100%;
+        min-width: 0;
+        height: 50px;
 
-                border-radius: 8px;
-                border: 1px solid var(--line-color);
-                padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid var(--line-color);
+        padding: 8px 16px;
 
-                align-items: center;
-        
-                &_time {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: var(--light-text-color);
+        align-items: center;
 
-                    p {
-                        color: var(--light-text-color)
-                    }
+        &_time {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-text-color);
 
-                    .tooltip_text {
-                        color: var(--tooltip-text-color);
-                    }
-                }
+            p {
+                color: var(--light-text-color)
+            }
 
-                @include screen() {
-                    display: flex;
-                    flex-direction: column;
-                    height: auto;
-                    align-items: flex-start;
-                    gap: 10px;
-                }
+            .tooltip_text {
+                color: var(--tooltip-text-color);
+            }
+        }
 
-                &_entity{
-                    display: flex;
-                    align-items: center;
-                    overflow: hidden;
-                    gap: 6px;
-                    cursor: pointer;
+        @include screen() {
+            display: flex;
+            flex-direction: column;
+            height: auto;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        &_entity{
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            gap: 6px;
+            cursor: pointer;
 
 
-                    svg {
-                        flex-shrink: 0;
-                    }
-        
-                    &_deleted {
-                        padding: 4px 8px;
-                        border-radius: 6px;
-                        --delete-color: rgb(255 89 89);
-                        background: rgb(from var(--delete-color) r g b / 0.1);
-                         
-                        p {
-                            font-size: 12px;
-                            color: var(--delete-color);
-                        }
-                    }
-        
-                    p {
-                        line-height: 1;
-                        font-size: 14px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-        
-                    }
-        
-                    &_post {
-                        display: flex;
-                        align-items: center;
-                        padding: 8px 12px;
-                        border-radius: 8px;
-                        background: var(--section-item-hover-background-color);
-                        
-                        &_deleted {
-                            p {
-                                color: var(--section-light-color);
-                            }
-                        }
-        
-                        svg {
-                            color: var(--section-light-color);
-                            height: 18px;
-                            width: 18px;
-                            flex-shrink: 0;
-                        }
-                    }
+            svg {
+                flex-shrink: 0;
+            }
+
+            &_deleted {
+                padding: 4px 8px;
+                border-radius: 6px;
+                --delete-color: rgb(255 89 89);
+                background: rgb(from var(--delete-color) r g b / 0.1);
                     
-                    &_category {
-                        display: flex;
-                        align-items: center;
-                        
-                        &_deleted {
-                            display: flex;
-                            align-items: center;
-        
-                            .chip_button {
-                                p {
-                                    color: var(--light-text-color);
-                                }
-        
-                                svg {
-                                    height: 16px;
-                                    width: 16px;
-                                    color: var(--light-text-color);
-                                }
-                                gap: 6px;
-                                align-items: center;
-        
-                            }
-                        }
-        
-                        &_icon {
-                            display: flex;
-                            align-items: center;
-        
-                            svg {
-                                color: var(--section-light-color);
-                                height: 18px;
-                                width: 18px;
-                            }
-                        }
-                    }
-                
-                    &_role {
-                        
-                    }
-                }
-        
-                &_message {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-        
-                    &_icon{
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        padding: 8px;
-                        width: 30px;
-                        height: 30px;
-                        border-radius: 8px;
-                        background: rgb(from var(--action-color) r g b / 0.1);
-        
-                        @include screen() {
-                            height: 22px;
-                            width: 22px;
-                            padding: 6px;
-                        }
-
-                        svg {
-                            color: var(--action-color);
-                            height: 100%;
-                            width: 100%;
-
-                        }
-                    }
-        
-                    p {
-                        color: var(--action-color);
-                        font-size: 14px;
-        
-                    }
-                }
-        
-                .chip_button {
-                    overflow: hidden;
-                }
-        
-                &_create_post{
-                    --action-color: var(--log-create-color);
-                }
-                
-                &_update_post{
-                    --action-color: var(--log-update-color);
-                }
-                
-                &_create_category{
-                    --action-color: var(--log-create-color);
-                }
-        
-                &_update_category{
-                    --action-color: var(--log-update-color);
-                }
-        
-                &_delete_category{
-                    --action-color: var(--log-error-color);
-                }
-        
-                &_delete_post{
-                    --action-color: var(--log-error-color);
-                }
-        
-                &_register {
-                    --action-color: var(--log-register-color)
-                }
-        
-                &_update_role {
-                    --action-color: var(--log-update-color);
+                p {
+                    font-size: 12px;
+                    color: var(--delete-color);
                 }
             }
+
+            p {
+                line-height: 1;
+                font-size: 14px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+            }
+
+            &_post {
+                display: flex;
+                align-items: center;
+                padding: 8px 12px;
+                border-radius: 8px;
+                background: var(--section-item-hover-background-color);
+                
+                &_deleted {
+                    p {
+                        color: var(--section-light-color);
+                    }
+                }
+
+                svg {
+                    color: var(--section-light-color);
+                    height: 18px;
+                    width: 18px;
+                    flex-shrink: 0;
+                }
+            }
+            
+            &_category {
+                display: flex;
+                align-items: center;
+                
+                &_deleted {
+                    display: flex;
+                    align-items: center;
+
+                    .chip_button {
+                        p {
+                            color: var(--light-text-color);
+                        }
+
+                        svg {
+                            height: 16px;
+                            width: 16px;
+                            color: var(--light-text-color);
+                        }
+                        gap: 6px;
+                        align-items: center;
+
+                    }
+                }
+
+                &_icon {
+                    display: flex;
+                    align-items: center;
+
+                    svg {
+                        color: var(--section-light-color);
+                        height: 18px;
+                        width: 18px;
+                    }
+                }
+            }
+        
+            &_role {
+                
+            }
+        }
+
+        &_message {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            &_icon{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 8px;
+                width: 30px;
+                height: 30px;
+                border-radius: 8px;
+                background: rgb(from var(--action-color) r g b / 0.1);
+
+                @include screen() {
+                    height: 22px;
+                    width: 22px;
+                    padding: 6px;
+                }
+
+                svg {
+                    color: var(--action-color);
+                    height: 100%;
+                    width: 100%;
+
+                }
+            }
+
+            p {
+                color: var(--action-color);
+                font-size: 14px;
+
+            }
+        }
+
+        .chip_button {
+            overflow: hidden;
+        }
+
+        &_create_post{
+            --action-color: var(--log-create-color);
+        }
+        
+        &_update_post{
+            --action-color: var(--log-update-color);
+        }
+        
+        &_create_category{
+            --action-color: var(--log-create-color);
+        }
+
+        &_update_category{
+            --action-color: var(--log-update-color);
+        }
+
+        &_delete_category{
+            --action-color: var(--log-error-color);
+        }
+
+        &_delete_post{
+            --action-color: var(--log-error-color);
+        }
+
+        &_register {
+            --action-color: var(--log-register-color)
+        }
+
+        &_update_role {
+            --action-color: var(--log-update-color);
         }
     }
 }

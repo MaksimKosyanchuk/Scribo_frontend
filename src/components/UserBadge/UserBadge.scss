@@ -17,6 +17,11 @@
         overflow: hidden;
         border-radius: 50%;
         user-select: none;
+        
+        @include screen() {
+            width: 18px;
+            height: 18px;
+        }
 
         img {
             width: 100%;
@@ -42,7 +47,7 @@
             color: var(--user-badge-name-color);
 
             @include screen(){
-                font-size: 16px;
+                font-size: 12px;
             }
         }
 
@@ -51,8 +56,8 @@
             height: 14px;
 
             @include screen() {
-                width: 14px;
-                height: 14px;
+                width: 12px;
+                height: 12px;
             }
         }
     }
