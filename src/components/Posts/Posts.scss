@@ -13,6 +13,14 @@
             justify-content: space-between;      
             gap: 12px;
         }
+
+        .pagination {
+            gap: 20px;
+            
+            &_content {
+                gap: 20px;
+            }
+        }
     }
 
     .posts_loader{

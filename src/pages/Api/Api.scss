@@ -1,23 +1,51 @@
 div[data-v-app]{
-    .scalar-app {
-        
-        .outdated-label {
-            background-color: #ef4444; 
-            color: white; 
-            padding: 2px 6px; 
-            border-radius: 4px; 
-            font-size: 11px; 
-            margin-left: 6px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        .badge {
+    .section {
+        border: none;
+    }
+
+    .badge {
+        padding: 6px;
+
+        &:has(.outdated-label) {
             display: flex;
             align-items: center;
-            padding: 6px 12px;
+            gap: 6px;
 
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            border-radius: 6px;
+
+            color: #ef4444;
+
+            .outdated-label {
+                margin: 0;
+                padding: 2px 6px;
+
+                background: #ef4444;
+                color: #fff;
+
+                border-radius: 4px;
+
+                font-size: 10px;
+                font-weight: 700;
+                line-height: 1.2;
+                text-transform: uppercase;
+                letter-spacing: 0.4px;
+            }
         }
     }
+}
+
+body {
+    --scalar-color-1: var(--text-color);
+    --scalar-color-2: var(--text-color);
+    --scalar-color-3: var(--light-text-color);
+    --scalar-color-accent: #0a85d1;
+    --scalar-sidebar-background-1: var(--section-background-color);
+    --scalar-sidebar-border-color: var(--line-color);
+    --scalar-background-1: var(--section-background-color);
+    --scalar-background-2: var(--section-background-color);
+    --scalar-background-3: var(--section-background-color);
+    --scalar-background-accent: #5369d20f;
+    --scalar-border-color: var(--line-color);
 }
