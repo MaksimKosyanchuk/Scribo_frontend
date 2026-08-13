@@ -1,0 +1,334 @@
+body {
+  --accent-color: #1b73fb;
+
+  --main-background: var(--gray-f1);
+
+  --warning-color: rgb(255 179 0);
+  --warning-background-color: rgba(255, 245, 163, .8);
+
+  --success-color: rgb(0 139 12);
+  --success-background-color: rgba(199, 252, 188, .8);
+
+  --error-color: rgb(255 14 14);
+  --error-background-color: rgba(250, 223, 223, .8);
+
+  --svg-logo-color: #2f2f2f;
+
+  --administrator-color: red;
+
+  --line-color: #afafaf;
+
+  --text-color: var(--gray-25);
+  --light-text-color: var(--gray-79);
+
+  --text-selection-color: var(--gray-f1);
+  --text-selection-background-color: var(--gray-33);
+
+  --background-text-color: var(--gray-e7);
+  --post-text-color: var(--gray-25);
+
+  --link-text-color: #80f;
+
+  --user-badge-name-color: var(--gray-1e);
+  --user-badge-name-hover-color: var(--gray-16);
+
+  --input-text-color: var(--gray-1e);
+  --input-background-color: var(--gray-f9);
+  --input-outline-color: var(--gray-c6);
+  --input-outline-active-color: var(--gray-25);
+  --input-placeholder-color: var(--gray-c6);
+
+  --drop-file-background-color: transparent;
+  --drop-file-hover-background-color: var(--gray-e7);
+  --drop-file-border-color: var(--gray-b5);
+  --drop-file-hover-border-color: var(--gray-63);
+
+  --avatar-icon-color: var(--drop-file-hover-background-color);
+
+  --submit-button-primary-color: var(--gray-33);
+  --submit-button-primary-hover-color: var(--gray-1e);
+  --submit-button-secondary-color: var(--main-background);
+  --submit-button-loading-background-color: var(--gray-d7);
+  --submit-button-disabled-background-color: var(--gray-e1);
+  --submit-button-disabled-color: var(--gray-99);
+
+  --section-background-color: var(--gray-ff);
+  --section-light-color: var(--gray-99);
+  --section-light-hover-color: var(--gray-25);
+
+  --float-section-background-color: rgba(255, 255, 255, .8);
+  --float-section-line-color: var(--gray-c6);
+
+  --section-item-hover-background-color: rgba(139, 139, 139, .1);
+
+  --loader-color: black;
+
+  --sticky-button-background-color: rgba(241, 241, 241, .8);
+
+  --red-button-primary-color: var(--red-f1);
+  --red-button-secondary-color: var(--gray-ff);
+  --red-button-third-color: var(--red-fd);
+
+  --profile-badge-background-color: var(--gray-f1);
+  --profile-badge-hover-background-color: var(--gray-e7);
+
+  --cancel-button-primary-color: var(--red-f1);
+  --cancel-button-hover-background-color: var(--red-fa);
+
+  --blue-button-primary-color: var(--blue-39);
+
+  --header-text-color: #6b6b6b;
+  --header-background: rgba(255, 255, 255, .8);
+  --header-button-color: var(--gray-63);
+  --header-button-hover-color: var(--gray-16);
+
+  --banner-haze: 1;
+
+  --post-title-color: var(--gray-25);
+
+  --modal-window-body-background-color: white;
+  --modal-window-background-color: rgb(0, 0, 0, .2);
+  --modal-window-button-color: var(--gray-63);
+  --modal-window-button-hover-color: var(--gray-1e);
+  --modal-window-title-text-color: var(--gray-1e);
+
+  --post-card-description-color: #6b6b6b;
+
+  --footer-background: var(--gray-ff);
+  --footer-line-color: var(--gray-e7);
+  --footer-content-color: var(--gray-b5);
+  --footer-content-hover-color: var(--gray-4f);
+
+  --swagger-patch-color: var(--swagger-patch-color-light);
+  --swagger-post-color: var(--swagger-post-color-light);
+  --swagger-main-text-color: black;
+  --swagger-secondary-text-color: black;
+  --swagger-field-background-color: rgba(255, 255, 255, .5);
+  --swagger-field-color: black;
+  --swagger-titles-color: #3b4151;
+  --swagger-option-background-color: #f1f5f9;
+  --swagger-servers-background-color: rgba(255, 255, 255, .4);
+
+  --dropdown-outline-color: var(--gray-c6);
+  --dropdown-selected-background-color: var(--gray-d7);
+  --dropdown-item-hover-background-color: var(--gray-f1);
+
+  --toggle-track-background: var(--gray-c6);
+  --toggle-active-track-background: var(--gray-25);
+  --toggle-thumb-background: var(--gray-ff);
+  --toggle-active-thumb-background: var(--gray-ff);
+
+  --text-editor-toolbar-item-hover-background: var(--gray-d7);
+  --text-editor-toolbar-item-color: var(--gray-63);
+
+  --switcher-bar-border-color: var(--gray-c6);
+  --switcher-bar-item-color: var(--gray-63);
+  --switcher-bar-item-hover-background-color: var(--gray-d7);
+  --switcher-bar-active-item-background-color: var(--gray-d7);
+  --switcher-bar-active-item-color: var(--gray-16);
+
+  --administrator-badge-background-color: var(--blue-de);
+  --administrator-badge-color: var(--blue-39);
+
+  --chip-button-background-color: var(--gray-e7);
+  --chip-button-text-color: var(--gray-25);
+  --chip-button-hover-background-color: var(--gray-f1);
+
+  --reply-button-color: var(--gray-63);
+  --reply-button-background-color: var(--gray-e7);
+  --reply-button-hover-background-color: var(--gray-25);
+
+  --tooltip-background-color: var(--gray-ff);
+  --tooltip-text-color: var(--gray-63);
+
+  --chip-active-button-text-color: var(--gray-e7);
+  --chip-active-button-background-color: var(--gray-33);
+  --chip-active-button-hover-background-color: var(--gray-4f);
+
+  --popup-button-background-color: var(--gray-d7);
+  --popup-background-color: rgba(255, 255, 255, .8);
+  --popup-button-background-hover-color: var(--gray-b5);
+  --popup-border-color: var(--gray-c6);
+  --popup-text-color: var(--text-color);
+  --popup-danger-item-hover-background-color: rgba(255, 120, 120, .1);
+
+  --navigation-bar-active-item-background-color: rgba(80, 80, 80, .1);
+
+  --log-create-color: rgb(0 152 13);
+  --log-error-color: rgb(255 109 109);
+  --log-update-color: rgb(214 154 0);
+  --log-register-color: rgb(5 134 255);
+
+  --author-color: var(--author-color-light);
+  --moderator-color: var(--moderator-color-light);
+  --admin-color: var(--admin-color-light);
+  --tech-admin-color: var(--tech-admin-color-light);
+}
+
+
+body.dark-theme {
+  --accent-color: #4e93ff;
+
+  --main-background: var(--gray-16);
+
+  --warning-color: rgb(255 191 0);
+  --warning-background-color: rgb(94, 85, 42, .8);
+
+  --success-color: rgb(132 255 148);
+  --success-background-color: rgb(72, 90, 73, .8);
+
+  --error-color: rgb(246 0 0);
+  --error-background-color: rgba(92, 62, 62, .8);
+
+  --svg-logo-color: white;
+
+  --administrator-color: var(--red-f5);
+
+  --line-color: var(--gray-4f);
+
+  --text-color: var(--gray-e1);
+  --light-text-color: var(--gray-63);
+
+  --text-selection-color: var(--gray-25);
+  --text-selection-background-color: var(--gray-b5);
+
+  --background-text-color: var(--gray-25);
+  --post-text-color: var(--gray-e7);
+
+  --link-text-color: #c583ff;
+
+  --user-badge-name-color: var(--gray-d7);
+  --user-badge-name-hover-color: var(--gray-f1);
+
+  --input-text-color: var(--gray-d7);
+  --input-background-color: var(--gray-1e);
+  --input-outline-color: var(--gray-33);
+  --input-outline-active-color: var(--gray-b5);
+  --input-placeholder-color: var(--gray-4f);
+
+  --drop-file-background-color: transparent;
+  --drop-file-hover-background-color: var(--gray-25);
+  --drop-file-border-color: var(--gray-4f);
+  --drop-file-hover-border-color: var(--gray-b5);
+
+  --avatar-icon-color: var(--drop-file-hover-background-color);
+
+  --submit-button-primary-color: var(--gray-b5);
+  --submit-button-primary-hover-color: var(--gray-e7);
+  --submit-button-secondary-color: var(--main-background);
+  --submit-button-loading-background-color: var(--gray-33);
+  --submit-button-disabled-background-color: var(--gray-1e);
+  --submit-button-disabled-color: var(--gray-4f);
+
+  --section-background-color: var(--gray-25);
+  --section-light-color: var(--gray-79);
+  --section-light-hover-color: var(--gray-d7);
+
+  --float-section-background-color: rgba(13, 13, 13, .8);
+  --float-section-line-color: var(--gray-33);
+
+  --section-item-hover-background-color: rgba(160, 160, 160, .1);
+
+  --loader-color: white;
+
+  --sticky-button-background-color: rgba(22, 22, 22, .8);
+
+  --red-button-primary-color: var(--red-f1);
+  --red-button-secondary-color: var(--gray-ff);
+  --red-button-third-color: var(--red-fd);
+
+  --profile-badge-background-color: var(--gray-33);
+  --profile-badge-hover-background-color: var(--gray-4f);
+
+  --cancel-button-primary-color: var(--red-f1);
+  --cancel-button-hover-background-color: var(--red-34);
+
+  --blue-button-primary-color: var(--blue-8f);
+
+  --header-text-color: var(--gray-b5);
+  --header-background: rgba(0, 0, 0, .8);
+  --header-button-color: var(--gray-b5);
+  --header-button-hover-color: var(--gray-ff);
+
+  --banner-haze: 0;
+
+  --post-title-color: var(--gray-e7);
+
+  --modal-window-body-background-color: var(--gray-1e);
+  --modal-window-background-color: rgb(0, 0, 0, .2);
+  --modal-window-button-color: var(--gray-b5);
+  --modal-window-button-hover-color: var(--gray-1e);
+  --modal-window-title-text-color: var(--gray-d7);
+
+  --post-card-description-color: var(--gray-b5);
+
+  --footer-background: var(--gray-1e);
+  --footer-line-color: var(--gray-4f);
+  --footer-content-color: var(--gray-79);
+  --footer-content-hover-color: var(--gray-d7);
+
+  --swagger-patch-color: var(--swagger-patch-color-dark);
+  --swagger-post-color: var(--swagger-post-color-dark);
+  --swagger-main-text-color: #d3d3d3;
+  --swagger-secondary-text-color: #a3a3a3;
+  --swagger-field-background-color: rgba(0, 0, 0, .1);
+  --swagger-field-color: white;
+  --swagger-titles-color: #a2acc7;
+  --swagger-option-background-color: #1b2229;
+  --swagger-servers-background-color: rgba(89, 89, 89, .1);
+
+  --dropdown-outline-color: var(--gray-25);
+  --dropdown-selected-background-color: var(--gray-33);
+  --dropdown-item-hover-background-color: var(--gray-25);
+
+  --toggle-track-background: var(--gray-4f);
+  --toggle-active-track-background: var(--gray-d7);
+  --toggle-thumb-background: var(--gray-1e);
+  --toggle-active-thumb-background: var(--gray-1e);
+
+  --text-editor-toolbar-item-hover-background: var(--gray-2f);
+  --text-editor-toolbar-item-color: var(--gray-79);
+
+  --switcher-bar-border-color: var(--gray-33);
+  --switcher-bar-item-color: var(--gray-b5);
+  --switcher-bar-item-hover-background-color: var(--gray-25);
+  --switcher-bar-active-item-background-color: var(--gray-33);
+  --switcher-bar-active-item-color: var(--gray-ff);
+
+  --administrator-badge-background-color: var(--blue-2f);
+  --administrator-badge-color: var(--blue-39);
+
+  --chip-button-background-color: var(--gray-1e);
+  --chip-button-text-color: var(--gray-b5);
+  --chip-button-hover-background-color: var(--gray-2f);
+
+  --reply-button-color: var(--gray-b5);
+  --reply-button-background-color: var(--gray-1e);
+  --reply-button-hover-background-color: var(--gray-e7);
+
+  --tooltip-background-color: var(--gray-1e);
+  --tooltip-text-color: var(--gray-b5);
+
+  --chip-active-button-text-color: var(--gray-16);
+  --chip-active-button-background-color: var(--gray-99);
+  --chip-active-button-hover-background-color: var(--gray-79);
+
+  --popup-button-background-color: var(--gray-2f);
+  --popup-background-color: rgba(22, 22, 22, .8);
+  --popup-button-background-hover-color: var(--gray-4f);
+  --popup-border-color: var(--gray-33);
+  --popup-text-color: var(--text-color);
+  --popup-danger-item-hover-background-color: rgba(235, 114, 114, .1);
+
+  --navigation-bar-active-item-background-color: var(--gray-1e);
+
+  --log-create-color: rgb(110 255 198);
+  --log-error-color: rgb(255 89 89);
+  --log-update-color: rgb(255 222 125);
+  --log-register-color: rgb(72 166 255);
+
+  --author-color: var(--author-color-dark);
+  --moderator-color: var(--moderator-color-dark);
+  --admin-color: var(--admin-color-dark);
+  --tech-admin-color: var(--tech-admin-color-dark);
+}

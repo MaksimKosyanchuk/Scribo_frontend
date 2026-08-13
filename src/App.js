@@ -24,7 +24,7 @@ import PageLayout from './layouts/PageLayout/index.jsx';
 
 import MobileNavigationBar from './components/MobileNavigationBar/index.jsx';
 
-import { CATEGORY_COLORS } from "./styles/constants.js";
+import { CATEGORY_COLORS } from './styles/constants.js';
 
 import "./styles/common.scss";
 
@@ -47,209 +47,35 @@ function App() {
   const [ modalCloseRequest, setModalCloseRequest ] = useState(0)
   const requestCloseModal = () => setModalCloseRequest(c => c + 1)
 
-  const CssVariables = {
-    '--header-height': '80px',
-    '--header-height-mobile': '60px',
-
-    '--accent-color': isDarkTheme ? '#4e93ff' : "#1b73fb",
-    '--gray-16': '#161616',
-    '--gray-1e': '#1e1e1e',
-    '--gray-25': '#252525',
-    '--gray-2f': '#2f2f2f',
-    '--gray-33': '#333333',
-    '--gray-4f': '#4f4f4f',
-    '--gray-63': '#636363',
-    '--gray-79': '#797979',
-    '--gray-99': '#999999',
-    '--gray-b5': '#b5b5b5',
-    '--gray-c6': '#c6c6c6',
-    '--gray-d7': '#d7d7d7',
-    '--gray-e1': '#e1e1e1',
-    '--gray-e7': '#e7e7e7',
-    '--gray-f1': '#f1f1f1',
-    '--gray-f9': '#f9f9f9',
-    '--gray-ff': '#ffffff',
-
-    '--red-fd': '#fd2d2d',
-    '--red-f5': '#ff4545',
-    '--red-f1': '#ff5151',
-    '--red-6d': '#ff6d6d',
-    '--red-fa': '#ffdada',
-    '--red-34': '#312424',
-    '--red-2e': '#2f1e1e',
-    '--red-ff': '#ffefef',
-
-    '--blue-39': '#3b76c9',
-    '--blue-8f': '#84aeff',
-    '--blue-de': '#dfedfe',
-    '--blue-2f': '#2e363f',
-
-    '--main-background': isDarkTheme ? 'var(--gray-16)' : 'var(--gray-f1)',
-
-    '--verified-icon-color': '#0095f6',
-    '--warning-color': isDarkTheme ? 'rgb(255 191 0)' : 'rgb(255, 179, 0)',
-    '--warning-background-color': isDarkTheme ? 'rgb(94, 85, 42, .8)' : 'rgba(255, 245, 163, .8)',
-    '--success-color': isDarkTheme ? 'rgb(132 255 148)' : 'rgb(0 139 12)',
-    '--success-background-color': isDarkTheme ? 'rgb(72, 90, 73, .8)' : 'rgba(199, 252, 188, .8)',
-    '--error-color': isDarkTheme ? 'rgb(246, 0, 0)' : 'rgb(255 14 14)',
-    '--error-background-color': isDarkTheme ? 'rgba(92, 62, 62, .8)' : 'rgba(250, 223, 223, .8)',
-    '--svg-logo-color': isDarkTheme ? 'white' : '#2f2f2f',
-    '--administrator-color': isDarkTheme ? 'var(--red-f5)' : 'red',
-    '--line-color': isDarkTheme ? 'var(--gray-4f)' : "#afafaf",
-    
-    '--text-color': isDarkTheme ? 'var(--gray-e1)' : 'var(--gray-25)',
-    '--light-text-color': isDarkTheme ? 'var(--gray-63)' : 'var(--gray-79)',
-    '--text-selection-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-f1)',
-    '--text-selection-background-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-33)',
-
-    '--background-text-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-e7)',
-    '--post-text-color': isDarkTheme ? 'var(--gray-e7)': 'var(--gray-25)',
-    '--link-text-color': isDarkTheme? '#c583ff' : '#80f',
-    '--user-badge-name-color' : isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-1e)',
-    '--user-badge-name-hover-color' : isDarkTheme ? 'var(--gray-f1)' : 'var(--gray-16)',
-    '--input-text-color': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-1e)',
-    '--input-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-f9)',
-    '--input-outline-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
-    '--input-outline-active-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-25)',
-    '--input-placeholder-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-c6)',
-    // '--drop-file-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-f7)',
-    '--drop-file-background-color': 'transparent',
-    '--drop-file-hover-background-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-e7)',
-    '--drop-file-border-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-b5)',
-    '--drop-file-hover-border-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-63)',
-    '--avatar-icon-color': 'var(--drop-file-hover-background-color)',
-
-    '--submit-button-primary-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-33)',
-    '--submit-button-primary-hover-color': isDarkTheme ? 'var(--gray-e7)' :'var(--gray-1e)',
-    '--submit-button-secondary-color': 'var(--main-background)',
-    '--submit-button-loading-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-d7)',
-    '--submit-button-disabled-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-e1)',
-    '--submit-button-disabled-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-99)',
-
-    '--section-background-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-ff)',
-    '--section-light-color': isDarkTheme ? 'var(--gray-79)' : 'var(--gray-99)',
-    '--section-light-hover-color': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-25)',
-
-    '--float-section-background-color': isDarkTheme ? 'rgba(13,13,13, .8)' : 'rgba(255,255,255, .8)',
-    '--float-section-line-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
-
-    '--section-item-hover-background-color': isDarkTheme ? 'rgba(160,160,160, .1)' : 'rgba(139, 139, 139, .1)',
-
-    '--loader-color': isDarkTheme ? 'white' : 'black',
-
-    '--sticky-button-background-color': isDarkTheme ? 'rgba(22, 22, 22, .8)' : 'rgba(241, 241, 241, .8)',
-    '--red-button-primary-color': isDarkTheme ? 'var(--red-f1)' : 'var(--red-f1)',
-    '--red-button-secondary-color': isDarkTheme ? 'var(--gray-ff)' : 'var(--gray-ff)',
-    '--red-button-third-color': isDarkTheme ? 'var(--red-fd)' : 'var(--red-fd)',
-
-    '--profile-badge-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-f1)',
-    '--profile-badge-hover-background-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-e7)',
-
-    '--cancel-button-primary-color': isDarkTheme ? 'var(--red-f1)' : 'var(--red-f1)',
-    '--cancel-button-hover-background-color': isDarkTheme ? 'var(--red-34)' : 'var(--red-fa)',
-
-    '--blue-button-primary-color': isDarkTheme ? 'var(--blue-8f)' : 'var(--blue-39)',
-    '--header-text-color': isDarkTheme ? '--gray-b5' : '#6b6b6b',
-    '--header-background': isDarkTheme ? 'rgba(0,0,0, .8)' : 'rgba(255,255,255, .8)',
-    '--header-button-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-63)',
-    '--header-button-hover-color': isDarkTheme ? 'var(--gray-ff)' : 'var(--gray-16)',
-    '--banner-haze': isDarkTheme ? 0 : 1,
-    '--post-title-color': isDarkTheme ? 'var(--gray-e7)' : 'var(--gray-25)',
-    '--modal-window-body-background-color': isDarkTheme ? 'var(--gray-1e)' : 'white',
-    '--modal-window-background-color': isDarkTheme ? 'rgb(0, 0, 0, .2)' : 'rgb(0, 0, 0, .2)',
-    '--modal-window-button-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-63)',
-    '--modal-window-button-hover-color': isDarkTheme ? 'var(--gray-f1)' : 'var(--gray-1e)',
-    '--modal-window-title-text-color': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-1e)',
-    '--post-card-description-color': isDarkTheme ? 'var(--gray-b5)' : "#6b6b6b",
-    '--footer-background': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-ff)',
-    '--footer-line-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-e7)',
-    '--footer-content-color': isDarkTheme ? 'var(--gray-79)' : 'var(--gray-b5)',
-    '--footer-content-hover-color': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-4f)',
-    
-    '--swagger-patch-color': isDarkTheme ? '#237b67' : '#00b1a9',
-    '--swagger-post-color': isDarkTheme ? '#237b46' : '#249762',
-    '--swagger-main-text-color': isDarkTheme ? '#d3d3d3' : 'black',
-    '--swagger-secondary-text-color': isDarkTheme ? '#a3a3a3' : 'black',
-    '--swagger-field-background-color': isDarkTheme ? 'rgba(0,0,0, .1)' : 'rgba(255, 255, 255, .5)',
-    '--swagger-field-color': isDarkTheme ? 'white' : 'black',
-    '--swagger-titles-color': isDarkTheme ? '#a2acc7' : '#3b4151',
-    '--swagger-option-background-color': isDarkTheme ? '#1b2229' : '#f1f5f9',
-    '--swagger-servers-background-color': isDarkTheme ? 'rgba(89,89,89, .1)' : 'rgba(255,255,255, .4)',
-    
-    '--dropdown-outline-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-c6)',
-    '--dropdown-selected-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-d7)',
-    '--dropdown-item-hover-background-color': isDarkTheme ? 'var(--gray-25)' : '',
-    
-    '--toggle-track-background': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-c6)',
-    '--toggle-active-track-background': isDarkTheme ? 'var(--gray-d7)' : 'var(--gray-25)',
-    '--toggle-thumb-background': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-ff)',
-    '--toggle-active-thumb-background': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-ff)',
-    
-    '--text-editor-toolbar-item-hover-background': isDarkTheme ? 'var(--gray-2f)' : 'var(--gray-d7)',
-    '--text-editor-toolbar-item-color': isDarkTheme ? 'var(--gray-79)' : 'var(--gray-63)',
-    
-    '--switcher-bar-border-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
-    '--switcher-bar-item-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-63)',
-    '--switcher-bar-item-hover-background-color': isDarkTheme ? 'var(--gray-25)' : 'var(--gray-d7)',
-    '--switcher-bar-active-item-background-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-d7)',
-    '--switcher-bar-active-item-color': isDarkTheme ? 'var(--gray-ff)' : 'var(--gray-16)',
-    
-    '--administrator-badge-background-color': isDarkTheme ? 'var(--blue-2f)' : 'var(--blue-de)',
-    '--administrator-badge-color': isDarkTheme ? 'var(--blue-39)' : 'var(--blue-39)',
-    
-    '--chip-button-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-e7)',
-    '--chip-button-text-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-25)',
-    '--chip-button-hover-background-color': isDarkTheme ? 'var(--gray-2f)' : 'var(--gray-f1)',
-    
-    '--reply-button-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-63)',
-    '--reply-button-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-e7)',
-    '--reply-button-hover-background-color': isDarkTheme ? 'var(--gray-e7)' : 'var(--gray-25)',
-    
-    '--tooltip-background-color': isDarkTheme ? 'var(--gray-1e)' : 'var(--gray-ff)',
-    '--tooltip-text-color': isDarkTheme ? 'var(--gray-b5)' : 'var(--gray-63)',
-    
-    '--chip-active-button-text-color': isDarkTheme ? 'var(--gray-16)' : 'var(--gray-e7)',
-    '--chip-active-button-background-color': isDarkTheme ? 'var(--gray-99)' : 'var(--gray-33)',
-    '--chip-active-button-hover-background-color': isDarkTheme ? 'var(--gray-79)' : 'var(--gray-4f)',
-    
-    '--popup-button-background-color': isDarkTheme ? 'var(--gray-2f)' : 'var(--gray-d7)',
-    '--popup-background-color': isDarkTheme ? 'rgba(22,22,22, .8)' : 'rgba(255,255,255, .8)',
-    '--popup-button-background-hover-color': isDarkTheme ? 'var(--gray-4f)' : 'var(--gray-b5)',
-    '--popup-border-color': isDarkTheme ? 'var(--gray-33)' : 'var(--gray-c6)',
-    '--popup-text-color': 'var(--main-text-color)',
-    '--popup-danger-item-hover-background-color': isDarkTheme ? 'rgba(235, 114, 114, .1)' : 'rgba(255, 120, 120, .1)',
-
-    '--navigation-bar-active-item-background-color': isDarkTheme ? 'var(--gray-1e)' : 'rgba(80, 80, 80, .1)',
-
-    '--log-create-color': isDarkTheme ? 'rgb(110 255 198)' : 'rgb(0 152 13)',
-    '--log-error-color': isDarkTheme ? 'rgb(255 89 89)' : 'rgb(255 109 109)',
-    '--log-update-color': isDarkTheme ? 'rgb(255 222 125)' : 'rgb(214 154 0)',
-    '--log-register-color': isDarkTheme ? 'rgb(72 166 255)' : 'rgb(5 134 255)',
-
-    '--author-color': isDarkTheme ? 'rgb(72 166 255)' : 'rgb(5 134 255)',
-    '--moderator-color': isDarkTheme ? '#d95bff' : '#c502ff',
-    '--admin-color': isDarkTheme ? 'rgb(255 89 89)' : 'rgb(255 109 109)',
-    '--tech-admin-color': isDarkTheme ? 'rgb(146 46 255)' : 'rgb(111 0 255)',
-
-    ...Object.fromEntries(
-        Object.values(CATEGORY_COLORS).map(color => [
-            color.variable,
-            isDarkTheme ? color.dark : color.light
-        ])
-    )
-  }
 
   useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(isDarkTheme))
-    const metaThemeColor = document.querySelector("meta[name=theme-color]");
-    metaThemeColor.setAttribute("content", isDarkTheme ? "#1e1e1e" : "#ffffff" );
+    localStorage.setItem('theme', JSON.stringify(isDarkTheme));
 
-  }, [isDarkTheme])
+    document.body.classList.toggle('dark-theme', isDarkTheme);
+
+    const metaThemeColor = document.querySelector(
+      'meta[name="theme-color"]'
+    );
+
+    metaThemeColor?.setAttribute(
+      'content',
+      isDarkTheme ? '#1e1e1e' : '#ffffff'
+    );
+  }, [isDarkTheme]);
+
+  useEffect(() => {
+    Object.values(CATEGORY_COLORS).forEach(color => {
+        document.body.style.setProperty(
+            color.variable,
+            isDarkTheme ? color.dark : color.light
+        );
+    });
+  }, [isDarkTheme]);
 
   return (
     <AppContext.Provider value={{profile, setProfile, isDarkTheme, setIsDarkTheme, profileLoading, setProfileLoading, toast, showToast, modalWindow, showModalWindow, requestCloseModal }}>
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <div className={`App ${isDarkTheme ? 'App_dark' : ''}`} id="app-root" style={CssVariables}>
+        <div className={"App"} id="app-root">
           <AppLayout>
             <ModalWindow
               modalWindow={modalWindow}
