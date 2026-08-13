@@ -126,9 +126,8 @@ const likePost = async (id, method="POST") => {
     const result = await fetch(`${API_URL}/api/posts/${id}/like`, { method, credentials: "include", headers })
     .then(res => res.json())
     .catch((err) => { 
-        console.log(err)
         return ({
-            status: "error",
+            status: false,
             message: err,
             data: null
         })
