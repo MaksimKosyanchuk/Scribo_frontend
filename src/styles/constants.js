@@ -4,7 +4,7 @@ export const CATEGORY_COLORS = {
         name: "Зеленый",
         variable: "--category-color-1",
         className: "category_color_1",
-        light: "#009a34",
+        light: "#007e2b",
         dark: "#00ff56",
     },
     2: {

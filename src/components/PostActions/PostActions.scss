@@ -15,11 +15,10 @@
 
     &_left_side {
         display: flex;
-        gap: 0 10px;
+        gap: 2px;
 
         @include screen() {
             width: 100%;
-            justify-content: space-between;
             align-items: center;
             order: 2;
         }
@@ -43,7 +42,7 @@
         align-items: center;
         cursor: pointer;
         gap: 2px;
-        padding: 8px;
+        padding: 10px;
         border-radius: 6px;
         
         color: var(--light-text-color);

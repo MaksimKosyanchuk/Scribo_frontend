@@ -47,9 +47,6 @@
 
         @include screen() {
             width: auto;
-            margin-top: 10px;
-            margin-left: calc(0px - var(--container-padding));
-            margin-right: calc(0px - var(--container-padding));
         }
         
         img {
@@ -62,7 +59,7 @@
             
             @include  screen() {
                 object-fit: contain;
-                margin-top: 18px;
+                margin-top: 0;
             }
         }
 

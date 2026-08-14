@@ -13,6 +13,7 @@
 
         &_reply_info {
             display: flex;
+            align-items: center;
             gap: 6px;
         }
 
@@ -170,7 +171,7 @@
                     align-items: center;
                     display: flex;
                     cursor: pointer;
-                    gap: 0 16px;
+                    gap: 2px;
                     color: var(--light-text-color);
                     
                     
@@ -178,10 +179,13 @@
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        gap: 2px;
+                        gap: 4px;
                         color: var(--light-text-color);
-
+                        padding: 10px;
+                        border-radius: 6px;
+                        
                         @include hover {
+                            background: var(--section-item-hover-background-color);
                             color: var(--text-color);
 
                             p {
@@ -195,8 +199,8 @@
                         }
 
                         svg {
-                            height: 18px;
-                            width: 18px;
+                            height: 16px;
+                            width: 16px;
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Pagination.scss";
 
 import { ReactComponent as ChevronLeft } from "../../../assets/svg/chevron-left.svg";
@@ -35,6 +35,16 @@ const Pagination = ({ content, limit = 5, children }) => {
 
     const pagesCount = Math.ceil(content.length / limit);
 
+    useEffect(() => {
+        setCurrentPage(prev => {
+            if (pagesCount === 0) {
+                return 0;
+            }
+
+            return Math.min(prev, pagesCount - 1);
+        });
+    }, [pagesCount]);
+
     const visibleContent = content.slice(
         currentPage * limit,
         currentPage * limit + limit
@@ -45,55 +55,54 @@ const Pagination = ({ content, limit = 5, children }) => {
             <div className="pagination_content">
                 {children(visibleContent)}
             </div>
-            {
-                pagesCount === 1 ?
-                    <></>
-                :
-                    <div className="pagination_panel">
-                        {
-                            currentPage === 0 ?
-                                <></>
-                            :
-                                <button className={`app-transition pagination_navigation_button`} onClick={() => setCurrentPage(p => p - 1)}>
-                                    <ChevronLeft className="app-transition" />
-                                    <p>
-                                        Назад
-                                    </p>
-                                </button>
-                        }
 
-                        {
-                            getPaginationRange(currentPage, pagesCount).map(index => {
-                                return (
-                                    <button
-                                        key={index}
-                                        onClick={() => setCurrentPage(index)}
-                                        className={`app-transition ${currentPage === index ? "pagination_active" : ""}`}
-                                    >
-                                        <p>
-                                            {index + 1}
-                                        </p>
-                                    </button>
-                                )
-                            })
+            {pagesCount > 1 && (
+                <div className="pagination_panel">
+                    {currentPage > 0 && (
+                        <button
+                            className="app-transition pagination_navigation_button"
+                            onClick={() => setCurrentPage(p => p - 1)}
+                        >
+                            <ChevronLeft className="app-transition" />
 
-                        }
-                        {
-                            currentPage === pagesCount - 1 ?
-                                <></>
-                            :
-                            <button className={`app-transition pagination_navigation_button`} onClick={() => setCurrentPage(p => p + 1)}>
-                                <p>
-                                    Вперед
-                                </p>
-                                <ChevronRight className="app-transition" />
-                            </button>
-                        }
-                    </div>
-            }
+                            <p>
+                                Назад
+                            </p>
+                        </button>
+                    )}
+
+                    {getPaginationRange(currentPage, pagesCount).map(index => (
+                        <button
+                            key={index}
+                            onClick={() => setCurrentPage(index)}
+                            className={`app-transition ${
+                                currentPage === index
+                                    ? "pagination_active"
+                                    : ""
+                            }`}
+                        >
+                            <p>
+                                {index + 1}
+                            </p>
+                        </button>
+                    ))}
+
+                    {currentPage < pagesCount - 1 && (
+                        <button
+                            className="app-transition pagination_navigation_button"
+                            onClick={() => setCurrentPage(p => p + 1)}
+                        >
+                            <p>
+                                Вперед
+                            </p>
+
+                            <ChevronRight className="app-transition" />
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
-
 
 export default Pagination;
