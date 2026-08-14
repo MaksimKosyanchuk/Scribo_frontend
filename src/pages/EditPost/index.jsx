@@ -78,14 +78,13 @@ const categoryIcons = {
 const EditPost = () => {
     const navigate = useNavigate()
     const { profile, profileLoading, showToast } = useContext(AppContext)
-    const [ initialized, setInitialized ] = useState(false);
     const [ createResult, setCreateResult ] = useState({})
     const [errors, setErrors] = useState({ });
     const [featuredImage, setFeaturedImage] = useState(null)
     const [allCategories, setAllCategories] = useState([])
 
     const { id } = useParams()
-
+    
     const [ isLoading, setIsLoading ] = useState(false);
 
     const [ fields, setFields ] = useState(
@@ -172,16 +171,22 @@ const EditPost = () => {
     }
 
     useEffect(() => {
-        if(initialized){
-            if(!profileLoading && fields.author && (!profile || profile.permissions.includes("edit_any_post") || profile._id.toString() !== fields.author._id.toString())) {
-                navigate("/posts")
-            }
+        if (
+            profileLoading ||
+            !profile ||
+            !fields.author
+        ) {
+            return;
         }
-        else {
-            setInitialized(true);
+
+        const canEdit =
+            profile.permissions?.includes("edit_any_post") ||
+            profile._id.toString() === fields.author.toString();
+
+        if (!canEdit) {
+            navigate("/posts");
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[profileLoading, initialized])
+    }, [profileLoading, profile, fields.author, navigate]);
 
     const handleClick = () => {
         const { featured_image: removedField, ...other } = errors;

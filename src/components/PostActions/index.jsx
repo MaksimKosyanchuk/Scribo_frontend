@@ -15,6 +15,7 @@ import { ReactComponent as LikeIcon} from "../../assets/svg/like-outline.svg";
 import { ReactComponent as FilledLikeIcon} from "../../assets/svg/like-filled.svg";
 
 import Category from "../Category/index";
+import Tooltip from "../Ui/Tooltip/index";
 
 function isMobile() {
     return navigator.maxTouchPoints > 0;
@@ -72,7 +73,6 @@ const PostActions = ({ className, article, setArticle }) => {
         }, 0);
     };
 
-
     async function doLike(method) {
         if(profile) {
             const isLike = method === "POST";
@@ -114,32 +114,40 @@ const PostActions = ({ className, article, setArticle }) => {
     return (
         <div className={`post_actions ${className ?? ""}`}>
             <div className="post_actions_left_side">
-                <button className="post_actions_button app-transition" onClick={() => { doLike(article.likes?.includes(profile?._id) ? "DELETE" : "POST") }}>
-                    {
-                        article.likes?.includes(profile?._id) ?
-                            <FilledLikeIcon />
-                        :
-                            <LikeIcon />
-                    }
-                    <p>{article.likes?.length > 0 ? article.likes.length : ""}</p>
-                </button>
-                <Link className="post_actions_button post_actions_comment app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
-                    <CommentIcon/>
-                    {
-                        article.comments?.length > 0 ?
-                            <p>
-                                {getCommentsCount(article.comments)}
-                            </p>
-                        :
-                            <></>
-                    }
-                </Link>
-                <button type="button" className="post_actions_button app-transition" onClick={save_post} disabled={isSavingProcess}>
-                    {isSaved ? <BookMarkFilled /> : <BookMarkBorder />}
-                </button>
-                <button className="post_actions_button app-transition" onClick={() => { share(article._id, showToast) }}>
-                    <ShareIcon />
-                </button>
+                <Tooltip text={article.likes?.includes(profile?._id) ? "Убрать лайк" : "Поставить лайк"}>
+                    <button className="post_actions_button app-transition" onClick={() => { doLike(article.likes?.includes(profile?._id) ? "DELETE" : "POST") }}>
+                        {
+                            article.likes?.includes(profile?._id) ?
+                                <FilledLikeIcon />
+                            :
+                                <LikeIcon />
+                        }
+                        <p>{article.likes?.length > 0 ? article.likes.length : ""}</p>
+                    </button>
+                </Tooltip>
+                <Tooltip text={"Перейти к комментариям"}>
+                    <Link className="post_actions_button post_actions_comment app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
+                        <CommentIcon/>
+                        {
+                            article.comments?.length > 0 ?
+                                <p>
+                                    {getCommentsCount(article.comments)}
+                                </p>
+                            :
+                                <></>
+                        }
+                    </Link>
+                </Tooltip>
+                <Tooltip text={isSaved ? "Убрать из сохранённых" : "Сохранить"}>
+                    <button type="button" className="post_actions_button app-transition" onClick={save_post} disabled={isSavingProcess}>
+                        {isSaved ? <BookMarkFilled /> : <BookMarkBorder />}
+                    </button>
+                </Tooltip>
+                <Tooltip text={isMobile() ? "Поделиться" : "Скопировать ссылку"}>
+                    <button className="post_actions_button app-transition" onClick={() => { share(article._id, showToast) }}>
+                        <ShareIcon />
+                    </button>
+                </Tooltip>
             </div>
             <div className="post_actions_right_side">
                 <Category category={article.category} is_active={true}/>
