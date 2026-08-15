@@ -87,6 +87,7 @@ const commentPost = async (id, data) => {
             Authorization: `Bearer ${token}`
         })
     };
+    
     const result = await fetch(`${API_URL}/api/posts/${id}/comments?expand=author`, { method: "POST", credentials: "include", headers, body: JSON.stringify(data) })
     .then(res => res.json())
     .catch((err) => { 

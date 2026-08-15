@@ -352,10 +352,10 @@ const PostComments = ({ postId, navigateTo }) => {
     const doComment = async (e) => {
         e.preventDefault();
         setIsLoading(true);
+
         const data = {
             comment_text: commentText
         }
-
 
         const result = await commentPost(postId, data)
 
