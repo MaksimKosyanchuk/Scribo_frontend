@@ -1,1 +1,0 @@
-var e=(e,t=`center`)=>{document.getElementById(e)?.scrollIntoView({behavior:`smooth`,block:t})};export{e as t};
