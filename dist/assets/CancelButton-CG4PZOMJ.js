@@ -1,1 +1,0 @@
-import{t as e}from"./jsx-runtime-096o_Uk7.js";import{z as t}from"./index-BUYn-8_k.js";var n=e();function r({children:e,onClick:r,type:i=`button`,className:a=``,is_active:o=!1}){return(0,n.jsxs)(`button`,{className:`cancel_button ${o?`cancel_button_active`:``} app-transition ${a}`,onClick:r,type:i,children:[(0,n.jsx)(t,{className:`cancel_button_icon`}),e]})}export{r as t};
