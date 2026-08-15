@@ -1,61 +1,46 @@
 {
   "name": "scribo-frontend",
-  "version": "3.10.4",
+  "version": "3.10.6",
   "private": true,
+  "type": "module",
   "description": "Frontend for Scribo blog platform",
   "dependencies": {
-    "@editorjs/editorjs": "^2.29.0",
-    "@editorjs/header": "^2.8.1",
-    "@editorjs/image": "^2.9.0",
-    "@editorjs/list": "^1.9.0",
     "@floating-ui/react": "^0.27.17",
     "@fontsource/geist": "^5.2.9",
     "@lexical/html": "^0.39.0",
     "@lexical/link": "^0.39.0",
     "@lexical/list": "^0.39.0",
     "@lexical/react": "^0.39.0",
-    "@lexical/selection": "^0.39.0",
     "@react-oauth/google": "^0.13.4",
-    "@scalar/api-reference-react": "^0.8.16",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "dotenv": "^16.4.5",
+    "@scalar/api-reference-react": "^0.9.63",
     "lexical": "^0.39.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.2",
-    "react-scripts": "5.0.1",
-    "sass": "^1.71.1",
-    "web-vitals": "^2.1.4"
+    "react-router-dom": "^7.18.2"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "cross-env": "^7.0.3"
+    "@eslint/js": "^9.39.5",
+    "@vitejs/plugin-react": "^6.0.5",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.11.0",
+    "sass": "^1.102.0",
+    "vite": "^8.2.1",
+    "vite-plugin-svgr": "^5.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+      "lint": "eslint .",
+      "lint:fix": "eslint . --fix",
+
+      "start": "vite",
+
+      "dev": "vite",
+
+      "prebuild": "npm run lint",
+      "build": "vite build",
+
+      "preview": "vite preview"
   },
   "repository": {
     "type": "git",

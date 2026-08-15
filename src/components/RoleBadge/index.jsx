@@ -1,9 +1,9 @@
 import "./RoleBadge.scss";
 
-import { ReactComponent as AdminIcon } from "../../assets/svg/protected-icon.svg";
-import { ReactComponent as AuthorIcon } from "../../assets/svg/author.svg";
-import { ReactComponent as ModeratorIcon } from "../../assets/svg/shield-security.svg";
-import { ReactComponent as TechAdminIcon } from "../../assets/svg/tech-admin.svg";
+import AdminIcon from "../../assets/svg/protected-icon.svg?react";
+import AuthorIcon from "../../assets/svg/author.svg?react";
+import ModeratorIcon from "../../assets/svg/shield-security.svg?react";
+import TechAdminIcon from "../../assets/svg/tech-admin.svg?react";
 
 import Tooltip from "../../components/Ui/Tooltip/index";
 

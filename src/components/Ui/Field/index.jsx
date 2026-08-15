@@ -1,4 +1,4 @@
-import { ReactComponent as WarningIcon } from "../../../assets/svg/warning-icon.svg";
+import WarningIcon from "../../../assets/svg/warning-icon.svg?react";
 
 import "./Field.scss";
 

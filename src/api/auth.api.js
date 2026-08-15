@@ -1,4 +1,4 @@
-const { API_URL } = require("../config");
+import { API_URL } from "../config";
 
 const verificationGoogle = async (token) => {
     try {

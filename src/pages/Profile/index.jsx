@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext, useMemo } from "react";
 
-import { AppContext } from "../../App.js";
+import { AppContext } from "../../App.jsx";
 
 import "./Profile.scss"
 
@@ -11,11 +11,11 @@ import { format_date_time, format_back } from "../../utils/format.js";
 
 import { scrollTo } from "../../utils/navigation.js"
 
-import { ReactComponent as Verified } from "../../assets/svg/verified.svg";
-import { ReactComponent as Calendar } from "../../assets/svg/calendar-icon.svg";
-import { ReactComponent as PostIcon } from "../../assets/svg/post.svg";
-import { ReactComponent as BookmarkOutline } from "../../assets/svg/bookmark-outline.svg";
-import { ReactComponent as SettingsIcon } from "../../assets/svg/settings.svg";
+import Verified from "../../assets/svg/verified.svg?react";
+import Calendar from "../../assets/svg/calendar-icon.svg?react";
+import PostIcon from "../../assets/svg/post.svg?react";
+import BookmarkOutline from "../../assets/svg/bookmark-outline.svg?react";
+import SettingsIcon from "../../assets/svg/settings.svg?react";
 
 import Posts from "../../components/Posts/index.jsx"
 import Loading from "../../components/Ui/Loading/index.jsx";
@@ -42,35 +42,46 @@ const Profile = () => {
     const posts_filters = useMemo( () => [], [])
 
     useEffect(() => {
-        if(!followThisUser) return;
-        setProfile({
-            ...profile,
+        if (!followThisUser) return;
+
+        setProfile(prevProfile => ({
+            ...prevProfile,
             follows: followThisUser?.follower?.follows
-        })
-        setUser({
-            ...user,
-            followers: followThisUser?.followed?.followers,
-            follows: followThisUser?.followed?.follows
-        })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [followThisUser])
+        }));
+
+        setUser(prevUser => {
+            if (!prevUser) return prevUser;
+
+            return {
+                ...prevUser,
+                followers: followThisUser?.followed?.followers,
+                follows: followThisUser?.followed?.follows
+            };
+        });
+    }, [followThisUser, setProfile]);
 
     useEffect(() => {
         if (!followAnotherUser) return;
-        setProfile({
-            ...profile,
+
+        setProfile(prevProfile => ({
+            ...prevProfile,
             follows: followAnotherUser?.follower?.follows
-        })
-        
-        if(user?._id === profile?._id) {
-            setUser({
-                ...user,
+        }));
+
+        setUser(prevUser => {
+            if (!prevUser) return prevUser;
+
+            if (prevUser._id !== profile?._id) {
+                return prevUser;
+            }
+
+            return {
+                ...prevUser,
                 follows: followAnotherUser?.follower?.follows,
                 followers: followAnotherUser?.follower?.followers
-            })
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [followAnotherUser])
+            };
+        });
+    }, [followAnotherUser, profile?._id, setProfile]);
 
     useEffect(() => {
         const getUser = async () => {
@@ -84,29 +95,26 @@ const Profile = () => {
             }
         };
         getUser();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
+    }, [id, navigate]);
 
     useEffect(() => {
-        if (user && user._id) {
+        if (user?._id) {
             fetchPosts({ author: user._id }).then(data => setPosts(data));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?._id]);
 
     useEffect(() => {
         if (activeTab === 0) {
             setActivePosts(posts);
         } else if (activeTab === 1) {
-            if(profile && user?._id === profile?._id) {
+            if(user?._id === profile?._id) {
                 fetchPosts({ _id: profile?.saved_posts }).then((posts) => setActivePosts(posts));
             }
             else {
                 fetchPosts({ _id: user?.saved_posts }).then((posts) => setActivePosts(posts));
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeTab, posts, profile?.saved_posts]);
+    }, [activeTab, posts, profile?.saved_posts, profile?._id, user?.saved_posts, user?._id]);
 
     const fetchPosts = async (query) => {
         setIsLoading(true);

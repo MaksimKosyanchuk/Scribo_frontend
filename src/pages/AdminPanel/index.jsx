@@ -1,13 +1,13 @@
 import "./AdminPanel.scss";
 
-import { ReactComponent as TagIcon } from "../../assets/svg/tag.svg";
-import { ReactComponent as PeoplesIcon } from "../../assets/svg/peoples.svg";
-import { ReactComponent as LogIcon } from "../../assets/svg/post.svg";
+import TagIcon from "../../assets/svg/tag.svg?react";
+import PeoplesIcon from "../../assets/svg/peoples.svg?react";
+import LogIcon from "../../assets/svg/post.svg?react";
 
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 
-import { AppContext } from "../../App.js";
+import { AppContext } from "../../App.jsx";
 
 import SidebarPage from "../../components/SidebarPage/index";
 
@@ -23,8 +23,8 @@ const AdminPanel = () => {
         if (!profileLoading && (!["admin", "tech_admin"].includes(profile?.role))) {
             navigate("/");
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [profile, profileLoading]);
+
+    }, [profile, profileLoading, navigate]);
 
     const pages=[
         {

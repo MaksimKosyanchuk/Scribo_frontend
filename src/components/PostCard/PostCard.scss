@@ -1,4 +1,4 @@
-@import "../../styles//helpers.scss";
+@use "../../styles//helpers.scss" as *;
 
 .posts_item {
     flex-basis: 100%;

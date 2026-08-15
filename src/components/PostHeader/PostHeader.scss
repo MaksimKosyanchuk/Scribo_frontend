@@ -1,4 +1,4 @@
-@import '../../styles/helpers.scss';
+@use '../../styles/helpers.scss' as *;
 
 .post_header{
     display: flex;

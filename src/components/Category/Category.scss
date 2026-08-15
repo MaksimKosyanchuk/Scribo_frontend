@@ -1,5 +1,5 @@
 @use "../../styles/categoryColors.scss" as *;
-@import "../../styles/helpers.scss";
+@use "../../styles/helpers.scss" as *;
 
 .category_content {
     display: flex;

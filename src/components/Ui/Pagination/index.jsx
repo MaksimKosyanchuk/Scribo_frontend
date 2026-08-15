@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import "./Pagination.scss";
 
-import { ReactComponent as ChevronLeft } from "../../../assets/svg/chevron-left.svg";
-import { ReactComponent as ChevronRight } from "../../../assets/svg/chevron-right.svg";
+import ChevronLeft from "../../../assets/svg/chevron-left.svg?react";
+import ChevronRight from "../../../assets/svg/chevron-right.svg?react";
 
 const getPaginationRange = (currentPage, pagesCount) => {
     const range = 3;

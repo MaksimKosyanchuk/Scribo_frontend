@@ -3,17 +3,17 @@ import { useNavigate } from "react-router-dom";
 
 import { getUsers, updateRole } from "../../api/users.api";
 
-import { AppContext } from "../../App.js";
+import { AppContext } from "../../App.jsx";
 
 import "./Admins.scss";
 
-import { ReactComponent as ThreeDotsIcon } from "../../assets/svg/three-dots.svg";
-import { ReactComponent as RedirectIcon } from "../../assets/svg/redirect.svg";
-import { ReactComponent as UserIcon } from "../../assets/svg/profile.svg";
-import { ReactComponent as AuthorIcon } from "../../assets/svg/author.svg";
-import { ReactComponent as ModeratorIcon } from "../../assets/svg/shield-security.svg";
-import { ReactComponent as AdminIcon } from "../../assets/svg/protected-icon.svg";
-import { ReactComponent as TechAdminIcon } from "../../assets/svg/tech-admin.svg";
+import ThreeDotsIcon from "../../assets/svg/three-dots.svg?react";
+import RedirectIcon from "../../assets/svg/redirect.svg?react";
+import UserIcon from "../../assets/svg/profile.svg?react";
+import AuthorIcon from "../../assets/svg/author.svg?react";
+import ModeratorIcon from "../../assets/svg/shield-security.svg?react";
+import AdminIcon from "../../assets/svg/protected-icon.svg?react";
+import TechAdminIcon from "../../assets/svg/tech-admin.svg?react";
 
 import RoleBadge from "../../components/RoleBadge/index";
 import UserBadge from "../../components/UserBadge/index";

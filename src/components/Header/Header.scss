@@ -1,4 +1,4 @@
-@import '../../styles/helpers.scss';
+@use '../../styles/helpers.scss' as *;
 
 .header {
     display: flex;
@@ -127,11 +127,8 @@
 
           }
         }
-
-        
       }
     }
-
 
     .user_badge_info{
       margin-left: 4px;
@@ -166,6 +163,10 @@
 
 .modal_window_body {
   &_content{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
     @include screen() {
       padding: 10px !important;
       gap: 20px !important;

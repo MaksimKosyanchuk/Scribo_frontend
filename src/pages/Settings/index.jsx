@@ -13,7 +13,7 @@ import Field from '../../components/Ui/Field';
 
 import "./Settings.scss";
 
-import { ReactComponent as AvatarIcon } from "../../assets/svg/avatar-icon.svg"
+import AvatarIcon from "../../assets/svg/avatar-icon.svg?react"
 
 const Settings = () => {
     const { profile, setProfile, profileLoading, showToast, isDarkTheme, setIsDarkTheme } = useContext(AppContext)
@@ -97,9 +97,11 @@ const Settings = () => {
     }
 
     const handleFocus = (fieldName) => {
-        const { [fieldName]: removedField, ...other } = errors;
-        setErrors (other)
-    }
+        const other = { ...errors };
+        delete other[fieldName];
+        setErrors(other);
+        
+    };
 
     const field_validation = () => {
         let is_error = false

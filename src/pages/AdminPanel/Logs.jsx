@@ -10,14 +10,14 @@ import { format_back, format_date_time } from "../../utils/format";
 import { getCategories } from "../../api/categories.api";
 import { getPosts } from "../../api/posts.api";
 
-import { ReactComponent as PostIcon } from "../../assets/svg/post.svg";
-import { ReactComponent as EditIcon } from "../../assets/svg/edit.svg";
-import { ReactComponent as PlusIcon } from "../../assets/svg/plus-icon.svg"; 
-import { ReactComponent as DeleteIcon } from "../../assets/svg/delete.svg";
-import { ReactComponent as NewUserIcon } from "../../assets/svg/new-user.svg";
-import { ReactComponent as RedirectIcon } from "../../assets/svg/redirect.svg";
-import { ReactComponent as TagIcon } from "../../assets/svg/tag.svg";
-import { ReactComponent as FilterIcon } from "../../assets/svg/filter.svg";
+import PostIcon from "../../assets/svg/post.svg?react";
+import EditIcon from "../../assets/svg/edit.svg?react";
+import PlusIcon from "../../assets/svg/plus-icon.svg?react";
+import DeleteIcon from "../../assets/svg/delete.svg?react";
+import NewUserIcon from "../../assets/svg/new-user.svg?react";
+import RedirectIcon from "../../assets/svg/redirect.svg?react";
+import TagIcon from "../../assets/svg/tag.svg?react";
+import FilterIcon from "../../assets/svg/filter.svg?react";
 
 import SearchSearch from "../../components/Ui/SearchSelect";
 import CancelButton from "../../components/Ui/CancelButton";
@@ -202,9 +202,8 @@ const CategoryEntity = ({ id, data, setFilter }) => {
     )
 }
 
-const RoleEntity = ({ id, data, setFilter }) => {
+const RoleEntity = ({ data }) => {
     return (
-        
         <div className="admin_panel_content_logs_page_item_entity admin_panel_content_logs_page_item_entity_role">
             {
                 data ? 
@@ -222,7 +221,7 @@ const RoleEntity = ({ id, data, setFilter }) => {
 }
 
 const LOG_RENDERERS = {
-    create_post: ({ log, users, posts, setFilter }) => (
+    create_post: ({ log, posts, setFilter }) => (
         <>
             <div className="admin_panel_content_logs_page_item_message">
                 <div className="admin_panel_content_logs_page_item_message_icon">
@@ -234,7 +233,7 @@ const LOG_RENDERERS = {
         </> 
     ),
 
-    update_post: ({ log, users, posts, setFilter }) => (
+    update_post: ({ log, posts, setFilter }) => (
         <>
             <div className="admin_panel_content_logs_page_item_message">
                 <div className="admin_panel_content_logs_page_item_message_icon">
@@ -246,7 +245,7 @@ const LOG_RENDERERS = {
         </>
     ),
     
-    delete_post: ({ log, users, posts, setFilter }) => (
+    delete_post: ({ log, posts, setFilter }) => (
         <>
              <div className="admin_panel_content_logs_page_item_message">
                 <div className="admin_panel_content_logs_page_item_message_icon">
@@ -258,7 +257,7 @@ const LOG_RENDERERS = {
         </>
     ),
 
-    register: ({ log, users, setFilter }) => (
+    register: () => (
         <>
             <div className="admin_panel_content_logs_page_item_message">
                 <div className="admin_panel_content_logs_page_item_message_icon">
@@ -271,7 +270,7 @@ const LOG_RENDERERS = {
         </>
     ),
 
-    create_category: ({ log, users, categories, setFilter }) => (
+    create_category: ({ log, categories, setFilter }) => (
         <>
             <div className="admin_panel_content_logs_page_item_message">
                 <div className="admin_panel_content_logs_page_item_message_icon">
@@ -283,7 +282,7 @@ const LOG_RENDERERS = {
         </>
     ),
 
-    update_category: ({ log, users, categories, setFilter }) => (
+    update_category: ({ log, categories, setFilter }) => (
         <>
             <div className="admin_panel_content_logs_page_item_message">
                 <div className="admin_panel_content_logs_page_item_message_icon">
@@ -295,7 +294,7 @@ const LOG_RENDERERS = {
         </>
     ),
 
-    delete_category: ({ log, users, categories, setFilter }) => (
+    delete_category: ({ log, categories, setFilter }) => (
         <>
             <div className="admin_panel_content_logs_page_item_message">
                 <div className="admin_panel_content_logs_page_item_message_icon">
@@ -307,7 +306,7 @@ const LOG_RENDERERS = {
         </>
     ),
 
-    update_role: ({ log, users, targetUser, setFilter }) => (
+    update_role: ({ log, users, setFilter }) => (
         <>
             <div className="admin_panel_content_logs_page_item_message">
                 <div className="admin_panel_content_logs_page_item_message_icon">

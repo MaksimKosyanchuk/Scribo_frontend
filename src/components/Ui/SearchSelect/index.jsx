@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import "./SearchSelect.scss";
 
 import InputField from "../InputField";
 
-import { ReactComponent as ArrowDownUpIcon } from "../../../assets/svg/chevron-down-up.svg";
-import { ReactComponent as CloseIcon } from "../../../assets/svg/cross-icon.svg";
+import ArrowDownUpIcon from "../../../assets/svg/chevron-down-up.svg?react";
+import  CloseIcon from "../../../assets/svg/cross-icon.svg?react";
 
 
 const SearchSelect = ({
@@ -13,7 +13,6 @@ const SearchSelect = ({
     value = "",
     onSetValue,
     error,
-    input_label,
     className = "",
     onFocus,
     placeholder = "Выбрать"
@@ -27,12 +26,6 @@ const SearchSelect = ({
     const wrapperRef = useRef(null);
     const optionRefs = useRef([]);
     const inputRef = useRef(null);
-
-    const closeSelect = () => {
-        setIsOpen(false);
-        inputRef.current?.blur();
-        resetValue();
-    };
 
     const selectedOption = useMemo(() => {
         return options.find(option => option.value === value);
@@ -51,7 +44,7 @@ const SearchSelect = ({
 
     }, [options, inputValue]);
 
-    const resetValue = () => {
+    const resetValue = useCallback(() => {
         const search = inputValue.trim().toLowerCase();
 
         const exactOption = options.find(
@@ -70,7 +63,13 @@ const SearchSelect = ({
 
         setIsSearching(false);
         setHighlightedIndex(-1);
-    };
+    }, [inputValue, options, onSetValue, value]);
+
+    const closeSelect = useCallback(() => {
+        setIsOpen(false);
+        inputRef.current?.blur();
+        resetValue();
+    }, [resetValue]);
 
     useEffect(() => {
         const option = options.find(o => o.value === value);
@@ -79,11 +78,9 @@ const SearchSelect = ({
 
     useEffect(() => {
         const handleClickOutside = (e) => {
-
             if (!wrapperRef.current?.contains(e.target)) {
                 closeSelect();
             }
-
         };
 
         document.addEventListener("mousedown", handleClickOutside);
@@ -91,9 +88,7 @@ const SearchSelect = ({
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inputValue]);
+    }, [closeSelect]);
 
     useEffect(() => {
 

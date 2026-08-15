@@ -7,9 +7,10 @@ import "./PostHeader.scss";
 
 import { deletePost } from "../../api/posts.api";
 
-import { ReactComponent as ThreeDotsIcon} from "../../assets/svg/three-dots.svg";
-import { ReactComponent as EditIcon} from "../../assets/svg/edit.svg";
-import { ReactComponent as DeleteIcon} from "../../assets/svg/delete.svg";
+import ThreeDotsIcon from "../../assets/svg/three-dots.svg?react";
+import EditIcon from "../../assets/svg/edit.svg?react";
+import DeleteIcon from "../../assets/svg/delete.svg?react";
+
 import { format_back, format_date_time } from "../../utils/format";
 
 import UserBadge from "../UserBadge";
@@ -62,7 +63,7 @@ const PostHeader = memo(({ post, onDeletePost, className }) => {
     const { profile, showModalWindow, requestCloseModal, showToast } = useContext(AppContext);
     const navigate = useNavigate();
     
-    const delete_post = async (id) => {
+    const delete_post = async () => {
         showModalWindow({
             title: `Вы уверены что хотите удалить пост?`,
             content: getDeleteModalContent(post, requestCloseModal, deletePost, onDeletePost, showToast),
