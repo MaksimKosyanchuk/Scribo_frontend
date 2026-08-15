@@ -5,11 +5,11 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 
 import { AppContext } from "../../App";
 
-import { ReactComponent as HomeIcon } from "../../assets/svg/home-icon.svg";
-import { ReactComponent as ProfileIcon } from "../../assets/svg/profile-icon.svg";
-import { ReactComponent as NotificationsIcon } from "../../assets/svg/notification.svg";
-import { ReactComponent as PlusIcon } from "../../assets/svg/plus-icon.svg";
-import { ReactComponent as RedirectIcon } from "../../assets/svg/redirect.svg";
+import HomeIcon from "../../assets/svg/home-icon.svg?react";
+import ProfileIcon from "../../assets/svg/profile-icon.svg?react";
+import NotificationsIcon from "../../assets/svg/notification.svg?react";
+import PlusIcon from "../../assets/svg/plus-icon.svg?react";
+import RedirectIcon from "../../assets/svg/redirect.svg?react";
 
 import {  getUsers, read_notifications } from "../../api/users.api";
 import { format_back } from "../../utils/format";
@@ -60,7 +60,7 @@ const MobileNavigationBar = () => {
             return acc;
         }, {});
 
-        return [...notifications].reverse().map((item, index) => (
+        return [...notifications].reverse().map((item) => (
             <div key={item._id} className="modal_window_body_content_notification">
                 <div className='modal_window_body_content_notification_new'>
                     {

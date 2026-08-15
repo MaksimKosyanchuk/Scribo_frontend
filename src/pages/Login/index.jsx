@@ -55,9 +55,10 @@ const Login = () => {
     }, [googleToken, navigate, showToast]);
 
     const handleFocus = (fieldName) => {
-        const { [fieldName]: removedField, ...other } = errors;
-        setErrors (other)
-    }
+        const other = { ...errors };
+        delete other[fieldName];
+        setErrors(other);
+    };
 
     const field_validation = () => {
         let is_error = false

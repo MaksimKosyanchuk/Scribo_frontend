@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-096o_Uk7.js";var t=e(),n=()=>(0,t.jsx)(`div`,{className:`page_not_found`,children:(0,t.jsx)(`h1`,{children:`Page not found`})});export{n as default};

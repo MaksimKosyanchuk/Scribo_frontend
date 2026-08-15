@@ -73,8 +73,7 @@ function getCategoryColorType(categoryName) {
             return 0
     }
 }
-
-module.exports = {
+export {
     format_date_time,
     format_back,
     getCategoryColorType

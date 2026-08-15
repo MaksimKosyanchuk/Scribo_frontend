@@ -8,16 +8,16 @@ import './Header.scss';
 import { getUsers, read_notifications } from '../../api/users.api';
 import { format_back } from "../../utils/format";
 
-import { ReactComponent as SunIcon } from "../../assets/svg/sun.svg";
-import { ReactComponent as MoonIcon } from "../../assets/svg/moon.svg";
-import { ReactComponent as MainLogo } from "../../assets/svg/full-logo-icon.svg";
-import { ReactComponent as DefaultProfileIcon } from "../../assets/svg/profile.svg";
-import { ReactComponent as NotificationIcon } from "../../assets/svg/notification.svg";
-import { ReactComponent as PlusIcon } from "../../assets/svg/plus-icon.svg";
-import { ReactComponent as SettingsIcon } from "../../assets/svg/settings.svg";
-import { ReactComponent as LogoutIcon } from "../../assets/svg/logout.svg";
-import { ReactComponent as ArrowDownIcon } from '../../assets/svg/chevron-down.svg';
-import { ReactComponent as RedirectIcon } from '../../assets/svg/redirect.svg';
+import SunIcon from "../../assets/svg/sun.svg?react";
+import MoonIcon from "../../assets/svg/moon.svg?react";
+import MainLogo from "../../assets/svg/full-logo-icon.svg?react";
+import DefaultProfileIcon from "../../assets/svg/profile.svg?react";
+import NotificationIcon from "../../assets/svg/notification.svg?react";
+import PlusIcon from "../../assets/svg/plus-icon.svg?react";
+import SettingsIcon from "../../assets/svg/settings.svg?react";
+import LogoutIcon from "../../assets/svg/logout.svg?react";
+import ArrowDownIcon from "../../assets/svg/chevron-down.svg?react";
+import RedirectIcon from "../../assets/svg/redirect.svg?react";
 
 import UserBadge from '../UserBadge/index';
 import CurrentUserBadge from "../CurrentUserBadge/index"
@@ -49,7 +49,7 @@ function Header() {
       return acc;
     }, {});
 
-    return [...notifications].reverse().map((item, index) => (
+    return [...notifications].reverse().map((item) => (
       <div key={item._id} className="modal_window_body_content_notification">
         <div className='modal_window_body_content_notification_new'>
           {

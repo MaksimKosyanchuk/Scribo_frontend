@@ -1,11 +1,14 @@
-import "./Footer.scss"
 import { Link } from 'react-router-dom';
+
 import LinkToProfile from '../LinkToProfile';
-import { ReactComponent as GhIcon } from "../../assets/svg/github-icon.svg";
-import { ReactComponent as InstagramIcon } from "../../assets/svg/instagram-icon.svg";
-import { ReactComponent as TelegramIcon } from "../../assets/svg/telegram-icon.svg";
-import { ReactComponent as TWitterIcon } from "../../assets/svg/twitter-icon.svg";
-import { ReactComponent as MainLogo } from "../../assets/svg/full-logo-icon.svg";
+
+import "./Footer.scss"
+
+import GhIcon from "../../assets/svg/github-icon.svg?react";
+import InstagramIcon from "../../assets/svg/instagram-icon.svg?react";
+import TelegramIcon from "../../assets/svg/telegram-icon.svg?react";
+import TWitterIcon from "../../assets/svg/twitter-icon.svg?react";
+import MainLogo from "../../assets/svg/full-logo-icon.svg?react";
 
 function Footer(){
     return(

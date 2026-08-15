@@ -14,7 +14,7 @@ import OtpInput from '../../components/Ui/OtpInput/index';
 
 import "./Register.scss";
 
-import { ReactComponent as AvatarIcon } from "../../assets/svg/avatar-icon.svg"
+import AvatarIcon from "../../assets/svg/avatar-icon.svg?react"
 
 const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) => {
     const navigate = useNavigate();
@@ -59,9 +59,10 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
     }
 
     const handleFocus = (fieldName) => {
-        const { [fieldName]: removedField, ...other } = errors;
-        setErrors (other)
-    }
+        const other = { ...errors };
+        delete other[fieldName];
+        setErrors(other);
+    };
 
     const field_validation = () => {
         let is_error = false
@@ -148,8 +149,10 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
     };
 
     const handleClick = () => {
-        const { avatar: removedField, ...other } = errors;
-        setErrors (other)
+        const other = { ...errors };
+        delete other.avatar;
+
+        setErrors(other);
     }
 
     return (
@@ -347,9 +350,10 @@ const Register = () => {
     }
 
     const handleFocus = (fieldName) => {
-        const { [fieldName]: removedField, ...other } = errors;
-        setErrors (other)
-    }
+        const other = { ...errors };
+        delete other[fieldName];
+        setErrors(other);
+    };
 
     const field_validation = () => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) {

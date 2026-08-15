@@ -2,7 +2,8 @@ import "./SidebarPage.scss";
 
 import { useSearchParams } from "react-router-dom";
 
-import { ReactComponent as MenuIcon } from "../../assets/svg/menu.svg";
+import MenuIcon from "../../assets/svg/menu.svg?react";
+
 import Popup from "../Ui/Popup";
 
 const SidebarPage = ({ pages, page_title }) => {

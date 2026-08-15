@@ -1,9 +1,11 @@
-import "./Banner.scss";
-import { ReactComponent as Logo } from "../../assets/svg/full-logo-text-icon.svg";
 import { Link } from 'react-router-dom';
+
+import Logo from "../../assets/svg/full-logo-text-icon.svg?react";
+import bannerImage from "../../assets/images/banner-img.png";
+
 import ChipButton from "../Ui/ChipButton";
 
-
+import "./Banner.scss";
 
 const Banner = () => {
     
@@ -39,7 +41,7 @@ const Banner = () => {
             </div>
 
             <img
-                src="/static/media/banner-img.893505d459742f6e2c72.png"
+                src={bannerImage}
                 alt=""
                 className="banner_image"
             />

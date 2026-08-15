@@ -35,7 +35,7 @@ const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
                 ),
         }));
 
-        if(profile){
+        if (profile) {
             uniqueFilters.unshift({
                 _id: "subscription",
                 name: "По подписке",
@@ -54,9 +54,7 @@ const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
         });
 
         setFilters(uniqueFilters);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [posts, posts_filters]);
+    }, [posts, posts_filters, profile]);
 
     useEffect(() => {
         const subscriptionFilterActive =
@@ -77,9 +75,7 @@ const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
         }
 
         setFilteredPosts(updatedPosts);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filters]);
+    }, [filters, posts, profile?.follows]);
 
     if (!posts) {
         return <NoPosts />;

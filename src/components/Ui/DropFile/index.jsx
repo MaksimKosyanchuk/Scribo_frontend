@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef } from "react";
+
 import "./DropFile.scss";
-import { ReactComponent as DeleteIcon } from "../../../assets/svg/delete.svg";
-import { ReactComponent as WarningIcon } from "../../../assets/svg/warning-icon.svg";
-import { ReactComponent as UploadFileIcon } from "../../../assets/svg/upload-file-icon.svg";
+
+import DeleteIcon from "../../../assets/svg/delete.svg?react";
+import WarningIcon from "../../../assets/svg/warning-icon.svg?react";
+import UploadFileIcon from "../../../assets/svg/upload-file-icon.svg?react";
 
 const DropFile = ({
     value,

@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
+
 import "./UserBadge.scss";
+
 import DefaultProfileAvatar from "../../assets/images/default-profile-avatar.png"
-import { ReactComponent as Verified } from "../../assets/svg/verified.svg";
+
+import Verified from "../../assets/svg/verified.svg?react";
 import Tooltip from "../Ui/Tooltip/index";
 
 const UserBadge = ( { data, class_name, asLink = true } ) => {

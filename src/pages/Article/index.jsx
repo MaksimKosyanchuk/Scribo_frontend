@@ -19,39 +19,42 @@ const Article = () => {
     const [article, setArticle] = useState([ ])
 
     useEffect(() => {
+        const getArticle = async () => {
+            try {
+                setIsLoading(true)
+
+                const result = await getPostById(id, {
+                    expand: "author,category"
+                })
+
+                if (result.status) {
+                    setArticle(result.data)
+                } else {
+                    navigate("/404")
+                }
+            } catch {
+                navigate("/404")
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
         getArticle()
-        if(location.state?.comment) {
-            setComment(location.state.comment)
-        }
-        else {
-            if(searchParams.get('comment')) {
-                setComment(searchParams.get('comment'))
-            }
-        }
-        // eslint-disable-next-line
-    }, [location.state?.time])
-
-    const getArticle = async () => {
-
-        try {
-            setIsLoading(true)
-            
-            const result = await getPostById(id, {expand: "author,category"})
-            setIsLoading(false)
-
-            if(result.status) {
-                setArticle(result.data)
-            } else {
-                navigate('/404')
-            }
-            
-        } catch(e) {
-            navigate('/404')
-        }
-    }
+    }, [id, navigate])
 
     useEffect(() => {
-    }, [article])
+        if (location.state?.comment) {
+            setComment(location.state.comment)
+            return
+        }
+
+        const commentId = searchParams.get("comment")
+
+        if (commentId) {
+            setComment(commentId)
+        }
+    }, [location.state?.comment, searchParams])
+
 
     return (
         (!isLoading) ?

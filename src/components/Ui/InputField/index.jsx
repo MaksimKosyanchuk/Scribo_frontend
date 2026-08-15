@@ -1,6 +1,8 @@
-import "./InputField.scss";
 import { forwardRef } from "react";
-import { ReactComponent as ConfirmedIcon } from "../../../assets/svg/confirmed-icon.svg";
+
+import "./InputField.scss";
+
+import ConfirmedIcon from "../../../assets/svg/confirmed-icon.svg?react";
 
 const Input = forwardRef(
 (

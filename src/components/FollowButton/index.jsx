@@ -1,4 +1,4 @@
-import { AppContext } from "../../App.js";
+import { AppContext } from "../../App.jsx";
 import { useContext } from "react";
 
 import { follow } from "../../api/users.api.js";

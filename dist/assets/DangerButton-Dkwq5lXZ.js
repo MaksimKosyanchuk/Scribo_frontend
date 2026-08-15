@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-096o_Uk7.js";var t=e();function n({children:e,onClick:n,type:r=`button`,className:i=``,is_active:a=!1}){return(0,t.jsx)(`button`,{className:`danger_button ${a?`danger_button_active`:``} app-transition ${i}`,onClick:n,type:r,children:e})}export{n as t};

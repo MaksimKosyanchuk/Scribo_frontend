@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { AppContext } from "../../App.js";
+import { AppContext } from "../../App.jsx";
 import { useNavigate } from "react-router-dom";
 
 import "./PostComments.scss";
@@ -10,13 +10,13 @@ import { deleteComment, editComment, likeComment } from "../../api/comments.api"
 import { format_back, format_date_time } from "../../utils/format";
 import { scrollTo } from "../../utils/navigation";
 
-import { ReactComponent as ReplyIcon } from "../../assets/svg/reply.svg";
-import { ReactComponent as DeleteIcon } from "../../assets/svg/delete.svg";
-import { ReactComponent as EditIcon } from "../../assets/svg/edit.svg";
-import { ReactComponent as LikeFilledIcon } from "../../assets/svg/like-filled.svg";
-import { ReactComponent as LikeOutlineIcon } from "../../assets/svg/like-outline.svg";
-import { ReactComponent as ThreeDotsVeritcalIcon } from "../../assets/svg/three-dots-vertical.svg";
-import { ReactComponent as RedirectIcon } from "../../assets/svg/redirect.svg";
+import ReplyIcon from "../../assets/svg/reply.svg?react";
+import DeleteIcon from "../../assets/svg/delete.svg?react";
+import EditIcon from "../../assets/svg/edit.svg?react";
+import LikeFilledIcon from "../../assets/svg/like-filled.svg?react";
+import LikeOutlineIcon from "../../assets/svg/like-outline.svg?react";
+import ThreeDotsVeritcalIcon from "../../assets/svg/three-dots-vertical.svg?react";
+import RedirectIcon from "../../assets/svg/redirect.svg?react";
 
 import CurrentUserBadge from "../CurrentUserBadge/index.jsx";
 import UserBadge from "../UserBadge/index.jsx";
@@ -115,7 +115,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
         const result = await commentPost(post_id, data)
 
         if(result.status) {
-            await fetchComments({ onSuccessFetch: (data) => {
+            await fetchComments({ onSuccessFetch: () => {
                 setReplyText('');
                 setShowForm(false);
                 showToast({
@@ -135,7 +135,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
 
         if(result.status) {
             setEditMode(false);
-            await fetchComments({ onSuccessFetch: (data) => {
+            await fetchComments({ onSuccessFetch: () => {
                 setReplyText('');
                 setShowForm(false);
                 showToast({
@@ -164,7 +164,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
         const result = await likeComment(comment._id, comment.likes.includes(profile?._id) ? "DELETE" : "POST");
 
         if(result.status) {
-            await fetchComments({ onSuccessFetch: (data) => {
+            await fetchComments({ onSuccessFetch: () => {
                 showToast({
                     type: "success",
                     message: comment.likes.includes(profile?._id) ? "Лайк снят" : "Лайк поставлен"
@@ -197,7 +197,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
             "onClick": () => {
                 deleteComment(comment._id).then((result) => {
                     if(result.status === true) {
-                        fetchComments({ onSuccessFetch: (data) => {
+                        fetchComments({ onSuccessFetch: () => {
                             showToast({
                                 type: "success",
                                 message: "Комментарий удален"
@@ -360,7 +360,7 @@ const PostComments = ({ postId, navigateTo }) => {
         const result = await commentPost(postId, data)
 
         if(result.status === true) {
-            await fetchComments({ onSuccessFetch: (data) => {
+            await fetchComments({ onSuccessFetch: () => {
                 setCommentText('');
                 showToast({
                     type: "success",

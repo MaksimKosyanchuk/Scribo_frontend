@@ -7,12 +7,12 @@ import { likePost, savePost } from "../../api/posts.api";
 
 import "./PostActions.scss";
 
-import { ReactComponent as BookMarkBorder} from "../../assets/svg/bookmark-outline.svg";
-import { ReactComponent as BookMarkFilled} from "../../assets/svg/bookmark-filled.svg";
-import { ReactComponent as ShareIcon} from "../../assets/svg/share.svg";
-import { ReactComponent as CommentIcon} from "../../assets/svg/comment.svg";
-import { ReactComponent as LikeIcon} from "../../assets/svg/like-outline.svg";
-import { ReactComponent as FilledLikeIcon} from "../../assets/svg/like-filled.svg";
+import BookMarkBorder from "../../assets/svg/bookmark-outline.svg?react";
+import BookMarkFilled from "../../assets/svg/bookmark-filled.svg?react";
+import ShareIcon from "../../assets/svg/share.svg?react";
+import CommentIcon from "../../assets/svg/comment.svg?react";
+import LikeIcon from "../../assets/svg/like-outline.svg?react";
+import FilledLikeIcon from "../../assets/svg/like-filled.svg?react";
 
 import Category from "../Category/index";
 import Tooltip from "../Ui/Tooltip/index";
@@ -26,11 +26,11 @@ async function share(id, showToast) {
         navigator.share({
             title: 'Заголовок',
             text: 'Текст',
-            url: `https://${process.env.REACT_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`
+            url: `https://${process.env.VITE_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`
         })
     } else {
         try {
-            await navigator.clipboard.writeText(`https://${process.env.REACT_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`)
+            await navigator.clipboard.writeText(`https://${process.env.VITE_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`)
             showToast({message: "Скопировано!", type: "success" })
         } catch (err) {
             console.error(`Failed to copy: /posts/${id}`, err)

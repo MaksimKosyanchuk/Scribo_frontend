@@ -23,11 +23,11 @@ import "./TextEditorField.scss";
 import SwitchBar from "../SwitchBar";
 import Tooltip from "../Tooltip/index"
 
-import { ReactComponent as BoldText } from "../../../assets/svg/bold-text.svg";
-import { ReactComponent as ItalicText } from "../../../assets/svg/italic-text.svg";
-import { ReactComponent as MarkList } from "../../../assets/svg/mark-list-icon.svg";
-import { ReactComponent as NumList } from "../../../assets/svg/num-list-icon.svg";
-import { ReactComponent as LinkText } from "../../../assets/svg/link-icon.svg";
+import BoldText from "../../../assets/svg/bold-text.svg?react";
+import ItalicText from "../../../assets/svg/italic-text.svg?react";
+import MarkList from "../../../assets/svg/mark-list-icon.svg?react";
+import NumList from "../../../assets/svg/num-list-icon.svg?react";
+import LinkText from "../../../assets/svg/link-icon.svg?react";
 
 import { useState, useEffect } from "react";
 import { useRef } from "react";
@@ -193,10 +193,8 @@ const EditorToolbar = () => {
 }
 
 export default function TextEditor({
-  value,
   initialHtml,
   onChange,
-  label,
   error,
   onFocus
 }) 
