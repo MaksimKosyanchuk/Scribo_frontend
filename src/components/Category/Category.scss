@@ -24,6 +24,10 @@
             border-color: var(--category-color);
             background: rgb(from var(--category-color) r g b / .1);
 
+            @include hover() {
+                background: rgb(from var(--category-color) r g b / .3);
+            }
+
             p {
                 color: var(--category-color);
             }

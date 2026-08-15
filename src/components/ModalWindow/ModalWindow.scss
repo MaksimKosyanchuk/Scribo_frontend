@@ -48,18 +48,28 @@
             &_title {
                 display: flex;
                 padding: 20px;
+                align-items: center;
+                justify-content: center;
                 flex-shrink: 0;
                 
                 &_close_button {
+                    display: flex;
                     margin-left: auto;
                     color: var(--modal-window-button-color);
-                    width: 24px;
-                    height: 24px;
+                    padding: 6px;
+                    cursor: pointer;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 999px;
+
+                    @include hover() {
+                        background: var(--section-item-hover-background-color);
+                    }
                 }
                 
-                &_close_button:hover {
-                    cursor: pointer;
-                    color: var(--modal-window-button-hover-color);
+                svg {
+                    width: 18px;
+                    height: 18px;
                 }
                 
                 p {
