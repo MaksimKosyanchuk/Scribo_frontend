@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import "./Tooltip.scss";
 
-const Tooltip = ({ text, children, className }) => {
+const Tooltip = ({ text, children, className, clickable=false }) => {
     const [position, setPosition] = useState("top");
     const wrapperRef = useRef(null);
 
@@ -21,7 +21,7 @@ const Tooltip = ({ text, children, className }) => {
 
     return (
         <div 
-            className={`tooltip_wrapper ${className || ""}`} 
+            className={`tooltip_wrapper ${className || ""} ${clickable ? "clickable" : ""}`} 
             ref={wrapperRef}
             onMouseEnter={handleMouseEnter}
         >

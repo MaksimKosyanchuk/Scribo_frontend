@@ -26,11 +26,11 @@ async function share(id, showToast) {
         navigator.share({
             title: 'Заголовок',
             text: 'Текст',
-            url: `https://${process.env.VITE_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`
+            url: `https://${import.meta.env.VITE_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`
         })
     } else {
         try {
-            await navigator.clipboard.writeText(`https://${process.env.VITE_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`)
+            await navigator.clipboard.writeText(`https://${import.meta.env.VITE_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`)
             showToast({message: "Скопировано!", type: "success" })
         } catch (err) {
             console.error(`Failed to copy: /posts/${id}`, err)
@@ -114,7 +114,7 @@ const PostActions = ({ className, article, setArticle }) => {
     return (
         <div className={`post_actions ${className ?? ""}`}>
             <div className="post_actions_left_side">
-                <Tooltip text={article.likes?.includes(profile?._id) ? "Убрать лайк" : "Поставить лайк"}>
+                <Tooltip text={article.likes?.includes(profile?._id) ? "Убрать лайк" : "Поставить лайк"} clickable={true}>
                     <button className="post_actions_button app-transition" onClick={() => { doLike(article.likes?.includes(profile?._id) ? "DELETE" : "POST") }}>
                         {
                             article.likes?.includes(profile?._id) ?
@@ -125,7 +125,7 @@ const PostActions = ({ className, article, setArticle }) => {
                         <p>{article.likes?.length > 0 ? article.likes.length : ""}</p>
                     </button>
                 </Tooltip>
-                <Tooltip text={"Перейти к комментариям"}>
+                <Tooltip text={"Перейти к комментариям"} clickable={true}>
                     <Link className="post_actions_button post_actions_comment app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
                         <CommentIcon/>
                         {
@@ -138,12 +138,12 @@ const PostActions = ({ className, article, setArticle }) => {
                         }
                     </Link>
                 </Tooltip>
-                <Tooltip text={isSaved ? "Убрать из сохранённых" : "Сохранить"}>
+                <Tooltip text={isSaved ? "Убрать из сохранённых" : "Сохранить"} clickable={true}>
                     <button type="button" className="post_actions_button app-transition" onClick={save_post} disabled={isSavingProcess}>
                         {isSaved ? <BookMarkFilled /> : <BookMarkBorder />}
                     </button>
                 </Tooltip>
-                <Tooltip text={isMobile() ? "Поделиться" : "Скопировать ссылку"}>
+                <Tooltip text={isMobile() ? "Поделиться" : "Скопировать ссылку"} clickable={true}>
                     <button className="post_actions_button app-transition" onClick={() => { share(article._id, showToast) }}>
                         <ShareIcon />
                     </button>
