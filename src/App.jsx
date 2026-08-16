@@ -4,16 +4,16 @@ import DefaultContainer from './layouts/DefaultContainer/index';
 
 const ApiDocs = lazy(() => import('./pages/Api/index.jsx'));
 
-const PageNotFound = lazy(() => import('./pages/PageNotFound/index.jsx'));
-const HomePage = lazy(() => import('./pages/HomePage/index.jsx'));
-const Article = lazy(() => import('./pages/Article/index.jsx'));
-const Profile = lazy(() => import('./pages/Profile/index.jsx'));
-const Settings = lazy(() => import('./pages/Settings/index.jsx'));
-const Login = lazy(() => import('./pages/Login/index.jsx'));
-const Register = lazy(() => import('./pages/Register/index.jsx'));
-const CreatePost = lazy(() => import('./pages/CreatePost/index.jsx'));
-const EditPost = lazy(() => import('./pages/EditPost/index.jsx'));
-const AdminPanel = lazy(() => import('./pages/AdminPanel/index.jsx'));
+import PageNotFound from './pages/PageNotFound/index.jsx';
+import HomePage from './pages/HomePage/index.jsx';
+import Article from './pages/Article/index.jsx';
+import Profile from './pages/Profile/index.jsx';
+import Settings from './pages/Settings/index.jsx';
+import Login from './pages/Login/index.jsx';
+import Register from './pages/Register/index.jsx';
+import CreatePost from './pages/CreatePost/index.jsx';
+import EditPost from './pages/EditPost/index.jsx';
+import AdminPanel from './pages/AdminPanel/index.jsx';
 
 import AppLayout from './layouts/AppLayout/index.jsx';
 import FullContainer from './layouts/FullContainer/index.jsx';
