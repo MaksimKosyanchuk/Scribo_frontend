@@ -247,46 +247,69 @@ const EditPost = () => {
     );
 
     return (
-        <form className='create_post' onSubmit={handleSubmit}>
-            <Field error={errors?.body?.title?.message} title={"Заголовок"}>
+        <form className="edit_post" onSubmit={handleSubmit}>
+            <Field
+                error={errors?.body?.title?.message}
+                title={"Заголовок"}
+            >
                 <InputFiled
                     value={fields.title}
                     placeholder={titlePlaceholder}
-                    className={"create_post_title"  + (createResult.status === "error" && createResult.message === "Incorrect 'title'" ? " incorrect_field" : "")}
+                    className={
+                        "edit_post_title" +
+                        (
+                            createResult.status === "error" &&
+                            createResult.message === "Incorrect 'title'"
+                                ? " incorrect_field"
+                                : ""
+                        )
+                    }
                     is_multiline={true}
                     multiline_rows={1}
-                    onChange={(e) => setFields({ ...fields, title: e.target.value })}
-                    onFocus={() => handleFocus('title')}
+                    onChange={(e) =>
+                        setFields({
+                            ...fields,
+                            title: e.target.value
+                        })
+                    }
+                    onFocus={() => handleFocus("title")}
                     length={200}
                     error={errors?.body?.title?.message}
                 />
             </Field>
-            <Field error={errors?.body?.category?.message} title={"Категория"}>
+
+            <Field
+                error={errors?.body?.category?.message}
+                title={"Категория"}
+            >
                 <SearchSelect
                     value={fields?.category}
                     onSetValue={(value) =>
-                        setFields(prev => ({
+                        setFields((prev) => ({
                             ...prev,
                             category: value
                         }))
                     }
-                    onFocus={() => setErrors(prevErrors => ({
-                        ...prevErrors,
-                        body: Object.fromEntries(
-                            Object.entries(prevErrors.body || {}).filter(
-                                ([key]) => key !== 'category'
+                    onFocus={() =>
+                        setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            body: Object.fromEntries(
+                                Object.entries(prevErrors.body || {}).filter(
+                                    ([key]) => key !== "category"
+                                )
                             )
-                        )
-                    }))}
+                        }))
+                    }
                     error={errors?.body?.category?.message}
                     className={CATEGORY_COLORS[selectedCategory?.color]?.className}
                     options={allCategories}
                 />
             </Field>
+
             <DropFile
                 value={fields.featured_image}
                 setValue={(file) =>
-                    setFields(prev => ({
+                    setFields((prev) => ({
                         ...prev,
                         featured_image: file
                     }))
@@ -299,15 +322,38 @@ const EditPost = () => {
                 onRemove={handleClick}
                 preview_url={fields.featured_image}
             />
-            <Field error={errors?.body?.content_text?.message} title={"Текст поста"}>
-                <TextEditorField initialHtml={fields.content_text} onFocus={() => handleFocus('content_text')} onChange={(html) => setFields({ ...fields, content_text: html })} error={errors?.body?.content_text?.message}/>
+
+            <Field
+                error={errors?.body?.content_text?.message}
+                title={"Текст поста"}
+            >
+                <TextEditorField
+                    initialHtml={fields.content_text}
+                    onFocus={() => handleFocus("content_text")}
+                    onChange={(html) =>
+                        setFields({
+                            ...fields,
+                            content_text: html
+                        })
+                    }
+                    error={errors?.body?.content_text?.message}
+                />
             </Field>
-            <div className="create_post_buttons">
-                <PrimaryButton onClick={handleSubmit} is_loading={isLoading}>Сохранить</PrimaryButton>
-                <DangerButton onClick={() => navigate("/posts")}>Отмена</DangerButton>
+
+            <div className="edit_post_buttons">
+                <PrimaryButton
+                    onClick={handleSubmit}
+                    is_loading={isLoading}
+                >
+                    Сохранить
+                </PrimaryButton>
+
+                <DangerButton onClick={() => navigate("/posts")}>
+                    Отмена
+                </DangerButton>
             </div>
         </form>
-    )
+    );
 }
 
 export default EditPost

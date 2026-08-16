@@ -96,7 +96,8 @@ const Toast = ({ toast }) => {
                     <div
                         key={toast.id}
                         className={`
-                            section
+                            float_section
+                            blurred
                             toast
                             toast_position_${index}
                             ${toast.isEntering ? "toast_enter" : ""}
