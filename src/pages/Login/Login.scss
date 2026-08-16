@@ -32,11 +32,12 @@
             a {
                 font-weight: bold;
                 margin-left: 5px;
+                
+                @include hover{
+                    text-decoration: underline;
+                }
             }
             
-            @include hover{
-                text-decoration: underline;
-            }
         }
     }
     .primary_button {

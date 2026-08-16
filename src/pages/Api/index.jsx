@@ -3,6 +3,8 @@ import { ApiReferenceReact } from "@scalar/api-reference-react";
 import "@scalar/api-reference-react/style.css";
 import "./Api.scss";
 
+import { getApiDocs } from "../../api/backend.api";
+
 import { AppContext } from "../../App";
 
 const isApiOutdated = (docsVersion, backendVersion) => {
@@ -26,29 +28,10 @@ function Api() {
 
     useEffect(() => {
         const loadApiDocument = async () => {
-            try {
-                const response = await fetch(
-                    `${process.env.VITE_APP_API_URL}/api/docs`
-                );
+            const docs = await getApiDocs();
 
-                if (!response.ok) {
-                    throw new Error(
-                        `Failed to fetch API docs: ${response.status}`
-                    );
-                }
-
-                const data = await response.json();
-
-                console.log("API documentation:", data);
-                console.log("API version:", data.info?.version);
-                console.log(
-                    "Backend version:",
-                    data.info?.["x-backend-version"]
-                );
-
-                setApiDocument(data);
-            } catch (error) {
-                console.error("Failed to load API documentation:", error);
+            if(docs.status) {
+                setApiDocument(docs.data);
             }
         };
 

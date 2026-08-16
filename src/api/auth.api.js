@@ -46,18 +46,24 @@ const loginGoogle = async (token) => {
 }
 
 const loginUsername = async (username, password) => {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_name: username, password: password }),
+    try {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_name: username, password: password }),
+        }
+        
+        const response = await fetch(`${API_URL}/api/auth/login/username`, requestOptions)
+        const code = response.status
+        const result = await response.json()
+    
+        return {
+            statusCode: code,
+            ...result
+        }
     }
-    const response = await fetch(`${API_URL}/api/auth/login/username`, requestOptions)
-    const code = response.status
-    const result = await response.json()
-
-    return {
-        statusCode: code,
-        ...result
+    catch(e){  
+        console.log(e)
     }
 }
 
