@@ -22,7 +22,7 @@ import PageLayout from './layouts/PageLayout/index.jsx';
 import ModalWindow from './components/ModalWindow/index.jsx';
 import Header from './components/Header/index.jsx';
 import Footer from './components/Footer/index.jsx';
-import Toast from './components/Banner/index.jsx';
+import Toast from './components/Ui/Toast/index.jsx';
 
 import MobileNavigationBar from './components/MobileNavigationBar/index.jsx';
 
