@@ -26,11 +26,11 @@ async function share(id, showToast) {
         navigator.share({
             title: 'Заголовок',
             text: 'Текст',
-            url: `https://${process.env.VITE_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`
+            url: `https://${import.meta.env.VITE_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`
         })
     } else {
         try {
-            await navigator.clipboard.writeText(`https://${process.env.VITE_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`)
+            await navigator.clipboard.writeText(`https://${import.meta.env.VITE_APP_VERCEL_PROJECT_PRODUCTION_URL}/posts/${id}`)
             showToast({message: "Скопировано!", type: "success" })
         } catch (err) {
             console.error(`Failed to copy: /posts/${id}`, err)
