@@ -76,12 +76,14 @@ const Toast = ({ toast }) => {
     }, [toast]);
 
     useEffect(() => {
+        const timers = timersRef.current;
+
         return () => {
-            timersRef.current.forEach((timer) => {
+            timers.forEach((timer) => {
                 clearTimeout(timer);
             });
 
-            timersRef.current.clear();
+            timers.clear();
         };
     }, []);
 
