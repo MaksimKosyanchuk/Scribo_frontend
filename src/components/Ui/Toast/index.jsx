@@ -1,72 +1,120 @@
 import { useEffect, useRef, useState } from "react";
 import "./Toast.scss";
 
-const Toast = ({ toast, showToast }) => {
-    const timerRef = useRef(null);
-    const visibilityTimerRef = useRef(null);
-    const exitTimerRef = useRef(null);
+const TOAST_DURATION = 3000;
+const ENTER_DELAY = 20;
+const EXIT_DURATION = 700;
 
-    const [isExiting, setIsExiting] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
+const Toast = ({ toast }) => {
+    const [toasts, setToasts] = useState([]);
+
+    const timersRef = useRef(new Map());
 
     useEffect(() => {
         if (!toast) {
             return;
         }
 
-        setIsVisible(false);
-        setIsExiting(false);
+        const id = `${Date.now()}-${Math.random()}`;
 
-        visibilityTimerRef.current = setTimeout(() => {
-            setIsVisible(true);
-        }, 10);
-
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
-        }
-
-        if (exitTimerRef.current) {
-            clearTimeout(exitTimerRef.current);
-        }
-
-        timerRef.current = setTimeout(() => {
-            setIsExiting(true);
-
-            exitTimerRef.current = setTimeout(() => {
-                showToast(false);
-                setIsVisible(false);
-            }, 300);
-        }, 3000);
-
-        return () => {
-            if (timerRef.current) {
-                clearTimeout(timerRef.current);
-                timerRef.current = null;
-            }
-
-            if (visibilityTimerRef.current) {
-                clearTimeout(visibilityTimerRef.current);
-                visibilityTimerRef.current = null;
-            }
-
-            if (exitTimerRef.current) {
-                clearTimeout(exitTimerRef.current);
-                exitTimerRef.current = null;
-            }
+        const newToast = {
+            id,
+            message: toast.message,
+            type: toast.type || "info",
+            isEntering: true,
+            isExiting: false
         };
-    }, [toast, showToast]);
+
+        setToasts((prev) => [
+            ...prev,
+            newToast
+        ]);
+
+        const enterTimer = setTimeout(() => {
+            setToasts((prev) =>
+                prev.map((item) =>
+                    item.id === id
+                        ? {
+                            ...item,
+                            isEntering: false
+                        }
+                        : item
+                )
+            );
+
+            timersRef.current.delete(`${id}-enter`);
+        }, ENTER_DELAY);
+
+        timersRef.current.set(`${id}-enter`, enterTimer);
+
+        const timer = setTimeout(() => {
+            setToasts((prev) =>
+                prev.map((item) =>
+                    item.id === id
+                        ? {
+                            ...item,
+                            isExiting: true
+                        }
+                        : item
+                )
+            );
+
+            const exitTimer = setTimeout(() => {
+                setToasts((prev) =>
+                    prev.filter((item) => item.id !== id)
+                );
+
+                timersRef.current.delete(`${id}-exit`);
+            }, EXIT_DURATION);
+
+            timersRef.current.set(`${id}-exit`, exitTimer);
+
+            timersRef.current.delete(id);
+        }, TOAST_DURATION);
+
+        timersRef.current.set(id, timer);
+    }, [toast]);
+
+    useEffect(() => {
+        return () => {
+            timersRef.current.forEach((timer) => {
+                clearTimeout(timer);
+            });
+
+            timersRef.current.clear();
+        };
+    }, []);
+
+    const visibleToasts = toasts.slice(-3);
 
     return (
-        <div
-            className={`app-transition toast 
-                ${isVisible ? (isExiting ? "toast_exit" : "toast_active") : ""} 
-                ${toast?.type === "info" ? "toast_type_info" : ""}
-                ${toast?.type === "warning" ? "toast_type_warning" : ""}
-                ${toast?.type === "success" ? "toast_type_success" : ""}
-                ${toast?.type === "error" ? "toast_type_error" : ""}
-            `}
-        >
-            <p>{toast?.message}</p>
+        <div className="toast-container">
+            {visibleToasts
+                .slice()
+                .reverse()
+                .map((toast, index) => (
+                    <div
+                        key={toast.id}
+                        className={`
+                            section
+                            toast
+                            toast_position_${index}
+                            ${toast.isEntering ? "toast_enter" : ""}
+                            ${toast.isExiting ? "toast_exit" : ""}
+                        `}
+                    >
+                        <div className="toast_content">
+                            <p
+                                className={`
+                                    toast_indicator
+                                    toast_indicator_${toast.type}
+                                `}
+                            />
+
+                            <p>{toast.message}</p>
+                        </div>
+                    </div>
+                ))}
         </div>
     );
 };
