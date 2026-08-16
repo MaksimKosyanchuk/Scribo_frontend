@@ -456,7 +456,6 @@ const LogsPage = () => {
         switch (filter.type) {
             case "user":
                 return log.data?.user === filter.id;
-
             case "post":
                 return log.data?.post === filter.id;
             case "category":
