@@ -17,6 +17,10 @@
         gap: 14px;
         margin-top: 64px;
 
+        @include screen() {
+            margin-top: 32px;
+        }
+
         &_header_1 {
             .post_header_right{
                 display: none;

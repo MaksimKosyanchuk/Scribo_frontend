@@ -1,12 +1,38 @@
 @use "../../styles/helpers.scss" as *;
 @use "../../styles/categoryColors.scss" as *;
 
-.create_post {
+.edit_post {
     display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .input_field {
+        width: 100%;
+        height: 100%;
+    }
+
+    .input_field::placeholder {
+        color: var(--input-placeholder-color);
+        transition: .3s;
+    }
+
+    .input_field_label {
+        span {
+            margin: 0;
+        }
+    }
+
     .search_select {
+        .search_select_item_selected {
+            background: var(--section-item-hover-background-color);
+        }
+
         @include category-colors {
             .search_select_input {
-                background: rgb(from var(--category-color) r g b / .1);;
+                background: rgb(
+                    from var(--category-color) r g b / .1
+                );
+
                 border-color: var(--category-color);
 
                 .input_field {
@@ -14,7 +40,7 @@
                 }
             }
 
-            .search_select_icon{
+            .search_select_icon {
                 color: var(--category-color);
             }
         }
@@ -22,7 +48,6 @@
 
     .search_select_item {
         @include category-colors {
-
             p {
                 color: var(--category-color);
             }
@@ -32,12 +57,102 @@
             }
 
             @include hover {
-                background-color: rgb(from var(--category-color) r g b / .1);
+                background-color: rgb(
+                    from var(--category-color) r g b / .1
+                );
             }
 
             &.search_select_item_selected {
-                background-color: rgb(from var(--category-color) r g b / .1);
+                background-color: rgb(
+                    from var(--category-color) r g b / .1
+                );
             }
+        }
+    }
+
+
+    .drop_file {
+        min-height: 230px;
+        border-radius: 8px;
+
+        @include screen() {
+            min-height: 140px;
+        }
+
+        .remove_image {
+            position: absolute;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            bottom: 20px;
+
+            width: 96%;
+            padding: 8px;
+
+            background-color: var(--sticky-button-background-color);
+            border: 1px solid var(--line-color);
+
+            .remove_image_button {
+                cursor: pointer;
+
+                svg {
+                    color: red;
+                    height: 20px;
+                }
+            }
+        }
+
+        &_info {
+            &_upload_icon {
+                width: 50px;
+                height: 50px;
+
+                @include screen() {
+                    display: none;
+                }
+            }
+
+            &_main_text {
+                @include screen() {
+                    font-size: 12px;
+                }
+            }
+
+            &_help_text {
+                @include screen() {
+                    font-size: 12px;
+                }
+            }
+
+            &_select {
+                margin-top: 16px;
+            }
+        }
+    }
+
+    .drop_file_error_messages {
+        align-items: flex-start;
+    }
+
+    &_main_text {
+        height: 300px;
+        font-size: 24px;
+
+        @include screen() {
+            height: 150px;
+            font-size: 14px;
+        }
+    }
+
+    &_buttons {
+        display: flex;
+        justify-content: space-between;
+
+        @include screen() {
+            flex-direction: column;
+            gap: 10px;
         }
     }
 }
