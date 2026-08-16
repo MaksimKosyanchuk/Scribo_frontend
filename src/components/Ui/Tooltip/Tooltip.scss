@@ -2,39 +2,30 @@
 
 .tooltip_wrapper {
     position: relative;
+
     display: inline-flex;
     align-items: center;
-    height: inherit;
+
     width: fit-content;
     height: fit-content;
-
-    &.clickable {
-        @include screen() {
-            @include hover {
-                .tooltip {
-                    opacity: 0;
-                    visibility: hidden;
-                    pointer-events: none;
-                }
-            }
-        }
-    }
 
     .tooltip {
         position: absolute;
         left: 50%;
+
         white-space: nowrap;
-        
+
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        
+
         background-color: var(--tooltip-background-color);
         border: 1px solid var(--line-color);
         padding: 6px 12px;
         border-radius: 6px;
+
         z-index: 100;
-        
+
         transition:
             opacity 0.2s ease,
             transform 0.2s ease,
@@ -48,28 +39,38 @@
         &_top {
             bottom: 100%;
             margin-bottom: 8px;
-            transform: translateX(-50%) translateY(4px);
+
+            transform:
+                translateX(-50%)
+                translateY(4px);
         }
 
         &_bottom {
             top: 100%;
             margin-top: 8px;
-            transform: translateX(-50%) translateY(-4px);
+
+            transform:
+                translateX(-50%)
+                translateY(-4px);
         }
     }
 
-
-    &:hover {
-        .tooltip_top {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
+    @include hover {
+        .tooltip_top,
         .tooltip_bottom {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) translateY(0);
+            transform:
+                translateX(-50%)
+                translateY(0);
+        }
+    }
+
+    &.non_clickable {
+        @include screen {
+            .tooltip {
+                display: none;
+            }
         }
     }
 }

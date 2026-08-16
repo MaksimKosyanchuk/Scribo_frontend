@@ -93,11 +93,11 @@ const PostHeader = memo(({ post, onDeletePost, className }) => {
                     profile?.permissions.includes("edit_any_post")
                 ) ||
                 profile?._id === post?.author?._id ?
-                    <div className="post_header_right app-transition">
-                        <Popup body={popupBody}>
-                            <ThreeDotsIcon className="article_topic_three_dots"/>
-                        </Popup>
-                    </div>
+                    <Popup body={popupBody}>
+                        <div className="post_header_right app-transition">
+                                <ThreeDotsIcon className="article_topic_three_dots"/>
+                        </div>
+                    </Popup>
                 :
                     <></>
         }
