@@ -1,3 +1,5 @@
+@use "../../../styles/helpers.scss" as *;
+
 .tooltip_wrapper {
     position: relative;
     display: inline-flex;
@@ -5,6 +7,18 @@
     height: inherit;
     width: fit-content;
     height: fit-content;
+
+    &.clickable {
+        @include screen() {
+            @include hover {
+                .tooltip {
+                    opacity: 0;
+                    visibility: hidden;
+                    pointer-events: none;
+                }
+            }
+        }
+    }
 
     .tooltip {
         position: absolute;
