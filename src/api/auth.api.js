@@ -62,8 +62,8 @@ const loginUsername = async (username, password) => {
             ...result
         }
     }
-    catch{
-
+    catch(e){  
+        console.log(e)
     }
 }
 
