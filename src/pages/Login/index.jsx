@@ -126,7 +126,7 @@ const Login = () => {
  
   return (
     <div className='login'>
-        <form className='form_input app-transition'>
+        <form className='form_input app-transition' onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
             <Field title="Логин" error={errors?.user_login ?? null}>
                 <InputField
                     className={`user_login`}
@@ -151,7 +151,7 @@ const Login = () => {
                     error={errors?.password ?? null}
                 />
             </Field>
-            <PrimaryButton onClick={handleLogin} is_loading={isLoading}>Войти</PrimaryButton>
+            <PrimaryButton type="submit" is_loading={isLoading}>Войти</PrimaryButton>
             <GoogleAuthButton setGoogleToken={setGoogleToken}/>
             <p className={"redirect_object"}>Нет акаунта?
             <Link to={"/auth/register"}>
