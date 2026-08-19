@@ -5,7 +5,6 @@ import { AppContext } from "../../App";
 import "./Posts.scss";
 
 import PostsFilters from "../../components/PostsFilters";
-import Loading from "../Ui/Loading";
 import NoPosts from "../NoPosts";
 import PostCard from "../PostCard";
 import Pagination from "../Ui/Pagination/index";
@@ -77,21 +76,33 @@ const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
         setFilteredPosts(updatedPosts);
     }, [filters, posts, profile?.follows]);
 
-    if (!posts) {
-        return <NoPosts />;
-    }
-
     return (
         <div className="posts posts_columns" id="posts_column">
-            {isLoading ? (
-                <div className="posts_loader">
-                    <Loading size={50} />
-                </div>
-            ) : posts.length === 0 ? (
-                <NoPosts />
-            ) : (
-                <>
+            {isLoading ?
+                (
+                    <>
+                        <PostsFilters
+                            isLoading={true}
+                            filters={[]}
+                            setFilters={setFilters}
+                        />
+
+                        {[0, 1].map(index => (
+                            <PostCard
+                                key={index}
+                                post={{ title: "Загрузка..." }}
+                                isLoading={true}
+                            />
+                        ))}
+                    </>
+                )
+            :
+                posts && posts.length === 0 ? (
+                    <NoPosts />
+                ) : (
+                    <>
                     <PostsFilters
+                        isLoading={isLoading}
                         filters={filters}
                         setFilters={setFilters}
                     />
@@ -103,6 +114,7 @@ const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
                             {(visibleContent) => (
                                 visibleContent.map(post => (
                                     <PostCard
+                                        isLoading={isLoading}
                                         key={post._id}
                                         post={post}
                                         category={post.category}
@@ -113,7 +125,8 @@ const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
                         </Pagination>
                     )}
                 </>
-            )}
+                )
+            }
         </div>
     );
 };

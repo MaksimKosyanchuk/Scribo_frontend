@@ -19,15 +19,17 @@ import RoleBadge from "../../components/RoleBadge/index";
 import UserBadge from "../../components/UserBadge/index";
 import Tooltip from "../../components/Ui/Tooltip";
 import Popup from "../../components/Ui/Popup";
+import Loading from "../../components/Ui/Loading";
 
 const AdminsPage = () => {
     const [admins, setAdmins] = useState([]);
+    const [ isLoading, setIsLoading ] = useState(true);
     const { profile } = useContext(AppContext);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        
+        setIsLoading(true);
         const fetchAdmins = async () => {
             const result = await getUsers();
             
@@ -38,6 +40,7 @@ const AdminsPage = () => {
                 })
                 setAdmins(result.data);
             }
+            setIsLoading(false);
         }
         
         fetchAdmins();
@@ -101,7 +104,9 @@ const AdminsPage = () => {
 
     return (
         <div className="admin_panel_content_amdins_page">
-            {
+            {   
+                isLoading ? 
+                <Loading size={40} /> :
                 admins.map((admin) => {
                     return (
                         <div className="admin_panel_content_amdins_page_item app-transition" key={admin._id}>

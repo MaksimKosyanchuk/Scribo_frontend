@@ -20,6 +20,8 @@ import DangerButton from "../Ui/DangerButton";
 import Tooltip from "../Ui/Tooltip/index";
 import Catregory from "../Category";
 
+import Sceleton from "../Ui/Sceleton/Sceleton";
+
 const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost, showToast) => (
     <div className="modal_delete_post_content">
         <div className="modal_delete_post_content_post">
@@ -59,7 +61,7 @@ const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost
     </div>
 );
 
-const PostHeader = memo(({ post, onDeletePost, className }) => {
+const PostHeader = memo(({ post, onDeletePost, className, isLoading=false }) => {
     const { profile, showModalWindow, requestCloseModal, showToast } = useContext(AppContext);
     const navigate = useNavigate();
     
@@ -82,20 +84,24 @@ const PostHeader = memo(({ post, onDeletePost, className }) => {
     return (
         <div className={`post_header ${className ?? ""}`}>
             <div className="post_header_left">
-                <UserBadge data={post.author} />
+                <Sceleton isLoading={isLoading} rounded={true} className="user_badge">
+                    <UserBadge data={post.author}/>
+                </Sceleton>
+                <Sceleton isLoading={isLoading} rounded={true} className="post_header_left_date">
                     <Tooltip text={format_date_time(post.created_date)} position="bottom">
                         <p className="post_header_left_date">{format_back(post.created_date)}</p>
                     </Tooltip>
+                </Sceleton>
             </div>
             {
-                (
-                    profile?.permissions.includes("delete_any_post") &&
-                    profile?.permissions.includes("edit_any_post")
-                ) ||
-                profile?._id === post?.author?._id ?
+                !isLoading &&
+                    (
+                        (profile?.permissions.includes("delete_any_post") && profile?.permissions.includes("edit_any_post")) || (profile?._id === post?.author?._id)
+                    )
+                ?
                     <Popup body={popupBody}>
                         <div className="post_header_right app-transition">
-                                <ThreeDotsIcon className="article_topic_three_dots"/>
+                            <ThreeDotsIcon className="article_topic_three_dots"/>
                         </div>
                     </Popup>
                 :

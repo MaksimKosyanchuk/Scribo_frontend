@@ -27,7 +27,8 @@
                 overflow: hidden;
                 border-radius: 50%;
                 flex-shrink: 0;
-                
+    
+
                 @include screen() {
                     width: 60px;
                     height: 60px;
@@ -87,7 +88,7 @@
         &_middle {
             display: flex;
             flex-direction: column;
-            margin-right: auto;
+            flex: 1;
         }
 
         &_right {
@@ -109,6 +110,7 @@
 
                 &_button {
                     display: flex;
+                    min-height: 50px;
                     justify-content: center;
                     gap: 10px;
                     align-items: center;
@@ -123,8 +125,10 @@
 
                 &_item {
                     display: flex;
-                    flex: 1;
                     flex-direction: column;
+                    min-width: 95px;
+                    height: 80px;
+                    width: fit-content;
                     align-items: center;
                     justify-content: center;
                     background: var(--profile-badge-background-color);
@@ -132,7 +136,7 @@
                     padding: 20px;
                     gap: 4px;
                     cursor: pointer;
-                    
+
                     @include hover{
                         background: var(--profile-badge-hover-background-color);
                     }
@@ -166,6 +170,8 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
+                width: 100%;
+                height: 28px;
                 
                 @include screen() {
                     gap: 6px;
@@ -196,6 +202,8 @@
 
             &_email{
                 margin-top: 10px;
+                min-height: 16px;
+                width: 100%;
 
                 p {
                     font-size: 20px;
@@ -208,6 +216,7 @@
 
             &_description {
                 margin-top: 10px;
+                min-height: 16px;
 
                 p {
                     font-size: 16px;
@@ -222,6 +231,7 @@
                 margin-top: 10px;
                 display: flex;
                 align-items: center;
+                height: 16px;
 
                 p {
                     display: flex;
@@ -247,8 +257,9 @@
         justify-content: center;
         align-self: center;
         margin: 20px 0;
-        padding: 10px 0;
-        width: fit-content;
+        width: 270px;
+        border-radius: 999px;
+        min-height: 35px;
 
         @include screen() {
             margin-top: 20px;

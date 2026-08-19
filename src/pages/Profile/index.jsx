@@ -17,8 +17,9 @@ import PostIcon from "../../assets/svg/post.svg?react";
 import BookmarkOutline from "../../assets/svg/bookmark-outline.svg?react";
 import SettingsIcon from "../../assets/svg/settings.svg?react";
 
+import Sceleton from "../../components/Ui/Sceleton/Sceleton.jsx";
+
 import Posts from "../../components/Posts/index.jsx"
-import Loading from "../../components/Ui/Loading/index.jsx";
 import UserBadge from "../../components/UserBadge/index.jsx"
 import DefaultProfileAvatar from "../../assets/images/default-profile-avatar.png"
 import FollowButton from "../../components/FollowButton";
@@ -31,9 +32,11 @@ const Profile = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { profile, setProfile, showModalWindow } = useContext(AppContext);
-    const [activeTab, setActiveTab] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
+    const [ isProfileLoading, setIsProfileLoading ] = useState(true);
+    const [ activeTab, setActiveTab ] = useState(0);
+    const [ isPostsLoading, setIsPostsLoading ] = useState(true);
     const [posts, setPosts] = useState([]);
+    const [savedPosts, setSavedPosts] = useState([]);
     const [activePosts, setActivePosts] = useState([]);
     const [user, setUser] = useState(null);
     const [followThisUser, setFollowThisUser] = useState(null);
@@ -85,6 +88,7 @@ const Profile = () => {
 
     useEffect(() => {
         const getUser = async () => {
+            setIsProfileLoading(true);
             const findNeededUser = await getUsers([{ nick_name: id }]);
             setActiveTab(0);
 
@@ -93,34 +97,69 @@ const Profile = () => {
             } else {
                 setUser(findNeededUser.data[0]);
             }
+            setIsProfileLoading(false);
         };
         getUser();
     }, [id, navigate]);
 
     useEffect(() => {
-        if (user?._id) {
-            fetchPosts({ author: user._id }).then(data => setPosts(data));
-        }
+        if (!user?._id) return;
+
+        const loadPosts = async () => {
+            setIsPostsLoading(true);
+            const posts = await fetchPosts({
+                author: user._id
+            });
+            setIsPostsLoading(false);
+
+            setPosts(posts);
+        };
+
+        loadPosts();
     }, [user?._id]);
 
     useEffect(() => {
-        if (activeTab === 0) {
-            setActivePosts(posts);
-        } else if (activeTab === 1) {
-            if(user?._id === profile?._id) {
-                fetchPosts({ _id: profile?.saved_posts }).then((posts) => setActivePosts(posts));
+        if (!user?._id) return;
+
+        const loadSavedPosts = async () => {
+            const savedPostsIds =
+                user._id === profile?._id
+                    ? profile?.saved_posts
+                    : user?.saved_posts;
+
+            if (!savedPostsIds?.length) {
+                setSavedPosts([]);
+                return;
             }
-            else {
-                fetchPosts({ _id: user?.saved_posts }).then((posts) => setActivePosts(posts));
-            }
-        }
-    }, [activeTab, posts, profile?.saved_posts, profile?._id, user?.saved_posts, user?._id]);
+
+            const savedPosts = await fetchPosts({
+                _id: savedPostsIds
+            });
+
+            setSavedPosts(savedPosts);
+        };
+
+        loadSavedPosts();
+    }, [
+        user?._id,
+        profile?._id,
+        profile?.saved_posts,
+        user?.saved_posts
+    ]);
+
+    useEffect(() => {
+        setActivePosts(
+            activeTab === 0
+                ? posts
+                : savedPosts
+        );
+    }, [activeTab, posts, savedPosts]);
 
     const fetchPosts = async (query) => {
-        setIsLoading(true);
+        setIsPostsLoading(true);
         query.expand = "author,category";
         const response = await getPosts(query);
-        setIsLoading(false);
+        setIsPostsLoading(false);
         return response.status === true ? response.data : [];
     };
 
@@ -177,114 +216,205 @@ const Profile = () => {
         )
     }
 
-    if (!user) {
-        return <Loading />;
-    }
 
     return (
         <div className="profile">
             <div className="profile_info section app-transition">
                 <div className="profile_info_left">
-                    <div className="profile_info_left_avatar">
-                        <img src={user?.avatar ?? DefaultProfileAvatar} alt="img" />
-                    </div>
+                    <Sceleton
+                        isLoading={isProfileLoading || isPostsLoading}
+                        circle={true}
+                        className="profile_info_left_avatar"
+                    >
+                        <div className="profile_info_left_avatar">
+                            <img
+                                src={user?.avatar ?? DefaultProfileAvatar}
+                                alt="img"
+                            />
+                        </div>
+                    </Sceleton>
+
                     <div className="profile_info_middle">
-                        
                     </div>
                 </div>
+
+
                 <div className="profile_info_middle">
-                    <div className="profile_info_bottom_nick">
-                        <p
-                            className={
-                                "profile_info_bottom_nick_name"
-                            }
-                        >
-                            {user.nick_name}
-                        </p>
-                        {
-                            user && user.is_verified ?
+
+                    <Sceleton
+                        isLoading={isProfileLoading || isPostsLoading}
+                        rounded={true}
+                        className="profile_info_bottom_nick"
+                    >
+                        <div className="profile_info_bottom_nick">
+                            <p className="profile_info_bottom_nick_name">
+                                {user?.nick_name}
+                            </p>
+
+                            {user?.is_verified && (
                                 <Tooltip text="Подтвержденный аккаунт">
-                                    <Verified className="profile_info_bottom_nick_verified verified-icon" />
+                                    <Verified
+                                        className="profile_info_bottom_nick_verified verified-icon"
+                                    />
                                 </Tooltip>
-                            :
-                                null
-                        }
-                    </div>
-                    <RoleBadge user={user} />
-                    {user?.is_email_public && (
-                        <div className="profile_info_bottom_email">
-                            <p>{user.email}</p>
+                            )}
                         </div>
-                    )}
-                    {user?.description && (
-                        <div className="profile_info_bottom_description">
-                            <p>{user.description}</p>
-                        </div>
-                    )}
-                    <div className="profile_info_bottom_registration_date">
-                        <Calendar className="app-transition" />
-                        <Tooltip text={ format_date_time(user?.created_date) }>
-                            <p>
-                                {'Регистрация: '}
-                                {format_back(user.created_date)}
-                            </p>
-                        </Tooltip>
-                    </div>
-                </div>
-                <div className="profile_info_right">
-                    <div className="profile_info_right_top">
-                        <div className="profile_info_right_top_item app-transition" onClick={ () => scrollTo("posts_column", "start") }>
-                            <h1>{posts?.length ?? "0"}</h1>
-                            <p>постов</p>
-                        </div>
-                        <div className="profile_info_right_top_item app-transition" onClick={ open_followers }>
-                            <h1>
-                                {user?.followers?.length ?? "0"}
-                            </h1>
-                            <p>
-                                подписчиков
-                            </p>
-                        </div>
-                        <div className="profile_info_right_top_item app-transition" onClick={ open_follows }>
-                            <h1>
-                                {user?.follows?.length ?? "0"}
-                            </h1>
-                            <p>
-                                подписок
-                            </p>
-                        </div>
-                    </div>
-                    {profile && profile._id === user._id ? (
-                        <ActionButton className="profile_info_right_top_button" onClick={open_settings}>
-                            <SettingsIcon className="profile_info_right_side_button_icon" />
-                            Настройки
-                        </ActionButton>
-                    ) 
-                    :
-                        <FollowButton setNewData={setFollowThisUser} author_id={user?._id} class_name={"profile_info_top_right_side_button"}/> 
+                    </Sceleton>
+
+                    {
+                        user && !isProfileLoading && !isPostsLoading && (
+                            <RoleBadge user={user} />
+                        )
                     }
+
+                    <Sceleton
+                        isLoading={isProfileLoading || isPostsLoading}
+                        rounded={true}
+                        className="profile_info_bottom_email"
+                    >
+                        <div className="profile_info_bottom_email">
+                            <p>{user?.email}</p>
+                        </div>
+                    </Sceleton>
+
+
+                    <Sceleton
+                        isLoading={isProfileLoading || isPostsLoading}
+                        rounded={true}
+                        className="profile_info_bottom_description"
+                    >
+                        <div className="profile_info_bottom_description">
+                            <p>{user?.description}</p>
+                        </div>
+                    </Sceleton>
+
+
+                    <Sceleton
+                        isLoading={isProfileLoading || isPostsLoading}
+                        rounded={true}
+                        className="profile_info_bottom_registration_date"
+                    >
+                        <div className="profile_info_bottom_registration_date">
+                            <Calendar className="app-transition" />
+
+                            <Tooltip text={format_date_time(user?.created_date)}>
+                                <p>
+                                    Регистрация: {format_back(user?.created_date)}
+                                </p>
+                            </Tooltip>
+                        </div>
+                    </Sceleton>
+
+                </div>
+
+
+                <div className="profile_info_right">
+
+                    <div className="profile_info_right_top">
+
+                        <Sceleton
+                            isLoading={isProfileLoading || isPostsLoading}
+                            className="profile_info_right_top_item"
+                        >
+                            <div
+                                className="profile_info_right_top_item app-transition"
+                                onClick={() => scrollTo("posts_column", "start")}
+                            >
+                                <h1>{posts?.length ?? "0"}</h1>
+                                <p>постов</p>
+                            </div>
+                        </Sceleton>
+
+
+                        <Sceleton
+                            isLoading={isProfileLoading || isPostsLoading}
+                            className="profile_info_right_top_item"
+                        >
+                            <div
+                                className="profile_info_right_top_item app-transition"
+                                onClick={open_followers}
+                            >
+                                <h1>
+                                    {user?.followers?.length ?? "0"}
+                                </h1>
+                                <p>
+                                    подписчиков
+                                </p>
+                            </div>
+                        </Sceleton>
+
+
+                        <Sceleton
+                            isLoading={isProfileLoading || isPostsLoading}
+                            className="profile_info_right_top_item"
+                        >
+                            <div
+                                className="profile_info_right_top_item app-transition"
+                                onClick={open_follows}
+                            >
+                                <h1>
+                                    {user?.follows?.length ?? "0"}
+                                </h1>
+                                <p>
+                                    подписок
+                                </p>
+                            </div>
+                        </Sceleton>
+
+                    </div>
+
+
+                    <Sceleton
+                        isLoading={isProfileLoading || isPostsLoading}
+                        className="profile_info_right_top_button"
+                    >
+                        {
+                            profile && profile._id === user?._id
+                                ?
+                                <ActionButton
+                                    className="profile_info_right_top_button"
+                                    onClick={open_settings}
+                                >
+                                    <SettingsIcon className="profile_info_right_side_button_icon" />
+                                    Настройки
+                                </ActionButton>
+                                :
+                                <FollowButton
+                                    setNewData={setFollowThisUser}
+                                    author_id={user?._id}
+                                    class_name="profile_info_top_right_side_button"
+                                />
+                        }
+                    </Sceleton>
                 </div>
             </div>
-            <div className="profile_tab_list app-transition">
-                <SwitchBar
-                    items={[
-                        
-                        <>
-                            <PostIcon />
-                            Посты
-                        </>
-                        ,
-                        <>
-                            <BookmarkOutline />
-                            Избранные
-                        </>
-                    ]}
-                    active_index={activeTab}
-                    setActiveIndex={setActiveTab}
-                />
-            </div>
+            <Sceleton
+                isLoading={isProfileLoading || isPostsLoading}
+                rounded={true}
+                section={false}
+                className="profile_tab_list"
+            >
+                <div className="profile_tab_list app-transition">
+                    <SwitchBar
+                        items={[
+                            
+                            <>
+                                <PostIcon />
+                                Посты
+                            </>
+                            ,
+                            <>
+                                <BookmarkOutline />
+                                Избранные
+                            </>
+                        ]}
+                        active_index={activeTab}
+                        setActiveIndex={setActiveTab}
+                    />
+                </div>
+            </Sceleton>
             <div className="profile_posts">
-                <Posts posts_filters={posts_filters} posts={activePosts} setPosts={setPosts} isLoading={isLoading} />
+                <Posts posts_filters={posts_filters} posts={activePosts} setPosts={setPosts} isLoading={isPostsLoading} />
             </div>
         </div>
     );

@@ -14,7 +14,7 @@
 
 @mixin hover {
     @media (hover: hover) and (pointer: fine) {
-        &:hover {
+        &:hover:not(.sceleton) {
             @content;
         }
     }
