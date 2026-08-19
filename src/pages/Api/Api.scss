@@ -36,6 +36,10 @@ div[data-v-app]{
     }
 }
 
+.scalar .scalar-app-layout.scalar-client {
+    margin-top: calc(var(--header-height) + 20px);
+}
+
 body {
     --scalar-color-1: var(--text-color);
     --scalar-color-2: var(--text-color);

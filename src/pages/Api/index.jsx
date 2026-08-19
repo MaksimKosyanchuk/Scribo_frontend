@@ -33,6 +33,7 @@ function Api() {
             if(docs.status) {
                 setApiDocument(docs.data);
             }
+            console.log("API Document loaded:", docs);
         };
 
         loadApiDocument();
