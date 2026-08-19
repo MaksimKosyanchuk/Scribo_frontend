@@ -466,7 +466,6 @@ const LogsPage = () => {
     });
 
     if (loading) {
-
         return (
             <Loading size={40} />
         );
