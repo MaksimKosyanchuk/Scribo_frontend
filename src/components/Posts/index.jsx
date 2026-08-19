@@ -5,12 +5,9 @@ import { AppContext } from "../../App";
 import "./Posts.scss";
 
 import PostsFilters from "../../components/PostsFilters";
-import Loading from "../Ui/Loading";
 import NoPosts from "../NoPosts";
 import PostCard from "../PostCard";
 import Pagination from "../Ui/Pagination/index";
-
-import Sceleton from "../Ui/Sceleton/Sceleton";
 
 const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
     const { profile } = useContext(AppContext);

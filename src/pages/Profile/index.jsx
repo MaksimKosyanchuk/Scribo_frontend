@@ -20,7 +20,6 @@ import SettingsIcon from "../../assets/svg/settings.svg?react";
 import Sceleton from "../../components/Ui/Sceleton/Sceleton.jsx";
 
 import Posts from "../../components/Posts/index.jsx"
-import Loading from "../../components/Ui/Loading/index.jsx";
 import UserBadge from "../../components/UserBadge/index.jsx"
 import DefaultProfileAvatar from "../../assets/images/default-profile-avatar.png"
 import FollowButton from "../../components/FollowButton";
