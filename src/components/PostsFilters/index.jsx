@@ -2,11 +2,12 @@ import "./PostsFilters.scss";
 import React from "react";
 import Category from "../Category";
 
-const PostsFilters = ({ filters, setFilters }) => {
+import Sceleton from "../Ui/Sceleton/Sceleton";
+
+const PostsFilters = ({ filters, setFilters, isLoading=false }) => {
 
     const handleClick = (categoryId) => {
         setFilters(prev => {
-            // Кнопка "Все"
             if (categoryId === "all") {
                 const isAllActive = prev.find(f => f._id === "all")?.is_active;
 
@@ -29,7 +30,6 @@ const PostsFilters = ({ filters, setFilters }) => {
                 });
             }
 
-            // Кнопка "По подписке"
             if (categoryId === "subscription") {
                 return prev.map(filter =>
                     filter._id === "subscription"
@@ -41,7 +41,6 @@ const PostsFilters = ({ filters, setFilters }) => {
                 );
             }
 
-            // Обычная категория
             let updated = prev.map(filter => {
                 if (filter._id === categoryId) {
                     return {
@@ -60,7 +59,6 @@ const PostsFilters = ({ filters, setFilters }) => {
                 return filter;
             });
 
-            // Если все категории активны — автоматически активируем "Все"
             const allCategoriesActive = updated
                 .filter(f => !["all", "subscription"].includes(f._id))
                 .every(f => f.is_active);
@@ -79,21 +77,23 @@ const PostsFilters = ({ filters, setFilters }) => {
     };
 
     return (
-        <div className="posts_filters">
-            {filters.map((category, index) => (
-                <React.Fragment key={category._id ?? category.name}>
-                    <Category
-                        is_active={category.is_active}
-                        onClick={() => handleClick(category._id)}
-                        category={category}
-                    />
+        <Sceleton isLoading={isLoading} className="posts_filters" rounded={true} section={false}>
+            <div className="posts_filters">
+                {filters.map((category, index) => (
+                    <React.Fragment key={category._id ?? category.name}>
+                        <Category
+                            is_active={category.is_active}
+                            onClick={() => handleClick(category._id)}
+                            category={category}
+                        />
 
-                    {index === 0 && (
-                        <div className="post_filter post_filter_separator app-transition" />
-                    )}
-                </React.Fragment>
-            ))}
-        </div>
+                        {index === 0 && (
+                            <div className="post_filter post_filter_separator app-transition" />
+                        )}
+                    </React.Fragment>
+                ))}
+            </div>
+        </Sceleton>
     );
 };
 

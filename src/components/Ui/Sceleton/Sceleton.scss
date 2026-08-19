@@ -1,0 +1,56 @@
+@use '../../../styles/helpers.scss' as *;
+
+.sceleton {
+    display: flex;
+
+    border-radius: 6px;
+    cursor: default;
+
+    background-color: var(--sceleton-color);
+
+    animation: sceleton-pulse 4s ease-in-out infinite;
+
+    @include hover() {
+        background-color: var(--sceleton-active-color);
+    }
+
+    &.sceleton_section {
+        background-color: var(--sceleton-section-color);
+
+        animation-name: sceleton-section-pulse;
+
+        @include hover() {
+            background-color: var(--sceleton-section-active-color);
+        }
+    }
+
+    &.circle {
+        border-radius: 50%;
+    }
+
+    &.rounded {
+        border-radius: 999px;
+    }
+}
+
+@keyframes sceleton-pulse {
+    0%,
+    60% {
+        background-color: var(--sceleton-color);
+    }
+
+    30% {
+        background-color: var(--sceleton-active-color);
+    }
+}
+
+@keyframes sceleton-section-pulse {
+    0%,
+    60% {
+        background-color: var(--sceleton-section-color);
+    }
+
+    30% {
+        background-color: var(--sceleton-section-active-color);
+    }
+}

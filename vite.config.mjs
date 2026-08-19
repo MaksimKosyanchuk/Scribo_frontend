@@ -9,6 +9,9 @@ export default defineConfig({
             include: "**/*.svg?react",
         })
     ],
+    css: {
+        devSourcemap: true,
+    },
     server: {
         port: 3000,
     },

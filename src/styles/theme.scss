@@ -163,6 +163,13 @@ body {
   --moderator-color: var(--moderator-color-light);
   --admin-color: var(--admin-color-light);
   --tech-admin-color: var(--tech-admin-color-light);
+
+  --sceleton-color: var(--gray-e7);
+  --sceleton-active-color: var(--gray-d7);
+
+  --sceleton-section-color: var(--gray-f1);
+  --sceleton-section-active-color: var(--gray-e1);
+
 }
 
 
@@ -331,4 +338,10 @@ body.dark-theme {
   --moderator-color: var(--moderator-color-dark);
   --admin-color: var(--admin-color-dark);
   --tech-admin-color: var(--tech-admin-color-dark);
+
+  --sceleton-color: var(--gray-25);
+  --sceleton-active-color: var(--gray-4f);
+
+  --sceleton-section-color: var(--gray-33);
+  --sceleton-section-active-color: var(--gray-4f);
 }

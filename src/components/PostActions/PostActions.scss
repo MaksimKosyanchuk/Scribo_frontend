@@ -16,6 +16,8 @@
     &_left_side {
         display: flex;
         gap: 2px;
+        min-height: 24px;
+        min-width: 160px;
 
         @include screen() {
             width: 100%;
@@ -29,6 +31,8 @@
         gap: 0 16px;
         align-items: center;
         margin-left: auto;
+        min-height: 24px;
+        min-width: 70px;
 
         @include screen() {
             margin-left: 0;

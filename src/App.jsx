@@ -26,6 +26,8 @@ import Toast from './components/Ui/Toast/index.jsx';
 
 import MobileNavigationBar from './components/MobileNavigationBar/index.jsx';
 
+import SceletonProvider from "./components/Ui/Sceleton";
+
 import { CATEGORY_COLORS } from './styles/constants.js';
 
 import "./styles/common.scss";
@@ -77,54 +79,56 @@ function App() {
   return (
     <AppContext.Provider value={{profile, setProfile, isDarkTheme, setIsDarkTheme, profileLoading, setProfileLoading, toast, showToast, modalWindow, showModalWindow, requestCloseModal }}>
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <div className={"App"} id="app-root">
-          <AppLayout>
-            <ModalWindow
-              modalWindow={modalWindow}
-              showModalWindow={showModalWindow}
-              modalCloseRequest={modalCloseRequest}
-            />
-            <Header/>
-            <MobileNavigationBar/>
-            
-            <Suspense fallback={null}>
-                <Routes>
-                    <Route element={<PageLayout/>}>
-                        <Route element={<DefaultContainer/>}>
+        <SceletonProvider>
+          <div className={"App"} id="app-root">
+            <AppLayout>
+              <ModalWindow
+                modalWindow={modalWindow}
+                showModalWindow={showModalWindow}
+                modalCloseRequest={modalCloseRequest}
+              />
+              <Header/>
+              <MobileNavigationBar/>
+              
+              <Suspense fallback={null}>
+                  <Routes>
+                      <Route element={<PageLayout/>}>
+                          <Route element={<DefaultContainer/>}>
 
-                            <Route
-                                path="*"
-                                element={<Navigate to="/404" replace />}
-                            />
+                              <Route
+                                  path="*"
+                                  element={<Navigate to="/404" replace />}
+                              />
 
-                            <Route
-                                path="/"
-                                element={<Navigate to="/posts" replace />}
-                            />
+                              <Route
+                                  path="/"
+                                  element={<Navigate to="/posts" replace />}
+                              />
 
-                            <Route path="posts/:id/edit" Component={EditPost}/>
-                            <Route path="/auth/login" Component={Login}/>
-                            <Route path="/api" Component={ApiDocs}/>
-                            <Route path="/auth/register" Component={Register}/>
-                            <Route path="/404" Component={PageNotFound}/>
-                            <Route path="/posts/" Component={HomePage}/>
-                            <Route path="/create-post" Component={CreatePost}/>
-                            <Route path="/users/:id" Component={Profile}/>
-                            <Route path="/posts/:id" Component={Article}/>
-                            <Route path="/settings" Component={Settings}/>
+                              <Route path="posts/:id/edit" Component={EditPost}/>
+                              <Route path="/auth/login" Component={Login}/>
+                              <Route path="/api" Component={ApiDocs}/>
+                              <Route path="/auth/register" Component={Register}/>
+                              <Route path="/404" Component={PageNotFound}/>
+                              <Route path="/posts/" Component={HomePage}/>
+                              <Route path="/create-post" Component={CreatePost}/>
+                              <Route path="/users/:id" Component={Profile}/>
+                              <Route path="/posts/:id" Component={Article}/>
+                              <Route path="/settings" Component={Settings}/>
 
-                        </Route>
+                          </Route>
 
-                        <Route element={<FullContainer/>}>
-                            <Route path="admin-panel" Component={AdminPanel}/>
-                        </Route>
-                    </Route>
-                </Routes>
-            </Suspense>            
-            <Footer></Footer>
-            <Toast toast={toast} showToast={showToast}/>
-          </AppLayout>
-        </div>
+                          <Route element={<FullContainer/>}>
+                              <Route path="admin-panel" Component={AdminPanel}/>
+                          </Route>
+                      </Route>
+                  </Routes>
+              </Suspense>            
+              <Footer></Footer>
+              <Toast toast={toast} showToast={showToast}/>
+            </AppLayout>
+          </div>
+        </SceletonProvider>
       </Router>
     </AppContext.Provider>
   )

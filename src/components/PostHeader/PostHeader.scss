@@ -6,16 +6,30 @@
     z-index: 1;
     justify-content: space-between;
     white-space: nowrap;
+    min-height: 36px;
     
     &_left {
         display: flex;
         align-items: center;
         gap: 10px;
         
+.user_badge {
+    min-height: 24px;
+    width: max-content;
+
+    &:empty {
+        width: 170px;
+    }
+}
+
         &_date {
+            display: flex;
+            align-items: center;
             color: var(--light-text-color);
             font-size: 14px;
             cursor: context-menu;
+            min-height: 24px;
+            min-width: 90px;
 
             @include screen() {
                 font-size: 12px;
