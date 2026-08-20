@@ -156,7 +156,6 @@ const Profile = () => {
     }, [activeTab, posts, savedPosts]);
 
     const fetchPosts = async (query) => {
-        setIsPostsLoading(true);
         query.expand = "author,category";
         const response = await getPosts(query);
         setIsPostsLoading(false);
@@ -215,7 +214,6 @@ const Profile = () => {
             }
         )
     }
-
 
     return (
         <div className="profile">
