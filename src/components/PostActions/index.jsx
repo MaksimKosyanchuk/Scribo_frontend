@@ -128,7 +128,7 @@ const PostActions = ({ className, article, setArticle, isLoading=false }) => {
                             <p>{article.likes?.length > 0 ? article.likes.length : ""}</p>
                         </button>
                     </Tooltip>
-                    <Tooltip text={"Перейти к комментариям"} clickable={true}>
+                    <Tooltip text={"Перейти к комментариям"} className="post_actions_comment"  clickable={true}>
                         <Link className="post_actions_button post_actions_comment app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
                             <CommentIcon/>
                             {
