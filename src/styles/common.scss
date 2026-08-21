@@ -41,7 +41,7 @@ p, h1, h2, h3, h4 ,h5, h6  {
     color: var(--text-color);
 } 
 
-p::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::selection, h6::selection {
+p::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::selection, h6::selection, span::selection {
     color: var(--text-selection-color);
     background-color: var(--text-selection-background-color);
 }
@@ -52,7 +52,7 @@ p, h1, h2, h3, h4 ,h5, h6, .app-transition {
 
 .section {
     background: var(--section-background-color);
-    border-radius: 8px;
+    border-radius: 14px;
     border: 1px solid var(--line-color);
     padding: 20px;
 
@@ -63,7 +63,7 @@ p, h1, h2, h3, h4 ,h5, h6, .app-transition {
 
 .float_section {
     background: var(--float-section-background-color);
-    border-radius: 8px;
+    border-radius: 14px;
     border: 1px solid var(--float-section-line-color);
 }
 
@@ -84,8 +84,8 @@ button {
 }
 
 .blurred {
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
 }
 
 .App {

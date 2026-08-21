@@ -115,6 +115,11 @@
                     gap: 10px;
                     align-items: center;
 
+                    svg {
+                        width: 18px;
+                        height: 18px;
+                    }
+
                     @include screen() {
                         svg {
                             width: 14px;
@@ -133,7 +138,7 @@
                     justify-content: center;
                     background: var(--profile-badge-background-color);
                     border-radius: 8px;
-                    padding: 20px;
+                    padding: 12px;
                     gap: 4px;
                     cursor: pointer;
 
@@ -155,7 +160,7 @@
                     
                     h1 {
                         font-weight: 400;
-                        font-size: 22px;
+                        font-size: 20px;
 
                         @include screen() {
                             font-size: 16px;
@@ -178,7 +183,7 @@
                 }
                 
                 &_name  {
-                    font-size: 28px;
+                    font-size: 24px;
                     font-weight: 600;
                     
                     @include screen(){
@@ -189,8 +194,8 @@
                 
 
                 &_verified{
-                    width: 20px;
-                    height: 20px;
+                    width: 18px;
+                    height: 18px;
                     
                     @include screen() {
                         width: 18px;
@@ -206,7 +211,7 @@
                 width: 100%;
 
                 p {
-                    font-size: 20px;
+                    font-size: 16px;
 
                     @include screen() {
                         font-size: 12px;
@@ -237,7 +242,7 @@
                     display: flex;
                     margin-left: 4px;
                     color: var(--light-text-color);
-                    font-size: 16px;
+                    font-size: 14px;
                     
                     @include screen(){
                         font-size: 10px;

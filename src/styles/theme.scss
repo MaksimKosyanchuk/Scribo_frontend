@@ -1,7 +1,7 @@
 body {
   --accent-color: #1b73fb;
 
-  --main-background: var(--gray-f1);
+  --main-background: var(--gray-ff);
 
   --warning-color: rgb(255 179 0);
   --warning-background-color: rgba(255, 245, 163, .8);
@@ -39,7 +39,7 @@ body {
   --input-placeholder-color: var(--gray-c6);
 
   --drop-file-background-color: transparent;
-  --drop-file-hover-background-color: var(--gray-e7);
+  --drop-file-hover-background-color: var(--gray-f7);
   --drop-file-border-color: var(--gray-b5);
   --drop-file-hover-border-color: var(--gray-63);
 
@@ -93,6 +93,7 @@ body {
   --modal-window-title-text-color: var(--gray-1e);
 
   --post-card-description-color: #6b6b6b;
+  --post-card-hover-background-color: var(--gray-f9);
 
   --footer-background: var(--gray-ff);
   --footer-line-color: var(--gray-e7);
@@ -124,7 +125,7 @@ body {
   --switcher-bar-border-color: var(--gray-c6);
   --switcher-bar-item-color: var(--gray-63);
   --switcher-bar-item-hover-background-color: var(--gray-d7);
-  --switcher-bar-active-item-background-color: var(--gray-d7);
+  --switcher-bar-active-item-background-color: var(--gray-f1);
   --switcher-bar-active-item-color: var(--gray-16);
 
   --administrator-badge-background-color: var(--blue-de);
@@ -227,7 +228,7 @@ body.dark-theme {
   --submit-button-disabled-background-color: var(--gray-1e);
   --submit-button-disabled-color: var(--gray-4f);
 
-  --section-background-color: var(--gray-25);
+  --section-background-color: var(--gray-1e);
   --section-light-color: var(--gray-79);
   --section-light-hover-color: var(--gray-d7);
 
@@ -268,6 +269,7 @@ body.dark-theme {
   --modal-window-title-text-color: var(--gray-d7);
 
   --post-card-description-color: var(--gray-b5);
+  --post-card-hover-background-color: var(--gray-25);
 
   --footer-background: var(--gray-1e);
   --footer-line-color: var(--gray-4f);
