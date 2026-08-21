@@ -7,6 +7,7 @@ footer {
     width: 100%; 
     background-color: var(--footer-background);
     position: relative;
+    border-top: 1px solid var(--line-color);
 
     .footer_top_content{
       padding: 36px 0;

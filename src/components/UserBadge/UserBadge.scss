@@ -12,8 +12,8 @@
     }
 
     &_avatar {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
         overflow: hidden;
         border-radius: 50%;
         user-select: none;
@@ -42,7 +42,7 @@
         }
 
         &_name  {
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1;
             color: var(--user-badge-name-color);
 
