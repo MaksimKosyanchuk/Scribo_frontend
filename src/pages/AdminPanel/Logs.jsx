@@ -376,6 +376,8 @@ const LogsPage = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState([]);
+    const [page, setPage] = useState(1);
+    const [pagesCount, setPagesCount] = useState(0);
     const [filter, setFilter] = useState({
         type: null,
         id: null
@@ -383,24 +385,41 @@ const LogsPage = () => {
 
     const { showToast } = useContext(AppContext);
 
+    const applyFilter = (next) => {
+        const type = next?.type ?? null;
+        const id = next?.id ?? null;
+
+        if (filter.type === type && filter.id === id) {
+            return;
+        }
+
+        setFilter({ type, id });
+        setPage(1);
+    };
+
     useEffect(() => {
+        let cancelled = false;
+
         const fetchData = async () => {
+            const logsQuery = {
+                page,
+                limit: 9
+            };
 
-            const [logsResult] = await Promise.all([
-                getAllLogs(),
-            ]);
+            if (filter.type && filter.id && ["user", "post", "category"].includes(filter.type)) {
+                logsQuery[filter.type] = filter.id;
+            }
 
-            const [categoriesResult] = await Promise.all([
+            const [logsResult, categoriesResult] = await Promise.all([
+                getAllLogs(logsQuery),
                 getCategories()
             ]);
 
-            const postsResult = await getPosts();
-
-            if(postsResult.status ) {
-                setPosts(postsResult.data);
+            if (cancelled) {
+                return;
             }
 
-            setCategories(categoriesResult.data);
+            setCategories(categoriesResult?.data || []);
 
             if (!logsResult.status) {
                 showToast({
@@ -408,25 +427,42 @@ const LogsPage = () => {
                     message: logsResult.message
                 });
 
+                setLogs([]);
+                setPagesCount(0);
                 setLoading(false);
                 return;
             }
 
-            setLogs(
-                [...logsResult.data].sort(
-                    (a, b) =>
-                        new Date(b.date_time) -
-                        new Date(a.date_time)
-                )
-            );
+            const items = logsResult.data?.items || [];
+            setLogs(items);
+            setPagesCount(logsResult.data?.pagination?.pages || 0);
 
-            setLoading(false);
+            const postIds = [...new Set(items.map((log) => log.data?.post).filter(Boolean))];
 
+            if (postIds.length) {
+                const postsResult = await getPosts({
+                    _id: postIds,
+                    limit: Math.min(50, postIds.length)
+                });
+                if (!cancelled) {
+                    setPosts(postsResult?.data?.items || []);
+                }
+            }
+            else if (!cancelled) {
+                setPosts([]);
+            }
+
+            if (!cancelled) {
+                setLoading(false);
+            }
         };
 
         fetchData();
 
-    }, [showToast]);
+        return () => {
+            cancelled = true;
+        };
+    }, [page, filter.id, filter.type, showToast]);
     
     useEffect(() => {
         const fetchUsers = async () => {
@@ -449,21 +485,6 @@ const LogsPage = () => {
 
         fetchUsers();
     },[logs]);
-
-    const filteredLogs = logs.filter(log => {
-        if (!filter.id) return true;
-
-        switch (filter.type) {
-            case "user":
-                return log.data?.user === filter.id;
-            case "post":
-                return log.data?.post === filter.id;
-            case "category":
-                return log.data?.category === filter.id;
-            default:
-                return true;
-        }
-    });
 
     if (loading) {
         return (
@@ -559,17 +580,27 @@ const LogsPage = () => {
                 filter.type ?
                     <div className="admin_panel_content_logs_page_filter">
                         <FilterIcon className="admin_panel_content_logs_page_filter_icon" />
-                        {filter.type === "user" && <UserEntity id={filter.id} data={users.find(u => u._id === filter.id)} setFilter={setFilter} />}
-                        {filter.type === "post" && <PostEntity id={filter.id} data={posts.find(p => p._id === filter.id)} setFilter={setFilter} />}
-                        {filter.type === "category" && <CategoryEntity id={filter.id} data={categories.find(c => c._id === filter.id)} setFilter={setFilter} />}
-                        {filter.type === "role" && <RoleEntity id={filter.id} data={ { role: filter.id } } setFilter={setFilter} />}
-                        <CancelButton onClick={() => setFilter({ type: null, id: null })}>Отмена</CancelButton>
+                        {filter.type === "user" && <UserEntity id={filter.id} data={users.find(u => u._id === filter.id)} setFilter={applyFilter} />}
+                        {filter.type === "post" && <PostEntity id={filter.id} data={posts.find(p => p._id === filter.id)} setFilter={applyFilter} />}
+                        {filter.type === "category" && <CategoryEntity id={filter.id} data={categories.find(c => c._id === filter.id)} setFilter={applyFilter} />}
+                        {filter.type === "role" && <RoleEntity id={filter.id} data={ { role: filter.id } } setFilter={applyFilter} />}
+                        <CancelButton onClick={() => applyFilter({ type: null, id: null })}>Отмена</CancelButton>
                     </div>
                 :
-                    <SearchSearch options={search_select_options} onSetValue={(value) => {setFilter({ type: value.type, id: value.value })}}/>
+                    <SearchSearch options={search_select_options} onSetValue={(value) => {
+                        if (!value?.type) {
+                            return;
+                        }
+                        applyFilter({ type: value.type, id: value.value });
+                    }}/>
             }
             {
-                <Pagination content={filteredLogs} limit={9}>
+                <Pagination
+                    content={logs}
+                    page={page - 1}
+                    pagesCount={pagesCount}
+                    onPageChange={(index) => setPage(index + 1)}
+                >
                     {(visibleContent) => (
                         visibleContent.map(log => {
                             const Renderer = LOG_RENDERERS[log.type];
@@ -579,7 +610,7 @@ const LogsPage = () => {
                                 <LogLayout
                                     key={log._id}
                                     action={action}
-                                    setFilter={setFilter}
+                                    setFilter={applyFilter}
                                     user={users.find(user => user._id === log.data.user)}
                                     log={log}
                                     time={log.date_time}
@@ -589,7 +620,7 @@ const LogsPage = () => {
                                         users,
                                         posts,
                                         categories,
-                                        setFilter
+                                        setFilter: applyFilter
                                     })}
                                 </LogLayout>
                             );

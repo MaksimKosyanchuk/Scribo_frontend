@@ -5,8 +5,8 @@ import { AppContext } from "../../App.jsx";
 
 import "./Profile.scss"
 
-import { getPosts } from "../../api/posts.api.js";
 import { getUsers } from "../../api/users.api.js";
+import { getPosts, unwrapPostsResponse, POSTS_PAGE_LIMIT } from "../../api/posts.api.js";
 import { format_date_time, format_back } from "../../utils/format.js";
 
 import { scrollTo } from "../../utils/navigation.js"
@@ -34,15 +34,13 @@ const Profile = () => {
     const { profile, setProfile, showModalWindow } = useContext(AppContext);
     const [ isProfileLoading, setIsProfileLoading ] = useState(true);
     const [ activeTab, setActiveTab ] = useState(0);
-    const [ isPostsLoading, setIsPostsLoading ] = useState(true);
-    const [posts, setPosts] = useState([]);
-    const [savedPosts, setSavedPosts] = useState([]);
-    const [activePosts, setActivePosts] = useState([]);
     const [user, setUser] = useState(null);
+    const [posts, setPosts] = useState([]);
+    const [postsPage, setPostsPage] = useState(1);
+    const [postsPages, setPostsPages] = useState(0);
+    const [isPostsLoading, setIsPostsLoading] = useState(true);
     const [followThisUser, setFollowThisUser] = useState(null);
     const [followAnotherUser, setFollowAnotherUser] = useState(null);
-
-    const posts_filters = useMemo( () => [], [])
 
     useEffect(() => {
         if (!followThisUser) return;
@@ -102,65 +100,81 @@ const Profile = () => {
         getUser();
     }, [id, navigate]);
 
+    const savedPostsIds = useMemo(() => {
+        if (!user?._id) {
+            return [];
+        }
+
+        const ids =
+            user._id === profile?._id
+                ? profile?.saved_posts
+                : user?.saved_posts;
+
+        return (ids || []).map((item) => String(item._id || item));
+    }, [user?._id, user?.saved_posts, profile?._id, profile?.saved_posts]);
+
     useEffect(() => {
-        if (!user?._id) return;
+        setPostsPage(1);
+        setPosts([]);
+        setIsPostsLoading(true);
+    }, [activeTab, user?._id]);
+
+    useEffect(() => {
+        if (!user?._id) {
+            return;
+        }
+
+        let cancelled = false;
 
         const loadPosts = async () => {
-            setIsPostsLoading(true);
-            const posts = await fetchPosts({
-                author: user._id
-            });
-            setIsPostsLoading(false);
-
-            setPosts(posts);
-        };
-
-        loadPosts();
-    }, [user?._id]);
-
-    useEffect(() => {
-        if (!user?._id) return;
-
-        const loadSavedPosts = async () => {
-            const savedPostsIds =
-                user._id === profile?._id
-                    ? profile?.saved_posts
-                    : user?.saved_posts;
-
-            if (!savedPostsIds?.length) {
-                setSavedPosts([]);
+            if (activeTab === 1 && savedPostsIds.length === 0) {
+                setPosts([]);
+                setPostsPages(0);
+                setIsPostsLoading(false);
                 return;
             }
 
-            const savedPosts = await fetchPosts({
-                _id: savedPostsIds
-            });
+            setIsPostsLoading(true);
 
-            setSavedPosts(savedPosts);
+            const query = {
+                expand: "author,category",
+                page: postsPage,
+                limit: POSTS_PAGE_LIMIT
+            };
+
+            if (activeTab === 0) {
+                query.author = user._id;
+            }
+            else {
+                query._id = savedPostsIds;
+            }
+
+            const response = await getPosts(query);
+
+            if (cancelled) {
+                return;
+            }
+
+            const { items, pagination } = unwrapPostsResponse(response);
+
+            if (response?.status === true) {
+                setPosts(items);
+                setPostsPages(pagination.pages || 0);
+            }
+            else {
+                setPosts([]);
+                setPostsPages(0);
+            }
+
+            setIsPostsLoading(false);
         };
 
-        loadSavedPosts();
-    }, [
-        user?._id,
-        profile?._id,
-        profile?.saved_posts,
-        user?.saved_posts
-    ]);
+        loadPosts();
 
-    useEffect(() => {
-        setActivePosts(
-            activeTab === 0
-                ? posts
-                : savedPosts
-        );
-    }, [activeTab, posts, savedPosts]);
-
-    const fetchPosts = async (query) => {
-        query.expand = "author,category";
-        const response = await getPosts(query);
-        setIsPostsLoading(false);
-        return response.status === true ? response.data : [];
-    };
+        return () => {
+            cancelled = true;
+        };
+    }, [user?._id, activeTab, postsPage, savedPostsIds]);
 
     const open_settings = () => {
         navigate('/settings');
@@ -220,7 +234,7 @@ const Profile = () => {
             <div className="profile_info section app-transition">
                 <div className="profile_info_left">
                     <Sceleton
-                        isLoading={isProfileLoading || isPostsLoading}
+                        isLoading={isProfileLoading}
                         circle={true}
                         className="profile_info_left_avatar"
                     >
@@ -240,7 +254,7 @@ const Profile = () => {
                 <div className="profile_info_middle">
 
                     <Sceleton
-                        isLoading={isProfileLoading || isPostsLoading}
+                        isLoading={isProfileLoading}
                         rounded={true}
                         className="profile_info_bottom_nick"
                     >
@@ -260,14 +274,14 @@ const Profile = () => {
                     </Sceleton>
 
                     {
-                        user && !isProfileLoading && !isPostsLoading && (
+                        user && !isProfileLoading && (
                             <RoleBadge user={user} />
                         )
                     }
                     {
                         user && user.email &&
                         <Sceleton
-                            isLoading={isProfileLoading || isPostsLoading}
+                            isLoading={isProfileLoading}
                             rounded={true}
                             className="profile_info_bottom_email"
                         >
@@ -279,7 +293,7 @@ const Profile = () => {
 
 
                     <Sceleton
-                        isLoading={isProfileLoading || isPostsLoading}
+                        isLoading={isProfileLoading}
                         rounded={true}
                         className="profile_info_bottom_description"
                     >
@@ -290,7 +304,7 @@ const Profile = () => {
 
 
                     <Sceleton
-                        isLoading={isProfileLoading || isPostsLoading}
+                        isLoading={isProfileLoading}
                         rounded={true}
                         className="profile_info_bottom_registration_date"
                     >
@@ -313,7 +327,7 @@ const Profile = () => {
                     <div className="profile_info_right_top">
 
                         <Sceleton
-                            isLoading={isProfileLoading || isPostsLoading}
+                            isLoading={isProfileLoading}
                             className="profile_info_right_top_item"
                         >
                             <div
@@ -327,7 +341,7 @@ const Profile = () => {
 
 
                         <Sceleton
-                            isLoading={isProfileLoading || isPostsLoading}
+                            isLoading={isProfileLoading}
                             className="profile_info_right_top_item"
                         >
                             <div
@@ -345,7 +359,7 @@ const Profile = () => {
 
 
                         <Sceleton
-                            isLoading={isProfileLoading || isPostsLoading}
+                            isLoading={isProfileLoading}
                             className="profile_info_right_top_item"
                         >
                             <div
@@ -365,7 +379,7 @@ const Profile = () => {
 
 
                     <Sceleton
-                        isLoading={isProfileLoading || isPostsLoading}
+                        isLoading={isProfileLoading}
                         className="profile_info_right_top_button"
                     >
                         {
@@ -389,7 +403,7 @@ const Profile = () => {
                 </div>
             </div>
             <Sceleton
-                isLoading={isProfileLoading || isPostsLoading}
+                isLoading={isProfileLoading}
                 rounded={true}
                 section={false}
                 className="profile_tab_list"
@@ -414,7 +428,15 @@ const Profile = () => {
                 </div>
             </Sceleton>
             <div className="profile_posts">
-                <Posts posts_filters={posts_filters} posts={activePosts} setPosts={setPosts} isLoading={isPostsLoading} />
+                <Posts
+                    posts={posts}
+                    setPosts={setPosts}
+                    isLoading={isProfileLoading || isPostsLoading}
+                    page={postsPage}
+                    pagesCount={postsPages}
+                    onPageChange={setPostsPage}
+                    showFilters={false}
+                />
             </div>
         </div>
     );

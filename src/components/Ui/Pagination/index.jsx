@@ -30,12 +30,28 @@ const getPaginationRange = (currentPage, pagesCount) => {
     ];
 };
 
-const Pagination = ({ content, limit = 5, children }) => {
+const Pagination = ({
+    content = [],
+    limit = 5,
+    page,
+    pagesCount: pagesCountProp,
+    onPageChange,
+    children
+}) => {
+    const isServer = typeof pagesCountProp === "number" && typeof onPageChange === "function";
     const [currentPage, setCurrentPage] = useState(0);
 
-    const pagesCount = Math.ceil(content.length / limit);
+    const pagesCount = isServer
+        ? pagesCountProp
+        : Math.ceil(content.length / limit);
+
+    const activePage = isServer ? (page ?? 0) : currentPage;
 
     useEffect(() => {
+        if (isServer) {
+            return;
+        }
+
         setCurrentPage(prev => {
             if (pagesCount === 0) {
                 return 0;
@@ -43,12 +59,23 @@ const Pagination = ({ content, limit = 5, children }) => {
 
             return Math.min(prev, pagesCount - 1);
         });
-    }, [pagesCount]);
+    }, [isServer, pagesCount]);
 
-    const visibleContent = content.slice(
-        currentPage * limit,
-        currentPage * limit + limit
-    );
+    const goTo = (next) => {
+        if (isServer) {
+            onPageChange(next);
+            return;
+        }
+
+        setCurrentPage(next);
+    };
+
+    const visibleContent = isServer
+        ? content
+        : content.slice(
+            activePage * limit,
+            activePage * limit + limit
+        );
 
     return (
         <div className="pagination">
@@ -58,10 +85,12 @@ const Pagination = ({ content, limit = 5, children }) => {
 
             {pagesCount > 1 && (
                 <div className="pagination_panel">
-                    {currentPage > 0 && (
+                    {activePage > 0 && (
                         <button
+                            type="button"
                             className="app-transition pagination_navigation_button"
-                            onClick={() => setCurrentPage(p => p - 1)}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onClick={() => goTo(activePage - 1)}
                         >
                             <ChevronLeft className="app-transition" />
 
@@ -71,12 +100,14 @@ const Pagination = ({ content, limit = 5, children }) => {
                         </button>
                     )}
 
-                    {getPaginationRange(currentPage, pagesCount).map(index => (
+                    {getPaginationRange(activePage, pagesCount).map(index => (
                         <button
+                            type="button"
                             key={index}
-                            onClick={() => setCurrentPage(index)}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onClick={() => goTo(index)}
                             className={`app-transition ${
-                                currentPage === index
+                                activePage === index
                                     ? "pagination_active"
                                     : ""
                             }`}
@@ -87,10 +118,12 @@ const Pagination = ({ content, limit = 5, children }) => {
                         </button>
                     ))}
 
-                    {currentPage < pagesCount - 1 && (
+                    {activePage < pagesCount - 1 && (
                         <button
+                            type="button"
                             className="app-transition pagination_navigation_button"
-                            onClick={() => setCurrentPage(p => p + 1)}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onClick={() => goTo(activePage + 1)}
                         >
                             <p>
                                 Вперед
