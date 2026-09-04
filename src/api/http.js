@@ -2,6 +2,7 @@ import { API_URL } from "../config";
 
 let accessToken = null;
 let refreshPromise = null;
+let authGeneration = 0;
 const listeners = new Set();
 
 export function getAccessToken() {
@@ -10,6 +11,7 @@ export function getAccessToken() {
 
 export function setAccessToken(token) {
     accessToken = token || null;
+    authGeneration += 1;
     listeners.forEach((listener) => listener(accessToken));
 }
 
@@ -35,12 +37,18 @@ export async function refreshAccessToken() {
         return refreshPromise;
     }
 
+    const generation = authGeneration;
+
     refreshPromise = (async () => {
         const response = await fetch(`${API_URL}/api/auth/refresh`, {
             method: "POST",
             credentials: "include"
         });
         const result = await parseJson(response);
+
+        if (generation !== authGeneration) {
+            return getAccessToken();
+        }
 
         if (!response.ok || !result?.data?.accessToken) {
             setAccessToken(null);

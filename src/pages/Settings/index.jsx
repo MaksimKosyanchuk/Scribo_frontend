@@ -354,9 +354,9 @@ const Settings = () => {
                                             {session.location || "—"} · {format_back(session.lastSeen) || format_date_time(session.lastSeen)}
                                         </p>
                                     </div>
-                                    <ActionButton type="button" onClick={() => handleDeleteSession(session)}>
+                                    <DangerButton type="button" onClick={() => handleDeleteSession(session)}>
                                         Завершить
-                                    </ActionButton>
+                                    </DangerButton>
                                 </div>
                             ))
                         )}
