@@ -48,7 +48,7 @@
         color: var(--red-f5);
         
         @include hover {
-            background-color: var(--popup-danger-item-hover-background-color);
+            background-color: var(--cancel-button-hover-background-color);
         }
 
         .popup_menu_item_title {

@@ -5,7 +5,8 @@
     font-size: 14px;
     border-radius: 8px;
     color: var(--submit-button-primary-color);
-    border: 1px solid var(--submit-button-primary-color);
+    border: 1px solid var(--line-color);
+    background-color: var(--secondary-button-background-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,8 +17,7 @@
     }
 
     @include hover {
-        color: var(--submit-button-secondary-color);
-        background: var(--submit-button-primary-color);
+        background: var(--secondary-button-hover-background-color);
     }
 
     .loader {

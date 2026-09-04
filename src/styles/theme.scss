@@ -52,6 +52,9 @@ body {
   --submit-button-disabled-background-color: var(--gray-e1);
   --submit-button-disabled-color: var(--gray-99);
 
+  --secondary-button-background-color: var(--gray-f1);
+  --secondary-button-hover-background-color: var(--gray-e7);
+
   --section-background-color: var(--gray-ff);
   --section-light-color: var(--gray-99);
   --section-light-hover-color: var(--gray-25);
@@ -71,9 +74,6 @@ body {
 
   --profile-badge-background-color: var(--gray-f1);
   --profile-badge-hover-background-color: var(--gray-e7);
-
-  --cancel-button-primary-color: var(--red-f1);
-  --cancel-button-hover-background-color: var(--red-fa);
 
   --blue-button-primary-color: var(--blue-39);
 
@@ -151,7 +151,9 @@ body {
   --popup-button-background-hover-color: var(--gray-b5);
   --popup-border-color: var(--gray-c6);
   --popup-text-color: var(--text-color);
-  --popup-danger-item-hover-background-color: rgba(255, 120, 120, .1);
+
+  --cancel-button-primary-color: var(--red-f1);
+  --cancel-button-hover-background-color: rgba(255, 120, 120, .1);
 
   --navigation-bar-active-item-background-color: rgba(80, 80, 80, .1);
 
@@ -221,12 +223,15 @@ body.dark-theme {
 
   --avatar-icon-color: var(--drop-file-hover-background-color);
 
-  --submit-button-primary-color: var(--gray-b5);
-  --submit-button-primary-hover-color: var(--gray-e7);
+  --submit-button-primary-color: var(--gray-e7);
+  --submit-button-primary-hover-color: var(--gray-b5);
   --submit-button-secondary-color: var(--main-background);
   --submit-button-loading-background-color: var(--gray-33);
   --submit-button-disabled-background-color: var(--gray-1e);
   --submit-button-disabled-color: var(--gray-4f);
+
+  --secondary-button-background-color: var(--gray-1e);
+  --secondary-button-hover-background-color: var(--gray-25);
 
   --section-background-color: var(--gray-1e);
   --section-light-color: var(--gray-79);
@@ -241,15 +246,12 @@ body.dark-theme {
 
   --sticky-button-background-color: rgba(22, 22, 22, .8);
 
-  --red-button-primary-color: var(--red-f1);
+  --red-button-primary-color: var(--red-fd);
   --red-button-secondary-color: var(--gray-ff);
   --red-button-third-color: var(--red-fd);
 
   --profile-badge-background-color: var(--gray-33);
   --profile-badge-hover-background-color: var(--gray-4f);
-
-  --cancel-button-primary-color: var(--red-f1);
-  --cancel-button-hover-background-color: var(--red-34);
 
   --blue-button-primary-color: var(--blue-8f);
 
@@ -327,7 +329,9 @@ body.dark-theme {
   --popup-button-background-hover-color: var(--gray-4f);
   --popup-border-color: var(--gray-33);
   --popup-text-color: var(--text-color);
-  --popup-danger-item-hover-background-color: rgba(235, 114, 114, .1);
+
+  --cancel-button-primary-color: var(--red-f1);
+  --cancel-button-hover-background-color: rgba(235, 114, 114, .1);
 
   --navigation-bar-active-item-background-color: var(--gray-1e);
 
