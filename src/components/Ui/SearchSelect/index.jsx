@@ -52,7 +52,9 @@ const SearchSelect = ({
         );
 
         if (!exactOption) {
-            onSetValue?.("");
+            if (value !== "" && value != null) {
+                onSetValue?.("");
+            }
             setInputValue("");
         } else if (exactOption.value !== value) {
             onSetValue?.(exactOption.value);

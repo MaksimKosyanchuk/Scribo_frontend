@@ -21,7 +21,7 @@
     @include category-colors {
         &.chip_button_active {
             color: var(--category-color);
-            border-color: var(--category-color);
+            border-color: transparent;
             background: rgb(from var(--category-color) r g b / .1);
 
             @include hover() {

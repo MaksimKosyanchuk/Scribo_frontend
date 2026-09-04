@@ -6,6 +6,9 @@ const getPosts = async (query) => {
 
     if(query) {
         queryString = Object.entries(query).map(([key, value]) => {
+            if (key === "empty" || value === undefined || value === null) {
+                return null
+            }
             if (Array.isArray(value)) {
                 if (value.length === 0) {
                     return `${key}=`
@@ -13,15 +16,11 @@ const getPosts = async (query) => {
                 return value.map(id => `${key}=${id}`).join('&')
             }
             return `${key}=${value}`
-        }).join('&')
+        }).filter(Boolean).join('&')
     }
     
     const result = await fetch(`${API_URL}/api/posts?${queryString}`)
     .then(res => res.json())
-    .then(res => {
-        res?.data?.sort((prev, next) => new Date(next.created_date) - new Date(prev.created_date));
-        return res
-    })
     .catch((err) => { 
         console.log(err)
         return ({
@@ -32,6 +31,18 @@ const getPosts = async (query) => {
     })
 
     return result
+}
+
+const POSTS_PAGE_LIMIT = 5
+
+function unwrapPostsResponse(response) {
+    const payload = response?.data
+    const items = Array.isArray(payload) ? payload : (payload?.items || [])
+    const pagination = Array.isArray(payload)
+        ? { page: 1, pages: items.length ? 1 : 0, total: items.length, limit: POSTS_PAGE_LIMIT }
+        : (payload?.pagination || { page: 1, pages: 0, total: 0, limit: POSTS_PAGE_LIMIT })
+
+    return { items, pagination }
 }
 
 const deletePost = async (id) => {
@@ -171,4 +182,4 @@ const editPost = async (id, data) => {
     }
 }
 
-export { getPosts, deletePost, getPostById, commentPost, getComments, likePost, savePost, createPost, editPost }
+export { getPosts, unwrapPostsResponse, POSTS_PAGE_LIMIT, deletePost, getPostById, commentPost, getComments, likePost, savePost, createPost, editPost }
