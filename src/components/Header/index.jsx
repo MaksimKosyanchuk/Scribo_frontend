@@ -6,6 +6,7 @@ import { AppContext } from '../../App';
 import './Header.scss';
 
 import { getUsers, read_notifications } from '../../api/users.api';
+import { logout } from '../../api/auth.api';
 import { format_back } from "../../utils/format";
 
 import SunIcon from "../../assets/svg/sun.svg?react";
@@ -210,9 +211,10 @@ function Header() {
                     icon: <LogoutIcon/>,
                     type: "danger",
                     onClick: () => { 
-                      localStorage.removeItem("token");
                       setProfile(null);
-                      showToast({type: "success", message: "Вы вышли из аккаунта!"})
+                      logout().then(() => {
+                        showToast({type: "success", message: "Вы вышли из аккаунта!"})
+                      })
                     }
                   }
                 ]}

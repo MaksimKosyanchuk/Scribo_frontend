@@ -1,4 +1,5 @@
 import { API_URL } from "../config";
+import { apiFetch, setAccessToken } from "./http";
 
 const verificationGoogle = async (token) => {
     try {
@@ -22,22 +23,30 @@ const verificationGoogle = async (token) => {
     }
 }
 
+const applyAuthResult = (result) => {
+    if (result?.status && result?.data?.accessToken) {
+        setAccessToken(result.data.accessToken)
+    }
+    return result
+}
+
 const loginGoogle = async (token) => {
     try {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ google_token: token }),
+            credentials: 'include'
         }
         
         const response = await fetch(`${API_URL}/api/auth/login/google`, requestOptions)
         const code = response.status
         const result = await response.json()
 
-        return {
+        return applyAuthResult({
             statusCode: code,
             ...result
-        }
+        })
 
     }
     catch(err) {
@@ -51,16 +60,17 @@ const loginUsername = async (username, password) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_name: username, password: password }),
+            credentials: 'include'
         }
         
         const response = await fetch(`${API_URL}/api/auth/login/username`, requestOptions)
         const code = response.status
         const result = await response.json()
     
-        return {
+        return applyAuthResult({
             statusCode: code,
             ...result
-        }
+        })
     }
     catch(e){  
         console.log(e)
@@ -146,6 +156,37 @@ const verificationEmail = async (email) => {
     }
 }
 
+const logout = async () => {
+    const response = await apiFetch(`${API_URL}/api/auth/logout`, { method: "POST" })
+    const result = await response.json()
+    setAccessToken(null)
+    return {
+        statusCode: response.status,
+        ...result
+    }
+}
+
+const getSessions = async () => {
+    const response = await apiFetch(`${API_URL}/api/auth/sessions`)
+    const result = await response.json()
+    return {
+        statusCode: response.status,
+        ...result
+    }
+}
+
+const deleteSession = async (id) => {
+    const response = await apiFetch(`${API_URL}/api/auth/sessions/${id}`, { method: "DELETE" })
+    const result = await response.json()
+    if (result?.data?.wasCurrent) {
+        setAccessToken(null)
+    }
+    return {
+        statusCode: response.status,
+        ...result
+    }
+}
+
 export {
     verificationGoogle,
     loginGoogle,
@@ -153,5 +194,8 @@ export {
     emailRegister,
     googleRegister,
     veriticationEmailConfirm,
-    verificationEmail
+    verificationEmail,
+    logout,
+    getSessions,
+    deleteSession
 }

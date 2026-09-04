@@ -1,4 +1,5 @@
 import { API_URL } from "../config";
+import { apiFetch } from "./http";
 
 const getCategories = async () => {
     try {
@@ -17,14 +18,11 @@ const getCategories = async () => {
 };
 
 const editCategory = async (id, data) => {
-    const token = localStorage.getItem('token');
-
     try {
-        const res = await fetch(`${API_URL}/api/categories/${id}`, {
+        const res = await apiFetch(`${API_URL}/api/categories/${id}`, {
             method: 'PATCH',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
@@ -42,14 +40,11 @@ const editCategory = async (id, data) => {
 }
 
 const createCategory = async (data) => {
-    const token = localStorage.getItem('token');
-    
     try {
-        const res = await fetch(`${API_URL}/api/categories`, {
+        const res = await apiFetch(`${API_URL}/api/categories`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
@@ -67,14 +62,11 @@ const createCategory = async (data) => {
 }
 
 const deleteCategory = async (id) => {
-    const token = localStorage.getItem('token');
-
     try {
-        const res = await fetch(`${API_URL}/api/categories/${id}`, {
+        const res = await apiFetch(`${API_URL}/api/categories/${id}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             }
         });
         const result = await res.json();

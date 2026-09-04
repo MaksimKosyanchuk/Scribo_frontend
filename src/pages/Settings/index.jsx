@@ -3,12 +3,15 @@ import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../App';
 
 import { editProfile } from '../../api/profile.api';
+import { logout as logoutRequest, getSessions, deleteSession } from '../../api/auth.api';
+import { format_back, format_date_time } from '../../utils/format';
 
 import InputField from '../../components/Ui/InputField/index';
 import DropFile from '../../components/Ui/DropFile/index';
 import Toggle from '../../components/Ui/Toggle/index';
 import PrimaryButton from '../../components/Ui/PrimaryButton';
 import DangerButton from '../../components/Ui/DangerButton';
+import ActionButton from '../../components/Ui/ActionButton';
 import Field from '../../components/Ui/Field';
 
 import "./Settings.scss";
@@ -21,6 +24,8 @@ const Settings = () => {
     const navigate = useNavigate();
     const [errors, setErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false);
+    const [sessions, setSessions] = useState([]);
+    const [sessionsLoading, setSessionsLoading] = useState(false);
 
     const [ fields, setFields ] = useState(
         {
@@ -72,6 +77,32 @@ const Settings = () => {
 
         setProfileData();
     }, [profileLoading, profile, initialized, navigate]);
+
+    useEffect(() => {
+        if (!profile) {
+            setSessions([]);
+            return;
+        }
+
+        let cancelled = false
+
+        const loadSessions = async () => {
+            setSessionsLoading(true)
+            const result = await getSessions()
+            if (!cancelled && result?.status) {
+                setSessions(result.data || [])
+            }
+            if (!cancelled) {
+                setSessionsLoading(false)
+            }
+        }
+
+        loadSessions()
+
+        return () => {
+            cancelled = true
+        }
+    }, [profile]);
 
     const add_errors_to_image = (new_errors) => {
         const updated_errors = { ...errors };
@@ -190,11 +221,30 @@ const Settings = () => {
         }
     };
 
-    const logout = () => {
-        localStorage.removeItem("token");
+    const handleLogout = async () => {
+        await logoutRequest();
         setProfile(null);
         showToast({ message: "Вы вышли из аккаунта!", type: "success" });
         navigate("/posts");
+    }
+
+    const handleDeleteSession = async (session) => {
+        const result = await deleteSession(session._id)
+
+        if (!result?.status) {
+            showToast({ message: "Не удалось завершить сеанс", type: "error" })
+            return
+        }
+
+        if (result.data?.wasCurrent) {
+            setProfile(null)
+            showToast({ message: "Текущий сеанс завершён", type: "success" })
+            navigate("/posts")
+            return
+        }
+
+        setSessions(prev => prev.filter(item => item._id !== session._id))
+        showToast({ message: "Сеанс удалён", type: "success" })
     }
 
     const handleAvatarRemove = () => {
@@ -284,7 +334,32 @@ const Settings = () => {
                     </Field>
                     <div className='form_input_buttons'>
                         <PrimaryButton type='button' is_loading={isLoading} onClick={save_settings}>Сохранить</PrimaryButton>
-                        <DangerButton className="logout_button app-transition" type="button" onClick={logout}>Выйти с аккаунта</DangerButton>
+                        <DangerButton className="logout_button app-transition" type="button" onClick={handleLogout}>Выйти с аккаунта</DangerButton>
+                    </div>
+                    <div className="settings_sessions">
+                        <p className="settings_sessions_title">Сеансы</p>
+                        {sessionsLoading ? (
+                            <p className="settings_sessions_empty">Загрузка…</p>
+                        ) : sessions.length === 0 ? (
+                            <p className="settings_sessions_empty">Нет активных сеансов</p>
+                        ) : (
+                            sessions.map((session) => (
+                                <div className="settings_sessions_item app-transition" key={session._id}>
+                                    <div className="settings_sessions_item_info">
+                                        <p className="settings_sessions_item_device">
+                                            {session.device}
+                                            {session.isCurrent ? " · этот сеанс" : ""}
+                                        </p>
+                                        <p className="settings_sessions_item_meta">
+                                            {session.location || "—"} · {format_back(session.lastSeen) || format_date_time(session.lastSeen)}
+                                        </p>
+                                    </div>
+                                    <ActionButton type="button" onClick={() => handleDeleteSession(session)}>
+                                        Завершить
+                                    </ActionButton>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </>
             </form>

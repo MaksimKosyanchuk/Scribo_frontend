@@ -33,10 +33,9 @@ const Login = () => {
 
             if(result.status === true) {
                 if(result.data.is_registered === true) {
-                    const login_result = await loginGoogle(googleToken)
+                    await loginGoogle(googleToken)
 
                     setIsLoading(false)
-                    localStorage.setItem('token', login_result.data.token);
                     navigate('/posts');
                     showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
                 }
@@ -103,7 +102,6 @@ const Login = () => {
         setIsLoading(false)
         
         if (result.status === true) { 
-            localStorage.setItem('token', result.data.token); 
             navigate('/posts');
             showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
             return result; 

@@ -1,4 +1,5 @@
 import { API_URL } from "../config"
+import { apiFetch } from "./http"
 
 const getPosts = async (query) => {
     let queryString = ""
@@ -34,9 +35,7 @@ const getPosts = async (query) => {
 }
 
 const deletePost = async (id) => {
-    const token = localStorage.getItem('token')
-    const headers = token ? { Authorization: `Bearer ${token}` } : {}
-    const result = await fetch(`${API_URL}/api/posts/${id}`, { method: "DELETE", credentials: "include", headers })
+    const result = await apiFetch(`${API_URL}/api/posts/${id}`, { method: "DELETE" })
     .then(res => res.json())
     .catch((err) => { 
         console.log(err)
@@ -80,15 +79,11 @@ const getPostById = async (id, query) => {
 }
 
 const commentPost = async (id, data) => {
-    const token = localStorage.getItem('token')
-    const headers = {
-        "Content-Type": "application/json",
-        ...(token && {
-            Authorization: `Bearer ${token}`
-        })
-    };
-    
-    const result = await fetch(`${API_URL}/api/posts/${id}/comments?expand=author`, { method: "POST", credentials: "include", headers, body: JSON.stringify(data) })
+    const result = await apiFetch(`${API_URL}/api/posts/${id}/comments?expand=author`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
     .then(res => res.json())
     .catch((err) => { 
         console.log(err)
@@ -117,14 +112,10 @@ const getComments = async (id) => {
 }
 
 const likePost = async (id, method="POST") => {
-    const token = localStorage.getItem('token')
-    const headers = {
-        "Content-Type": "application/json",
-        ...(token && {
-            Authorization: `Bearer ${token}`
-        })
-    };
-    const result = await fetch(`${API_URL}/api/posts/${id}/like`, { method, credentials: "include", headers })
+    const result = await apiFetch(`${API_URL}/api/posts/${id}/like`, {
+        method,
+        headers: { "Content-Type": "application/json" }
+    })
     .then(res => res.json())
     .catch((err) => { 
         return ({
@@ -138,7 +129,7 @@ const likePost = async (id, method="POST") => {
 }
 
 const savePost = async (id, method="POST") => {
-    let response = await fetch(`${API_URL}/api/posts/${id}/save`, { method, credentials: "include", headers:{ 'Authorization': `Bearer ${localStorage.getItem("token")}` } })
+    let response = await apiFetch(`${API_URL}/api/posts/${id}/save`, { method })
     const result = await response.json();
     const code = response.status
 
@@ -149,12 +140,8 @@ const savePost = async (id, method="POST") => {
 }
 
 const createPost = async (data) => {
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem("token")}`
-    }
-
     try {
-        const response = await fetch(`${API_URL}/api/posts`, { method: "POST", body: data, headers: headers})
+        const response = await apiFetch(`${API_URL}/api/posts`, { method: "POST", body: data})
         const result = await response.json()
         const code = response.status
 
@@ -170,11 +157,8 @@ const createPost = async (data) => {
 }
 
 const editPost = async (id, data) => {
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem("token")}`
-    }
     try {
-        const response = await fetch(`${API_URL}/api/posts/${id}`, { method: "PATCH", body: data, headers: headers})
+        const response = await apiFetch(`${API_URL}/api/posts/${id}`, { method: "PATCH", body: data})
         const result = await response.json()
         const code = response.status
         return {

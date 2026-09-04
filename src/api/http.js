@@ -1,0 +1,88 @@
+import { API_URL } from "../config";
+
+let accessToken = null;
+let refreshPromise = null;
+const listeners = new Set();
+
+export function getAccessToken() {
+    return accessToken;
+}
+
+export function setAccessToken(token) {
+    accessToken = token || null;
+    listeners.forEach((listener) => listener(accessToken));
+}
+
+export function subscribeAccessToken(listener) {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+}
+
+function isAuthRefreshUrl(url) {
+    return typeof url === "string" && url.includes("/api/auth/refresh");
+}
+
+async function parseJson(response) {
+    try {
+        return await response.json();
+    } catch {
+        return null;
+    }
+}
+
+export async function refreshAccessToken() {
+    if (refreshPromise) {
+        return refreshPromise;
+    }
+
+    refreshPromise = (async () => {
+        const response = await fetch(`${API_URL}/api/auth/refresh`, {
+            method: "POST",
+            credentials: "include"
+        });
+        const result = await parseJson(response);
+
+        if (!response.ok || !result?.data?.accessToken) {
+            setAccessToken(null);
+            return null;
+        }
+
+        setAccessToken(result.data.accessToken);
+        return result.data.accessToken;
+    })().finally(() => {
+        refreshPromise = null;
+    });
+
+    return refreshPromise;
+}
+
+export async function apiFetch(url, options = {}) {
+    const { skipAuth, _retry, headers: initHeaders, ...rest } = options;
+    const headers = new Headers(initHeaders || {});
+    const token = getAccessToken();
+
+    if (!skipAuth && token && !headers.has("Authorization")) {
+        headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    const response = await fetch(url, {
+        ...rest,
+        headers,
+        credentials: "include"
+    });
+
+    if (
+        response.status === 401 &&
+        !_retry &&
+        !skipAuth &&
+        !isAuthRefreshUrl(url)
+    ) {
+        const nextToken = await refreshAccessToken();
+
+        if (nextToken) {
+            return apiFetch(url, { ...options, _retry: true });
+        }
+    }
+
+    return response;
+}

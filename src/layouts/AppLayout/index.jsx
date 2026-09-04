@@ -8,7 +8,7 @@ import { getProfile } from "../../api/profile.api";
 
 const AppLayout = ({ children }) => {
     const location = useLocation()
-    const { setProfile, setProfileLoading } = useContext(AppContext) 
+    const { setProfile, setProfileLoading, authReady } = useContext(AppContext) 
 
     const setProfileData = useCallback(async () => {
         setProfileLoading(true);
@@ -26,13 +26,17 @@ const AppLayout = ({ children }) => {
     }, [setProfile, setProfileLoading]);
 
     useEffect(() => {
+        if (!authReady) {
+            return
+        }
+
         setProfileData();
 
         document.body.scrollTo({
             top: 0,
             behavior: "smooth",
         });
-    }, [location, setProfileData]);
+    }, [location, setProfileData, authReady]);
 
      return (
         <div className="app-layout app-transition" id="app-layout">

@@ -1,4 +1,5 @@
 import { API_URL } from "../config"
+import { apiFetch } from "./http"
 
 
 const getUsers = async (query = []) => {
@@ -29,15 +30,10 @@ const getUsers = async (query = []) => {
 };
 
 const updateRole = async (user_id, new_role) => {
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`
-    };
-
     try {
-        const response = await fetch(`${API_URL}/api/users/${user_id}/role`, {
+        const response = await apiFetch(`${API_URL}/api/users/${user_id}/role`, {
             method: 'PATCH',
-            headers: headers,
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ role: new_role })
         });
         const result = await response.json();
@@ -52,18 +48,13 @@ const updateRole = async (user_id, new_role) => {
 }
 
 const read_notifications = async () => {
-    const headers = { 'Authorization': `Bearer ${localStorage.getItem("token")}`}
-    
-    const result = await fetch(`${API_URL}/api/profile/notifications`, { method: "PATCH", headers: headers })
+    const result = await apiFetch(`${API_URL}/api/profile/notifications`, { method: "PATCH" })
     return await result.json();
 }
 
 const follow = async ({method="POST", user_id}) => {
     try {
-        const headers = {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-        const response = await fetch(`${API_URL}/api/users/${user_id}/follow`, { method: method,  headers: headers })
+        const response = await apiFetch(`${API_URL}/api/users/${user_id}/follow`, { method: method })
 
         const status = response.status;
         const result = await response.json();

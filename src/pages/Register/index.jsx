@@ -324,7 +324,6 @@ const Register = () => {
                     const result = await loginGoogle(googleToken)
                     
                     if(result.statusCode === 200) {
-                        localStorage.setItem("token", result.data.token)
                         navigate("/")
                         showToast({ message: "Вход выполнен!", type: "success" });
                     }
