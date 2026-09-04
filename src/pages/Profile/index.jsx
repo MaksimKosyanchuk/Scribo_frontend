@@ -264,16 +264,18 @@ const Profile = () => {
                             <RoleBadge user={user} />
                         )
                     }
-
-                    <Sceleton
-                        isLoading={isProfileLoading || isPostsLoading}
-                        rounded={true}
-                        className="profile_info_bottom_email"
-                    >
-                        <div className="profile_info_bottom_email">
-                            <p>{user?.email}</p>
-                        </div>
-                    </Sceleton>
+                    {
+                        user && user.email &&
+                        <Sceleton
+                            isLoading={isProfileLoading || isPostsLoading}
+                            rounded={true}
+                            className="profile_info_bottom_email"
+                        >
+                            <div className="profile_info_bottom_email">
+                                <p>{user?.email}</p>
+                            </div>
+                        </Sceleton>
+                    }
 
 
                     <Sceleton
@@ -380,7 +382,7 @@ const Profile = () => {
                                 <FollowButton
                                     setNewData={setFollowThisUser}
                                     author_id={user?._id}
-                                    class_name="profile_info_top_right_side_button"
+                                    class_name="profile_info_right_top_button"
                                 />
                         }
                     </Sceleton>

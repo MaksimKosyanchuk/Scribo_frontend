@@ -87,7 +87,7 @@ const Posts = ({ posts, setPosts, isLoading, posts_filters = [] }) => {
                             setFilters={setFilters}
                         />
 
-                        {[0, 1].map(index => (
+                        {[0, 5].map(index => (
                             <PostCard
                                 key={index}
                                 post={{ title: "Загрузка..." }}
