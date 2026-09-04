@@ -72,7 +72,7 @@ const Posts = ({
                 ),
         }));
 
-        if (profile) {
+        if (profile?._id) {
             uniqueFilters.unshift({
                 _id: "subscription",
                 name: "По подписке",
@@ -92,7 +92,7 @@ const Posts = ({
 
         setFilters(uniqueFilters);
         setPage(1);
-    }, [categoryList, posts_filters, profile?._id]);
+    }, [isControlled, categoryList, posts_filters, profile?._id]);
 
     const requestQuery = useMemo(() => {
         const extraQuery = JSON.parse(queryKey);
@@ -110,7 +110,7 @@ const Posts = ({
         };
 
         if (subscriptionFilterActive) {
-            const follows = followIds(profile);
+            const follows = followIds({ follows: profile?.follows });
 
             if (extraQuery.author) {
                 const authors = (Array.isArray(extraQuery.author) ? extraQuery.author : [extraQuery.author])
@@ -140,7 +140,7 @@ const Posts = ({
         }
 
         return next;
-    }, [filters, page, profile?._id, profile?.follows, queryKey]);
+    }, [filters, page, profile, queryKey]);
 
     useEffect(() => {
         if (isControlled || wait || !filters.length) {

@@ -11,7 +11,6 @@ import DropFile from '../../components/Ui/DropFile/index';
 import Toggle from '../../components/Ui/Toggle/index';
 import PrimaryButton from '../../components/Ui/PrimaryButton';
 import DangerButton from '../../components/Ui/DangerButton';
-import ActionButton from '../../components/Ui/ActionButton';
 import Field from '../../components/Ui/Field';
 
 import "./Settings.scss";
