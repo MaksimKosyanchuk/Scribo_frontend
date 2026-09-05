@@ -22,16 +22,52 @@
         flex: 1;
     }
 
-    .settings_panel_hint {
-        font-size: 13px;
-        line-height: 1.4;
-        color: var(--light-text-color);
-    }
-
     .settings_panel_actions {
         display: flex;
         justify-content: flex-start;
+        align-items: center;
+        gap: 12px;
         padding-top: 4px;
+        flex-wrap: wrap;
+    }
+
+    .settings_password {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        max-width: 420px;
+        width: 100%;
+    }
+
+    .settings_password_preview {
+        display: flex;
+        align-items: stretch;
+        gap: 12px;
+        width: 100%;
+        max-width: 520px;
+
+        .input_field_wrapper {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .input_field {
+            letter-spacing: 2px;
+            cursor: default;
+        }
+
+        .action_button {
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
+
+        @include screen() {
+            flex-direction: column;
+
+            .action_button {
+                width: 100%;
+            }
+        }
     }
 
     .form_input {

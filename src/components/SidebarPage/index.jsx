@@ -9,7 +9,10 @@ const SidebarPage = ({ pages, pageTitle }) => {
 
     const activeKey = searchParams.get("tab") ?? pages[0].key;
 
-    let activePage = pages.findIndex(page => page.key === activeKey);
+    const pageMatchesTab = (page, key) =>
+        page.key === key || (page.aliases || []).includes(key);
+
+    let activePage = pages.findIndex(page => pageMatchesTab(page, activeKey));
 
     if (activePage === -1) {
         activePage = 0;

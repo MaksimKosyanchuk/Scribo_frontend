@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 
 import { getProfile } from "../../api/profile.api";
 import { trackVisit } from "../../api/analytics.api";
-import { getAccessToken } from "../../api/http";
+import { getAccessToken, subscribeAccessToken } from "../../api/http";
 
 const SKIP_TRACKING = /^\/admin-panel/;
 
@@ -20,6 +20,13 @@ const AppLayout = ({ children }) => {
 
     const setProfileData = useCallback(async () => {
         const requestId = ++requestIdRef.current
+
+        if (!getAccessToken()) {
+            setProfile(null);
+            setProfileLoading(false);
+            return
+        }
+
         const silent = Boolean(profileRef.current)
 
         if (!silent) {
@@ -28,19 +35,30 @@ const AppLayout = ({ children }) => {
 
         const result = await getProfile();
 
-        if (requestId !== requestIdRef.current) {
+        if (requestId !== requestIdRef.current || !getAccessToken()) {
             return
         }
 
         if (result.status) {
             setProfile(result.data);
         }
-        else if (result.unauthorized || !getAccessToken()) {
+        else if (result.unauthorized) {
             setProfile(null);
         }
 
         setProfileLoading(false);
     }, [setProfile, setProfileLoading]);
+
+    useEffect(() => {
+        return subscribeAccessToken((token) => {
+            if (!token) {
+                requestIdRef.current += 1
+                profileRef.current = null
+                setProfile(null)
+                setProfileLoading(false)
+            }
+        })
+    }, [setProfile, setProfileLoading])
 
     useEffect(() => {
         if (!authReady) {

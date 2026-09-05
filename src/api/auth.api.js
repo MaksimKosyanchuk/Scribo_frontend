@@ -159,6 +159,43 @@ const verificationEmail = async (email) => {
     }
 }
 
+const jsonAuthPost = async (path, body) => {
+    try {
+        const response = await fetch(`${API_URL}${path}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        })
+        const result = await response.json()
+        return {
+            statusCode: response.status,
+            ...result
+        }
+    }
+    catch (error) {
+        console.log(error)
+        return {
+            status: false,
+            statusCode: 0,
+            message: "server not found"
+        }
+    }
+}
+
+const requestPasswordReset = (email) => jsonAuthPost("/api/auth/password/forgot", { email })
+
+const confirmPasswordReset = (email, email_code) => jsonAuthPost("/api/auth/password/forgot/confirm", {
+    email,
+    email_code
+})
+
+const resetPassword = ({ email, email_code, new_password, new_password_confirm }) => jsonAuthPost("/api/auth/password/reset", {
+    email,
+    email_code,
+    new_password,
+    new_password_confirm
+})
+
 const logout = async () => {
     const response = await apiFetch(`${API_URL}/api/auth/logout`, { method: "POST" })
     const result = await response.json()
@@ -198,6 +235,9 @@ export {
     googleRegister,
     veriticationEmailConfirm,
     verificationEmail,
+    requestPasswordReset,
+    confirmPasswordReset,
+    resetPassword,
     logout,
     getSessions,
     deleteSession
