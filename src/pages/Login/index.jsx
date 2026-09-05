@@ -7,6 +7,7 @@ import PrimaryButton from '../../components/Ui/PrimaryButton';
 import Field from '../../components/Ui/Field/index';
 
 import { verificationGoogle, loginGoogle, loginUsername } from '../../api/auth.api';
+import { FIELD_LIMITS } from '../../constants/fieldLimits';
 
 import "../Auth/Auth.scss";
 
@@ -18,8 +19,8 @@ const Login = () => {
     const [ isLoading, setIsLoading ] = useState(false)
     const [ fields, setFields ] = useState(
         {
-            user_login: '',
-            password: '',
+            userName: '',
+            userPassword: '',
         }
     )
     const [errors, setErrors] = useState({}); 
@@ -61,31 +62,31 @@ const Login = () => {
 
     const field_validation = () => {
         let is_error = false
-        if (fields.user_login.length < 3) {
+        if (fields.userName.length < FIELD_LIMITS.login.min) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                user_login: "User login must be at least 3 characters long!"
+                userName: `Логин не короче ${FIELD_LIMITS.login.min} символов`
             }));
             is_error = true
         }
-        if (fields.user_login.length > 60) {
+        if (fields.userName.length > FIELD_LIMITS.login.max) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                user_login: "User login cannot be longer than 60 characters!"
+                userName: `Логин не длиннее ${FIELD_LIMITS.login.max} символов`
             }));
             is_error = true
         }
-        if (fields.password.length < 8) {
+        if (fields.userPassword.length < FIELD_LIMITS.password.min) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                password: "Password must be at least 8 characters long!"
+                userPassword: `Пароль не короче ${FIELD_LIMITS.password.min} символов`
             }));
             is_error = true
         }
-        if (fields.password.length > 20) {
+        if (fields.userPassword.length > FIELD_LIMITS.password.max) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                password: "Password cannot be longer than 20 characters!"
+                userPassword: `Пароль не длиннее ${FIELD_LIMITS.password.max} символов`
             }));
             is_error = true
         }
@@ -98,7 +99,7 @@ const Login = () => {
         }
         
         setIsLoading(true)
-        const result = await loginUsername(fields.user_login, fields.password)
+        const result = await loginUsername(fields.userName, fields.userPassword)
         setIsLoading(false)
         
         if (result.status === true) { 
@@ -109,13 +110,7 @@ const Login = () => {
         else { 
             showToast({ message: 'Неверно!', type: 'error' }); 
             if (result?.errors?.body) {
-                const formattedErrors = Object.fromEntries(
-                    Object.entries(result.errors.body).map(
-                        ([field, obj]) => [field, obj.message]
-                    )
-                );
-
-                setErrors(formattedErrors);
+                setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
             }
     
             return result; 
@@ -128,26 +123,28 @@ const Login = () => {
             <div className="auth_page_stack">
                 <h1 className="auth_page_title">Вход</h1>
                 <div className="auth_page_group section app-transition">
-                    <Field title="Логин" error={errors?.user_login ?? null}>
+                    <Field title="Логин" error={errors?.userName ?? null}>
                         <InputField
-                            className={`user_login`}
+                            className={`userName`}
                             type="text"
-                            onChange={(e) => setFields({ ...fields, user_login: e.target.value })}
-                            onFocus={() => handleFocus('user_login')}
+                            onChange={(e) => setFields({ ...fields, userName: e.target.value })}
+                            onFocus={() => handleFocus('userName')}
                             placeholder="Имя пользователя или email"
-                            value={fields.user_login}
-                            error={errors?.user_login ?? null}
+                            value={fields.userName}
+                            error={errors?.userName ?? null}
+                            length={FIELD_LIMITS.login.max}
                         />
                     </Field>
-                    <Field title="Пароль" error={errors?.password ?? null}>
+                    <Field title="Пароль" error={errors?.userPassword ?? null}>
                         <InputField
-                            className={`password`}
+                            className={`userPassword`}
                             type="password"
-                            onChange={(e) => setFields({ ...fields, password: e.target.value })}
-                            onFocus={() => handleFocus('password')}
+                            onChange={(e) => setFields({ ...fields, userPassword: e.target.value })}
+                            onFocus={() => handleFocus('userPassword')}
                             placeholder="Введите пароль"
-                            value={fields.password}
-                            error={errors?.password ?? null}
+                            value={fields.userPassword}
+                            error={errors?.userPassword ?? null}
+                            length={FIELD_LIMITS.password.max}
                         />
                     </Field>
                     <div className="auth_page_forgot">

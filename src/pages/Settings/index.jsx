@@ -4,6 +4,7 @@ import { AppContext } from '../../App';
 
 import { editProfile, changePassword } from '../../api/profile.api';
 import { logout as logoutRequest, getSessions, deleteSession } from '../../api/auth.api';
+import { FIELD_LIMITS } from '../../constants/fieldLimits';
 import { format_back, format_date_time } from '../../utils/format';
 
 import InputField from '../../components/Ui/InputField/index';
@@ -33,32 +34,32 @@ const Settings = () => {
     const [sessions, setSessions] = useState([]);
     const [sessionsLoading, setSessionsLoading] = useState(false);
     const [passwordFields, setPasswordFields] = useState({
-        current_password: "",
-        new_password: "",
-        new_password_confirm: ""
+        currentPassword: "",
+        newPassword: "",
+        newPasswordConfirm: ""
     });
 
     const [ fields, setFields ] = useState(
         {
-            nick_name: '',
-            description: '',
-            is_email_public: false,
-            is_saved_posts_public: false,
-            avatar: null
+            userNickName: '',
+            userDescription: '',
+            isEmailPublic: false,
+            isSavedPostsPublic: false,
+            userAvatar: null
         }
     )
 
     const set_email_visibility = (visibility) => {
         setFields(prev => ({
             ...prev,
-            is_email_public: visibility
+            isEmailPublic: visibility
         }))
     }
     
     const set_saved_posts_visibility = (visibility) => {
         setFields(prev => ({
             ...prev,
-            is_saved_posts_public: visibility
+            isSavedPostsPublic: visibility
         }))
     }
 
@@ -78,11 +79,11 @@ const Settings = () => {
 
             setFields(prev => ({
                 ...prev,
-                nick_name: profile.nick_name ?? "",
-                description: profile.description ?? "",
-                avatar: profile.avatar,
-                is_email_public: profile.is_email_public,
-                is_saved_posts_public: profile.is_saved_posts_public
+                userNickName: profile.nick_name ?? "",
+                userDescription: profile.description ?? "",
+                userAvatar: profile.avatar,
+                isEmailPublic: profile.is_email_public,
+                isSavedPostsPublic: profile.is_saved_posts_public
             }));
         };
 
@@ -90,18 +91,18 @@ const Settings = () => {
     }, [profileLoading, profile, initialized, navigate]);
 
     useEffect(() => {
-        if (!profile) {
-            setSessions([]);
-            return;
-        }
-
         let cancelled = false
 
         const loadSessions = async () => {
             setSessionsLoading(true)
             const result = await getSessions()
             if (!cancelled && result?.status) {
-                setSessions(result.data || [])
+                const list = Array.isArray(result.data)
+                    ? result.data
+                    : Array.isArray(result.data?.sessions)
+                        ? result.data.sessions
+                        : [];
+                setSessions(list);
             }
             if (!cancelled) {
                 setSessionsLoading(false)
@@ -113,17 +114,17 @@ const Settings = () => {
         return () => {
             cancelled = true
         }
-    }, [profile]);
+    }, []);
 
     const add_errors_to_image = (new_errors) => {
         const updated_errors = { ...errors };
 
-        if (!updated_errors.featured_image) { 
-            updated_errors.featured_image = [];
+        if (!updated_errors.userAvatar) { 
+            updated_errors.userAvatar = [];
         }
 
         for(const new_error of new_errors) {
-            updated_errors.featured_image.push(new_error)
+            updated_errors.userAvatar.push(new_error)
         }
         setErrors(updated_errors);
     }
@@ -131,8 +132,8 @@ const Settings = () => {
     const clear_errors_from_image = () => {
         const updated_errors = { ...errors };
 
-        if(updated_errors.featured_image) {
-            delete updated_errors.featured_image
+        if(updated_errors.userAvatar) {
+            delete updated_errors.userAvatar
         }
 
         setErrors(updated_errors)
@@ -147,24 +148,24 @@ const Settings = () => {
 
     const field_validation = () => {
         let is_error = false
-        if (fields.nick_name.length < 3) {
+        if (fields.userNickName.length < FIELD_LIMITS.nick.min) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                nick_name: "Username must be at least 3 characters long!"
+                userNickName: `Имя должно быть не короче ${FIELD_LIMITS.nick.min} символов`
             }));
             is_error = true
         }
-        if (fields.nick_name.length > 20) {
+        if (fields.userNickName.length > FIELD_LIMITS.nick.max) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                nick_name: "Username cannot be longer than 20 characters!"
+                userNickName: `Имя не длиннее ${FIELD_LIMITS.nick.max} символов`
             }));
             is_error = true
         }
-        if (fields.description.length > 60) {
+        if (fields.userDescription.length > FIELD_LIMITS.description.max) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                description: "Description cannot be longer than 60 characters!"
+                userDescription: `Описание не длиннее ${FIELD_LIMITS.description.max} символов`
             }));
             is_error = true
         }
@@ -175,33 +176,33 @@ const Settings = () => {
         let is_error = false
         const next = {}
 
-        if (passwordFields.current_password.length < 8 || passwordFields.current_password.length > 20) {
-            next.current_password = "Пароль должен быть от 8 до 20 символов"
+        if (passwordFields.currentPassword.length < FIELD_LIMITS.password.min || passwordFields.currentPassword.length > FIELD_LIMITS.password.max) {
+            next.currentPassword = `Пароль должен быть от ${FIELD_LIMITS.password.min} до ${FIELD_LIMITS.password.max} символов`
             is_error = true
         }
-        if (passwordFields.new_password.length < 8 || passwordFields.new_password.length > 20) {
-            next.new_password = "Пароль должен быть от 8 до 20 символов"
+        if (passwordFields.newPassword.length < FIELD_LIMITS.password.min || passwordFields.newPassword.length > FIELD_LIMITS.password.max) {
+            next.newPassword = `Пароль должен быть от ${FIELD_LIMITS.password.min} до ${FIELD_LIMITS.password.max} символов`
             is_error = true
         }
-        if (passwordFields.new_password_confirm.length < 8 || passwordFields.new_password_confirm.length > 20) {
-            next.new_password_confirm = "Пароль должен быть от 8 до 20 символов"
+        if (passwordFields.newPasswordConfirm.length < FIELD_LIMITS.password.min || passwordFields.newPasswordConfirm.length > FIELD_LIMITS.password.max) {
+            next.newPasswordConfirm = `Пароль должен быть от ${FIELD_LIMITS.password.min} до ${FIELD_LIMITS.password.max} символов`
             is_error = true
         }
-        if (!is_error && passwordFields.new_password !== passwordFields.new_password_confirm) {
-            next.new_password_confirm = "Пароли не совпадают"
+        if (!is_error && passwordFields.newPassword !== passwordFields.newPasswordConfirm) {
+            next.newPasswordConfirm = "Пароли не совпадают"
             is_error = true
         }
-        if (!is_error && passwordFields.current_password === passwordFields.new_password) {
-            next.new_password = "Новый пароль должен отличаться от текущего"
+        if (!is_error && passwordFields.currentPassword === passwordFields.newPassword) {
+            next.newPassword = "Новый пароль должен отличаться от текущего"
             is_error = true
         }
 
         if (is_error) {
             setErrors(prev => {
                 const other = { ...prev }
-                delete other.current_password
-                delete other.new_password
-                delete other.new_password_confirm
+                delete other.currentPassword
+                delete other.newPassword
+                delete other.newPasswordConfirm
                 return { ...other, ...next }
             })
         }
@@ -222,26 +223,22 @@ const Settings = () => {
             setPasswordLoading(false);
             if (result.status === true) {
                 setPasswordFields({
-                    current_password: "",
-                    new_password: "",
-                    new_password_confirm: ""
+                    currentPassword: "",
+                    newPassword: "",
+                    newPasswordConfirm: ""
                 });
                 setErrors(prev => {
                     const next = { ...prev };
-                    delete next.current_password;
-                    delete next.new_password;
-                    delete next.new_password_confirm;
+                    delete next.currentPassword;
+                    delete next.newPassword;
+                    delete next.newPasswordConfirm;
                     return next;
                 });
                 setChangingPassword(false);
                 showToast({ message: "Пароль изменён", type: "success" });
             } else {
                 if (result?.errors?.body) {
-                    const formattedErrors = Object.fromEntries(
-                        Object.entries(result.errors.body).map(
-                            ([field, obj]) => [field, obj.message]
-                        )
-                    );
+                    const formattedErrors = Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message]));
 
                     setErrors(prev => ({ ...prev, ...formattedErrors }));
                 }
@@ -264,20 +261,27 @@ const Settings = () => {
         const formData = new FormData();
 
         const avatarChanged =
-            fields.avatar instanceof File ||
-            fields.avatar !== (profile?.avatar ?? null);
+            fields.userAvatar instanceof File ||
+            fields.userAvatar !== (profile?.avatar ?? null);
+
+        const profileCompare = {
+            userNickName: profile.nick_name ?? "",
+            userDescription: profile.description ?? "",
+            isEmailPublic: profile.is_email_public,
+            isSavedPostsPublic: profile.is_saved_posts_public
+        }
 
         for (let field in fields) {
-            if (field === 'avatar') {
+            if (field === 'userAvatar') {
                 continue;
             }
 
-            if (fields[field] === profile[field]) continue
+            if (fields[field] === profileCompare[field]) continue
             formData.append(field, fields[field])
         }
 
         if (avatarChanged) {
-            formData.append('avatar', fields.avatar ?? '');
+            formData.append('userAvatar', fields.userAvatar ?? '');
         }
 
         try {
@@ -293,13 +297,7 @@ const Settings = () => {
                 showToast({ message: "Успешно сохранено!", type: "success" });
             } else {
                 if (result?.errors?.body) {
-                    const formattedErrors = Object.fromEntries(
-                        Object.entries(result.errors.body).map(
-                            ([field, obj]) => [field, obj.message]
-                        )
-                    );
-
-                    setErrors(formattedErrors);
+                    setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
                 }
                 showToast({ message: "Ошибка!", type: "error" });
                 return result;
@@ -308,7 +306,7 @@ const Settings = () => {
             console.log(error);
             if(error instanceof TypeError && error.message === "Failed to fetch") {
                 setErrors({
-                    "avatar": [ "Max size of image is 5 mb"] 
+                    userAvatar: [ "Max size of image is 5 mb"] 
                 })
             }
             return { status: "error", message: "server not found" };
@@ -344,21 +342,21 @@ const Settings = () => {
     const handleAvatarRemove = () => {
         setFields(prev => ({
             ...prev,
-            avatar: null
+            userAvatar: null
         }));
     };
 
     const openPasswordForm = () => {
         setPasswordFields({
-            current_password: "",
-            new_password: "",
-            new_password_confirm: ""
+            currentPassword: "",
+            newPassword: "",
+            newPasswordConfirm: ""
         });
         setErrors(prev => {
             const next = { ...prev };
-            delete next.current_password;
-            delete next.new_password;
-            delete next.new_password_confirm;
+            delete next.currentPassword;
+            delete next.newPassword;
+            delete next.newPasswordConfirm;
             return next;
         });
         setChangingPassword(true);
@@ -366,15 +364,15 @@ const Settings = () => {
 
     const closePasswordForm = () => {
         setPasswordFields({
-            current_password: "",
-            new_password: "",
-            new_password_confirm: ""
+            currentPassword: "",
+            newPassword: "",
+            newPasswordConfirm: ""
         });
         setErrors(prev => {
             const next = { ...prev };
-            delete next.current_password;
-            delete next.new_password;
-            delete next.new_password_confirm;
+            delete next.currentPassword;
+            delete next.newPassword;
+            delete next.newPasswordConfirm;
             return next;
         });
         setChangingPassword(false);
@@ -401,14 +399,14 @@ const Settings = () => {
                                 <div className="settings_profile">
                                     <div className="settings_profile_avatar">
                                         <DropFile
-                                            value={fields.avatar}
+                                            value={fields.userAvatar}
                                             setValue={(file) =>
-                                                setFields(prev => ({ ...prev, avatar: file }))
+                                                setFields(prev => ({ ...prev, userAvatar: file }))
                                             }
                                             background={<AvatarIcon className="drop_file_info_avatar_icon app-transition" />}
                                             dropFileType={"image/*"}
                                             fileTypes={"SVG, PNG, JPEG, JPG и другие"}
-                                            errors={errors?.avatar}
+                                            errors={errors?.userAvatar}
                                             addNewErrors={add_errors_to_image}
                                             clearErrors={clear_errors_from_image}
                                             onRemove={handleAvatarRemove}
@@ -426,29 +424,30 @@ const Settings = () => {
                                                 />
                                             </Field>
                                         ) : null}
-                                        <Field error={errors?.nick_name ?? null} title={"Имя пользователя"}>
+                                        <Field error={errors?.userNickName ?? null} title={"Имя пользователя"}>
                                             <InputField
                                                 className={`user_name`}
                                                 type="text"
-                                                onChange={(e) => setFields({ ...fields, nick_name: e.target.value })}
-                                                onFocus={() => handleFocus('nick_name')}
+                                                onChange={(e) => setFields({ ...fields, userNickName: e.target.value })}
+                                                onFocus={() => handleFocus('userNickName')}
                                                 placeholder="User Name"
-                                                value={fields?.nick_name}
-                                                error={errors?.nick_name ?? null}
+                                                value={fields?.userNickName}
+                                                error={errors?.userNickName ?? null}
+                                                length={FIELD_LIMITS.nick.max}
                                             />
                                         </Field>
-                                        <Field error={errors?.description ?? null} title={"Описание"}>
+                                        <Field error={errors?.userDescription ?? null} title={"Описание"}>
                                             <InputField
                                                 className={`description`}
                                                 type="text"
                                                 isMultiline={true}
-                                                length={60}
+                                                length={FIELD_LIMITS.description.max}
                                                 rows={3}
-                                                onChange={(e) => setFields({ ...fields, description: e.target.value })}
-                                                onFocus={() => handleFocus('description')}
+                                                onChange={(e) => setFields({ ...fields, userDescription: e.target.value })}
+                                                onFocus={() => handleFocus('userDescription')}
                                                 placeholder="Description of profile"
-                                                value={fields?.description}
-                                                error={errors?.description ?? null}
+                                                value={fields?.userDescription}
+                                                error={errors?.userDescription ?? null}
                                             />
                                         </Field>
                                     </div>
@@ -459,14 +458,14 @@ const Settings = () => {
                                         <div className="private_setting_content_item app-transition">
                                             <p>Отображать мой email в профиле</p>
                                             <Toggle
-                                                checked={fields.is_email_public}
+                                                checked={fields.isEmailPublic}
                                                 onChange={set_email_visibility}
                                             />
                                         </div>
                                         <div className="private_setting_content_item app-transition">
                                             <p>Разрешить просмотр моих сохраненных постов</p>
                                             <Toggle
-                                                checked={fields.is_saved_posts_public}
+                                                checked={fields.isSavedPostsPublic}
                                                 onChange={set_saved_posts_visibility}
                                             />
                                         </div>
@@ -493,40 +492,40 @@ const Settings = () => {
                                             save_password();
                                         }}
                                     >
-                                        <Field error={errors?.current_password ?? null} title={"Текущий пароль"}>
+                                        <Field error={errors?.currentPassword ?? null} title={"Текущий пароль"}>
                                             <InputField
                                                 type="password"
                                                 autoComplete="current-password"
-                                                length={20}
-                                                onChange={(e) => setPasswordFields({ ...passwordFields, current_password: e.target.value })}
-                                                onFocus={() => handleFocus('current_password')}
+                                                length={FIELD_LIMITS.password.max}
+                                                onChange={(e) => setPasswordFields({ ...passwordFields, currentPassword: e.target.value })}
+                                                onFocus={() => handleFocus('currentPassword')}
                                                 placeholder="Текущий пароль"
-                                                value={passwordFields.current_password}
-                                                error={errors?.current_password ?? null}
+                                                value={passwordFields.currentPassword}
+                                                error={errors?.currentPassword ?? null}
                                             />
                                         </Field>
-                                        <Field error={errors?.new_password ?? null} title={"Новый пароль"}>
+                                        <Field error={errors?.newPassword ?? null} title={"Новый пароль"}>
                                             <InputField
                                                 type="password"
                                                 autoComplete="new-password"
-                                                length={20}
-                                                onChange={(e) => setPasswordFields({ ...passwordFields, new_password: e.target.value })}
-                                                onFocus={() => handleFocus('new_password')}
+                                                length={FIELD_LIMITS.password.max}
+                                                onChange={(e) => setPasswordFields({ ...passwordFields, newPassword: e.target.value })}
+                                                onFocus={() => handleFocus('newPassword')}
                                                 placeholder="Новый пароль"
-                                                value={passwordFields.new_password}
-                                                error={errors?.new_password ?? null}
+                                                value={passwordFields.newPassword}
+                                                error={errors?.newPassword ?? null}
                                             />
                                         </Field>
-                                        <Field error={errors?.new_password_confirm ?? null} title={"Повторите новый пароль"}>
+                                        <Field error={errors?.newPasswordConfirm ?? null} title={"Повторите новый пароль"}>
                                             <InputField
                                                 type="password"
                                                 autoComplete="new-password"
-                                                length={20}
-                                                onChange={(e) => setPasswordFields({ ...passwordFields, new_password_confirm: e.target.value })}
-                                                onFocus={() => handleFocus('new_password_confirm')}
+                                                length={FIELD_LIMITS.password.max}
+                                                onChange={(e) => setPasswordFields({ ...passwordFields, newPasswordConfirm: e.target.value })}
+                                                onFocus={() => handleFocus('newPasswordConfirm')}
                                                 placeholder="Повторите новый пароль"
-                                                value={passwordFields.new_password_confirm}
-                                                error={errors?.new_password_confirm ?? null}
+                                                value={passwordFields.newPasswordConfirm}
+                                                error={errors?.newPasswordConfirm ?? null}
                                             />
                                         </Field>
                                         <div className="settings_panel_actions">

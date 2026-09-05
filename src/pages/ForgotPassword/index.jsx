@@ -9,6 +9,7 @@ import Field from '../../components/Ui/Field/index';
 import OtpInput from '../../components/Ui/OtpInput/index';
 
 import { requestPasswordReset, confirmPasswordReset, resetPassword } from '../../api/auth.api';
+import { FIELD_LIMITS } from '../../constants/fieldLimits';
 import { setAccessToken } from '../../api/http';
 
 import "../Auth/Auth.scss";
@@ -23,8 +24,8 @@ const ForgotPassword = () => {
     const [email, setEmail] = useState("");
     const [code, setCode] = useState(Array(CODE_LENGTH).fill(""));
     const [passwords, setPasswords] = useState({
-        new_password: "",
-        new_password_confirm: ""
+        newPassword: "",
+        newPasswordConfirm: ""
     });
     const [errors, setErrors] = useState({});
 
@@ -36,17 +37,13 @@ const ForgotPassword = () => {
 
     const applyBodyErrors = (result) => {
         if (result?.errors?.body) {
-            setErrors(Object.fromEntries(
-                Object.entries(result.errors.body).map(
-                    ([field, obj]) => [field, obj.message]
-                )
-            ));
+            setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
         }
     };
 
     const sendCode = async () => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-            setErrors({ email: "Некорректная почта" });
+            setErrors({ userEmail: "Некорректная почта" });
             return;
         }
 
@@ -71,15 +68,15 @@ const ForgotPassword = () => {
     };
 
     const confirmCode = async () => {
-        const email_code = code.join("");
+        const emailCode = code.join("");
 
-        if (email_code.length !== CODE_LENGTH) {
-            setErrors({ email_code: " " });
+        if (emailCode.length !== CODE_LENGTH) {
+            setErrors({ emailCode: " " });
             return;
         }
 
         setIsLoading(true);
-        const result = await confirmPasswordReset(email.trim(), email_code);
+        const result = await confirmPasswordReset(email.trim(), emailCode);
         setIsLoading(false);
 
         if (result?.statusCode === 429) {
@@ -88,26 +85,26 @@ const ForgotPassword = () => {
         }
 
         if (result?.status === true) {
-            setPasswords({ new_password: "", new_password_confirm: "" });
+            setPasswords({ newPassword: "", newPasswordConfirm: "" });
             setErrors({});
             setStep("password");
             return;
         }
 
-        setErrors({ email_code: result?.errors?.body?.email_code?.message || " " });
+        setErrors({ emailCode: result?.errors?.body?.emailCode?.message || " " });
         showToast({ message: "Неверный код", type: "error" });
     };
 
     const submitPassword = async () => {
         const next = {};
-        if (passwords.new_password.length < 8 || passwords.new_password.length > 20) {
-            next.new_password = "Пароль должен быть от 8 до 20 символов";
+        if (passwords.newPassword.length < FIELD_LIMITS.password.min || passwords.newPassword.length > FIELD_LIMITS.password.max) {
+            next.newPassword = `Пароль должен быть от ${FIELD_LIMITS.password.min} до ${FIELD_LIMITS.password.max} символов`;
         }
-        if (passwords.new_password_confirm.length < 8 || passwords.new_password_confirm.length > 20) {
-            next.new_password_confirm = "Пароль должен быть от 8 до 20 символов";
+        if (passwords.newPasswordConfirm.length < FIELD_LIMITS.password.min || passwords.newPasswordConfirm.length > FIELD_LIMITS.password.max) {
+            next.newPasswordConfirm = `Пароль должен быть от ${FIELD_LIMITS.password.min} до ${FIELD_LIMITS.password.max} символов`;
         }
-        if (!next.new_password && !next.new_password_confirm && passwords.new_password !== passwords.new_password_confirm) {
-            next.new_password_confirm = "Пароли не совпадают";
+        if (!next.newPassword && !next.newPasswordConfirm && passwords.newPassword !== passwords.newPasswordConfirm) {
+            next.newPasswordConfirm = "Пароли не совпадают";
         }
         if (Object.keys(next).length) {
             setErrors(next);
@@ -117,9 +114,9 @@ const ForgotPassword = () => {
         setIsLoading(true);
         const result = await resetPassword({
             email: email.trim(),
-            email_code: code.join(""),
-            new_password: passwords.new_password,
-            new_password_confirm: passwords.new_password_confirm
+            emailCode: code.join(""),
+            newPassword: passwords.newPassword,
+            newPasswordConfirm: passwords.newPasswordConfirm
         });
         setIsLoading(false);
 
@@ -153,15 +150,16 @@ const ForgotPassword = () => {
                     <div className="auth_page_stack">
                     <h1 className="auth_page_title">Сброс пароля</h1>
                     <div className="auth_page_group section app-transition">
-                        <Field title="Почта" error={errors?.email ?? null}>
+                        <Field title="Почта" error={errors?.userEmail ?? null}>
                             <InputField
                                 type="email"
                                 autoComplete="email"
                                 onChange={(e) => setEmail(e.target.value)}
-                                onFocus={() => handleFocus("email")}
+                                onFocus={() => handleFocus("userEmail")}
                                 placeholder="Email"
                                 value={email}
-                                error={errors?.email ?? null}
+                                error={errors?.userEmail ?? null}
+                                length={FIELD_LIMITS.email.max}
                             />
                         </Field>
                         <PrimaryButton type="submit" isLoading={isLoading}>Отправить код</PrimaryButton>
@@ -191,8 +189,8 @@ const ForgotPassword = () => {
                                     length={CODE_LENGTH}
                                     value={code}
                                     onChange={setCode}
-                                    error={errors?.email_code}
-                                    onFocus={() => handleFocus("email_code")}
+                                    error={errors?.emailCode}
+                                    onFocus={() => handleFocus("emailCode")}
                                 />
                             </div>
                         </div>
@@ -225,28 +223,28 @@ const ForgotPassword = () => {
                     <div className="auth_page_stack">
                     <h1 className="auth_page_title">Новый пароль</h1>
                     <div className="auth_page_group section app-transition">
-                        <Field title="Новый пароль" error={errors?.new_password ?? null}>
+                        <Field title="Новый пароль" error={errors?.newPassword ?? null}>
                             <InputField
                                 type="password"
                                 autoComplete="new-password"
-                                length={20}
-                                onChange={(e) => setPasswords({ ...passwords, new_password: e.target.value })}
-                                onFocus={() => handleFocus("new_password")}
+                                length={FIELD_LIMITS.password.max}
+                                onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
+                                onFocus={() => handleFocus("newPassword")}
                                 placeholder="Новый пароль"
-                                value={passwords.new_password}
-                                error={errors?.new_password ?? null}
+                                value={passwords.newPassword}
+                                error={errors?.newPassword ?? null}
                             />
                         </Field>
-                        <Field title="Повторите пароль" error={errors?.new_password_confirm ?? null}>
+                        <Field title="Повторите пароль" error={errors?.newPasswordConfirm ?? null}>
                             <InputField
                                 type="password"
                                 autoComplete="new-password"
-                                length={20}
-                                onChange={(e) => setPasswords({ ...passwords, new_password_confirm: e.target.value })}
-                                onFocus={() => handleFocus("new_password_confirm")}
+                                length={FIELD_LIMITS.password.max}
+                                onChange={(e) => setPasswords({ ...passwords, newPasswordConfirm: e.target.value })}
+                                onFocus={() => handleFocus("newPasswordConfirm")}
                                 placeholder="Повторите пароль"
-                                value={passwords.new_password_confirm}
-                                error={errors?.new_password_confirm ?? null}
+                                value={passwords.newPasswordConfirm}
+                                error={errors?.newPasswordConfirm ?? null}
                             />
                         </Field>
                         <PrimaryButton type="submit" isLoading={isLoading}>Сменить пароль</PrimaryButton>

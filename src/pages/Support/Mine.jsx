@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 import { AppContext } from "../../App";
 import { createSupportRequest, getMySupportRequests } from "../../api/support.api";
+import { FIELD_LIMITS } from "../../constants/fieldLimits";
 import { SUPPORT_KINDS, kindLabel, statusLabel } from "./constants";
 import { format_back, format_date_time } from "../../utils/format";
 
@@ -22,8 +23,8 @@ const SupportMine = () => {
     const { showToast, profile, profileLoading } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
     const [fields, setFields] = useState({
-        kind: "request",
-        message: ""
+        supportKind: "request",
+        supportMessage: ""
     });
     const [errors, setErrors] = useState({});
     const [items, setItems] = useState([]);
@@ -72,12 +73,16 @@ const SupportMine = () => {
     const validate = () => {
         const next = {};
 
-        if (!fields.kind) {
-            next.kind = "Выберите тип обращения";
+        if (!fields.supportKind) {
+            next.supportKind = "Выберите тип обращения";
         }
 
-        if (!fields.message.trim()) {
-            next.message = "Напишите сообщение";
+        if (!fields.supportMessage.trim()) {
+            next.supportMessage = "Напишите сообщение";
+        } else if (fields.supportMessage.trim().length < FIELD_LIMITS.supportMessage.min) {
+            next.supportMessage = `Сообщение не короче ${FIELD_LIMITS.supportMessage.min} символов`;
+        } else if (fields.supportMessage.length > FIELD_LIMITS.supportMessage.max) {
+            next.supportMessage = `Сообщение не длиннее ${FIELD_LIMITS.supportMessage.max} символов`;
         }
 
         setErrors(next);
@@ -92,8 +97,8 @@ const SupportMine = () => {
         setIsLoading(true);
         try {
             const result = await createSupportRequest({
-                kind: fields.kind,
-                message: fields.message.trim()
+                supportKind: fields.supportKind,
+                supportMessage: fields.supportMessage.trim()
             });
 
             if (result.status === true && result.data?.access_key) {
@@ -141,28 +146,28 @@ const SupportMine = () => {
                     handleSubmit();
                 }}
             >
-                <Field title="Тип" error={errors?.kind ?? null}>
+                <Field title="Тип" error={errors?.supportKind ?? null}>
                     <DropDown
                         options={SUPPORT_KINDS}
-                        value={fields.kind}
+                        value={fields.supportKind}
                         placeholder="Тип обращения"
-                        error={Boolean(errors?.kind)}
+                        error={Boolean(errors?.supportKind)}
                         onChange={(value) => {
-                            handleFocus("kind");
-                            setFields({ ...fields, kind: value });
+                            handleFocus("supportKind");
+                            setFields({ ...fields, supportKind: value });
                         }}
                     />
                 </Field>
-                <Field title="Сообщение" error={errors?.message ?? null}>
+                <Field title="Сообщение" error={errors?.supportMessage ?? null}>
                     <InputField
                         isMultiline={true}
                         multilineRows={6}
-                        length={2000}
-                        value={fields.message}
+                        length={FIELD_LIMITS.supportMessage.max}
+                        value={fields.supportMessage}
                         placeholder="Опишите ситуацию"
-                        onChange={(event) => setFields({ ...fields, message: event.target.value })}
-                        onFocus={() => handleFocus("message")}
-                        error={errors?.message ?? null}
+                        onChange={(event) => setFields({ ...fields, supportMessage: event.target.value })}
+                        onFocus={() => handleFocus("supportMessage")}
+                        error={errors?.supportMessage ?? null}
                     />
                 </Field>
                 <PrimaryButton type="submit" isLoading={isLoading}>

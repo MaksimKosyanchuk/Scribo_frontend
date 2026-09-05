@@ -39,8 +39,7 @@
     }
 
     &_item {
-        display: grid;
-        grid-template-columns: 8px minmax(0, 1fr);
+        display: flex;
         align-items: start;
         gap: 10px;
         padding: 12px;

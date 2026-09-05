@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { AppContext } from "../../App.jsx";
 import { getPublicSupportRequest, replyPublicSupportRequest, updateSupportRequestStatus } from "../../api/support.api";
+import { FIELD_LIMITS } from "../../constants/fieldLimits";
 import { SUPPORT_STATUSES, kindLabel, statusLabel } from "./constants";
 import { format_date_time } from "../../utils/format";
 
@@ -69,6 +70,10 @@ const SupportRequestPage = () => {
             setError("Напишите сообщение");
             return;
         }
+        if (reply.length > FIELD_LIMITS.supportReply.max) {
+            setError(`Сообщение не длиннее ${FIELD_LIMITS.supportReply.max} символов`);
+            return;
+        }
 
         setSending(true);
         try {
@@ -76,8 +81,8 @@ const SupportRequestPage = () => {
 
             if (!result.status) {
                 showToast({ type: "error", message: result.message || "Не удалось отправить сообщение" });
-                if (result?.errors?.body?.text?.message) {
-                    setError(result.errors.body.text.message);
+                if (result?.errors?.body?.replyText?.message) {
+                    setError(result.errors.body.replyText.message);
                 }
                 return;
             }
@@ -205,7 +210,7 @@ const SupportRequestPage = () => {
                         <InputField
                             isMultiline={true}
                             multilineRows={6}
-                            length={2000}
+                            length={FIELD_LIMITS.supportReply.max}
                             value={reply}
                             placeholder={isStaff ? "Текст ответа" : "Дополните обращение"}
                             onChange={(event) => setReply(event.target.value)}

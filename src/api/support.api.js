@@ -69,7 +69,7 @@ const replySupportRequest = async (id, text) => {
     const response = await apiFetch(`${API}/${id}/replies`, {
         method: "POST",
         headers: jsonHeaders,
-        body: JSON.stringify({ text })
+        body: JSON.stringify({ replyText: text })
     })
 
     return await response.json()
@@ -79,7 +79,7 @@ const replyPublicSupportRequest = async (key, text) => {
     const response = await apiFetch(`${API}/public/${key}/replies`, {
         method: "POST",
         headers: jsonHeaders,
-        body: JSON.stringify({ text })
+        body: JSON.stringify({ replyText: text })
     })
 
     return await response.json()
@@ -89,7 +89,7 @@ const updateSupportRequestStatus = async (id, status) => {
     const response = await apiFetch(`${API}/${id}/status`, {
         method: "PATCH",
         headers: jsonHeaders,
-        body: JSON.stringify({ status })
+        body: JSON.stringify({ supportStatus: status })
     })
 
     return await response.json()

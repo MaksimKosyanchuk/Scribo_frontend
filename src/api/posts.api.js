@@ -93,7 +93,10 @@ const commentPost = async (id, data) => {
     const result = await apiFetch(`${API_URL}/api/posts/${id}/comments?expand=author`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+            commentText: data.commentText,
+            ...(data.parentCommentId ? { parentCommentId: data.parentCommentId } : {})
+        })
     })
     .then(res => res.json())
     .catch((err) => { 

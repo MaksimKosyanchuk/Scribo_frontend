@@ -29,9 +29,9 @@ const trackVisit = async (path) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                path,
-                visitor_id: getVisitorId(),
-                referrer: typeof document === "undefined" ? "" : document.referrer,
+                pagePath: path,
+                visitorId: getVisitorId(),
+                pageReferrer: typeof document === "undefined" ? "" : document.referrer,
                 ...geo
             })
         })

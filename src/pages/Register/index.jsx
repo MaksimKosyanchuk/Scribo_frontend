@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../App';
 
 import { emailRegister, googleRegister, veriticationEmailConfirm, verificationGoogle, loginGoogle, verificationEmail } from '../../api/auth.api';
+import { FIELD_LIMITS } from '../../constants/fieldLimits';
 
 import InputField from '../../components/Ui/InputField/index';
 import DropFile from '../../components/Ui/DropFile/index';
@@ -21,10 +22,10 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
 
     const [ fields, setFields ] = useState(
         {
-            nick_name: '',
-            password: '',
-            description: '',
-            avatar: null
+            userNickName: '',
+            userPassword: '',
+            userDescription: '',
+            userAvatar: null
         }
     )
     const [errors, setErrors] = useState({});
@@ -38,12 +39,12 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
     const add_errors_to_image = (new_errors) => {
         const updated_errors = { ...errors };
 
-        if (!updated_errors.featured_image) { 
-            updated_errors.featured_image = [];
+        if (!updated_errors.userAvatar) { 
+            updated_errors.userAvatar = [];
         }
 
         for(const new_error of new_errors) {
-            updated_errors.featured_image.push(new_error)
+            updated_errors.userAvatar.push(new_error)
         }
         setErrors(updated_errors);
     }
@@ -51,8 +52,8 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
     const clear_errors_from_image = () => {
         const updated_errors = { ...errors };
 
-        if(updated_errors.featured_image) {
-            delete updated_errors.featured_image
+        if(updated_errors.userAvatar) {
+            delete updated_errors.userAvatar
         }
 
         setErrors(updated_errors)
@@ -66,38 +67,38 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
 
     const field_validation = () => {
         let is_error = false
-        if (fields.nick_name.length < 3) {
+        if (fields.userNickName.length < FIELD_LIMITS.nick.min) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                nick_name: "Username must be at least 3 characters long!"
+                userNickName: `Имя должно быть не короче ${FIELD_LIMITS.nick.min} символов`
             }));
             is_error = true
         }
-        if (fields.nick_name.length > 20) {
+        if (fields.userNickName.length > FIELD_LIMITS.nick.max) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                nick_name: "Username cannot be longer than 20 characters!"
+                userNickName: `Имя не длиннее ${FIELD_LIMITS.nick.max} символов`
             }));
             is_error = true
         }
-        if (fields.password.length < 8) {
+        if (fields.userPassword.length < FIELD_LIMITS.password.min) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                password: "Password must be at least 8 characters long!"
+                userPassword: `Пароль не короче ${FIELD_LIMITS.password.min} символов`
             }));
             is_error = true
         }
-        if (fields.password.length > 20) {
+        if (fields.userPassword.length > FIELD_LIMITS.password.max) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                password: "Password cannot be longer than 20 characters!"
+                userPassword: `Пароль не длиннее ${FIELD_LIMITS.password.max} символов`
             }));
             is_error = true
         }
-        if (fields.description.length > 60) {
+        if (fields.userDescription.length > FIELD_LIMITS.description.max) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                password: "Description cannot be longer than 60 characters!"
+                userDescription: `Описание не длиннее ${FIELD_LIMITS.description.max} символов`
             }));
             is_error = true
         }
@@ -117,15 +118,15 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
             formData.append(field, fields[field])
         }
 
-        formData.append("email", email)
+        formData.append("userEmail", email)
         var result
 
         if(google_token) {
-            formData.append("google_token", google_token)
+            formData.append("googleToken", google_token)
             result = await googleRegister(formData)
         }
         else {
-            formData.append("email_code", gmail_code)
+            formData.append("emailCode", gmail_code)
             result = await emailRegister(formData)
         }
 
@@ -135,12 +136,7 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
         }
         else {
             if (result?.errors?.body) {
-                const formattedErrors = Object.fromEntries(
-                    Object.entries(result.errors.body).map(
-                        ([field, obj]) => [field, obj.message]
-                    )
-                );
-                setErrors(formattedErrors);
+                setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
             }
             showToast({ message: "Ошибка!", type: "error" });
             setIsLoading(false)
@@ -150,7 +146,7 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
 
     const handleClick = () => {
         const other = { ...errors };
-        delete other.avatar;
+        delete other.userAvatar;
 
         setErrors(other);
     }
@@ -169,16 +165,16 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                     <div className="auth_page_group section app-transition">
                     <div className="top_side">
                         <DropFile
-                            value={fields.avatar}
+                            value={fields.userAvatar}
                             setValue={(file) =>
-                                setFields({ ...fields, avatar: file })
+                                setFields({ ...fields, userAvatar: file })
                             }
                             background={
                                 <AvatarIcon className="drop_file_info_avatar_icon app-transition" />
                             }
                             dropFileType="image/*"
                             fileTypes="SVG, PNG, JPEG, JPG и другие"
-                            errors={errors?.featured_image}
+                            errors={errors?.userAvatar}
                             addNewErrors={add_errors_to_image}
                             clearErrors={clear_errors_from_image}
                             onRemove={handleClick}
@@ -191,32 +187,34 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                             onChange={() => {}}
                             placeholder="Email"
                             value={email ?? fields.email}
-                            error={errors?.email ?? null}
+                            error={errors?.userEmail ?? null}
                             confirmed={Boolean(email)}
+                            length={FIELD_LIMITS.email.max}
                         />
                     </Field>
-                    <Field title="Имя пользователя" error={errors?.nick_name ?? null}>
+                    <Field title="Имя пользователя" error={errors?.userNickName ?? null}>
                         <InputField
                             className={`user_name`}
                             type="text"
-                            onChange={(e) => setFields({ ...fields, nick_name: e.target.value })}
-                            onFocus={() => handleFocus('nick_name')}
+                            onChange={(e) => setFields({ ...fields, userNickName: e.target.value })}
+                            onFocus={() => handleFocus('userNickName')}
                             placeholder="User Name"
-                            value={fields.nick_name}
-                            error={errors?.nick_name ?? null}
+                            value={fields.userNickName}
+                            error={errors?.userNickName ?? null}
+                            length={FIELD_LIMITS.nick.max}
                         />
                     </Field>
-                    <Field title="Описание" error={errors?.description ?? null}>
+                    <Field title="Описание" error={errors?.userDescription ?? null}>
                         <InputField
                             className={`description`}
                             type="text"
                             isMultiline={true}
-                            length={30}
-                            onChange={(e) => setFields({ ...fields, description: e.target.value })}
-                            onFocus={() => handleFocus('description')}
+                            length={FIELD_LIMITS.description.max}
+                            onChange={(e) => setFields({ ...fields, userDescription: e.target.value })}
+                            onFocus={() => handleFocus('userDescription')}
                             placeholder="Description of profile"
-                            value={fields.description}
-                            error={errors?.description ?? null}
+                            value={fields.userDescription}
+                            error={errors?.userDescription ?? null}
                         />
                     </Field>
                 </div>
@@ -224,15 +222,16 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                 <div className="auth_page_stack">
                     <h1 className="auth_page_title">Пароль</h1>
                     <div className="auth_page_group section app-transition">
-                    <Field title="Пароль" error={errors?.password ?? null}>
+                    <Field title="Пароль" error={errors?.userPassword ?? null}>
                         <InputField
                             className={`password`}
                             type="password"
-                            onChange={(e) => setFields({ ...fields, password: e.target.value })}
-                            onFocus={() => handleFocus('password')}
+                            onChange={(e) => setFields({ ...fields, userPassword: e.target.value })}
+                            onFocus={() => handleFocus('userPassword')}
                             placeholder="Password123"
-                            value={fields.password}
-                            error={errors?.password ?? null}
+                            value={fields.userPassword}
+                            error={errors?.userPassword ?? null}
+                            length={FIELD_LIMITS.password.max}
                         />
                     </Field>
                     <PrimaryButton type="submit" isLoading={isLoading}>
@@ -264,7 +263,7 @@ const VerifyGmailCode = ({ email }) => {
         const fullCode = code.join("");
 
         if (fullCode.length !== CODE_LENGTH) {
-            setErrors({ code: " " });
+            setErrors({ emailCode: " " });
             setIsLoading(false)
             return;
         }
@@ -275,9 +274,14 @@ const VerifyGmailCode = ({ email }) => {
 
         if(result.statusCode === 200) {
             setRedigrectToForm(true)
+            return
         }
-        if(result.statusCode === 401) {
-            setErrors({ "code": " " })
+        if (result?.errors?.body) {
+            setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
+            return
+        }
+        if(result.statusCode === 401 || result.statusCode === 400) {
+            setErrors({ emailCode: " " })
         }
     };
 
@@ -300,7 +304,7 @@ const VerifyGmailCode = ({ email }) => {
                                 length={CODE_LENGTH}
                                 value={code}
                                 onChange={setCode}
-                                error={errors?.code}
+                                error={errors?.emailCode}
                                 onFocus={() => setErrors({})}
                             />
                         </div>
@@ -371,7 +375,7 @@ const Register = () => {
     const field_validation = () => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) {
             setErrors({
-                email: "Incorrect email!"
+                userEmail: "Incorrect email!"
             });
             return false
         }
@@ -393,10 +397,15 @@ const Register = () => {
 
         if(result.statusCode === 200) {
             setGmailCodeSedned(true)
-        }        
+            return
+        }
+        if (result?.errors?.body) {
+            setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
+            return
+        }
         if(result.statusCode === 409) {
             setErrors({
-                email: result.message
+                userEmail: result.message
             });
         }
     };
@@ -414,16 +423,17 @@ const Register = () => {
                 <div className="auth_page_stack">
                     <h1 className="auth_page_title">Регистрация</h1>
                     <div className="auth_page_group section app-transition">
-                    <Field title="Почта" error={errors?.email ?? null}>
+                    <Field title="Почта" error={errors?.userEmail ?? null}>
                         <InputField
                             className={`email`}
                             type="text"
                             onChange={(e) => setFields({ ...fields, email: e.target.value })}
-                            onFocus={() => handleFocus('email')}
+                            onFocus={() => handleFocus('userEmail')}
                             placeholder="Email"
                             value={email ?? fields.email}
-                            error={errors?.email ?? null}
+                            error={errors?.userEmail ?? null}
                             confirmed={Boolean(email)}
+                            length={FIELD_LIMITS.email.max}
                         />
                     </Field>
                     <PrimaryButton isLoading={isLoading} type="submit">
