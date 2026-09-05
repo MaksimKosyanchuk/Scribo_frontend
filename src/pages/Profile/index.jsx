@@ -232,13 +232,13 @@ const Profile = () => {
     return (
         <div className="profile">
             <div className="profile_info section app-transition">
-                <div className="profile_info_left">
+                <div className="profile_info_main">
                     <Sceleton
                         isLoading={isProfileLoading}
                         circle={true}
-                        className="profile_info_left_avatar"
+                        className="profile_info_avatar"
                     >
-                        <div className="profile_info_left_avatar">
+                        <div className="profile_info_avatar">
                             <img
                                 src={user?.avatar ?? DefaultProfileAvatar}
                                 alt="img"
@@ -246,197 +246,167 @@ const Profile = () => {
                         </div>
                     </Sceleton>
 
-                    <div className="profile_info_middle">
-                    </div>
-                </div>
-
-
-                <div className="profile_info_middle">
-
-                    <Sceleton
-                        isLoading={isProfileLoading}
-                        rounded={true}
-                        className="profile_info_bottom_nick"
-                    >
-                        <div className="profile_info_bottom_nick">
-                            <p className="profile_info_bottom_nick_name">
-                                {user?.nick_name}
-                            </p>
-
-                            {user?.is_verified && (
-                                <Tooltip text="Подтвержденный аккаунт">
-                                    <Verified
-                                        className="profile_info_bottom_nick_verified verified-icon"
-                                    />
-                                </Tooltip>
-                            )}
-                        </div>
-                    </Sceleton>
-
-                    {
-                        user && !isProfileLoading && (
-                            <RoleBadge user={user} />
-                        )
-                    }
-                    {
-                        user && user.email &&
+                    <div className="profile_info_bio">
                         <Sceleton
                             isLoading={isProfileLoading}
                             rounded={true}
-                            className="profile_info_bottom_email"
+                            className="profile_info_nick"
                         >
-                            <div className="profile_info_bottom_email">
-                                <p>{user?.email}</p>
+                            <div className="profile_info_nick">
+                                <p className="profile_info_nick_name">
+                                    {user?.nick_name}
+                                </p>
+                                {user?.is_verified && (
+                                    <Tooltip text="Подтвержденный аккаунт">
+                                        <Verified
+                                            className="profile_info_nick_verified verified-icon"
+                                        />
+                                    </Tooltip>
+                                )}
                             </div>
                         </Sceleton>
-                    }
-
-
-                    <Sceleton
-                        isLoading={isProfileLoading}
-                        rounded={true}
-                        className="profile_info_bottom_description"
-                    >
-                        <div className="profile_info_bottom_description">
-                            <p>{user?.description}</p>
-                        </div>
-                    </Sceleton>
-
-
-                    <Sceleton
-                        isLoading={isProfileLoading}
-                        rounded={true}
-                        className="profile_info_bottom_registration_date"
-                    >
-                        <div className="profile_info_bottom_registration_date">
-                            <Calendar className="app-transition" />
-
-                            <Tooltip text={format_date_time(user?.created_date)}>
-                                <p>
-                                    Регистрация: {format_back(user?.created_date)}
-                                </p>
-                            </Tooltip>
-                        </div>
-                    </Sceleton>
-
-                </div>
-
-
-                <div className="profile_info_right">
-
-                    <div className="profile_info_right_top">
-
+                        {
+                            user && !isProfileLoading && (
+                                <RoleBadge user={user} />
+                            )
+                        }
+                        {
+                            user && user.email &&
+                            <Sceleton
+                                isLoading={isProfileLoading}
+                                rounded={true}
+                                className="profile_info_email"
+                            >
+                                <p className="profile_info_email">{user?.email}</p>
+                            </Sceleton>
+                        }
+                        {(isProfileLoading || user?.description) ? (
+                            <Sceleton
+                                isLoading={isProfileLoading}
+                                rounded={true}
+                                className="profile_info_description"
+                            >
+                                <p className="profile_info_description">{user?.description}</p>
+                            </Sceleton>
+                        ) : null}
                         <Sceleton
                             isLoading={isProfileLoading}
-                            className="profile_info_right_top_item"
+                            rounded={true}
+                            className="profile_info_date"
                         >
-                            <div
-                                className="profile_info_right_top_item app-transition"
-                                onClick={() => scrollTo("posts_column", "start")}
-                            >
-                                <h1>{posts?.length ?? "0"}</h1>
-                                <p>постов</p>
+                            <div className="profile_info_date">
+                                <Calendar className="app-transition" />
+                                <Tooltip text={format_date_time(user?.created_date)}>
+                                    <p>
+                                        Регистрация: {format_back(user?.created_date)}
+                                    </p>
+                                </Tooltip>
                             </div>
                         </Sceleton>
-
-
-                        <Sceleton
-                            isLoading={isProfileLoading}
-                            className="profile_info_right_top_item"
-                        >
-                            <div
-                                className="profile_info_right_top_item app-transition"
-                                onClick={open_followers}
-                            >
-                                <h1>
-                                    {user?.followers?.length ?? "0"}
-                                </h1>
-                                <p>
-                                    подписчиков
-                                </p>
-                            </div>
-                        </Sceleton>
-
-
-                        <Sceleton
-                            isLoading={isProfileLoading}
-                            className="profile_info_right_top_item"
-                        >
-                            <div
-                                className="profile_info_right_top_item app-transition"
-                                onClick={open_follows}
-                            >
-                                <h1>
-                                    {user?.follows?.length ?? "0"}
-                                </h1>
-                                <p>
-                                    подписок
-                                </p>
-                            </div>
-                        </Sceleton>
-
                     </div>
 
-
                     <Sceleton
                         isLoading={isProfileLoading}
-                        className="profile_info_right_top_button"
+                        className="profile_info_action"
                     >
                         {
                             profile && profile._id === user?._id
                                 ?
                                 <ActionButton
-                                    className="profile_info_right_top_button"
+                                    className="profile_info_action"
                                     onClick={open_settings}
                                 >
-                                    <SettingsIcon className="profile_info_right_side_button_icon" />
+                                    <SettingsIcon className="profile_info_action_icon" />
                                     Настройки
                                 </ActionButton>
                                 :
                                 <FollowButton
                                     setNewData={setFollowThisUser}
                                     author_id={user?._id}
-                                    class_name="profile_info_right_top_button"
+                                    class_name="profile_info_action"
                                 />
                         }
                     </Sceleton>
                 </div>
+
+                <div className="profile_info_stats">
+                    <Sceleton
+                        isLoading={isProfileLoading}
+                        className="profile_info_stat"
+                    >
+                        <button
+                            type="button"
+                            className="profile_info_stat app-transition"
+                            onClick={() => scrollTo("posts_column", "start")}
+                        >
+                            <h1>{posts?.length ?? "0"}</h1>
+                            <p>постов</p>
+                        </button>
+                    </Sceleton>
+                    <Sceleton
+                        isLoading={isProfileLoading}
+                        className="profile_info_stat"
+                    >
+                        <button
+                            type="button"
+                            className="profile_info_stat app-transition"
+                            onClick={open_followers}
+                        >
+                            <h1>{user?.followers?.length ?? "0"}</h1>
+                            <p>подписчиков</p>
+                        </button>
+                    </Sceleton>
+                    <Sceleton
+                        isLoading={isProfileLoading}
+                        className="profile_info_stat"
+                    >
+                        <button
+                            type="button"
+                            className="profile_info_stat app-transition"
+                            onClick={open_follows}
+                        >
+                            <h1>{user?.follows?.length ?? "0"}</h1>
+                            <p>подписок</p>
+                        </button>
+                    </Sceleton>
+                </div>
             </div>
-            <Sceleton
-                isLoading={isProfileLoading}
-                rounded={true}
-                section={false}
-                className="profile_tab_list"
-            >
-                <div className="profile_tab_list app-transition">
-                    <SwitchBar
-                        items={[
-                            
-                            <>
-                                <PostIcon />
-                                Посты
-                            </>
-                            ,
-                            <>
-                                <BookmarkOutline />
-                                Избранные
-                            </>
-                        ]}
-                        active_index={activeTab}
-                        setActiveIndex={setActiveTab}
+
+            <div className="profile_feed">
+                <Sceleton
+                    isLoading={isProfileLoading}
+                    rounded={true}
+                    section={false}
+                    className="profile_tab_list"
+                >
+                    <div className="profile_tab_list app-transition">
+                        <SwitchBar
+                            items={[
+                                <>
+                                    <PostIcon />
+                                    Посты
+                                </>,
+                                <>
+                                    <BookmarkOutline />
+                                    Избранные
+                                </>
+                            ]}
+                            active_index={activeTab}
+                            setActiveIndex={setActiveTab}
+                        />
+                    </div>
+                </Sceleton>
+                <div className="profile_posts">
+                    <Posts
+                        posts={posts}
+                        setPosts={setPosts}
+                        isLoading={isProfileLoading || isPostsLoading}
+                        page={postsPage}
+                        pagesCount={postsPages}
+                        onPageChange={setPostsPage}
+                        showFilters={false}
                     />
                 </div>
-            </Sceleton>
-            <div className="profile_posts">
-                <Posts
-                    posts={posts}
-                    setPosts={setPosts}
-                    isLoading={isProfileLoading || isPostsLoading}
-                    page={postsPage}
-                    pagesCount={postsPages}
-                    onPageChange={setPostsPage}
-                    showFilters={false}
-                />
             </div>
         </div>
     );
