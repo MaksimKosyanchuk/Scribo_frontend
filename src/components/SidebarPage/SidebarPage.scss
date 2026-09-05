@@ -15,8 +15,8 @@
         align-items: stretch;
         padding: 24px 20px;
         flex: 0 0 240px;
-        width: 240px;
-        min-width: 240px;
+        width: 300px;
+        min-width: 300px;
         box-sizing: border-box;
         
         @include screen() {

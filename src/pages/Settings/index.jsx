@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../App';
 
-import { editProfile } from '../../api/profile.api';
+import { editProfile, changePassword } from '../../api/profile.api';
 import { logout as logoutRequest, getSessions, deleteSession } from '../../api/auth.api';
 import { format_back, format_date_time } from '../../utils/format';
 
@@ -10,6 +10,7 @@ import InputField from '../../components/Ui/InputField/index';
 import DropFile from '../../components/Ui/DropFile/index';
 import Toggle from '../../components/Ui/Toggle/index';
 import PrimaryButton from '../../components/Ui/PrimaryButton';
+import ActionButton from '../../components/Ui/ActionButton';
 import DangerButton from '../../components/Ui/DangerButton';
 import Field from '../../components/Ui/Field';
 import Tooltip from '../../components/Ui/Tooltip';
@@ -20,7 +21,6 @@ import "./Settings.scss";
 import AvatarIcon from "../../assets/svg/avatar-icon.svg?react"
 import ProfileIcon from "../../assets/svg/profile-icon.svg?react"
 import ShieldIcon from "../../assets/svg/shield-security.svg?react"
-import PeoplesIcon from "../../assets/svg/peoples.svg?react"
 
 const Settings = () => {
     const { profile, setProfile, profileLoading, showToast } = useContext(AppContext)
@@ -28,8 +28,15 @@ const Settings = () => {
     const navigate = useNavigate();
     const [errors, setErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false);
+    const [passwordLoading, setPasswordLoading] = useState(false);
+    const [changingPassword, setChangingPassword] = useState(false);
     const [sessions, setSessions] = useState([]);
     const [sessionsLoading, setSessionsLoading] = useState(false);
+    const [passwordFields, setPasswordFields] = useState({
+        current_password: "",
+        new_password: "",
+        new_password_confirm: ""
+    });
 
     const [ fields, setFields ] = useState(
         {
@@ -157,12 +164,95 @@ const Settings = () => {
         if (fields.description.length > 60) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                password: "Description cannot be longer than 60 characters!"
+                description: "Description cannot be longer than 60 characters!"
             }));
             is_error = true
         }
         return !is_error
     }
+
+    const password_field_validation = () => {
+        let is_error = false
+        const next = {}
+
+        if (passwordFields.current_password.length < 8 || passwordFields.current_password.length > 20) {
+            next.current_password = "Пароль должен быть от 8 до 20 символов"
+            is_error = true
+        }
+        if (passwordFields.new_password.length < 8 || passwordFields.new_password.length > 20) {
+            next.new_password = "Пароль должен быть от 8 до 20 символов"
+            is_error = true
+        }
+        if (passwordFields.new_password_confirm.length < 8 || passwordFields.new_password_confirm.length > 20) {
+            next.new_password_confirm = "Пароль должен быть от 8 до 20 символов"
+            is_error = true
+        }
+        if (!is_error && passwordFields.new_password !== passwordFields.new_password_confirm) {
+            next.new_password_confirm = "Пароли не совпадают"
+            is_error = true
+        }
+        if (!is_error && passwordFields.current_password === passwordFields.new_password) {
+            next.new_password = "Новый пароль должен отличаться от текущего"
+            is_error = true
+        }
+
+        if (is_error) {
+            setErrors(prev => {
+                const other = { ...prev }
+                delete other.current_password
+                delete other.new_password
+                delete other.new_password_confirm
+                return { ...other, ...next }
+            })
+        }
+
+        return !is_error
+    }
+
+    const save_password = async () => {
+        setPasswordLoading(true);
+        if (!password_field_validation()) {
+            setPasswordLoading(false);
+            return
+        }
+
+        try {
+            const result = await changePassword(passwordFields);
+
+            setPasswordLoading(false);
+            if (result.status === true) {
+                setPasswordFields({
+                    current_password: "",
+                    new_password: "",
+                    new_password_confirm: ""
+                });
+                setErrors(prev => {
+                    const next = { ...prev };
+                    delete next.current_password;
+                    delete next.new_password;
+                    delete next.new_password_confirm;
+                    return next;
+                });
+                setChangingPassword(false);
+                showToast({ message: "Пароль изменён", type: "success" });
+            } else {
+                if (result?.errors?.body) {
+                    const formattedErrors = Object.fromEntries(
+                        Object.entries(result.errors.body).map(
+                            ([field, obj]) => [field, obj.message]
+                        )
+                    );
+
+                    setErrors(prev => ({ ...prev, ...formattedErrors }));
+                }
+                showToast({ message: "Ошибка!", type: "error" });
+            }
+        } catch (error) {
+            console.log(error);
+            setPasswordLoading(false);
+            showToast({ message: "Ошибка!", type: "error" });
+        }
+    };
 
     const save_settings = async () => {
         setIsLoading(true);
@@ -258,6 +348,38 @@ const Settings = () => {
         }));
     };
 
+    const openPasswordForm = () => {
+        setPasswordFields({
+            current_password: "",
+            new_password: "",
+            new_password_confirm: ""
+        });
+        setErrors(prev => {
+            const next = { ...prev };
+            delete next.current_password;
+            delete next.new_password;
+            delete next.new_password_confirm;
+            return next;
+        });
+        setChangingPassword(true);
+    };
+
+    const closePasswordForm = () => {
+        setPasswordFields({
+            current_password: "",
+            new_password: "",
+            new_password_confirm: ""
+        });
+        setErrors(prev => {
+            const next = { ...prev };
+            delete next.current_password;
+            delete next.new_password;
+            delete next.new_password_confirm;
+            return next;
+        });
+        setChangingPassword(false);
+    };
+
     return (
         <div className="settings">
             <SidebarPage
@@ -266,6 +388,7 @@ const Settings = () => {
                     {
                         title: "Профиль",
                         key: "profile",
+                        aliases: ["privacy"],
                         icon: <ProfileIcon />,
                         content: (
                             <form
@@ -328,27 +451,9 @@ const Settings = () => {
                                                 error={errors?.description ?? null}
                                             />
                                         </Field>
-                                        <div className="settings_panel_actions">
-                                            <PrimaryButton type="submit" isLoading={isLoading}>Сохранить</PrimaryButton>
-                                        </div>
                                     </div>
                                 </div>
-                            </form>
-                        )
-                    },
-                    {
-                        title: "Приватность",
-                        key: "privacy",
-                        icon: <ShieldIcon />,
-                        content: (
-                            <form
-                                className="settings_panel settings_panel_privacy"
-                                onSubmit={(event) => {
-                                    event.preventDefault();
-                                    save_settings();
-                                }}
-                            >
-                                <p className="settings_panel_hint">Кто видит данные в вашем профиле</p>
+                                <p className="settings_panel_hint">Конфиденциальность</p>
                                 <div className="private_setting">
                                     <div className="private_setting_content app-transition">
                                         <div className="private_setting_content_item app-transition">
@@ -374,11 +479,77 @@ const Settings = () => {
                         )
                     },
                     {
-                        title: "Сеансы",
-                        key: "sessions",
-                        icon: <PeoplesIcon />,
+                        title: "Безопасность",
+                        key: "security",
+                        aliases: ["sessions", "password"],
+                        icon: <ShieldIcon />,
                         content: (
                             <div className="settings_panel">
+                                {changingPassword ? (
+                                    <form
+                                        className="settings_password"
+                                        onSubmit={(event) => {
+                                            event.preventDefault();
+                                            save_password();
+                                        }}
+                                    >
+                                        <Field error={errors?.current_password ?? null} title={"Текущий пароль"}>
+                                            <InputField
+                                                type="password"
+                                                autoComplete="current-password"
+                                                length={20}
+                                                onChange={(e) => setPasswordFields({ ...passwordFields, current_password: e.target.value })}
+                                                onFocus={() => handleFocus('current_password')}
+                                                placeholder="Текущий пароль"
+                                                value={passwordFields.current_password}
+                                                error={errors?.current_password ?? null}
+                                            />
+                                        </Field>
+                                        <Field error={errors?.new_password ?? null} title={"Новый пароль"}>
+                                            <InputField
+                                                type="password"
+                                                autoComplete="new-password"
+                                                length={20}
+                                                onChange={(e) => setPasswordFields({ ...passwordFields, new_password: e.target.value })}
+                                                onFocus={() => handleFocus('new_password')}
+                                                placeholder="Новый пароль"
+                                                value={passwordFields.new_password}
+                                                error={errors?.new_password ?? null}
+                                            />
+                                        </Field>
+                                        <Field error={errors?.new_password_confirm ?? null} title={"Повторите новый пароль"}>
+                                            <InputField
+                                                type="password"
+                                                autoComplete="new-password"
+                                                length={20}
+                                                onChange={(e) => setPasswordFields({ ...passwordFields, new_password_confirm: e.target.value })}
+                                                onFocus={() => handleFocus('new_password_confirm')}
+                                                placeholder="Повторите новый пароль"
+                                                value={passwordFields.new_password_confirm}
+                                                error={errors?.new_password_confirm ?? null}
+                                            />
+                                        </Field>
+                                        <div className="settings_panel_actions">
+                                            <PrimaryButton type="submit" isLoading={passwordLoading}>Изменить пароль</PrimaryButton>
+                                            <ActionButton type="button" onClick={closePasswordForm}>Отмена</ActionButton>
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <Field title="Пароль">
+                                        <div className="settings_password_preview">
+                                            <InputField
+                                                type="password"
+                                                value="********"
+                                                readOnly
+                                                tabIndex={-1}
+                                                onChange={() => {}}
+                                            />
+                                            <ActionButton type="button" onClick={openPasswordForm}>
+                                                Сменить пароль
+                                            </ActionButton>
+                                        </div>
+                                    </Field>
+                                )}
                                 <p className="settings_panel_hint">Устройства, с которых выполнен вход</p>
                                 <div className="settings_sessions">
                                     {sessionsLoading ? (

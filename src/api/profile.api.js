@@ -62,4 +62,32 @@ const editProfile = async (data) => {
     }
 }
 
-export { getProfile, editProfile };
+const changePassword = async ({ current_password, new_password, new_password_confirm }) => {
+    if (!getAccessToken()) {
+        return {
+            status: false,
+            message: "No token found",
+            data: null
+        };
+    }
+
+    const response = await apiFetch(`${API_URL}/api/profile/password`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            current_password,
+            new_password,
+            new_password_confirm
+        })
+    });
+
+    const code = response.status;
+    const result = await response.json();
+
+    return {
+        statusCode: code,
+        ...result
+    }
+}
+
+export { getProfile, editProfile, changePassword };

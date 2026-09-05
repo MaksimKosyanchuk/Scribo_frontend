@@ -125,33 +125,36 @@ const Login = () => {
   return (
     <div className="auth_page">
         <form className="form_input" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
-            <div className="auth_page_group section app-transition">
-                <div className="auth_page_group_intro">
-                    <h1>Вход</h1>
+            <div className="auth_page_stack">
+                <h1 className="auth_page_title">Вход</h1>
+                <div className="auth_page_group section app-transition">
+                    <Field title="Логин" error={errors?.user_login ?? null}>
+                        <InputField
+                            className={`user_login`}
+                            type="text"
+                            onChange={(e) => setFields({ ...fields, user_login: e.target.value })}
+                            onFocus={() => handleFocus('user_login')}
+                            placeholder="Имя пользователя или email"
+                            value={fields.user_login}
+                            error={errors?.user_login ?? null}
+                        />
+                    </Field>
+                    <Field title="Пароль" error={errors?.password ?? null}>
+                        <InputField
+                            className={`password`}
+                            type="password"
+                            onChange={(e) => setFields({ ...fields, password: e.target.value })}
+                            onFocus={() => handleFocus('password')}
+                            placeholder="Введите пароль"
+                            value={fields.password}
+                            error={errors?.password ?? null}
+                        />
+                    </Field>
+                    <div className="auth_page_forgot">
+                        <Link to="/auth/forgot-password">Забыли пароль?</Link>
+                    </div>
+                    <PrimaryButton type="submit" isLoading={isLoading}>Войти</PrimaryButton>
                 </div>
-                <Field title="Логин" error={errors?.user_login ?? null}>
-                    <InputField
-                        className={`user_login`}
-                        type="text"
-                        onChange={(e) => setFields({ ...fields, user_login: e.target.value })}
-                        onFocus={() => handleFocus('user_login')}
-                        placeholder="Имя пользователя или email"
-                        value={fields.user_login}
-                        error={errors?.user_login ?? null}
-                    />
-                </Field>
-                <Field title="Пароль" error={errors?.password ?? null}>
-                    <InputField
-                        className={`password`}
-                        type="password"
-                        onChange={(e) => setFields({ ...fields, password: e.target.value })}
-                        onFocus={() => handleFocus('password')}
-                        placeholder="Введите пароль"
-                        value={fields.password}
-                        error={errors?.password ?? null}
-                    />
-                </Field>
-                <PrimaryButton type="submit" isLoading={isLoading}>Войти</PrimaryButton>
             </div>
             <p className="auth_page_or">или</p>
             <GoogleAuthButton setGoogleToken={setGoogleToken}/>

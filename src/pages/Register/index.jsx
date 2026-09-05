@@ -164,10 +164,9 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                     handleRegister();
                 }}
             >
-                <div className="auth_page_group section app-transition">
-                    <div className="auth_page_group_intro">
-                        <h1>Регистрация</h1>
-                    </div>
+                <div className="auth_page_stack">
+                    <h1 className="auth_page_title">Регистрация</h1>
+                    <div className="auth_page_group section app-transition">
                     <div className="top_side">
                         <DropFile
                             value={fields.avatar}
@@ -221,10 +220,10 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                         />
                     </Field>
                 </div>
-                <div className="auth_page_group section app-transition">
-                    <div className="auth_page_group_intro">
-                        <h1>Пароль</h1>
-                    </div>
+                </div>
+                <div className="auth_page_stack">
+                    <h1 className="auth_page_title">Пароль</h1>
+                    <div className="auth_page_group section app-transition">
                     <Field title="Пароль" error={errors?.password ?? null}>
                         <InputField
                             className={`password`}
@@ -239,6 +238,7 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                     <PrimaryButton type="submit" isLoading={isLoading}>
                         Зарегистрироваться
                     </PrimaryButton>
+                    </div>
                 </div>
                 <p className="redirect_object">
                     Уже есть аккаунт?
@@ -291,15 +291,10 @@ const VerifyGmailCode = ({ email }) => {
                     handleSubmit();
                 }}
             >
-                <div className="auth_page_group section app-transition">
-                    <div className="auth_page_group_intro">
-                        <h1>Регистрация</h1>
-                    </div>
+                <div className="auth_page_stack">
+                    <h1 className="auth_page_title">Регистрация</h1>
+                    <div className="auth_page_group section app-transition">
                     <div className="otp_container">
-                        <div className="otp_container_title">
-                            <p>Код отправлен на</p>
-                            <p className="otp_container_title_email">{email}</p>
-                        </div>
                         <div className="otp_container_content">
                             <OtpInput
                                 length={CODE_LENGTH}
@@ -313,6 +308,7 @@ const VerifyGmailCode = ({ email }) => {
                     <PrimaryButton type="submit" isLoading={isLoading}>
                         Продолжить
                     </PrimaryButton>
+                    </div>
                 </div>
             </form>
         </div> 
@@ -415,10 +411,9 @@ const Register = () => {
                     handleRegister();
                 }}
             >
-                <div className="auth_page_group section app-transition">
-                    <div className="auth_page_group_intro">
-                        <h1>Регистрация</h1>
-                    </div>
+                <div className="auth_page_stack">
+                    <h1 className="auth_page_title">Регистрация</h1>
+                    <div className="auth_page_group section app-transition">
                     <Field title="Почта" error={errors?.email ?? null}>
                         <InputField
                             className={`email`}
@@ -434,6 +429,7 @@ const Register = () => {
                     <PrimaryButton isLoading={isLoading} type="submit">
                         Продолжить
                     </PrimaryButton>
+                    </div>
                 </div>
                 <p className="auth_page_or">или</p>
                 <GoogleAuthButton setGoogleToken={setGoogleToken}/>

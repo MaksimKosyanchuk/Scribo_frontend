@@ -10,6 +10,7 @@ import Article from './pages/Article/index.jsx';
 import Profile from './pages/Profile/index.jsx';
 import Settings from './pages/Settings/index.jsx';
 import Login from './pages/Login/index.jsx';
+import ForgotPassword from './pages/ForgotPassword/index.jsx';
 import Register from './pages/Register/index.jsx';
 import CreatePost from './pages/CreatePost/index.jsx';
 import EditPost from './pages/EditPost/index.jsx';
@@ -139,6 +140,7 @@ function App() {
 
                               <Route path="posts/:id/edit" Component={EditPost}/>
                               <Route path="/auth/login" Component={Login}/>
+                              <Route path="/auth/forgot-password" Component={ForgotPassword}/>
                               <Route path="/api" Component={ApiDocs}/>
                               <Route path="/auth/register" Component={Register}/>
                               <Route path="/404" Component={PageNotFound}/>
