@@ -8,7 +8,16 @@ const PageNotFound = () => {
 
     return (
         <div className="page_not_found">
-            <div className="page_not_found_sheet app-transition" aria-hidden="true">
+            <div className="page_not_found_sheet" aria-hidden="true">
+                <div className="page_not_found_rules">
+                    <span className="page_not_found_rule app-transition" />
+                    <span className="page_not_found_rule app-transition" />
+                    <span className="page_not_found_rule app-transition" />
+                    <span className="page_not_found_rule app-transition" />
+                    <span className="page_not_found_rule app-transition" />
+                    <span className="page_not_found_rule app-transition" />
+                    <span className="page_not_found_rule app-transition" />
+                </div>
                 <p className="page_not_found_code">
                     4<span className="page_not_found_zero" />4
                 </p>
