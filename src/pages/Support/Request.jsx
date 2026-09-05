@@ -203,8 +203,8 @@ const SupportRequestPage = () => {
                 >
                     <Field title={isStaff ? "Ответ" : "Сообщение"} error={error}>
                         <InputField
-                            is_multiline={true}
-                            multiline_rows={6}
+                            isMultiline={true}
+                            multilineRows={6}
                             length={2000}
                             value={reply}
                             placeholder={isStaff ? "Текст ответа" : "Дополните обращение"}
@@ -213,7 +213,7 @@ const SupportRequestPage = () => {
                             error={error}
                         />
                     </Field>
-                    <PrimaryButton type="submit" is_loading={sending}>
+                    <PrimaryButton type="submit" isLoading={sending}>
                         Отправить
                     </PrimaryButton>
                 </form>

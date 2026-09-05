@@ -10,7 +10,7 @@ import ActionButton from '../ActionButton/index';
 const GoogleAuthButton = ({ setGoogleToken }) => {
   const [ isLoading, setIsLoading ] = useState(false);
 
-  const google_login = useGoogleLogin({
+  const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       setGoogleToken(tokenResponse.access_token)
       setIsLoading(false);
@@ -25,11 +25,11 @@ const GoogleAuthButton = ({ setGoogleToken }) => {
 
   const login = () => {
     setIsLoading(true);
-    google_login();
+    googleLogin();
   }
 
   return (
-    <ActionButton is_loading={isLoading} disabled={isLoading} onClick={login} className="google_auth_button">
+    <ActionButton isLoading={isLoading} disabled={isLoading} onClick={login} className="google_auth_button">
       <GoogleIcon/>
         Продолжить с Google
     </ActionButton>

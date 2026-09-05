@@ -123,20 +123,26 @@ const getComments = async (id) => {
 }
 
 const likePost = async (id, method="POST") => {
-    const result = await apiFetch(`${API_URL}/api/posts/${id}/like`, {
-        method,
-        headers: { "Content-Type": "application/json" }
-    })
-    .then(res => res.json())
-    .catch((err) => { 
-        return ({
+    try {
+        const response = await apiFetch(`${API_URL}/api/posts/${id}/like`, {
+            method,
+            headers: { "Content-Type": "application/json" }
+        })
+        const result = await response.json()
+
+        return {
+            statusCode: response.status,
+            ...result
+        }
+    }
+    catch (err) {
+        return {
             status: false,
+            statusCode: 0,
             message: err,
             data: null
-        })
-    })
-
-    return result
+        }
+    }
 }
 
 const savePost = async (id, method="POST") => {

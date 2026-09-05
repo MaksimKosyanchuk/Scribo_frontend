@@ -218,8 +218,8 @@ const CreatePost = () => {
                 <InputFiled 
                     placeholder={titlePlaceholder}
                     className={"create_post_title"  + (createResult.status === "error" && createResult.message === "Incorrect 'title'" ? " incorrect_field" : "")}
-                    is_multiline={true}
-                    multiline_rows={1}
+                    isMultiline={true}
+                    multilineRows={1}
                     onChange={(e) => setFields({ ...fields, title: e.target.value })}
                     onFocus={() => handleFocus('title')}
                     length={200}
@@ -252,11 +252,11 @@ const CreatePost = () => {
             <DropFile
                 value={fields.featured_image}
                 setValue={(file) => setFields({ ...fields, featured_image: file })}
-                drop_file_type={"image/*"}
-                file_types={"SVG, PNG, JPEG, JPG и другие"}
+                dropFileType={"image/*"}
+                fileTypes={"SVG, PNG, JPEG, JPG и другие"}
                 errors={errors?.body?.featured_image?.message}
-                add_new_errors={add_errors_to_image}
-                clear_errors={clear_errors_from_image}
+                addNewErrors={add_errors_to_image}
+                clearErrors={clear_errors_from_image}
                 onRemove={handleClick}
             />
             <Field error={errors?.body?.content_text?.message} title={"Текст поста"}>
@@ -268,7 +268,7 @@ const CreatePost = () => {
                 />
             </Field>
             <div className="create_post_buttons">
-                <PrimaryButton onClick={handleSubmit} is_loading={isLoading}>Создать пост</PrimaryButton>
+                <PrimaryButton onClick={handleSubmit} isLoading={isLoading}>Создать пост</PrimaryButton>
                 <DangerButton onClick={() => navigate("/posts")}>Отмена</DangerButton>
             </div>
         </form>

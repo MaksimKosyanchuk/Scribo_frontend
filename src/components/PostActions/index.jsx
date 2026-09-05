@@ -1,9 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from 'react-router-dom';
 
 import { AppContext } from "../../App";
 
 import { likePost, savePost } from "../../api/posts.api";
+import { hasId, setIdPresent, withId, withoutId } from "../../utils/ids";
 
 import "./PostActions.scss";
 
@@ -42,29 +43,52 @@ async function share(id, showToast) {
 
 const PostActions = ({ className, article, setArticle, isLoading=false }) => {
     const { profile, setProfile, showToast } = useContext(AppContext)
-    const [isSaved, setIsSaved] = useState(!!(profile?.saved_posts?.includes(article?._id)));
-    const [isSavingProcess, setSavingProcess] = useState(false)
+    const [isSaved, setIsSaved] = useState(hasId(profile?.saved_posts, article?._id));
+    const [isSavingProcess, setIsSavingProcess] = useState(false)
+    const likeBusy = useRef(false)
+    const likeWanted = useRef(null)
     
     useEffect(() => {
-        setIsSaved(!!(profile?.saved_posts?.includes(article?._id)));
+        setIsSaved(hasId(profile?.saved_posts, article?._id));
     }, [profile, article?._id])
 
-    const save_post = async () => {
-        setSavingProcess(true)
-
-        const result = await savePost(article._id, profile?.saved_posts?.some((post) => post.toString() === article._id) ? 'DELETE' : 'POST')
-        
-        if (result.status === true) {
-            let saved_posts = isSaved ? profile.saved_posts.filter(element => element !== article._id ) : [...profile.saved_posts, article._id]
-            setProfile({ ...profile, saved_posts: saved_posts })
-            showToast({ message: isSaved ? "Убрано из сохранённых!" : "Сохранено!", type: "success" });
-            setIsSaved(!isSaved)
-        } else {
-            if(result.statusCode === 401) {
-                showToast({ message: "Чтобы сохранить пост, войдите в аккаунт!", type: "warning" })
+    const patchArticle = (updater) => {
+        setArticle((prev) => {
+            const current = prev && !Array.isArray(prev) && prev._id ? prev : article
+            if (!current?._id) {
+                return prev
             }
+            return updater(current)
+        })
+    }
+
+    const handleSavePost = async () => {
+        if (!profile) {
+            showToast({ message: "Чтобы сохранить пост, войдите в аккаунт!", type: "warning" })
+            return
         }
-        setSavingProcess(false)
+
+        if (isSavingProcess || !article?._id) {
+            return
+        }
+
+        setIsSavingProcess(true)
+        const currentlySaved = hasId(profile.saved_posts, article._id)
+        const result = await savePost(article._id, currentlySaved ? "DELETE" : "POST")
+
+        if (result.status === true) {
+            setProfile((prev) => ({
+                ...prev,
+                saved_posts: currentlySaved
+                    ? withoutId(prev.saved_posts, article._id)
+                    : withId(prev.saved_posts, article._id)
+            }))
+            setIsSaved(!currentlySaved)
+            showToast({ message: currentlySaved ? "Убрано из сохранённых!" : "Сохранено!", type: "success" });
+        } else if (result.statusCode === 401) {
+            showToast({ message: "Чтобы сохранить пост, войдите в аккаунт!", type: "warning" })
+        }
+        setIsSavingProcess(false)
     };
 
     const getCommentsCount = (comments) => {
@@ -75,52 +99,71 @@ const PostActions = ({ className, article, setArticle, isLoading=false }) => {
         }, 0);
     };
 
-    async function doLike(method) {
-        if(profile) {
-            const isLike = method === "POST";
-
-            if(isLike) {
-                setArticle({ ...article, likes: [...article.likes, profile?._id] })
-                
-                const result = await likePost(article._id, method)
-                
-                if (result.status === true) {
-                    setArticle({ ...article, likes: result.data.likes });
-                    showToast({ message: "Поставлен лайк!", type: "success" })
-                }
-                else {
-                    setArticle({ ...article, likes: article.likes.filter((like) => like !== profile?._id) });
-                }
-            }
-            else {
-                setArticle({ ...article, likes: article.likes.filter((like) => like !== profile?._id) })
-                
-                const result = await likePost(article._id, method)
-                
-                if (result.status === true) {
-                    setArticle({ ...article, likes: result.data.likes });
-                    showToast({ message: "Лайк убран!", type: "success" })
-                }
-                else {
-                    setArticle({ ...article, likes: [...article.likes, profile?._id] });
-                }
-            }
-            
+    const flushLike = async () => {
+        if (likeBusy.current || !article?._id || !profile?._id) {
+            return
         }
 
-        else {
+        likeBusy.current = true
+
+        try {
+            while (likeWanted.current !== null) {
+                const wantLiked = likeWanted.current
+                likeWanted.current = null
+                const result = await likePost(article._id, wantLiked ? "POST" : "DELETE")
+
+                if (likeWanted.current !== null) {
+                    continue
+                }
+
+                if (result.status === true && result.data?.likes) {
+                    patchArticle((current) => ({ ...current, likes: result.data.likes }))
+                    showToast({ message: wantLiked ? "Поставлен лайк!" : "Лайк убран!", type: "success" })
+                } else if (result.statusCode === 409) {
+                    patchArticle((current) => ({
+                        ...current,
+                        likes: setIdPresent(current.likes, profile._id, wantLiked)
+                    }))
+                } else {
+                    patchArticle((current) => ({
+                        ...current,
+                        likes: setIdPresent(current.likes, profile._id, !wantLiked)
+                    }))
+                }
+            }
+        } finally {
+            likeBusy.current = false
+            if (likeWanted.current !== null) {
+                flushLike()
+            }
+        }
+    }
+
+    const doLike = () => {
+        if (!profile) {
             showToast({ message: "Чтобы поставить лайк, войдите в аккаунт!", type: "warning" })
+            return
         }
+
+        patchArticle((current) => {
+            const nextLiked = !hasId(current.likes, profile._id)
+            likeWanted.current = nextLiked
+            return {
+                ...current,
+                likes: setIdPresent(current.likes, profile._id, nextLiked)
+            }
+        })
+        flushLike()
     }
 
     return (
         <div className={`post_actions ${className ?? ""}`}>
             <Sceleton isLoading={isLoading} rounded={true} className="post_actions_left_side">
                 <div className="post_actions_left_side">
-                    <Tooltip text={article.likes?.includes(profile?._id) ? "Убрать лайк" : "Поставить лайк"} clickable={true}>
-                        <button className="post_actions_button app-transition" onClick={() => { doLike(article.likes?.includes(profile?._id) ? "DELETE" : "POST") }}>
+                    <Tooltip text={hasId(article.likes, profile?._id) ? "Убрать лайк" : "Поставить лайк"} clickable={true}>
+                        <button type="button" className="post_actions_button app-transition" onClick={doLike}>
                             {
-                                article.likes?.includes(profile?._id) ?
+                                hasId(article.likes, profile?._id) ?
                                     <FilledLikeIcon />
                                 :
                                     <LikeIcon />
@@ -142,7 +185,7 @@ const PostActions = ({ className, article, setArticle, isLoading=false }) => {
                         </Link>
                     </Tooltip>
                     <Tooltip text={isSaved ? "Убрать из сохранённых" : "Сохранить"} clickable={true}>
-                        <button type="button" className="post_actions_button app-transition" onClick={save_post} disabled={isSavingProcess}>
+                        <button type="button" className="post_actions_button app-transition" onClick={handleSavePost} disabled={isSavingProcess}>
                             {isSaved ? <BookMarkFilled /> : <BookMarkBorder />}
                         </button>
                     </Tooltip>
@@ -155,7 +198,7 @@ const PostActions = ({ className, article, setArticle, isLoading=false }) => {
             </Sceleton>
             <Sceleton isLoading={isLoading} rounded={true} className="post_actions_right_side">
                 <div className="post_actions_right_side">
-                    <Category category={article.category} is_active={true}/>
+                    <Category category={article.category} isActive={true}/>
                 </div>     
             </Sceleton>
         </div>

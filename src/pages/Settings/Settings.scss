@@ -165,12 +165,8 @@
                 align-items: center;
                 justify-content: space-between;
                 gap: 20px;
-                padding: 10px 12px;
+                padding: 10px 0;
                 border-radius: 8px;
-
-                @include hover {
-                    background: var(--section-item-hover-background-color);
-                }
 
                 p {
                     font-size: 14px;

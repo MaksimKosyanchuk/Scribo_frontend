@@ -26,7 +26,7 @@ const HomePage = () => {
                 <a href="https://github.com/MaksimKosyanchuk/news_site_frontend" target="_blank" rel={"noreferrer"}>GitHub</a>
                 <Link to={`/users/Maks`}>My profile</Link>
             </Banner>
-            <Posts posts_filters={filtersFromUrl} />
+            <Posts postsFilters={filtersFromUrl} />
         </>
     )
 }

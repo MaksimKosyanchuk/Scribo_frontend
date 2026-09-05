@@ -9,7 +9,7 @@ const PostsFilters = ({ filters, setFilters, isLoading=false }) => {
     const handleClick = (categoryId) => {
         setFilters(prev => {
             if (categoryId === "all") {
-                const isAllActive = prev.find(f => f._id === "all")?.is_active;
+                const isAllActive = prev.find(f => f._id === "all")?.isActive;
 
                 return prev.map(filter => {
                     if (filter._id === "subscription") {
@@ -19,13 +19,13 @@ const PostsFilters = ({ filters, setFilters, isLoading=false }) => {
                     if (filter._id === "all") {
                         return {
                             ...filter,
-                            is_active: !isAllActive
+                            isActive: !isAllActive
                         };
                     }
 
                     return {
                         ...filter,
-                        is_active: !isAllActive
+                        isActive: !isAllActive
                     };
                 });
             }
@@ -35,7 +35,7 @@ const PostsFilters = ({ filters, setFilters, isLoading=false }) => {
                     filter._id === "subscription"
                         ? {
                             ...filter,
-                            is_active: !filter.is_active
+                            isActive: !filter.isActive
                         }
                         : filter
                 );
@@ -45,14 +45,14 @@ const PostsFilters = ({ filters, setFilters, isLoading=false }) => {
                 if (filter._id === categoryId) {
                     return {
                         ...filter,
-                        is_active: !filter.is_active
+                        isActive: !filter.isActive
                     };
                 }
 
                 if (filter._id === "all") {
                     return {
                         ...filter,
-                        is_active: false
+                        isActive: false
                     };
                 }
 
@@ -61,13 +61,13 @@ const PostsFilters = ({ filters, setFilters, isLoading=false }) => {
 
             const allCategoriesActive = updated
                 .filter(f => !["all", "subscription"].includes(f._id))
-                .every(f => f.is_active);
+                .every(f => f.isActive);
 
             updated = updated.map(filter =>
                 filter._id === "all"
                     ? {
                         ...filter,
-                        is_active: allCategoriesActive
+                        isActive: allCategoriesActive
                     }
                     : filter
             );
@@ -82,7 +82,7 @@ const PostsFilters = ({ filters, setFilters, isLoading=false }) => {
                 {filters.map((category, index) => (
                     <React.Fragment key={category._id ?? category.name}>
                         <Category
-                            is_active={category.is_active}
+                            isActive={category.isActive}
                             onClick={() => handleClick(category._id)}
                             category={category}
                         />

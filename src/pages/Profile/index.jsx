@@ -199,7 +199,7 @@ const Profile = () => {
                             profile && profile._id === authorData._id ?
                                 <></>
                             :
-                                <FollowButton setNewData={setFollowAnotherUser} author_id={authorData._id}/>
+                                <FollowButton setNewData={setFollowAnotherUser} authorId={authorData._id}/>
                         }
                     </div>
                   ))
@@ -221,7 +221,7 @@ const Profile = () => {
                             profile && profile._id === authorData._id ?
                                 <></>
                             :
-                                <FollowButton setNewData={setFollowAnotherUser} author_id={authorData._id}/>
+                                <FollowButton setNewData={setFollowAnotherUser} authorId={authorData._id}/>
                         }
                     </div>
                   ))
@@ -322,8 +322,8 @@ const Profile = () => {
                                 :
                                 <FollowButton
                                     setNewData={setFollowThisUser}
-                                    author_id={user?._id}
-                                    class_name="profile_info_action"
+                                    authorId={user?._id}
+                                    className="profile_info_action"
                                 />
                         }
                     </Sceleton>
@@ -391,7 +391,7 @@ const Profile = () => {
                                     Избранные
                                 </>
                             ]}
-                            active_index={activeTab}
+                            activeIndex={activeTab}
                             setActiveIndex={setActiveTab}
                         />
                     </div>

@@ -155,8 +155,8 @@ const SupportMine = () => {
                 </Field>
                 <Field title="Сообщение" error={errors?.message ?? null}>
                     <InputField
-                        is_multiline={true}
-                        multiline_rows={6}
+                        isMultiline={true}
+                        multilineRows={6}
                         length={2000}
                         value={fields.message}
                         placeholder="Опишите ситуацию"
@@ -165,7 +165,7 @@ const SupportMine = () => {
                         error={errors?.message ?? null}
                     />
                 </Field>
-                <PrimaryButton type="submit" is_loading={isLoading}>
+                <PrimaryButton type="submit" isLoading={isLoading}>
                     Отправить
                 </PrimaryButton>
             </form>

@@ -7,7 +7,7 @@ import DefaultProfileAvatar from "../../assets/images/default-profile-avatar.png
 import Verified from "../../assets/svg/verified.svg?react";
 import Tooltip from "../Ui/Tooltip/index";
 
-const UserBadge = ( { data, class_name, asLink = true } ) => {
+const UserBadge = ( { data, className, asLink = true } ) => {
     if(!data) return<></>
 
     const content = (
@@ -33,14 +33,14 @@ const UserBadge = ( { data, class_name, asLink = true } ) => {
 
     if (!asLink) {
         return (
-            <div className={`user_badge app-transition ${class_name ?? ''}`}>
+            <div className={`user_badge app-transition ${className ?? ''}`}>
                 {content}
             </div>
         )
     }
 
     return (
-        <Link className={`user_badge app-transition ${class_name ?? ''}`} to={`/users/${data.nick_name}`}>
+        <Link className={`user_badge app-transition ${className ?? ''}`} to={`/users/${data.nick_name}`}>
             {content}
         </Link>
     )

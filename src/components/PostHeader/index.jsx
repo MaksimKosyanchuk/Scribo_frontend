@@ -18,7 +18,7 @@ import Popup from "../Ui/Popup";
 import ActionButton from "../Ui/ActionButton";
 import DangerButton from "../Ui/DangerButton";
 import Tooltip from "../Ui/Tooltip/index";
-import Catregory from "../Category";
+import Category from "../Category";
 
 import Sceleton from "../Ui/Sceleton/Sceleton";
 
@@ -27,7 +27,7 @@ const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost
         <div className="modal_delete_post_content_post">
             <div className="modal_delete_post_content_post_header">
                 <PostHeader post={post} />
-                <Catregory category={post.category} is_active={true}/>
+                <Category category={post.category} isActive={true}/>
             </div>
             <h2 className="modal_delete_post_content_post_title">{post.title}</h2>
             {post.featured_image && (
@@ -53,7 +53,7 @@ const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost
 
                 }}
                 className="modal_delete_post_content_button" 
-                is_active={true}
+                isActive={true}
             >
                 Удалить
             </DangerButton>
@@ -65,12 +65,12 @@ const PostHeader = memo(({ post, onDeletePost, className, isLoading=false }) => 
     const { profile, showModalWindow, requestCloseModal, showToast } = useContext(AppContext);
     const navigate = useNavigate();
     
-    const delete_post = async () => {
+    const handleDeletePost = async () => {
         showModalWindow({
             title: `Вы уверены что хотите удалить пост?`,
             content: getDeleteModalContent(post, requestCloseModal, deletePost, onDeletePost, showToast),
-            show_close_button: false,
-            close_func: () => {}
+            showCloseButton: false,
+            closeFunc: () => {}
         });
     };
 
@@ -78,7 +78,7 @@ const PostHeader = memo(({ post, onDeletePost, className, isLoading=false }) => 
 
     popupBody.push(
         { title: "Редактировать", icon: <EditIcon />, onClick: () => navigate(`/posts/${post._id}/edit`) },
-        { title: "Удалить", icon: <DeleteIcon />, type: "danger", onClick: () => delete_post(post._id) }
+        { title: "Удалить", icon: <DeleteIcon />, type: "danger", onClick: () => handleDeletePost(post._id) }
     );
 
     return (

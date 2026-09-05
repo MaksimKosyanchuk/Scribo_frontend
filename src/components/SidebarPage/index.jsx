@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import DropDown from "../Ui/DropDown";
 
-const SidebarPage = ({ pages, page_title }) => {
+const SidebarPage = ({ pages, pageTitle }) => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const activeKey = searchParams.get("tab") ?? pages[0].key;
@@ -22,7 +22,7 @@ const SidebarPage = ({ pages, page_title }) => {
     return (
         <div className="sidebar_page">
             <div className="sidebar_page_navigation section app-transition">
-                <h1>{page_title}</h1>
+                <h1>{pageTitle}</h1>
 
                 <div className="sidebar_page_navigation_list">
                     {pages.map((page, index) => (

@@ -8,29 +8,29 @@ import UploadFileIcon from "../../../assets/svg/upload-file-icon.svg?react";
 
 const DropFile = ({
     value,
-    preview_url = null,
+    previewUrl = null,
     setValue,
     background = null,
-    drop_file_type,
+    dropFileType,
     errors,
-    file_types,
-    add_new_errors,
-    clear_errors,
+    fileTypes,
+    addNewErrors,
+    clearErrors,
     onRemove,
 }) => {
     const [preview, setPreview] = useState(null);
     const [isPreviewHidden, setIsPreviewHidden] = useState(false);
-    const [isDragged, setDraged] = useState(false);
+    const [isDragged, setIsDragged] = useState(false);
     const fileRef = useRef(null);
     const inputRef = useRef(null);
-    const lastPreviewUrlRef = useRef(preview_url);
+    const lastPreviewUrlRef = useRef(previewUrl);
 
     useEffect(() => {
-        if (lastPreviewUrlRef.current !== preview_url) {
-            lastPreviewUrlRef.current = preview_url;
+        if (lastPreviewUrlRef.current !== previewUrl) {
+            lastPreviewUrlRef.current = previewUrl;
             setIsPreviewHidden(false);
         }
-    }, [preview_url]);
+    }, [previewUrl]);
 
     useEffect(() => {
         if (value instanceof File) {
@@ -41,21 +41,21 @@ const DropFile = ({
             return () => URL.revokeObjectURL(url);
         }
 
-        if (preview_url && !isPreviewHidden) {
-            setPreview(preview_url);
+        if (previewUrl && !isPreviewHidden) {
+            setPreview(previewUrl);
             return;
         }
 
         setPreview(null);
-    }, [value, preview_url, isPreviewHidden]);
+    }, [value, previewUrl, isPreviewHidden]);
 
-    const image_validation = (file) => {
+    const validateImage = (file) => {
         const errors = [];
 
         if (
-            drop_file_type &&
-            drop_file_type.trim() !== "" &&
-            !new RegExp(drop_file_type).test(file.type)
+            dropFileType &&
+            dropFileType.trim() !== "" &&
+            !new RegExp(dropFileType).test(file.type)
         ) {
             errors.push("Incorrect type of file!");
         }
@@ -65,7 +65,7 @@ const DropFile = ({
         }
 
         return {
-            is_valid: errors.length === 0,
+            isValid: errors.length === 0,
             errors,
         };
     };
@@ -74,13 +74,13 @@ const DropFile = ({
         const file = e.currentTarget.files[0];
         if (!file) return;
 
-        const validation = image_validation(file);
+        const validation = validateImage(file);
 
-        if (validation.is_valid) {
+        if (validation.isValid) {
             setValue(file);
-            clear_errors?.();
+            clearErrors?.();
         } else {
-            add_new_errors?.(validation.errors);
+            addNewErrors?.(validation.errors);
         }
     };
 
@@ -92,13 +92,13 @@ const DropFile = ({
         const handleDragIn = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            setDraged(true);
+            setIsDragged(true);
         };
 
         const handleDragOut = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            setDraged(false);
+            setIsDragged(false);
         };
 
         const handleDrag = (e) => {
@@ -109,7 +109,7 @@ const DropFile = ({
         const handleDrop = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            setDraged(false);
+            setIsDragged(false);
 
             if (e.dataTransfer.files.length > 0) {
                 setValue(e.dataTransfer.files[0]);
@@ -173,7 +173,7 @@ const DropFile = ({
                                     <p className="drop_file_info_main_text">
                                         Выберите файл или перетащите его сюда
                                     </p>
-                                    <p className="drop_file_info_help_text">{file_types}</p>
+                                    <p className="drop_file_info_help_text">{fileTypes}</p>
                                     <div className="drop_file_info_select app-transition">
                                         Выбрать
                                     </div>
@@ -183,7 +183,7 @@ const DropFile = ({
                         <input
                             className="image_input"
                             type="file"
-                            accept={drop_file_type}
+                            accept={dropFileType}
                             onChange={setFileHandler}
                             ref={inputRef}
                         />

@@ -18,15 +18,15 @@ const Input = forwardRef(
     placeholder,
     required = false,
     confirmed = false,
-    is_multiline = false,
-    multiline_rows = 1,
+    isMultiline = false,
+    multilineRows = 1,
     length = 120,
     ...props
   },
   ref
 ) => {
   
-  const InputComponent = is_multiline ? "textarea" : "input";
+  const InputComponent = isMultiline ? "textarea" : "input";
 
   return (
     <div className="input_field_wrapper">
@@ -40,7 +40,7 @@ const Input = forwardRef(
           onKeyDown={onKeyDown}
           required={required}
           placeholder={placeholder}
-          rows={multiline_rows}
+          rows={multilineRows}
           wrap="hard"
           maxLength={length}
           value={value}

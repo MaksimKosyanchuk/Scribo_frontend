@@ -9,7 +9,7 @@ import {
 } from "@floating-ui/react";
 import "./Popup.scss";
 
-function PopupMenu({ anchorRef, children, onClose, z_index }) {
+function PopupMenu({ anchorRef, children, onClose, zIndex }) {
     const popupRef = useRef(null);
 
     const { refs, floatingStyles } = useFloating({
@@ -46,7 +46,7 @@ function PopupMenu({ anchorRef, children, onClose, z_index }) {
                 }}
                 style={{
                     ...floatingStyles,
-                    zIndex: z_index,
+                    zIndex,
                 }}
                 className="popup_menu float_section blurred"
             >
@@ -56,7 +56,7 @@ function PopupMenu({ anchorRef, children, onClose, z_index }) {
     );
 }
 
-function Popup({ children, body, z_index = 99, className }) {
+function Popup({ children, body, zIndex = 99, className }) {
     const buttonRef = useRef(null);
     const [open, setOpen] = useState(false);
     
@@ -73,7 +73,7 @@ function Popup({ children, body, z_index = 99, className }) {
                 <PopupMenu
                     anchorRef={buttonRef}
                     onClose={() => setOpen(false)}
-                    z_index={z_index}
+                    zIndex={zIndex}
                 >
                     {
                         body.map((item, index) => (

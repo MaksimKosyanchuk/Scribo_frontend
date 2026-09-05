@@ -15,15 +15,16 @@ const PostCard = ({
     setPosts,
 }) => {
 
-    const updatePost = useCallback((updatedPost) => {
-        setPosts(prev =>
-            prev.map(post =>
-                post._id === updatedPost._id
-                    ? updatedPost
-                    : post
-            )
+    const updatePost = useCallback((next) => {
+        setPosts((prev) =>
+            prev.map((item) => {
+                if (item._id !== post._id) {
+                    return item
+                }
+                return typeof next === "function" ? next(item) : { ...item, ...next }
+            })
         );
-    }, [setPosts]);
+    }, [setPosts, post._id]);
 
     const deletePost = useCallback((id) => {
         setPosts(prev =>

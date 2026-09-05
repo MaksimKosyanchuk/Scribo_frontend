@@ -43,7 +43,7 @@ const MobileNavigationBar = () => {
     const { profile, setProfile, showToast, showModalWindow } = useContext(AppContext);
     const [activeIndex, setActiveIndex] = useState(0);
     
-    const get_notification = async (notifications) => {
+    const getNotification = async (notifications) => {
         const userIds = [
             ...new Set(
                 notifications
@@ -80,15 +80,15 @@ const MobileNavigationBar = () => {
         ));
     };
         
-    const open_notifications = useCallback(async () => {
+    const openNotifications = useCallback(async () => {
         if(!profile) {
             showToast({type: "warning", message: "Войдите в аккаунт, чтоб получать уведомления!"})
             return
         }
 
-        const notificationContent = await get_notification(profile?.notifications);
+        const notificationContent = await getNotification(profile?.notifications);
     
-        const update_notification = async () => {
+        const updateNotification = async () => {
             const result = await read_notifications()
             if(result.status === true){
                 setProfile({ 
@@ -101,7 +101,7 @@ const MobileNavigationBar = () => {
         showModalWindow({
             title: `Уведомления`,
             content: notificationContent,
-            close_func: update_notification
+            closeFunc: updateNotification
         });
     }, [showModalWindow, setProfile, profile, showToast]);
 
@@ -150,7 +150,7 @@ const MobileNavigationBar = () => {
             items.push({
                 path: "/notifications",
                 icon: NotificationsIcon,
-                onClick: open_notifications
+                onClick: openNotifications
             });
 
 
@@ -168,7 +168,7 @@ const MobileNavigationBar = () => {
             index
         }));
 
-    }, [profile, navigate, open_notifications]); 
+    }, [profile, navigate, openNotifications]); 
 
     useEffect(() => {
         const currentItem = items.find(item => item.path === location.pathname);
@@ -186,7 +186,7 @@ const MobileNavigationBar = () => {
             <SwitchBar 
                 items={renderItems(items)}
                 setActiveIndex={handleIndex}
-                active_index={activeIndex}
+                activeIndex={activeIndex}
             />
         </div>
     )

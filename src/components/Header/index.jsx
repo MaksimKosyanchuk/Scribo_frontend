@@ -34,7 +34,7 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const get_notification = async (notifications) => {
+  const getNotification = async (notifications) => {
     const userIds = [
       ...new Set(
           notifications
@@ -71,15 +71,15 @@ function Header() {
     ));
   };
     
-  const open_notifications = async () => {
+  const openNotifications = async () => {
     if(!profile) {
       showToast({type: "warning", message: "Войдите в аккаунт, чтоб получать уведомления!"})
       return
     }
 
-    const notificationContent = await get_notification(profile?.notifications);
+    const notificationContent = await getNotification(profile?.notifications);
   
-    const update_notification = async () => {
+    const updateNotification = async () => {
       const result = await read_notifications()
       if(result.status === true){
         setProfile({ 
@@ -92,7 +92,7 @@ function Header() {
     showModalWindow({
       title: `Уведомления`,
       content: notificationContent,
-      close_func: update_notification
+      closeFunc: updateNotification
     });
   };
 
@@ -134,7 +134,7 @@ function Header() {
               :
                 <></>
             }
-            <button type='button' onClick={() => { open_notifications() }} className='header_item header_notification app-transition'>
+            <button type='button' onClick={() => { openNotifications() }} className='header_item header_notification app-transition'>
               {
                 profile?.notifications?.some(item => item.is_read === false ) 
                   ? 
@@ -158,7 +158,7 @@ function Header() {
             {
               profile ?
 
-              <Popup className="header_user_badge_popup app-transition" z_index={3000}
+              <Popup className="header_user_badge_popup app-transition" zIndex={3000}
                 body={[
                   {
                     "title": "В профиль",
@@ -201,11 +201,11 @@ function Header() {
                   }
                 ]}
               >
-                <CurrentUserBadge as_link={false} DefaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
+                <CurrentUserBadge asLink={false} defaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
                 <ArrowDownIcon className="header_item_icon header_user_badge_popup_arrow app-transition"/>
               </Popup>
               :
-                <CurrentUserBadge as_link={true} className={"header_item"} DefaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
+                <CurrentUserBadge asLink={true} className={"header_item"} defaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
             }
           </div>
         </div>

@@ -274,13 +274,13 @@ const Settings = () => {
                                 setFields(prev => ({ ...prev, avatar: file }))
                             }
                             background={<AvatarIcon className="drop_file_info_avatar_icon app-transition" />}
-                            drop_file_type={"image/*"}
-                            file_types={"SVG, PNG, JPEG, JPG и другие"}
+                            dropFileType={"image/*"}
+                            fileTypes={"SVG, PNG, JPEG, JPG и другие"}
                             errors={errors?.avatar}
-                            add_new_errors={add_errors_to_image}
-                            clear_errors={clear_errors_from_image}
+                            addNewErrors={add_errors_to_image}
+                            clearErrors={clear_errors_from_image}
                             onRemove={handleAvatarRemove}
-                            preview_url={profile?.avatar}
+                            previewUrl={profile?.avatar}
                         />
                     </div>
                     {profile?.email ? (
@@ -308,7 +308,7 @@ const Settings = () => {
                         <InputField
                             className={`description`}
                             type="text"
-                            is_multiline={true}
+                            isMultiline={true}
                             length={60}
                             rows={3}
                             onChange={(e) => setFields({ ...fields, description: e.target.value })}
@@ -349,7 +349,7 @@ const Settings = () => {
                             </div>
                         </div>
                     </div>
-                    <PrimaryButton type="submit" is_loading={isLoading}>Сохранить</PrimaryButton>
+                    <PrimaryButton type="submit" isLoading={isLoading}>Сохранить</PrimaryButton>
                 </div>
             </form>
 
@@ -373,7 +373,7 @@ const Settings = () => {
                                     <div className="settings_sessions_item_head">
                                         <p className="settings_sessions_item_device">{session.device}</p>
                                         {session.isCurrent ? (
-                                            <span className="settings_sessions_badge">Этот сеанс</span>
+                                            <span className="settings_sessions_badge app-transition">Этот сеанс</span>
                                         ) : null}
                                     </div>
                                     <p className="settings_sessions_item_location">{session.location || "—"}</p>

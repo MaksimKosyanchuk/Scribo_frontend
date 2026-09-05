@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { AppContext } from "../../App.jsx";
 import { useNavigate } from "react-router-dom";
 
@@ -6,6 +6,7 @@ import "./PostComments.scss";
 
 import { commentPost, getComments } from "../../api/posts.api";
 import { deleteComment, editComment, likeComment } from "../../api/comments.api";
+import { hasId, sameId, setIdPresent } from "../../utils/ids";
 
 import { format_back, format_date_time } from "../../utils/format";
 import { scrollTo } from "../../utils/navigation";
@@ -21,7 +22,7 @@ import RedirectIcon from "../../assets/svg/redirect.svg?react";
 import CurrentUserBadge from "../CurrentUserBadge/index.jsx";
 import UserBadge from "../UserBadge/index.jsx";
 import InputField from "../Ui/InputField/index";
-import PrimaryButton from "../../components/Ui/PrimaryButton/index";
+import PrimaryButton from "../Ui/PrimaryButton/index";
 import CancelButton from "../../components/Ui/CancelButton/index";
 import Tooltip from "../Ui/Tooltip/index";
 import Popup from "../Ui/Popup/index.jsx";
@@ -59,11 +60,11 @@ const CommentForm = ({
             {title}
 
             <div className="comment_form_content">
-                <CurrentUserBadge as_link={false} />
+                <CurrentUserBadge asLink={false} />
 
                 <InputField
-                    is_multiline
-                    multiline_rows={3}
+                    isMultiline
+                    multilineRows={3}
                     length={500}
                     value={value}
                     onMouseDown={handleInputMouseDown}
@@ -84,7 +85,7 @@ const CommentForm = ({
                     <PrimaryButton
                         type="submit"
                         disabled={!value.trim()}
-                        is_loading={isLoading}
+                        isLoading={isLoading}
                     >
                         Отправить
                     </PrimaryButton>
@@ -94,7 +95,21 @@ const CommentForm = ({
     );
 };
 
-const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, profile, fetchComments, showToast, post_id }) => {
+const mapCommentTree = (comments, commentId, updater) =>
+    (comments || []).map((item) => {
+        if (sameId(item._id, commentId)) {
+            return updater(item)
+        }
+        if (item.replies?.length) {
+            return {
+                ...item,
+                replies: mapCommentTree(item.replies, commentId, updater)
+            }
+        }
+        return item
+    })
+
+const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, profile, fetchComments, patchComment, showToast, postId }) => {
     const [showForm, setShowForm] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -102,6 +117,8 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
     const [editText, setEditText] = useState(comment.comment_text);
     const { showModalWindow } = useContext(AppContext);
     const navigate = useNavigate();
+    const likeBusy = useRef(false);
+    const likeWanted = useRef(null);
 
     const doReply = async (e) => {
         setIsLoading(true);
@@ -112,7 +129,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
             parent_comment_id: comment._id
         }
 
-        const result = await commentPost(post_id, data)
+        const result = await commentPost(postId, data)
 
         if(result.status) {
             await fetchComments({ onSuccessFetch: () => {
@@ -153,36 +170,77 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
         setIsLoading(false);
     }
 
-    const doLike = async () => {
-        if(!profile) {
+    const flushLike = async () => {
+        if (likeBusy.current || !comment?._id || !profile?._id) {
+            return;
+        }
+
+        likeBusy.current = true;
+
+        try {
+            while (likeWanted.current !== null) {
+                const wantLiked = likeWanted.current;
+                likeWanted.current = null;
+                const result = await likeComment(comment._id, wantLiked ? "POST" : "DELETE");
+
+                if (likeWanted.current !== null) {
+                    continue;
+                }
+
+                if (result.status === true && result.data?.likes) {
+                    patchComment(comment._id, (item) => ({ ...item, likes: result.data.likes }));
+                    showToast({
+                        type: "success",
+                        message: wantLiked ? "Лайк поставлен" : "Лайк снят"
+                    });
+                } else if (result.statusCode === 409) {
+                    patchComment(comment._id, (item) => ({
+                        ...item,
+                        likes: setIdPresent(item.likes, profile._id, wantLiked)
+                    }));
+                } else {
+                    patchComment(comment._id, (item) => ({
+                        ...item,
+                        likes: setIdPresent(item.likes, profile._id, !wantLiked)
+                    }));
+                    if (result.message) {
+                        showToast({
+                            type: "error",
+                            message: result.message
+                        });
+                    }
+                }
+            }
+        } finally {
+            likeBusy.current = false;
+            if (likeWanted.current !== null) {
+                flushLike();
+            }
+        }
+    };
+
+    const doLike = () => {
+        if (!profile) {
             showToast({
                 type: "error",
                 message: "Войдите в аккаунт, чтобы поставить лайк"
             });
             return;
         }
-        const result = await likeComment(comment._id, comment.likes.includes(profile?._id) ? "DELETE" : "POST");
 
-        if(result.status) {
-            await fetchComments({ onSuccessFetch: () => {
-                showToast({
-                    type: "success",
-                    message: comment.likes.includes(profile?._id) ? "Лайк снят" : "Лайк поставлен"
-                });
-            }});
-        }
-        else {
-            showToast({
-                type: "error",
-                message: result.message
-            });
-        }
+        const nextLiked = !hasId(comment.likes, profile._id);
+        likeWanted.current = nextLiked;
+        patchComment(comment._id, (item) => ({
+            ...item,
+            likes: setIdPresent(item.likes, profile._id, nextLiked)
+        }));
+        flushLike();
     }
 
-    const actions_body = []
+    const actionsBody = []
 
-    if(profile && profile._id.toString() === comment.author._id.toString()) {
-        actions_body.push({
+    if (profile && profile._id.toString() === comment.author?._id?.toString()) {
+        actionsBody.push({
             "title": "Редактировать",
             "onClick": () => {
                 setEditMode(true);
@@ -191,8 +249,8 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
         });
     }
 
-    if((profile && profile._id.toString() === comment.author._id.toString()) || (profile && profile.permissions.includes("delete_any_comment"))) {
-        actions_body.push({
+    if ((profile && profile._id.toString() === comment.author?._id?.toString()) || (profile && profile.permissions.includes("delete_any_comment"))) {
+        actionsBody.push({
            "title": "Удалить",
             "onClick": () => {
                 deleteComment(comment._id).then((result) => {
@@ -233,7 +291,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                             <div className="comment_body_top_side">
                                 <UserBadge
                                     data={comment.author}
-                                    class_name="comment_author"
+                                    className="comment_author"
                                 />
                                 <Tooltip text={format_date_time(comment.created_date)}>
                                     <p className="comment_body_top_side_date">
@@ -241,11 +299,11 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                                     </p>
                                 </Tooltip>
                                 {
-                                    actions_body.length > 0 ?
+                                    actionsBody.length > 0 ?
 
                                         <div className="comment_body_top_side_more">
                                             <Popup
-                                                body={actions_body}   
+                                                body={actionsBody}   
                                             >
                                                 <ThreeDotsVeritcalIcon className="app-transition"/>
                                             </Popup>
@@ -260,18 +318,19 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                                 </p>
                             </div>
                             <div className="comment_body_bottom_side">
-                                <Tooltip text="Поставить лайк">
+                                <Tooltip text={hasId(comment.likes, profile?._id) ? "Убрать лайк" : "Поставить лайк"}>
                                     <button
+                                        type="button"
                                         className="comment_body_bottom_side_button app-transition"
                                         onClick={doLike}
                                     >
                                         {
-                                            comment.likes.includes(profile?._id) ?
+                                            hasId(comment.likes, profile?._id) ?
                                                 <LikeFilledIcon className="comment_like_icon app-transition"/>
                                             :
                                                 <LikeOutlineIcon className="comment_like_icon app-transition"/>
                                         }
-                                        <p>{comment.likes.length ?? 0}</p>
+                                        <p>{comment.likes?.length > 0 ? comment.likes.length : ""}</p>
                                     </button>
                                 </Tooltip>
                                 <Tooltip text="Ответить">
@@ -279,7 +338,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                                         className="comment_body_bottom_side_button app-transition"
                                         onClick={() => { setShowForm(true) }}>
                                         <ReplyIcon className="app-transition"/>
-                                        <p>{comment.replies.length ?? 0}</p>
+                                        <p>{comment.replies?.length > 0 ? comment.replies.length : ""}</p>
                                     </div>
                                 </Tooltip>
                             </div>
@@ -320,9 +379,10 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                                 replyCommentText={replyCommentText}
                                 setReplyCommentText={setReplyCommentText}
                                 fetchComments={fetchComments}
+                                patchComment={patchComment}
                                 showToast={showToast}
                                 profile={profile}
-                                post_id={post_id}
+                                postId={postId}
                             />
                         ))}
                     </div>
@@ -347,6 +407,10 @@ const PostComments = ({ postId, navigateTo }) => {
 
             setComments(result.data);
         }
+    };
+
+    const patchComment = (commentId, updater) => {
+        setComments((prev) => mapCommentTree(prev, commentId, updater));
     };
 
     const doComment = async (e) => {
@@ -413,9 +477,10 @@ const PostComments = ({ postId, navigateTo }) => {
                         key={comment._id}
                         comment={comment}
                         fetchComments={fetchComments}
+                        patchComment={patchComment}
                         showToast={showToast}
                         profile={profile}
-                        post_id={postId}
+                        postId={postId}
                     />
                 ))}
             </div>

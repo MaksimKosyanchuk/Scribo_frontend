@@ -61,18 +61,18 @@ const categoryIcons = {
     26: CategoryIcon26,
 };
 
-const Category = memo(({ category, is_active, onClick, className }) => {
-    const nagivate = useNavigate();
+const Category = memo(({ category, isActive, onClick, className }) => {
+    const navigate = useNavigate();
 
     const Icon = categoryIcons[category?.icon];
 
     return (
         <ChipButton
-            is_active={is_active}
+            isActive={isActive}
             onClick={
                 onClick ??
                 (() => {
-                    nagivate("/posts?filter=" + category?._id);
+                    navigate("/posts?filter=" + category?._id);
                 })
             }
             className={`category_content ${CATEGORY_COLORS[category?.color]?.className ?? ""} ${className || ""}`}

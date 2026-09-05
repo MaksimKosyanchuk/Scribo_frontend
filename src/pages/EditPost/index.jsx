@@ -264,8 +264,8 @@ const EditPost = () => {
                                 : ""
                         )
                     }
-                    is_multiline={true}
-                    multiline_rows={1}
+                    isMultiline={true}
+                    multilineRows={1}
                     onChange={(e) =>
                         setFields({
                             ...fields,
@@ -314,13 +314,13 @@ const EditPost = () => {
                         featured_image: file
                     }))
                 }
-                drop_file_type={"image/*"}
-                file_types={"SVG, PNG, JPEG, JPG и другие"}
+                dropFileType={"image/*"}
+                fileTypes={"SVG, PNG, JPEG, JPG и другие"}
                 errors={errors?.body?.featured_image?.message}
-                add_new_errors={add_errors_to_image}
-                clear_errors={clear_errors_from_image}
+                addNewErrors={add_errors_to_image}
+                clearErrors={clear_errors_from_image}
                 onRemove={handleClick}
-                preview_url={fields.featured_image}
+                previewUrl={fields.featured_image}
             />
 
             <Field
@@ -343,7 +343,7 @@ const EditPost = () => {
             <div className="edit_post_buttons">
                 <PrimaryButton
                     onClick={handleSubmit}
-                    is_loading={isLoading}
+                    isLoading={isLoading}
                 >
                     Сохранить
                 </PrimaryButton>

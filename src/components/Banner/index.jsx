@@ -9,7 +9,7 @@ import "./Banner.scss";
 
 const Banner = () => {
     
-    const redirect_to_personal_github = () => {
+    const openPersonalGithub = () => {
         window.open("https://github.com/MaksimKosyanchuk", "_blank");
     }
     
@@ -29,10 +29,10 @@ const Banner = () => {
                 </p>
 
                 <div className="banner_content_actions">
-                    <ChipButton is_active={true} onClick={redirect_to_personal_github}>
+                    <ChipButton isActive={true} onClick={openPersonalGithub}>
                         My GitHub
                     </ChipButton>
-                    <ChipButton is_active={true}>
+                    <ChipButton isActive={true}>
                         <Link to={"/users/Maks"}>
                             My profile
                         </Link>

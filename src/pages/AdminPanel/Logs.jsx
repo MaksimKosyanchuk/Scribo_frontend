@@ -193,7 +193,7 @@ const CategoryEntity = ({ id, data, setFilter }) => {
             <div className="admin_panel_content_logs_page_item_entity admin_panel_content_logs_page_item_entity_category">
                 {
                     data ? 
-                        <Category category={data} is_active={true} onClick={() => {}} /> :
+                        <Category category={data} isActive={true} onClick={() => {}} /> :
                     <div className="admin_panel_content_logs_page_item_entity admin_panel_content_logs_page_item_entity_category_deleted">
                     
                         <ChipButton >

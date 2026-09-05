@@ -2,7 +2,7 @@ import "./SwitchBar.scss";
 import { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
 
 export default function SwitchBar({
-    active_index,
+    activeIndex,
     setActiveIndex,
     items,
 }) {
@@ -15,7 +15,7 @@ export default function SwitchBar({
     });
 
     const updateIndicator = useCallback(() => {
-        const button = buttonsRef.current[active_index];
+        const button = buttonsRef.current[activeIndex];
 
         if (!button) return;
 
@@ -24,11 +24,11 @@ export default function SwitchBar({
             width: button.offsetWidth,
         });
 
-    }, [active_index]);
+    }, [activeIndex]);
 
     useLayoutEffect(() => {
         updateIndicator();
-    }, [active_index, items, updateIndicator]);
+    }, [activeIndex, items, updateIndicator]);
 
     useEffect(() => {
         window.addEventListener("resize", updateIndicator);
@@ -56,7 +56,7 @@ export default function SwitchBar({
                     ref={(el) => (buttonsRef.current[index] = el)}
                     type="button"
                     className={`switcher_bar_item ${
-                        active_index === index
+                        activeIndex === index
                             ? "switcher_bar_item_active"
                             : ""
                     }`}

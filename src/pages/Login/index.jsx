@@ -151,7 +151,7 @@ const Login = () => {
                         error={errors?.password ?? null}
                     />
                 </Field>
-                <PrimaryButton type="submit" is_loading={isLoading}>Войти</PrimaryButton>
+                <PrimaryButton type="submit" isLoading={isLoading}>Войти</PrimaryButton>
             </div>
             <p className="auth_page_or">или</p>
             <GoogleAuthButton setGoogleToken={setGoogleToken}/>

@@ -177,11 +177,11 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                             background={
                                 <AvatarIcon className="drop_file_info_avatar_icon app-transition" />
                             }
-                            drop_file_type="image/*"
-                            file_types="SVG, PNG, JPEG, JPG и другие"
+                            dropFileType="image/*"
+                            fileTypes="SVG, PNG, JPEG, JPG и другие"
                             errors={errors?.featured_image}
-                            add_new_errors={add_errors_to_image}
-                            clear_errors={clear_errors_from_image}
+                            addNewErrors={add_errors_to_image}
+                            clearErrors={clear_errors_from_image}
                             onRemove={handleClick}
                         />
                     </div>
@@ -211,7 +211,7 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                         <InputField
                             className={`description`}
                             type="text"
-                            is_multiline={true}
+                            isMultiline={true}
                             length={30}
                             onChange={(e) => setFields({ ...fields, description: e.target.value })}
                             onFocus={() => handleFocus('description')}
@@ -236,7 +236,7 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                             error={errors?.password ?? null}
                         />
                     </Field>
-                    <PrimaryButton type="submit" is_loading={isLoading}>
+                    <PrimaryButton type="submit" isLoading={isLoading}>
                         Зарегистрироваться
                     </PrimaryButton>
                 </div>
@@ -310,7 +310,7 @@ const VerifyGmailCode = ({ email }) => {
                             />
                         </div>
                     </div>
-                    <PrimaryButton type="submit" is_loading={isLoading}>
+                    <PrimaryButton type="submit" isLoading={isLoading}>
                         Продолжить
                     </PrimaryButton>
                 </div>
@@ -431,7 +431,7 @@ const Register = () => {
                             confirmed={Boolean(email)}
                         />
                     </Field>
-                    <PrimaryButton is_loading={isLoading} type="submit">
+                    <PrimaryButton isLoading={isLoading} type="submit">
                         Продолжить
                     </PrimaryButton>
                 </div>
