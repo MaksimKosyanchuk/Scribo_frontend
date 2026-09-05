@@ -240,33 +240,37 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
     const actionsBody = []
 
     if (profile && profile._id.toString() === comment.author?._id?.toString()) {
-        actionsBody.push({
-            "title": "Редактировать",
-            "onClick": () => {
-                setEditMode(true);
-            },
-            icon: <EditIcon/>
-        });
+        actionsBody.push([
+            {
+                title: "Редактировать",
+                onClick: () => {
+                    setEditMode(true);
+                },
+                icon: <EditIcon/>
+            }
+        ]);
     }
 
     if ((profile && profile._id.toString() === comment.author?._id?.toString()) || (profile && profile.permissions.includes("delete_any_comment"))) {
-        actionsBody.push({
-           "title": "Удалить",
-            "onClick": () => {
-                deleteComment(comment._id).then((result) => {
-                    if(result.status === true) {
-                        fetchComments({ onSuccessFetch: () => {
-                            showToast({
-                                type: "success",
-                                message: "Комментарий удален"
-                            });
-                        }});
-                    }
-                });
-            },
-            icon: <DeleteIcon/>,
-            type: "danger"
-        });
+        actionsBody.push([
+            {
+                title: "Удалить",
+                onClick: () => {
+                    deleteComment(comment._id).then((result) => {
+                        if(result.status === true) {
+                            fetchComments({ onSuccessFetch: () => {
+                                showToast({
+                                    type: "success",
+                                    message: "Комментарий удален"
+                                });
+                            }});
+                        }
+                    });
+                },
+                icon: <DeleteIcon/>,
+                type: "danger"
+            }
+        ]);
     }
 
     return (

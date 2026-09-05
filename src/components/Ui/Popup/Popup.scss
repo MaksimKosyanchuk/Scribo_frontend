@@ -12,12 +12,36 @@
 }
 
 .popup_menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1100;
+    transform: translate3d(var(--popup-x, 0px), var(--popup-y, 0px), 0);
     border-radius: 8px;
     padding: 6px;
     display: flex;
     flex-direction: column;
+    gap: 6px;
     min-width: 200px;
+    overflow: visible;
     box-shadow: 0px 0px 11px 3px rgba(0, 0, 0, 0.1);
+
+    &_nested {
+        z-index: 1110;
+    }
+
+    &_section {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    &_separator {
+        height: 1px;
+        margin: 0 6px;
+        background-color: var(--line-color);
+        flex-shrink: 0;
+    }
 
     &_item {
         display: flex;
@@ -26,22 +50,55 @@
         gap: 14px;
         padding: 12px;
         border-radius: 6px;
+        width: 100%;
         color: var(--text-color);
-        
+
         @include hover {
             background-color: var(--section-item-hover-background-color);
         }
 
         &_title{
+            flex: 1;
             text-align: start;
             font-size: 14px;
+        }
+
+        &_value {
+            flex-shrink: 0;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            color: var(--light-text-color);
+        }
+
+        &_chevron {
+            flex-shrink: 0;
+            width: 14px;
+            height: 14px;
+            opacity: 0.55;
+        }
+
+        &_check {
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
         }
 
         svg {
             color: inherit;
             width: 16px;
             height: 16px;
+
+            &.popup_menu_item_chevron {
+                width: 14px;
+                height: 14px;
+            }
         }
+    }
+
+    &_item_active {
+        background-color: var(--section-item-hover-background-color);
     }
 
     &_item_danger {

@@ -17,6 +17,7 @@ import AdminPanel from './pages/AdminPanel/index.jsx';
 import Support from './pages/Support/index.jsx';
 import SupportMine from './pages/Support/Mine.jsx';
 import SupportRequestPage from './pages/Support/Request.jsx';
+import Notifications from './pages/Notifications/index.jsx';
 import RequestDetailPage from './pages/AdminPanel/RequestDetail.jsx';
 
 import AppLayout from './layouts/AppLayout/index.jsx';
@@ -145,7 +146,7 @@ function App() {
                               <Route path="/create-post" Component={CreatePost}/>
                               <Route path="/users/:id" Component={Profile}/>
                               <Route path="/posts/:id" Component={Article}/>
-                              <Route path="/settings" Component={Settings}/>
+                              <Route path="/notifications" Component={Notifications}/>
                               <Route path="/support" Component={Support}/>
                               <Route path="/support/mine" Component={SupportMine}/>
                               <Route path="/support/:key" Component={SupportRequestPage}/>
@@ -153,6 +154,7 @@ function App() {
                           </Route>
 
                           <Route element={<FullContainer/>}>
+                              <Route path="/settings" Component={Settings}/>
                               <Route path="admin-panel" Component={AdminPanel}/>
                               <Route path="admin-panel/requests/:id" Component={RequestDetailPage}/>
                           </Route>

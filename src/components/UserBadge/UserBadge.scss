@@ -36,6 +36,14 @@
     }
 
 
+    &_avatar_only {
+        padding: 0;
+
+        @include hover {
+            background: transparent;
+        }
+    }
+
     &_info {
         margin-left: 6px;
         display: flex;

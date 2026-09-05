@@ -1,0 +1,111 @@
+@use "../../styles/helpers" as *;
+
+.notifications_page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 640px;
+    width: 100%;
+    margin: 0 auto 40px;
+
+    &_intro {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        h1 {
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 14px;
+            color: var(--light-text-color);
+        }
+    }
+
+    &_list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 12px;
+
+        @include screen() {
+            padding: 8px;
+        }
+
+        .loader {
+            margin: 24px auto;
+        }
+    }
+
+    &_item {
+        display: grid;
+        grid-template-columns: 8px minmax(0, 1fr);
+        align-items: start;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 8px;
+
+        @include hover {
+            background: var(--section-item-hover-background-color);
+        }
+
+        &_unread {
+            background: var(--section-item-hover-background-color);
+        }
+
+        &_dot {
+            width: 6px;
+            height: 6px;
+            margin-top: 14px;
+            border-radius: 50%;
+            background: transparent;
+
+            &_on {
+                background: var(--red-f5, #c62828);
+            }
+        }
+
+        .user_badge {
+            width: fit-content;
+        }
+
+        &_body {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        &_message {
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--light-text-color);
+            overflow-wrap: anywhere;
+            padding-left: 6px;
+        }
+
+        &_time {
+            font-size: 12px;
+            color: var(--light-text-color);
+            padding-left: 6px;
+        }
+    }
+
+    &_empty {
+        padding: 28px 12px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--light-text-color);
+    }
+
+    .notification_link {
+        font-weight: 500;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+
+        @include hover() {
+            color: var(--text-color);
+        }
+    }
+}

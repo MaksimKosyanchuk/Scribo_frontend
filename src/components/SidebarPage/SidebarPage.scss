@@ -2,17 +2,22 @@
 
 .sidebar_page {
     display: flex;
+    align-items: stretch;
     gap: 20px;
     flex: 1;
+    width: 100%;
+    min-width: 0;
 
     &_navigation {
         display: flex;
         gap: 20px;
         flex-direction: column;
-        align-items: flex-start;
-        padding: 18px;
-        flex: 0 1 20%;
-        min-width: fit-content;
+        align-items: stretch;
+        padding: 24px 20px;
+        flex: 0 0 240px;
+        width: 240px;
+        min-width: 240px;
+        box-sizing: border-box;
         
         @include screen() {
             display: none;
@@ -68,14 +73,22 @@
 
     
     &_content {
-        width: 100%;
+        flex: 1;
+        min-width: 0;
+        width: auto;
+        padding: 24px 28px;
+
+        @include screen() {
+            padding: 16px 20px;
+        }
         
-            &_item {
+        &_item {
             display: flex;
             flex-direction: column;
             gap: 20px;
             height: 100%;
             overflow: visible;
+            min-width: 0;
 
             &_menu {
                 display: none;

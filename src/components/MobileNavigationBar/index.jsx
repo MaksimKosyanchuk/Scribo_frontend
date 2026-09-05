@@ -1,195 +1,162 @@
 import "./MobileNavigationBar.scss";
 
-import { useEffect, useState, useContext, useMemo, useCallback } from "react";
+import { useContext, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { AppContext } from "../../App";
 
 import HomeIcon from "../../assets/svg/home-icon.svg?react";
-import ProfileIcon from "../../assets/svg/profile-icon.svg?react";
 import NotificationsIcon from "../../assets/svg/notification.svg?react";
 import PlusIcon from "../../assets/svg/plus-icon.svg?react";
-import RedirectIcon from "../../assets/svg/redirect.svg?react";
+import MoonIcon from "../../assets/svg/moon.svg?react";
+import SunIcon from "../../assets/svg/sun.svg?react";
+import DefaultProfileAvatar from "../../assets/images/default-profile-avatar.png";
 
-import {  getUsers, read_notifications } from "../../api/users.api";
-import { format_back } from "../../utils/format";
+import { logout } from "../../api/auth.api";
 
-import SwitchBar from "../Ui/SwitchBar/index";
-import UserBadge from "../UserBadge/index";
-import NotificationMessage from "../NotificationMessage/index";
+import SwitchBar from "../Ui/SwitchBar";
+import Popup from "../Ui/Popup";
+import CurrentUserBadge from "../CurrentUserBadge/index";
+import { getAccountMenuBody } from "../AccountMenu/getAccountMenuBody";
 
+const isPathActive = (pathname, path) => {
+    if (!path) {
+        return false;
+    }
 
-const renderItems = (items) => {
-    return items.map((item, index) => {
-        return (
-            <div key={index} className="navigation_item">
-                {
-                    item.icon ? 
-                        <item.icon />
-                    :
-                    <>
-                        <span>{item.path}</span>
-                        <span>{item.index}</span>
-                    </>
-                }
-            </div>
-        )
-    })
-}
+    if (path === "/posts") {
+        return pathname === "/posts" || pathname === "/posts/";
+    }
+
+    return pathname === path || pathname.startsWith(`${path}/`);
+};
 
 const MobileNavigationBar = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { profile, setProfile, showToast, showModalWindow } = useContext(AppContext);
-    const [activeIndex, setActiveIndex] = useState(0);
-    
-    const getNotification = async (notifications) => {
-        const userIds = [
-            ...new Set(
-                notifications
-                    .map(item => item.user)
-                    .filter(Boolean)
-            )
-        ];
+    const { profile, setProfile, showToast, isDarkTheme, setIsDarkTheme } = useContext(AppContext);
 
-        const users = await getUsers(
-            userIds.map(_id => ({ _id }))
-        );
+    const hasUnread = Boolean(profile?.notifications?.some((item) => item.is_read === false));
+    const ThemeIcon = isDarkTheme ? MoonIcon : SunIcon;
+    const canCreate = Boolean(profile?.permissions?.includes("create_post"));
 
-        const userMap = users?.data?.reduce((acc, u) => {
-            acc[u._id] = u;
-            return acc;
-        }, {});
-
-        return [...notifications].reverse().map((item) => (
-            <div key={item._id} className="modal_window_body_content_notification">
-                <div className='modal_window_body_content_notification_new'>
-                    {
-                        !item.is_read ?
-                            <div className="modal_window_body_content_notification_new_circle"></div>
-                        :
-                            <></>
-                    }
-                    <UserBadge data={userMap[item?.user]} />
-                </div>
-                <p className='modal_window_body_content_notification_message'>
-                    <NotificationMessage item={item} />
-                </p>
-                <p className='modal_window_body_content_notification_time'>{format_back(item.time)}</p>
-            </div>
-        ));
-    };
-        
-    const openNotifications = useCallback(async () => {
-        if(!profile) {
-            showToast({type: "warning", message: "Войдите в аккаунт, чтоб получать уведомления!"})
-            return
-        }
-
-        const notificationContent = await getNotification(profile?.notifications);
-    
-        const updateNotification = async () => {
-            const result = await read_notifications()
-            if(result.status === true){
-                setProfile({ 
-                ...profile, 
-                notifications: profile.notifications.map((item) => ({ ...item, is_read: true }))
-                });
-            }
-        }
-
-        showModalWindow({
-            title: `Уведомления`,
-            content: notificationContent,
-            closeFunc: updateNotification
-        });
-    }, [showModalWindow, setProfile, profile, showToast]);
-
-    const items = useMemo(() => {
-
-        const items = [];
-
-        items.push({
+    const slots = useMemo(() => {
+        const home = {
+            id: "home",
             path: "/posts",
-            icon: HomeIcon,
-            onClick: () => navigate("/posts")
-        });
+            node: <HomeIcon />,
+            onClick: () => navigate("/posts"),
+        };
 
+        const notifications = {
+            id: "notifications",
+            path: "/notifications",
+            node: (
+                <>
+                    {hasUnread ? (
+                        <span className="navigation_bar_badge">
+                            <span className="navigation_bar_badge_dot" />
+                        </span>
+                    ) : null}
+                    <NotificationsIcon />
+                </>
+            ),
+            onClick: () => navigate("/notifications"),
+        };
 
-        if(!profile) {
+        const create = {
+            id: "create",
+            path: "/create-post",
+            node: <PlusIcon />,
+            onClick: () => navigate("/create-post"),
+        };
 
-            items.push({
+        const theme = {
+            id: "theme",
+            node: <ThemeIcon />,
+            onClick: () => setIsDarkTheme(!isDarkTheme),
+        };
+
+        const profileSlot = profile
+            ? {
+                id: "profile",
+                extraPaths: [`/users/${profile.nick_name}`, "/settings", "/support/mine", "/admin-panel"],
+                node: (
+                    <Popup
+                        body={getAccountMenuBody({
+                            profile,
+                            location,
+                            navigate,
+                            setProfile,
+                            showToast,
+                            logout,
+                        })}
+                    >
+                        <CurrentUserBadge asLink={false} avatarOnly />
+                    </Popup>
+                ),
+            }
+            : {
+                id: "login",
                 path: "/auth/login",
-                icon: ProfileIcon,
-                onClick: () => navigate("/auth/login")
-            });
+                extraPaths: ["/auth/register"],
+                node: (
+                    <img
+                        src={DefaultProfileAvatar}
+                        alt=""
+                        className="navigation_bar_avatar"
+                    />
+                ),
+                onClick: () => navigate("/auth/login"),
+            };
 
-        } else {
+        const left = [home];
 
-            if(["admin", "tech_admin"].includes(profile.role)) {
-
-                items.push({
-                    path: "/admin-panel",
-                    icon: RedirectIcon,
-                    onClick: () => navigate("/admin-panel")
-                });
-            }
-
-
-            if(profile.permissions?.includes("create_post")) {
-
-                items.push({
-                    path: "/create-post",
-                    icon: PlusIcon,
-                    onClick: () => navigate("/create-post")
-                });
-
-            }
-
-
-            items.push({
-                path: "/notifications",
-                icon: NotificationsIcon,
-                onClick: openNotifications
-            });
-
-
-            items.push({
-                path: `/users/${profile.nick_name}`,
-                icon: ProfileIcon,
-                onClick: () => navigate(`/users/${profile.nick_name}`)
-            });
-
+        if (profile) {
+            left.push(notifications);
         }
 
+        const right = [theme, profileSlot];
 
-        return items.map((item,index)=>({
-            ...item,
-            index
-        }));
-
-    }, [profile, navigate, openNotifications]); 
-
-    useEffect(() => {
-        const currentItem = items.find(item => item.path === location.pathname);
-        if(currentItem) {
-            setActiveIndex(currentItem.index);
+        if (canCreate) {
+            return [...left, create, ...right];
         }
-    }, [location, items]);
 
-    const handleIndex = (index) => {
-        items.at(index).onClick();
-    }
+        return [...left, ...right];
+    }, [
+        profile,
+        navigate,
+        hasUnread,
+        isDarkTheme,
+        setIsDarkTheme,
+        canCreate,
+        location,
+        setProfile,
+        showToast,
+    ]);
+
+    const isSlotActive = (item) => {
+        if (isPathActive(location.pathname, item.path)) {
+            return true;
+        }
+
+        return Boolean(item.extraPaths?.some((path) => isPathActive(location.pathname, path)));
+    };
+
+    const activeIndex = slots.findIndex((item) => isSlotActive(item));
 
     return (
-        <div className="navigation_bar float_section app-transition blurred">
-            <SwitchBar 
-                items={renderItems(items)}
-                setActiveIndex={handleIndex}
+        <nav className={`navigation_bar ${slots.length >= 5 ? "navigation_bar_compact" : ""}`}>
+            <SwitchBar
+                className="float_section blurred"
+                items={slots.map((item) => item.node)}
                 activeIndex={activeIndex}
+                setActiveIndex={(index) => {
+                    slots[index]?.onClick?.();
+                }}
             />
-        </div>
-    )
+        </nav>
+    );
 }
 
 export default MobileNavigationBar;

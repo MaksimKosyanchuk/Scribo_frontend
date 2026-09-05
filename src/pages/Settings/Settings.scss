@@ -2,16 +2,42 @@
 
 .settings {
     display: flex;
-    flex-direction: column;
-    gap: 24px;
-    max-width: 520px;
+    flex: 1 1;
     width: 100%;
-    margin: 0 auto 40px;
+    min-width: 0;
+    margin: 0 0 40px;
+
+    .sidebar_page {
+        flex: 1 1;
+        display: flex;
+        min-width: 0;
+    }
+
+    .settings_panel {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        min-width: 0;
+        flex: 1;
+    }
+
+    .settings_panel_hint {
+        font-size: 13px;
+        line-height: 1.4;
+        color: var(--light-text-color);
+    }
+
+    .settings_panel_actions {
+        display: flex;
+        justify-content: flex-start;
+        padding-top: 4px;
+    }
 
     .form_input {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        gap: 16px;
         width: 100%;
         margin: 0;
     }
@@ -20,48 +46,42 @@
         width: 100%;
     }
 
-    .primary_button,
-    .danger_button {
+    .settings_profile {
+        display: grid;
+        grid-template-columns: 140px minmax(0, 1fr);
+        gap: 28px;
+        align-items: start;
         width: 100%;
-    }
 
-    .top_side {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        align-items: center;
-        gap: 16px;
-    }
+        @include screen() {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
 
-    &_group {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-
-        &_intro {
+        &_avatar {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            align-items: flex-start;
+        }
 
-            h1 {
-                font-size: 18px;
-            }
-
-            p {
-                font-size: 13px;
-                color: var(--light-text-color);
-            }
+        &_fields {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 0;
+            width: 100%;
         }
     }
 
     .drop_file {
         border-radius: 50%;
-        width: 150px;
-        height: 150px;
+        width: 140px;
+        height: 140px;
+        flex-shrink: 0;
 
         @include screen() {
-            width: 120px;
-            height: 120px;
+            width: 112px;
+            height: 112px;
         }
 
         .remove_image {
@@ -144,20 +164,21 @@
     }
 
     .drop_file_error_messages {
-        margin-bottom: 20px;
+        margin-top: 8px;
     }
 
     .private_setting {
         display: flex;
         flex-direction: column;
-        gap: 8px;
         width: 100%;
 
         &_content {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            border: 1px solid var(--line-color);
+            border-radius: 8px;
+            overflow: hidden;
 
             &_item {
                 display: flex;
@@ -165,11 +186,20 @@
                 align-items: center;
                 justify-content: space-between;
                 gap: 20px;
-                padding: 10px 0;
-                border-radius: 8px;
+                padding: 14px 16px;
+                border-bottom: 1px solid var(--line-color);
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                @include hover {
+                    background: var(--section-item-hover-background-color);
+                }
 
                 p {
                     font-size: 14px;
+                    line-height: 1.4;
                 }
             }
         }
@@ -178,12 +208,15 @@
     .settings_sessions {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
         width: 100%;
 
         &_empty {
             font-size: 13px;
             color: var(--light-text-color);
+            padding: 16px;
+            border: 1px solid var(--line-color);
+            border-radius: 8px;
         }
 
         &_badge {
@@ -200,10 +233,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            padding: 12px;
+            gap: 16px;
+            width: 100%;
+            padding: 14px 16px;
             border: 1px solid var(--line-color);
             border-radius: 8px;
+            box-sizing: border-box;
+
+            @include hover {
+                background: var(--section-item-hover-background-color);
+            }
 
             .danger_button {
                 width: auto;
@@ -235,5 +274,12 @@
                 color: var(--light-text-color);
             }
         }
+    }
+
+    .settings_logout {
+        display: flex;
+        justify-content: flex-start;
+        padding-top: 12px;
+        border-top: 1px solid var(--line-color);
     }
 }

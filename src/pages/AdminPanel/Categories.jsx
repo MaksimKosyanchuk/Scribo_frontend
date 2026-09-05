@@ -550,25 +550,29 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
                                     <div className="admin_panel_content_categories_page_category_actions">
                                         <Popup
                                             body={[
-                                                {
-                                                    title: "Перейти к постам",
-                                                    icon: <Redirect />,
-                                                    onClick: () => { navigate(`/posts?filter=${category._id}`) },
-                                                },
-                                                {
-                                                    title: "Редактировать",
-                                                    icon: <EditIcon />,
-                                                    onClick: () => {
-                                                        setActiveCategory(category._id)
-                                                        setActivePage('edit')
+                                                [
+                                                    {
+                                                        title: "Перейти к постам",
+                                                        icon: <Redirect />,
+                                                        onClick: () => { navigate(`/posts?filter=${category._id}`) },
                                                     },
-                                                },
-                                                {
-                                                    title: "Удалить",
-                                                    icon: <DeleteIcon />,
-                                                    type: "danger",
-                                                    onClick: () => { doDeleteCategory(categories.find(c => c._id === category._id)) },
-                                                }
+                                                    {
+                                                        title: "Редактировать",
+                                                        icon: <EditIcon />,
+                                                        onClick: () => {
+                                                            setActiveCategory(category._id)
+                                                            setActivePage('edit')
+                                                        },
+                                                    },
+                                                ],
+                                                [
+                                                    {
+                                                        title: "Удалить",
+                                                        icon: <DeleteIcon />,
+                                                        type: "danger",
+                                                        onClick: () => { doDeleteCategory(categories.find(c => c._id === category._id)) },
+                                                    }
+                                                ]
                                             ]}
                                         >
 

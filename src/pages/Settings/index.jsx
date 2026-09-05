@@ -13,13 +13,17 @@ import PrimaryButton from '../../components/Ui/PrimaryButton';
 import DangerButton from '../../components/Ui/DangerButton';
 import Field from '../../components/Ui/Field';
 import Tooltip from '../../components/Ui/Tooltip';
+import SidebarPage from '../../components/SidebarPage';
 
 import "./Settings.scss";
 
 import AvatarIcon from "../../assets/svg/avatar-icon.svg?react"
+import ProfileIcon from "../../assets/svg/profile-icon.svg?react"
+import ShieldIcon from "../../assets/svg/shield-security.svg?react"
+import PeoplesIcon from "../../assets/svg/peoples.svg?react"
 
 const Settings = () => {
-    const { profile, setProfile, profileLoading, showToast, isDarkTheme, setIsDarkTheme } = useContext(AppContext)
+    const { profile, setProfile, profileLoading, showToast } = useContext(AppContext)
     const [ initialized, setInitialized ] = useState(false);
     const navigate = useNavigate();
     const [errors, setErrors] = useState({})
@@ -256,150 +260,168 @@ const Settings = () => {
 
     return (
         <div className="settings">
-            <form
-                className="form_input"
-                onSubmit={(event) => {
-                    event.preventDefault();
-                    save_settings();
-                }}
-            >
-                <div className="settings_group section app-transition">
-                    <div className="settings_group_intro">
-                        <h1>Профиль</h1>
-                    </div>
-                    <div className="top_side">
-                        <DropFile
-                            value={fields.avatar}
-                            setValue={(file) =>
-                                setFields(prev => ({ ...prev, avatar: file }))
-                            }
-                            background={<AvatarIcon className="drop_file_info_avatar_icon app-transition" />}
-                            dropFileType={"image/*"}
-                            fileTypes={"SVG, PNG, JPEG, JPG и другие"}
-                            errors={errors?.avatar}
-                            addNewErrors={add_errors_to_image}
-                            clearErrors={clear_errors_from_image}
-                            onRemove={handleAvatarRemove}
-                            previewUrl={profile?.avatar}
-                        />
-                    </div>
-                    {profile?.email ? (
-                        <Field title="Почта">
-                            <InputField
-                                type="email"
-                                value={profile.email}
-                                confirmed={Boolean(profile.is_verified)}
-                                onChange={() => {}}
-                            />
-                        </Field>
-                    ) : null}
-                    <Field error={errors?.nick_name ?? null} title={"Имя пользователя"}>
-                        <InputField
-                            className={`user_name`}
-                            type="text"
-                            onChange={(e) => setFields({ ...fields, nick_name: e.target.value })}
-                            onFocus={() => handleFocus('nick_name')}
-                            placeholder="User Name"
-                            value={fields?.nick_name}
-                            error={errors?.nick_name ?? null}
-                        />
-                    </Field>
-                    <Field error={errors?.description ?? null} title={"Описание"}>
-                        <InputField
-                            className={`description`}
-                            type="text"
-                            isMultiline={true}
-                            length={60}
-                            rows={3}
-                            onChange={(e) => setFields({ ...fields, description: e.target.value })}
-                            onFocus={() => handleFocus('description')}
-                            placeholder="Description of profile"
-                            value={fields?.description}
-                            error={errors?.description ?? null}
-                        />
-                    </Field>
-                </div>
-
-                <div className="settings_group section app-transition">
-                    <div className="settings_group_intro">
-                        <h1>Приватность и оформление</h1>
-                    </div>
-                    <div className="private_setting">
-                        <div className="private_setting_content app-transition">
-                            <div className="private_setting_content_item app-transition">
-                                <p>Отображать мой email в профиле</p>
-                                <Toggle
-                                    checked={fields.is_email_public}
-                                    onChange={set_email_visibility}
-                                />
-                            </div>
-                            <div className="private_setting_content_item app-transition">
-                                <p>Разрешить просмотр моих сохраненных постов</p>
-                                <Toggle
-                                    checked={fields.is_saved_posts_public}
-                                    onChange={set_saved_posts_visibility}
-                                />
-                            </div>
-                            <div className="private_setting_content_item app-transition">
-                                <p>Темная тема</p>
-                                <Toggle
-                                    checked={isDarkTheme}
-                                    onChange={setIsDarkTheme}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <PrimaryButton type="submit" isLoading={isLoading}>Сохранить</PrimaryButton>
-                </div>
-            </form>
-
-            <div className="settings_group section app-transition">
-                <div className="settings_group_intro">
-                    <h1>Сеансы</h1>
-                    <p>Устройства, с которых выполнен вход</p>
-                </div>
-                <div className="settings_sessions">
-                    {sessionsLoading ? (
-                        <p className="settings_sessions_empty">Загрузка…</p>
-                    ) : sessions.length === 0 ? (
-                        <p className="settings_sessions_empty">Нет активных сеансов</p>
-                    ) : (
-                        sessions.map((session) => (
-                            <div
-                                className="settings_sessions_item app-transition"
-                                key={session._id}
+            <SidebarPage
+                pageTitle="Настройки"
+                pages={[
+                    {
+                        title: "Профиль",
+                        key: "profile",
+                        icon: <ProfileIcon />,
+                        content: (
+                            <form
+                                className="settings_panel settings_panel_profile"
+                                onSubmit={(event) => {
+                                    event.preventDefault();
+                                    save_settings();
+                                }}
                             >
-                                <div className="settings_sessions_item_info">
-                                    <div className="settings_sessions_item_head">
-                                        <p className="settings_sessions_item_device">{session.device}</p>
-                                        {session.isCurrent ? (
-                                            <span className="settings_sessions_badge app-transition">Этот сеанс</span>
-                                        ) : null}
+                                <div className="settings_profile">
+                                    <div className="settings_profile_avatar">
+                                        <DropFile
+                                            value={fields.avatar}
+                                            setValue={(file) =>
+                                                setFields(prev => ({ ...prev, avatar: file }))
+                                            }
+                                            background={<AvatarIcon className="drop_file_info_avatar_icon app-transition" />}
+                                            dropFileType={"image/*"}
+                                            fileTypes={"SVG, PNG, JPEG, JPG и другие"}
+                                            errors={errors?.avatar}
+                                            addNewErrors={add_errors_to_image}
+                                            clearErrors={clear_errors_from_image}
+                                            onRemove={handleAvatarRemove}
+                                            previewUrl={profile?.avatar}
+                                        />
                                     </div>
-                                    <p className="settings_sessions_item_location">{session.location || "—"}</p>
-                                    <Tooltip text={format_date_time(session.lastSeen)}>
-                                        <p className="settings_sessions_item_time">
-                                            {format_back(session.lastSeen) || format_date_time(session.lastSeen)}
-                                        </p>
-                                    </Tooltip>
+                                    <div className="settings_profile_fields">
+                                        {profile?.email ? (
+                                            <Field title="Почта">
+                                                <InputField
+                                                    type="email"
+                                                    value={profile.email}
+                                                    confirmed={Boolean(profile.is_verified)}
+                                                    onChange={() => {}}
+                                                />
+                                            </Field>
+                                        ) : null}
+                                        <Field error={errors?.nick_name ?? null} title={"Имя пользователя"}>
+                                            <InputField
+                                                className={`user_name`}
+                                                type="text"
+                                                onChange={(e) => setFields({ ...fields, nick_name: e.target.value })}
+                                                onFocus={() => handleFocus('nick_name')}
+                                                placeholder="User Name"
+                                                value={fields?.nick_name}
+                                                error={errors?.nick_name ?? null}
+                                            />
+                                        </Field>
+                                        <Field error={errors?.description ?? null} title={"Описание"}>
+                                            <InputField
+                                                className={`description`}
+                                                type="text"
+                                                isMultiline={true}
+                                                length={60}
+                                                rows={3}
+                                                onChange={(e) => setFields({ ...fields, description: e.target.value })}
+                                                onFocus={() => handleFocus('description')}
+                                                placeholder="Description of profile"
+                                                value={fields?.description}
+                                                error={errors?.description ?? null}
+                                            />
+                                        </Field>
+                                        <div className="settings_panel_actions">
+                                            <PrimaryButton type="submit" isLoading={isLoading}>Сохранить</PrimaryButton>
+                                        </div>
+                                    </div>
                                 </div>
-                                <DangerButton type="button" onClick={() => handleDeleteSession(session)}>
-                                    Завершить
-                                </DangerButton>
+                            </form>
+                        )
+                    },
+                    {
+                        title: "Приватность",
+                        key: "privacy",
+                        icon: <ShieldIcon />,
+                        content: (
+                            <form
+                                className="settings_panel settings_panel_privacy"
+                                onSubmit={(event) => {
+                                    event.preventDefault();
+                                    save_settings();
+                                }}
+                            >
+                                <p className="settings_panel_hint">Кто видит данные в вашем профиле</p>
+                                <div className="private_setting">
+                                    <div className="private_setting_content app-transition">
+                                        <div className="private_setting_content_item app-transition">
+                                            <p>Отображать мой email в профиле</p>
+                                            <Toggle
+                                                checked={fields.is_email_public}
+                                                onChange={set_email_visibility}
+                                            />
+                                        </div>
+                                        <div className="private_setting_content_item app-transition">
+                                            <p>Разрешить просмотр моих сохраненных постов</p>
+                                            <Toggle
+                                                checked={fields.is_saved_posts_public}
+                                                onChange={set_saved_posts_visibility}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="settings_panel_actions">
+                                    <PrimaryButton type="submit" isLoading={isLoading}>Сохранить</PrimaryButton>
+                                </div>
+                            </form>
+                        )
+                    },
+                    {
+                        title: "Сеансы",
+                        key: "sessions",
+                        icon: <PeoplesIcon />,
+                        content: (
+                            <div className="settings_panel">
+                                <p className="settings_panel_hint">Устройства, с которых выполнен вход</p>
+                                <div className="settings_sessions">
+                                    {sessionsLoading ? (
+                                        <p className="settings_sessions_empty">Загрузка…</p>
+                                    ) : sessions.length === 0 ? (
+                                        <p className="settings_sessions_empty">Нет активных сеансов</p>
+                                    ) : (
+                                        sessions.map((session) => (
+                                            <div
+                                                className="settings_sessions_item app-transition"
+                                                key={session._id}
+                                            >
+                                                <div className="settings_sessions_item_info">
+                                                    <div className="settings_sessions_item_head">
+                                                        <p className="settings_sessions_item_device">{session.device}</p>
+                                                        {session.isCurrent ? (
+                                                            <span className="settings_sessions_badge app-transition">Этот сеанс</span>
+                                                        ) : null}
+                                                    </div>
+                                                    <p className="settings_sessions_item_location">{session.location || "—"}</p>
+                                                    <Tooltip text={format_date_time(session.lastSeen)}>
+                                                        <p className="settings_sessions_item_time">
+                                                            {format_back(session.lastSeen) || format_date_time(session.lastSeen)}
+                                                        </p>
+                                                    </Tooltip>
+                                                </div>
+                                                <DangerButton type="button" onClick={() => handleDeleteSession(session)}>
+                                                    Завершить
+                                                </DangerButton>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                                <div className="settings_logout">
+                                    <DangerButton className="logout_button" type="button" onClick={handleLogout}>
+                                        Выйти с аккаунта
+                                    </DangerButton>
+                                </div>
                             </div>
-                        ))
-                    )}
-                </div>
-            </div>
-
-            <div className="settings_group section app-transition">
-                <div className="settings_group_intro">
-                    <h1>Аккаунт</h1>
-                </div>
-                <DangerButton className="logout_button app-transition" type="button" onClick={handleLogout}>
-                    Выйти с аккаунта
-                </DangerButton>
-            </div>
+                        )
+                    }
+                ]}
+            />
         </div>
     );
 };

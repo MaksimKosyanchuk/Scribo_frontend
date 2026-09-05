@@ -74,12 +74,14 @@ const PostHeader = memo(({ post, onDeletePost, className, isLoading=false }) => 
         });
     };
 
-    const popupBody = [];
-
-    popupBody.push(
-        { title: "Редактировать", icon: <EditIcon />, onClick: () => navigate(`/posts/${post._id}/edit`) },
-        { title: "Удалить", icon: <DeleteIcon />, type: "danger", onClick: () => handleDeletePost(post._id) }
-    );
+    const popupBody = [
+        [
+            { title: "Редактировать", icon: <EditIcon />, onClick: () => navigate(`/posts/${post._id}/edit`) },
+        ],
+        [
+            { title: "Удалить", icon: <DeleteIcon />, type: "danger", onClick: () => handleDeletePost(post._id) },
+        ],
+    ];
 
     return (
         <div className={`post_header ${className ?? ""}`}>

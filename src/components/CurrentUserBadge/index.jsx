@@ -6,12 +6,12 @@ import { Link } from 'react-router-dom';
 import DefaultProfileAvatar from "../../assets/images/default-profile-avatar.png"
 
 
-const CurrentUserBadge = ({ className, asLink = true, defaultAvatar }) => {
+const CurrentUserBadge = ({ className, asLink = true, defaultAvatar, avatarOnly = false }) => {
     const { profile } = useContext(AppContext)
 
     return (
         profile ? 
-            <UserBadge data={profile} className={className} asLink={asLink} />
+            <UserBadge data={profile} className={className} asLink={asLink} avatarOnly={avatarOnly} />
         :
         
         asLink ? 

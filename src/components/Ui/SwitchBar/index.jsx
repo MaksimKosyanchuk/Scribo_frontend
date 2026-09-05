@@ -5,6 +5,7 @@ export default function SwitchBar({
     activeIndex,
     setActiveIndex,
     items,
+    className = "",
 }) {
     const containerRef = useRef(null);
     const buttonsRef = useRef([]);
@@ -17,7 +18,13 @@ export default function SwitchBar({
     const updateIndicator = useCallback(() => {
         const button = buttonsRef.current[activeIndex];
 
-        if (!button) return;
+        if (!button) {
+            setIndicator({
+                left: 0,
+                width: 0,
+            });
+            return;
+        }
 
         setIndicator({
             left: button.offsetLeft,
@@ -40,7 +47,7 @@ export default function SwitchBar({
     return (
         <div
             ref={containerRef}
-            className="switcher_bar app-transition"
+            className={`switcher_bar app-transition ${className}`}
         >
             <div
                 className="switcher_bar_indicator"
