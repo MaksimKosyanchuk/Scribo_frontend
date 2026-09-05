@@ -196,7 +196,7 @@ const Posts = ({
             )}
 
             {loading && list.length === 0 ? (
-                [0, 5].map(index => (
+                [0, 1, 2, 3, 4].map(index => (
                     <PostCard
                         key={index}
                         post={{ title: "Загрузка..." }}

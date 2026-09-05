@@ -2,9 +2,7 @@ import "./SidebarPage.scss";
 
 import { useSearchParams } from "react-router-dom";
 
-import MenuIcon from "../../assets/svg/menu.svg?react";
-
-import Popup from "../Ui/Popup";
+import DropDown from "../Ui/DropDown";
 
 const SidebarPage = ({ pages, page_title }) => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -47,15 +45,15 @@ const SidebarPage = ({ pages, page_title }) => {
             <div className="sidebar_page_content section app-transition">
                 <div className="sidebar_page_content_item app-transition">
                     <div className="sidebar_page_content_item_menu app-transition">
-                        <Popup
-                            body={pages.map(page => ({
-                                title: page.title,
-                                icon: page.icon,
-                                onClick: () => setPage(page.key),
+                        <DropDown
+                            options={pages.map((page) => ({
+                                value: page.key,
+                                name: page.title,
+                                icon: page.icon
                             }))}
-                        >
-                            <MenuIcon />
-                        </Popup>
+                            value={pages[activePage].key}
+                            onChange={setPage}
+                        />
                     </div>
 
                     <h1>{pages[activePage].title}</h1>

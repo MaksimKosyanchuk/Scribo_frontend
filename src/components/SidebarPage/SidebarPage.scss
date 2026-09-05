@@ -70,26 +70,27 @@
     &_content {
         width: 100%;
         
-        &_item {
+            &_item {
             display: flex;
             flex-direction: column;
             gap: 20px;
             height: 100%;
+            overflow: visible;
 
             &_menu {
-                color: var(--text-color);
-                width: 24px;
-                height: 24px;
                 display: none;
-                cursor: pointer;
-
-                svg {
-                    height: 100%;
-                    width: 100%;
-                }
+                width: 100%;
+                position: relative;
+                z-index: 3;
 
                 @include screen() {
                     display: block;
+                }
+            }
+
+            > h1 {
+                @include screen() {
+                    display: none;
                 }
             }
         }

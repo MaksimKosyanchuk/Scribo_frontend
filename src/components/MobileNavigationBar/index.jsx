@@ -1,7 +1,7 @@
 import "./MobileNavigationBar.scss";
 
 import { useEffect, useState, useContext, useMemo, useCallback } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { AppContext } from "../../App";
 
@@ -16,6 +16,7 @@ import { format_back } from "../../utils/format";
 
 import SwitchBar from "../Ui/SwitchBar/index";
 import UserBadge from "../UserBadge/index";
+import NotificationMessage from "../NotificationMessage/index";
 
 
 const renderItems = (items) => {
@@ -72,33 +73,8 @@ const MobileNavigationBar = () => {
                     <UserBadge data={userMap[item?.user]} />
                 </div>
                 <p className='modal_window_body_content_notification_message'>
-                    {(() => {
-                        switch (item.type) {
-                        case "follow":
-                            return "Подписался(-ась) на ваши обновления"
-                            case "unfollow":
-                            return "Отписался(-ась) от вас"
-                            case "like_post":
-                            return (
-                                <>Поставил лайк на ваш <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>пост</Link></>
-                            )
-                            case "comment_post":
-                            return (
-                                <>
-                                Прокомментировал(-а) ваш <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>пост</Link>
-                                </>
-                            )
-                            case "reply_comment":
-                            return (
-                                <>
-                                Ответил(-а) на <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`} state={{ comment: item.comment, time: Date.now() }}>ваш комментарий</Link>
-                                </>
-                            )
-                            default:
-                            return ""
-                            }
-                        })()}
-                    </p>
+                    <NotificationMessage item={item} />
+                </p>
                 <p className='modal_window_body_content_notification_time'>{format_back(item.time)}</p>
             </div>
         ));

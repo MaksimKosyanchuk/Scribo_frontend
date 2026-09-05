@@ -14,6 +14,10 @@ import Register from './pages/Register/index.jsx';
 import CreatePost from './pages/CreatePost/index.jsx';
 import EditPost from './pages/EditPost/index.jsx';
 import AdminPanel from './pages/AdminPanel/index.jsx';
+import Support from './pages/Support/index.jsx';
+import SupportMine from './pages/Support/Mine.jsx';
+import SupportRequestPage from './pages/Support/Request.jsx';
+import RequestDetailPage from './pages/AdminPanel/RequestDetail.jsx';
 
 import AppLayout from './layouts/AppLayout/index.jsx';
 import FullContainer from './layouts/FullContainer/index.jsx';
@@ -142,11 +146,15 @@ function App() {
                               <Route path="/users/:id" Component={Profile}/>
                               <Route path="/posts/:id" Component={Article}/>
                               <Route path="/settings" Component={Settings}/>
+                              <Route path="/support" Component={Support}/>
+                              <Route path="/support/mine" Component={SupportMine}/>
+                              <Route path="/support/:key" Component={SupportRequestPage}/>
 
                           </Route>
 
                           <Route element={<FullContainer/>}>
                               <Route path="admin-panel" Component={AdminPanel}/>
+                              <Route path="admin-panel/requests/:id" Component={RequestDetailPage}/>
                           </Route>
                       </Route>
                   </Routes>

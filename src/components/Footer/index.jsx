@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
+import { AppContext } from '../../App.jsx';
 import LinkToProfile from '../LinkToProfile';
 
 import "./Footer.scss"
@@ -11,6 +13,8 @@ import TWitterIcon from "../../assets/svg/twitter-icon.svg?react";
 import MainLogo from "../../assets/svg/full-logo-icon.svg?react";
 
 function Footer(){
+    const { profile } = useContext(AppContext);
+
     return(
         <footer className="blurred app-transition">
             <div className="default-container">
@@ -28,7 +32,11 @@ function Footer(){
                         <Link to={'/api'}><p>Api</p></Link>
                     </div>
                     <div className="footer_links">
-                        <a href="mailto:scribo.blog.dev@gmail.com" target="_blank" rel="noreferrer"><p>Support</p></a>
+                        {profile ? (
+                            <Link to={'/support/mine'}><p>Мои запросы</p></Link>
+                        ) : (
+                            <Link to={'/support'}><p>Поддержка</p></Link>
+                        )}
                     </div>
                 </div>
                 <div className="footer_bottom_content app-transition">
