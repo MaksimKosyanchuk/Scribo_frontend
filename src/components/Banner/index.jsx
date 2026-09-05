@@ -1,52 +1,44 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import Logo from "../../assets/svg/full-logo-text-icon.svg?react";
-import bannerImage from "../../assets/images/banner-img.png";
-
-import ChipButton from "../Ui/ChipButton";
+import GhIcon from "../../assets/svg/github-icon.svg?react";
+import ProfileIcon from "../../assets/svg/profile-icon.svg?react";
+import ChevronRightIcon from "../../assets/svg/chevron-right.svg?react";
 
 import "./Banner.scss";
 
-const Banner = () => {
-    
-    const openPersonalGithub = () => {
-        window.open("https://github.com/MaksimKosyanchuk", "_blank");
-    }
-    
-    return (
-        <div className="banner">
-            <div className="banner_content">
-                <div className="banner_content_title">
-                    <h1>
-                        Hello! It's{" "}
-                    </h1>
-                    <Logo className="banner_content_title_logo app-transition"/>
-                </div>
-
-                <p className="banner_content_text">
-                    This is my personal project, developed voluntarily in my free time.
-    I’d really appreciate it if you checked out the links below.
-                </p>
-
-                <div className="banner_content_actions">
-                    <ChipButton isActive={true} onClick={openPersonalGithub}>
-                        My GitHub
-                    </ChipButton>
-                    <ChipButton isActive={true}>
-                        <Link to={"/users/Maks"}>
-                            My profile
-                        </Link>
-                    </ChipButton>
-                </div>
-            </div>
-
-            <img
-                src={bannerImage}
-                alt=""
-                className="banner_image"
-            />
+const Banner = () => (
+    <aside className="banner">
+        <p className="banner_kicker">Личный проект</p>
+        <p className="banner_lead">Пишу, когда есть что сказать — без редакции.</p>
+        <div className="banner_links app-transition">
+            <a
+                className="banner_link app-transition"
+                href="https://github.com/MaksimKosyanchuk"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub MaksimKosyanchuk"
+            >
+                <GhIcon className="banner_link_icon app-transition" aria-hidden="true" />
+                <span className="banner_link_copy">
+                    <span className="banner_link_label">GitHub</span>
+                    <span className="banner_link_hint">MaksimKosyanchuk</span>
+                </span>
+                <ChevronRightIcon className="banner_link_chevron" aria-hidden="true" />
+            </a>
+            <Link
+                className="banner_link app-transition"
+                to="/users/Maks"
+                aria-label="Профиль на этом сайте"
+            >
+                <ProfileIcon className="banner_link_icon app-transition" aria-hidden="true" />
+                <span className="banner_link_copy">
+                    <span className="banner_link_label">Мой профиль</span>
+                    <span className="banner_link_hint">на scribo</span>
+                </span>
+                <ChevronRightIcon className="banner_link_chevron" aria-hidden="true" />
+            </Link>
         </div>
-    );
-};
+    </aside>
+);
 
 export default Banner;

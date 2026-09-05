@@ -61,13 +61,16 @@ const categoryIcons = {
     26: CategoryIcon26,
 };
 
-const Category = memo(({ category, isActive, onClick, className }) => {
+const Category = memo(({ category, isActive, onClick, className, quiet = false, tag = false }) => {
     const navigate = useNavigate();
 
     const Icon = categoryIcons[category?.icon];
+    const colorClass = CATEGORY_COLORS[category?.color]?.className ?? "";
+    const isQuiet = quiet || tag;
 
     return (
         <ChipButton
+            variant={isQuiet ? "quiet" : "default"}
             isActive={isActive}
             onClick={
                 onClick ??
@@ -75,9 +78,10 @@ const Category = memo(({ category, isActive, onClick, className }) => {
                     navigate("/posts?filter=" + category?._id);
                 })
             }
-            className={`category_content ${CATEGORY_COLORS[category?.color]?.className ?? ""} ${className || ""}`}
+            className={`category_content ${isQuiet ? "category_content_quiet" : ""} ${tag ? "category_content_tag" : ""} ${colorClass} ${className || ""}`}
         >
-            {Icon && <Icon className="category_svg_icon" />}
+            {isQuiet && category?.color != null ? <span className="category_dot" aria-hidden="true" /> : null}
+            {!isQuiet && Icon ? <Icon className="category_svg_icon" /> : null}
             <p>{category?.name}</p>
         </ChipButton>
     );

@@ -23,3 +23,13 @@
     color: var(--cancel-button-secondary-color);
     background: var(--cancel-button-hover-background-color);
 }
+
+.cancel_button_disabled,
+.cancel_button_loading {
+    cursor: not-allowed;
+    opacity: 0.55;
+
+    @include hover {
+        background: transparent;
+    }
+}

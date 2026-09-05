@@ -5,22 +5,19 @@
     flex-direction: column;
     min-height: 100px;
     position: relative;
-    gap: 28px;
-    
-    &.posts_columns {  
-        @include screen() {
-            flex-wrap: wrap;
-            justify-content: space-between;      
-            gap: 12px;
-        }
+    gap: var(--space-6);
 
-        .pagination {
-            gap: 20px;
-            
-            &_content {
-                gap: 20px;
-            }
+    .pagination {
+        gap: var(--space-6);
+
+        &_content {
+            gap: 0;
         }
+    }
+
+    .pagination_content > .posts_item:first-child,
+    > .posts_item:first-child {
+        padding-top: 0;
     }
 
     .posts_loader{

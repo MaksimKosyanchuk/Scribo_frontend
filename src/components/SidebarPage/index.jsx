@@ -24,8 +24,7 @@ const SidebarPage = ({ pages, pageTitle }) => {
 
     return (
         <div className="sidebar_page">
-            <div className="sidebar_page_navigation section app-transition">
-                <h1>{pageTitle}</h1>
+            <div className="sidebar_page_navigation app-transition" aria-label={pageTitle}>
 
                 <div className="sidebar_page_navigation_list">
                     {pages.map((page, index) => (
@@ -45,7 +44,7 @@ const SidebarPage = ({ pages, pageTitle }) => {
                 </div>
             </div>
 
-            <div className="sidebar_page_content section app-transition">
+            <div className="sidebar_page_content app-transition">
                 <div className="sidebar_page_content_item app-transition">
                     <div className="sidebar_page_content_item_menu app-transition">
                         <DropDown

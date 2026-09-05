@@ -9,10 +9,9 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-size: 16px;
-    padding: 8px 0;
+    font-size: var(--text-md);
+    padding: 8px 12px;
     width: 100%;
-    padding: 10px 16px;
     background-color: transparent;
     border: 1px solid var(--input-outline-color);
     border-radius: 8px;
@@ -37,7 +36,7 @@
     }
 
     &::placeholder {
-        font-size: 16px;
+        font-size: var(--text-md);
         color: var(--input-placeholder-color);
         transition: .3s;
     }
@@ -45,7 +44,6 @@
 
 .incorrect_field {
     border: 1px solid red !important;
-    box-shadow: 0 0 10px rgb(255 0 0 / 50%);
 }
 
 

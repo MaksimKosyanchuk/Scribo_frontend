@@ -33,4 +33,51 @@
             }
         }
     }
+
+    &.category_content_quiet {
+        border-radius: 0;
+
+        .category_dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--category-color, var(--light-text-color));
+            flex-shrink: 0;
+            opacity: 0.4;
+        }
+
+        @include category-colors {
+            &.chip_button_active {
+                color: var(--text-color);
+                background: transparent;
+                border-color: transparent;
+
+                .category_dot {
+                    opacity: 1;
+                }
+
+                p {
+                    color: var(--text-color);
+                }
+
+                @include hover() {
+                    background: transparent;
+                }
+            }
+        }
+
+        &.category_content_tag {
+            color: var(--text-color);
+            font-weight: 400;
+            box-shadow: none;
+
+            .category_dot {
+                opacity: 1;
+            }
+
+            p {
+                color: inherit;
+            }
+        }
+    }
 }

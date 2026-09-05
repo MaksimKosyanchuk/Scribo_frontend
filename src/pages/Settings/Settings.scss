@@ -16,10 +16,28 @@
     .settings_panel {
         display: flex;
         flex-direction: column;
-        gap: 20px;
         width: 100%;
         min-width: 0;
         flex: 1;
+    }
+
+    .settings_stack {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-6);
+        width: 100%;
+        max-width: 480px;
+    }
+
+    .settings_group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        min-width: 0;
+
+        > .kicker {
+            margin-bottom: var(--space-1);
+        }
     }
 
     .settings_panel_actions {
@@ -34,22 +52,16 @@
     .settings_password {
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        max-width: 420px;
+        gap: var(--space-3);
         width: 100%;
     }
 
     .settings_password_preview {
         display: flex;
+        flex-direction: column;
         align-items: stretch;
-        gap: 12px;
+        gap: var(--space-3);
         width: 100%;
-        max-width: 520px;
-
-        .input_field_wrapper {
-            flex: 1 1 auto;
-            min-width: 0;
-        }
 
         .input_field {
             letter-spacing: 2px;
@@ -57,68 +69,45 @@
         }
 
         .action_button {
-            flex: 0 0 auto;
+            align-self: flex-start;
             white-space: nowrap;
         }
-
-        @include screen() {
-            flex-direction: column;
-
-            .action_button {
-                width: 100%;
-            }
-        }
-    }
-
-    .form_input {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        width: 100%;
-        margin: 0;
     }
 
     .field {
         width: 100%;
     }
 
-    .settings_profile {
-        display: grid;
-        grid-template-columns: 140px minmax(0, 1fr);
-        gap: 28px;
-        align-items: start;
-        width: 100%;
+    .settings_avatar {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        padding-bottom: var(--space-2);
+    }
 
-        @include screen() {
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
+    .settings_avatar_copy {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+    }
 
-        &_avatar {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
+    .settings_avatar_title {
+        font-size: 14px;
+        font-weight: 500;
+    }
 
-        &_fields {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            min-width: 0;
-            width: 100%;
-        }
+    .settings_avatar_hint {
+        font-size: 12px;
+        color: var(--light-text-color);
+        line-height: 1.4;
     }
 
     .drop_file {
         border-radius: 50%;
-        width: 140px;
-        height: 140px;
+        width: 88px;
+        height: 88px;
         flex-shrink: 0;
-
-        @include screen() {
-            width: 112px;
-            height: 112px;
-        }
 
         .remove_image {
             position: absolute;
@@ -141,11 +130,6 @@
                     color: var(--red-button-third-color);
                     height: 12px;
                     width: 12px;
-
-                    @include screen() {
-                        height: 16px;
-                        width: 16px;
-                    }
                 }
             }
         }
@@ -156,10 +140,6 @@
             height: 100%;
             justify-content: flex-end;
 
-            @include screen() {
-                gap: 4px;
-            }
-
             &_avatar_icon {
                 height: 70%;
                 width: 70%;
@@ -167,28 +147,12 @@
             }
 
             &_upload_icon {
-                width: 40px;
-                height: 40px;
-
-                @include screen() {
-                    height: 35px;
-                    width: 35px;
-                }
+                width: 28px;
+                height: 28px;
             }
 
-            &_main_text {
-                display: none;
-            }
-
-            &_help_text {
-                font-size: 12px;
-                text-align: center;
-
-                @include screen() {
-                    font-size: 10px;
-                }
-            }
-
+            &_main_text,
+            &_help_text,
             &_select {
                 display: none;
             }
@@ -203,62 +167,65 @@
         margin-top: 8px;
     }
 
-    .private_setting {
+    .settings_switch {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        width: 100%;
+        padding: var(--space-3) 0;
+        border-bottom: 1px solid var(--line-color);
+        box-sizing: border-box;
+
+        &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        &:first-of-type {
+            padding-top: 0;
+        }
+
+        .toggle {
+            flex-shrink: 0;
+            margin-top: 0;
+        }
+    }
+
+    .settings_switch_copy {
         display: flex;
         flex-direction: column;
-        width: 100%;
+        gap: 2px;
+        min-width: 0;
+        flex: 1 1 auto;
+    }
 
-        &_content {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--line-color);
-            border-radius: 8px;
-            overflow: hidden;
+    .settings_switch_title {
+        font-size: 14px;
+        line-height: 1.35;
+    }
 
-            &_item {
-                display: flex;
-                width: 100%;
-                align-items: center;
-                justify-content: space-between;
-                gap: 20px;
-                padding: 14px 16px;
-                border-bottom: 1px solid var(--line-color);
-
-                &:last-child {
-                    border-bottom: none;
-                }
-
-                @include hover {
-                    background: var(--section-item-hover-background-color);
-                }
-
-                p {
-                    font-size: 14px;
-                    line-height: 1.4;
-                }
-            }
-        }
+    .settings_switch_hint {
+        font-size: 12px;
+        color: var(--light-text-color);
+        line-height: 1.4;
     }
 
     .settings_sessions {
         display: flex;
         flex-direction: column;
-        gap: 8px;
         width: 100%;
 
         &_empty {
             font-size: 13px;
             color: var(--light-text-color);
-            padding: 16px;
-            border: 1px solid var(--line-color);
-            border-radius: 8px;
+            padding: 4px 0;
         }
 
         &_badge {
             font-size: 12px;
             font-weight: 500;
-            padding: 4px 8px;
+            padding: 2px 8px;
             border-radius: 6px;
             white-space: nowrap;
             color: var(--success-color);
@@ -267,22 +234,28 @@
 
         &_item {
             display: flex;
+            flex-direction: row;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: var(--space-4);
             width: 100%;
-            padding: 14px 16px;
-            border: 1px solid var(--line-color);
-            border-radius: 8px;
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--line-color);
             box-sizing: border-box;
 
-            @include hover {
-                background: var(--section-item-hover-background-color);
+            &:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            &:first-child {
+                padding-top: 0;
             }
 
             .danger_button {
                 width: auto;
-                flex-shrink: 0;
+                flex: 0 0 auto;
+                white-space: nowrap;
             }
 
             &_info {
@@ -304,7 +277,16 @@
                 font-weight: 500;
             }
 
-            &_location,
+            &_meta {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 6px;
+                font-size: 12px;
+                color: var(--light-text-color);
+                line-height: 1.4;
+            }
+
             &_time {
                 font-size: 12px;
                 color: var(--light-text-color);
@@ -315,7 +297,6 @@
     .settings_logout {
         display: flex;
         justify-content: flex-start;
-        padding-top: 12px;
-        border-top: 1px solid var(--line-color);
+        padding-top: var(--space-2);
     }
 }

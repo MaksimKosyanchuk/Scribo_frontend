@@ -17,7 +17,7 @@ import "./Popup.scss";
 
 import ChevronRightIcon from "../../../assets/svg/chevron-right.svg?react";
 
-const MENU_ROOT = "app-layout";
+const MENU_ROOT_DEFAULT = "app-layout";
 
 function normalizeSections(body) {
     if (!Array.isArray(body) || body.length === 0) {
@@ -61,12 +61,13 @@ function useFloatingPosition(refs, x, y) {
     }, [refs, x, y]);
 }
 
-function MenuItem({ item, onItemSelect }) {
+function MenuItem({ item, onItemSelect, portalRootId }) {
     if (item.type === "submenu" || item.type === "dropdown") {
         return (
             <FlyoutItem
                 item={item}
                 onItemSelect={onItemSelect}
+                portalRootId={portalRootId}
             />
         );
     }
@@ -90,7 +91,7 @@ function MenuItem({ item, onItemSelect }) {
     );
 }
 
-function MenuBody({ sections, onItemSelect }) {
+function MenuBody({ sections, onItemSelect, portalRootId }) {
     return sections.map((section, sectionIndex) => (
         <Fragment key={sectionIndex}>
             {sectionIndex > 0 && <div className="popup_menu_separator" role="separator" />}
@@ -100,6 +101,7 @@ function MenuBody({ sections, onItemSelect }) {
                         key={item.id ?? `${sectionIndex}-${itemIndex}`}
                         item={item}
                         onItemSelect={onItemSelect}
+                        portalRootId={portalRootId}
                     />
                 ))}
             </div>
@@ -107,7 +109,7 @@ function MenuBody({ sections, onItemSelect }) {
     ));
 }
 
-function FlyoutItem({ item, onItemSelect }) {
+function FlyoutItem({ item, onItemSelect, portalRootId = MENU_ROOT_DEFAULT }) {
     const nodeId = useFloatingNodeId();
     const [open, setOpen] = useState(false);
     const sections = normalizeSections(item.items);
@@ -168,7 +170,7 @@ function FlyoutItem({ item, onItemSelect }) {
             </button>
 
             {open && (
-                <FloatingPortal root={document.getElementById(MENU_ROOT)}>
+                <FloatingPortal root={document.getElementById(portalRootId)}>
                     <div
                         {...getFloatingProps({
                             ref: (node) => {
@@ -184,6 +186,7 @@ function FlyoutItem({ item, onItemSelect }) {
                         <MenuBody
                             sections={sections}
                             onItemSelect={onItemSelect}
+                            portalRootId={portalRootId}
                         />
                     </div>
                 </FloatingPortal>
@@ -192,7 +195,7 @@ function FlyoutItem({ item, onItemSelect }) {
     );
 }
 
-function PopupMenu({ anchorRef, children, onClose }) {
+function PopupMenu({ anchorRef, children, onClose, portalRootId }) {
     const { refs, x, y } = useFloating({
         elements: {
             reference: anchorRef.current,
@@ -221,7 +224,7 @@ function PopupMenu({ anchorRef, children, onClose }) {
     }, [onClose, anchorRef]);
 
     return (
-        <FloatingPortal root={document.getElementById(MENU_ROOT)}>
+        <FloatingPortal root={document.getElementById(portalRootId)}>
             <div
                 ref={(node) => {
                     refs.setFloating(node);
@@ -238,7 +241,7 @@ function PopupMenu({ anchorRef, children, onClose }) {
     );
 }
 
-function Popup({ children, body, className }) {
+function Popup({ children, body, className, portalRootId = MENU_ROOT_DEFAULT }) {
     const buttonRef = useRef(null);
     const [open, setOpen] = useState(false);
     const sections = normalizeSections(body);
@@ -258,10 +261,12 @@ function Popup({ children, body, className }) {
                     <PopupMenu
                         anchorRef={buttonRef}
                         onClose={() => setOpen(false)}
+                        portalRootId={portalRootId}
                     >
                         <MenuBody
                             sections={sections}
                             onItemSelect={() => setOpen(false)}
+                            portalRootId={portalRootId}
                         />
                     </PopupMenu>
                 </FloatingTree>

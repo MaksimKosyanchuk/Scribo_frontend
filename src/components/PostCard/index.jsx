@@ -11,68 +11,57 @@ import Sceleton from "../Ui/Sceleton/Sceleton";
 const PostCard = ({
     isLoading = false,
     post,
-    category,
     setPosts,
 }) => {
-
     const updatePost = useCallback((next) => {
         setPosts((prev) =>
             prev.map((item) => {
                 if (item._id !== post._id) {
-                    return item
+                    return item;
                 }
-                return typeof next === "function" ? next(item) : { ...item, ...next }
+                return typeof next === "function" ? next(item) : { ...item, ...next };
             })
         );
     }, [setPosts, post._id]);
 
     const deletePost = useCallback((id) => {
-        setPosts(prev =>
-            prev.filter(post => post._id !== id)
-        );
+        setPosts((prev) => prev.filter((item) => item._id !== id));
     }, [setPosts]);
 
+    const body = (
+        <>
+            <Sceleton isLoading={isLoading} rounded={true} section={false} className="posts_item_title">
+                <h2 className="posts_item_title">{post.title}</h2>
+            </Sceleton>
+            {post.featured_image ? (
+                <div className="posts_item_img">
+                    <img src={post.featured_image} alt="" />
+                </div>
+            ) : null}
+        </>
+    );
+
     return (
-        <div className="posts_item section app-transition">
+        <article className="posts_item app-transition">
             <PostHeader
                 post={post}
                 isLoading={isLoading}
                 onDeletePost={deletePost}
             />
-            <Sceleton isLoading={isLoading} rounded={true} className="posts_item_content">
-                <div className="posts_item_content">
-                    <h2 className="posts_item_title">
-                        {post.title}
-                    </h2>
-                </div>
-            </Sceleton>
-
-            {post.featured_image && (
-                <div className="posts_item_img">
-                    <img
-                        src={post.featured_image}
-                        alt=""
-                    />
-                </div>
+            {isLoading || !post._id ? (
+                <div className="posts_item_main">{body}</div>
+            ) : (
+                <Link className="posts_item_main" to={`/posts/${post._id}`}>
+                    {body}
+                </Link>
             )}
-
-            <div className="posts_item_bottom">
-                <PostActions
-                    article={post}
-                    isLoading={isLoading}
-                    category={category}
-                    setArticle={updatePost}
-                />
-            </div>
-            {
-                !isLoading && (
-                    <Link
-                        className="posts_item_link"
-                        to={`/posts/${post._id}`}
-                    />
-                )
-            }
-        </div>
+            <PostActions
+                article={post}
+                isLoading={isLoading}
+                setArticle={updatePost}
+                showCategory={false}
+            />
+        </article>
     );
 };
 

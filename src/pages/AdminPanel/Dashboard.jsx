@@ -130,7 +130,7 @@ const TrendChart = ({ series, keys }) => {
     return (
         <svg className="analytics_chart" viewBox={`0 0 ${width} ${height}`} role="img">
             <line
-                className="analytics_chart_axis"
+                className="analytics_chart_axis app-transition"
                 x1={pad.left}
                 y1={pad.top + innerHeight}
                 x2={pad.left + innerWidth}
@@ -181,6 +181,7 @@ const TrendChart = ({ series, keys }) => {
             ) : null}
             {series.map((point, index) => (
                 <rect
+                    className="app-transition"
                     key={`hit-${point.date}`}
                     x={toX(index) - hitWidth / 2}
                     y={pad.top}
@@ -325,7 +326,6 @@ const DashboardPage = () => {
     return (
         <div className="analytics">
             <div className="analytics_toolbar">
-                    <p className="analytics_toolbar_hint">Посещения, города, устройства и категории за выбранный период</p>
                 <div className="analytics_toolbar_ranges">
                     {RANGES.map((range) => (
                         <ChipButton
@@ -353,15 +353,15 @@ const DashboardPage = () => {
                         />
                         <StatCard label="Новые пользователи" value={totals.new_users} />
                         <StatCard label="Новые посты" value={totals.new_posts} />
-                        <StatCard label="Комментарии" value={totals.new_comments} hint="Новые за период" />
-                        <StatCard label="Категории" value={totals.categories} hint="Всего рубрик на сайте" />
+                        <StatCard label="Комментарии" value={totals.new_comments} />
+                        <StatCard label="Категории" value={totals.categories} />
                         <StatCard label="Всего пользователей" value={totals.registered_users} />
                     </div>
 
                     <div className="analytics_grid">
-                        <section className="analytics_block">
+                        <section className="analytics_block app-transition">
                             <div className="analytics_block_head">
-                                <h2>Посещения</h2>
+                                <h2 className="kicker">Посещения</h2>
                             </div>
                             {series.length ? (
                                 <TrendChart series={series} keys={TREND_KEYS} />
@@ -370,9 +370,9 @@ const DashboardPage = () => {
                             )}
                         </section>
 
-                        <section className="analytics_block">
+                        <section className="analytics_block app-transition">
                             <div className="analytics_block_head">
-                                <h2>Города</h2>
+                                <h2 className="kicker">Города</h2>
                             </div>
                             <BarChart
                                 items={cities}
@@ -383,9 +383,9 @@ const DashboardPage = () => {
                     </div>
 
                     <div className="analytics_grid">
-                        <section className="analytics_block">
+                        <section className="analytics_block app-transition">
                             <div className="analytics_block_head">
-                                <h2>Устройства</h2>
+                                <h2 className="kicker">Устройства</h2>
                             </div>
                             <BarChart
                                 items={devices}
@@ -393,9 +393,9 @@ const DashboardPage = () => {
                             />
                         </section>
 
-                        <section className="analytics_block">
+                        <section className="analytics_block app-transition">
                             <div className="analytics_block_head">
-                                <h2>Посты по категориям</h2>
+                                <h2 className="kicker">Посты по категориям</h2>
                             </div>
                             <BarChart
                                 items={categories}
@@ -406,9 +406,9 @@ const DashboardPage = () => {
                     </div>
 
                     <div className="analytics_grid analytics_grid_bottom">
-                        <section className="analytics_block">
+                        <section className="analytics_block app-transition">
                             <div className="analytics_block_head">
-                                <h2>Популярные страницы</h2>
+                                <h2 className="kicker">Популярные страницы</h2>
                             </div>
                             {data?.top_paths?.length ? (
                                 <div className="analytics_table">
@@ -425,18 +425,18 @@ const DashboardPage = () => {
                             )}
                         </section>
 
-                        <section className="analytics_block">
+                        <section className="analytics_block app-transition">
                             <div className="analytics_block_head">
-                                <h2>Действия на сайте</h2>
+                                <h2 className="kicker">Действия на сайте</h2>
                             </div>
                             <BarChart items={activity} />
                         </section>
                     </div>
 
                     <div className="analytics_grid analytics_grid_bottom">
-                        <section className="analytics_block">
+                        <section className="analytics_block app-transition">
                             <div className="analytics_block_head">
-                                <h2>Контент</h2>
+                                <h2 className="kicker">Контент</h2>
                             </div>
                             <div className="analytics_content_stats">
                                 <div>

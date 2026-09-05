@@ -12,11 +12,11 @@
         display: flex;
         align-items: center;
         width: fit-content;
-        gap: 10px;
+        gap: 8px;
         margin-bottom: 10px;
-        border-radius: 8px;
-        border: 1px solid var(--line-color);
-        padding: 8px ;
+        border-radius: var(--radius-sm);
+        border: 0;
+        padding: 4px 0;
 
         &_icon {
             width: 20px;
@@ -57,11 +57,13 @@
 
         width: 100%;
         min-width: 0;
-        height: 50px;
+        height: auto;
+        min-height: 44px;
 
-        border-radius: 8px;
-        border: 1px solid var(--line-color);
-        padding: 8px 16px;
+        border-radius: 0;
+        border: 0;
+        border-bottom: 1px solid var(--line-color);
+        padding: 10px 0;
 
         align-items: center;
 

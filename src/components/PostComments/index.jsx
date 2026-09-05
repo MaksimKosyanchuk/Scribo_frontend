@@ -77,6 +77,7 @@ const CommentForm = ({
                     {onCancel && (
                         <CancelButton
                             type="button"
+                            disabled={isLoading}
                             onClick={onCancel}
                         >
                             Отмена
@@ -278,7 +279,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
         <div
             className={`comment app-transition ${level === 0 ? `comment_root` : ''}`}
         >
-            <div className="comment_body section app-transition">
+            <div className="comment_body app-transition">
                 {
                     editMode ?
                         <CommentForm

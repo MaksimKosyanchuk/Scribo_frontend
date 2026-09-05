@@ -33,6 +33,8 @@ const Settings = () => {
     const [changingPassword, setChangingPassword] = useState(false);
     const [sessions, setSessions] = useState([]);
     const [sessionsLoading, setSessionsLoading] = useState(false);
+    const [logoutLoading, setLogoutLoading] = useState(false);
+    const [endingSessionId, setEndingSessionId] = useState(null);
     const [passwordFields, setPasswordFields] = useState({
         currentPassword: "",
         newPassword: "",
@@ -314,29 +316,39 @@ const Settings = () => {
     };
 
     const handleLogout = async () => {
-        await logoutRequest();
-        setProfile(null);
-        showToast({ message: "Вы вышли из аккаунта!", type: "success" });
-        navigate("/posts");
+        setLogoutLoading(true)
+        try {
+            await logoutRequest();
+            setProfile(null);
+            showToast({ message: "Вы вышли из аккаунта!", type: "success" });
+            navigate("/posts");
+        } finally {
+            setLogoutLoading(false)
+        }
     }
 
     const handleDeleteSession = async (session) => {
-        const result = await deleteSession(session._id)
+        setEndingSessionId(session._id)
+        try {
+            const result = await deleteSession(session._id)
 
-        if (!result?.status) {
-            showToast({ message: "Не удалось завершить сеанс", type: "error" })
-            return
+            if (!result?.status) {
+                showToast({ message: "Не удалось завершить сеанс", type: "error" })
+                return
+            }
+
+            if (result.data?.wasCurrent) {
+                setProfile(null)
+                showToast({ message: "Текущий сеанс завершён", type: "success" })
+                navigate("/posts")
+                return
+            }
+
+            setSessions(prev => prev.filter(item => item._id !== session._id))
+            showToast({ message: "Сеанс удалён", type: "success" })
+        } finally {
+            setEndingSessionId(null)
         }
-
-        if (result.data?.wasCurrent) {
-            setProfile(null)
-            showToast({ message: "Текущий сеанс завершён", type: "success" })
-            navigate("/posts")
-            return
-        }
-
-        setSessions(prev => prev.filter(item => item._id !== session._id))
-        showToast({ message: "Сеанс удалён", type: "success" })
     }
 
     const handleAvatarRemove = () => {
@@ -396,24 +408,29 @@ const Settings = () => {
                                     save_settings();
                                 }}
                             >
-                                <div className="settings_profile">
-                                    <div className="settings_profile_avatar">
-                                        <DropFile
-                                            value={fields.userAvatar}
-                                            setValue={(file) =>
-                                                setFields(prev => ({ ...prev, userAvatar: file }))
-                                            }
-                                            background={<AvatarIcon className="drop_file_info_avatar_icon app-transition" />}
-                                            dropFileType={"image/*"}
-                                            fileTypes={"SVG, PNG, JPEG, JPG и другие"}
-                                            errors={errors?.userAvatar}
-                                            addNewErrors={add_errors_to_image}
-                                            clearErrors={clear_errors_from_image}
-                                            onRemove={handleAvatarRemove}
-                                            previewUrl={profile?.avatar}
-                                        />
-                                    </div>
-                                    <div className="settings_profile_fields">
+                                <div className="settings_stack">
+                                    <div className="settings_group">
+                                        <p className="kicker">Аккаунт</p>
+                                        <div className="settings_avatar">
+                                            <DropFile
+                                                value={fields.userAvatar}
+                                                setValue={(file) =>
+                                                    setFields(prev => ({ ...prev, userAvatar: file }))
+                                                }
+                                                background={<AvatarIcon className="drop_file_info_avatar_icon app-transition" />}
+                                                dropFileType={"image/*"}
+                                                fileTypes={"SVG, PNG, JPEG, JPG и другие"}
+                                                errors={errors?.userAvatar}
+                                                addNewErrors={add_errors_to_image}
+                                                clearErrors={clear_errors_from_image}
+                                                onRemove={handleAvatarRemove}
+                                                previewUrl={profile?.avatar}
+                                            />
+                                            <div className="settings_avatar_copy">
+                                                <p className="settings_avatar_title">Фото профиля</p>
+                                                <p className="settings_avatar_hint">Нажмите на круг, чтобы заменить. PNG, JPEG, SVG</p>
+                                            </div>
+                                        </div>
                                         {profile?.email ? (
                                             <Field title="Почта">
                                                 <InputField
@@ -451,28 +468,32 @@ const Settings = () => {
                                             />
                                         </Field>
                                     </div>
-                                </div>
-                                <p className="settings_panel_hint">Конфиденциальность</p>
-                                <div className="private_setting">
-                                    <div className="private_setting_content app-transition">
-                                        <div className="private_setting_content_item app-transition">
-                                            <p>Отображать мой email в профиле</p>
+                                    <div className="settings_group">
+                                        <p className="kicker">Конфиденциальность</p>
+                                        <div className="settings_switch">
+                                            <div className="settings_switch_copy">
+                                                <p className="settings_switch_title">Показывать email</p>
+                                                <p className="settings_switch_hint">Адрес будет виден на странице профиля</p>
+                                            </div>
                                             <Toggle
                                                 checked={fields.isEmailPublic}
                                                 onChange={set_email_visibility}
                                             />
                                         </div>
-                                        <div className="private_setting_content_item app-transition">
-                                            <p>Разрешить просмотр моих сохраненных постов</p>
+                                        <div className="settings_switch">
+                                            <div className="settings_switch_copy">
+                                                <p className="settings_switch_title">Открытые сохранённые</p>
+                                                <p className="settings_switch_hint">Закладки увидят посетители профиля</p>
+                                            </div>
                                             <Toggle
                                                 checked={fields.isSavedPostsPublic}
                                                 onChange={set_saved_posts_visibility}
                                             />
                                         </div>
                                     </div>
-                                </div>
-                                <div className="settings_panel_actions">
-                                    <PrimaryButton type="submit" isLoading={isLoading}>Сохранить</PrimaryButton>
+                                    <div className="settings_panel_actions">
+                                        <PrimaryButton type="submit" isLoading={isLoading}>Сохранить</PrimaryButton>
+                                    </div>
                                 </div>
                             </form>
                         )
@@ -484,108 +505,127 @@ const Settings = () => {
                         icon: <ShieldIcon />,
                         content: (
                             <div className="settings_panel">
-                                {changingPassword ? (
-                                    <form
-                                        className="settings_password"
-                                        onSubmit={(event) => {
-                                            event.preventDefault();
-                                            save_password();
-                                        }}
-                                    >
-                                        <Field error={errors?.currentPassword ?? null} title={"Текущий пароль"}>
-                                            <InputField
-                                                type="password"
-                                                autoComplete="current-password"
-                                                length={FIELD_LIMITS.password.max}
-                                                onChange={(e) => setPasswordFields({ ...passwordFields, currentPassword: e.target.value })}
-                                                onFocus={() => handleFocus('currentPassword')}
-                                                placeholder="Текущий пароль"
-                                                value={passwordFields.currentPassword}
-                                                error={errors?.currentPassword ?? null}
-                                            />
-                                        </Field>
-                                        <Field error={errors?.newPassword ?? null} title={"Новый пароль"}>
-                                            <InputField
-                                                type="password"
-                                                autoComplete="new-password"
-                                                length={FIELD_LIMITS.password.max}
-                                                onChange={(e) => setPasswordFields({ ...passwordFields, newPassword: e.target.value })}
-                                                onFocus={() => handleFocus('newPassword')}
-                                                placeholder="Новый пароль"
-                                                value={passwordFields.newPassword}
-                                                error={errors?.newPassword ?? null}
-                                            />
-                                        </Field>
-                                        <Field error={errors?.newPasswordConfirm ?? null} title={"Повторите новый пароль"}>
-                                            <InputField
-                                                type="password"
-                                                autoComplete="new-password"
-                                                length={FIELD_LIMITS.password.max}
-                                                onChange={(e) => setPasswordFields({ ...passwordFields, newPasswordConfirm: e.target.value })}
-                                                onFocus={() => handleFocus('newPasswordConfirm')}
-                                                placeholder="Повторите новый пароль"
-                                                value={passwordFields.newPasswordConfirm}
-                                                error={errors?.newPasswordConfirm ?? null}
-                                            />
-                                        </Field>
-                                        <div className="settings_panel_actions">
-                                            <PrimaryButton type="submit" isLoading={passwordLoading}>Изменить пароль</PrimaryButton>
-                                            <ActionButton type="button" onClick={closePasswordForm}>Отмена</ActionButton>
-                                        </div>
-                                    </form>
-                                ) : (
-                                    <Field title="Пароль">
-                                        <div className="settings_password_preview">
-                                            <InputField
-                                                type="password"
-                                                value="********"
-                                                readOnly
-                                                tabIndex={-1}
-                                                onChange={() => {}}
-                                            />
-                                            <ActionButton type="button" onClick={openPasswordForm}>
-                                                Сменить пароль
-                                            </ActionButton>
-                                        </div>
-                                    </Field>
-                                )}
-                                <p className="settings_panel_hint">Устройства, с которых выполнен вход</p>
-                                <div className="settings_sessions">
-                                    {sessionsLoading ? (
-                                        <p className="settings_sessions_empty">Загрузка…</p>
-                                    ) : sessions.length === 0 ? (
-                                        <p className="settings_sessions_empty">Нет активных сеансов</p>
-                                    ) : (
-                                        sessions.map((session) => (
-                                            <div
-                                                className="settings_sessions_item app-transition"
-                                                key={session._id}
+                                <div className="settings_stack">
+                                    <div className="settings_group">
+                                        <p className="kicker">Пароль</p>
+                                        {changingPassword ? (
+                                            <form
+                                                className="settings_password"
+                                                onSubmit={(event) => {
+                                                    event.preventDefault();
+                                                    save_password();
+                                                }}
                                             >
-                                                <div className="settings_sessions_item_info">
-                                                    <div className="settings_sessions_item_head">
-                                                        <p className="settings_sessions_item_device">{session.device}</p>
-                                                        {session.isCurrent ? (
-                                                            <span className="settings_sessions_badge app-transition">Этот сеанс</span>
-                                                        ) : null}
-                                                    </div>
-                                                    <p className="settings_sessions_item_location">{session.location || "—"}</p>
-                                                    <Tooltip text={format_date_time(session.lastSeen)}>
-                                                        <p className="settings_sessions_item_time">
-                                                            {format_back(session.lastSeen) || format_date_time(session.lastSeen)}
-                                                        </p>
-                                                    </Tooltip>
+                                                <Field error={errors?.currentPassword ?? null} title={"Текущий пароль"}>
+                                                    <InputField
+                                                        type="password"
+                                                        autoComplete="current-password"
+                                                        length={FIELD_LIMITS.password.max}
+                                                        onChange={(e) => setPasswordFields({ ...passwordFields, currentPassword: e.target.value })}
+                                                        onFocus={() => handleFocus('currentPassword')}
+                                                        placeholder="Текущий пароль"
+                                                        value={passwordFields.currentPassword}
+                                                        error={errors?.currentPassword ?? null}
+                                                    />
+                                                </Field>
+                                                <Field error={errors?.newPassword ?? null} title={"Новый пароль"}>
+                                                    <InputField
+                                                        type="password"
+                                                        autoComplete="new-password"
+                                                        length={FIELD_LIMITS.password.max}
+                                                        onChange={(e) => setPasswordFields({ ...passwordFields, newPassword: e.target.value })}
+                                                        onFocus={() => handleFocus('newPassword')}
+                                                        placeholder="Новый пароль"
+                                                        value={passwordFields.newPassword}
+                                                        error={errors?.newPassword ?? null}
+                                                    />
+                                                </Field>
+                                                <Field error={errors?.newPasswordConfirm ?? null} title={"Повторите новый пароль"}>
+                                                    <InputField
+                                                        type="password"
+                                                        autoComplete="new-password"
+                                                        length={FIELD_LIMITS.password.max}
+                                                        onChange={(e) => setPasswordFields({ ...passwordFields, newPasswordConfirm: e.target.value })}
+                                                        onFocus={() => handleFocus('newPasswordConfirm')}
+                                                        placeholder="Повторите новый пароль"
+                                                        value={passwordFields.newPasswordConfirm}
+                                                        error={errors?.newPasswordConfirm ?? null}
+                                                    />
+                                                </Field>
+                                                <div className="settings_panel_actions">
+                                                    <PrimaryButton type="submit" isLoading={passwordLoading}>Изменить пароль</PrimaryButton>
+                                                    <ActionButton type="button" disabled={passwordLoading} onClick={closePasswordForm}>Отмена</ActionButton>
                                                 </div>
-                                                <DangerButton type="button" onClick={() => handleDeleteSession(session)}>
-                                                    Завершить
-                                                </DangerButton>
+                                            </form>
+                                        ) : (
+                                            <div className="settings_password_preview">
+                                                <InputField
+                                                    type="password"
+                                                    value="********"
+                                                    readOnly
+                                                    tabIndex={-1}
+                                                    onChange={() => {}}
+                                                />
+                                                <ActionButton type="button" onClick={openPasswordForm}>
+                                                    Сменить пароль
+                                                </ActionButton>
                                             </div>
-                                        ))
-                                    )}
-                                </div>
-                                <div className="settings_logout">
-                                    <DangerButton className="logout_button" type="button" onClick={handleLogout}>
-                                        Выйти с аккаунта
-                                    </DangerButton>
+                                        )}
+                                    </div>
+                                    <div className="settings_group">
+                                        <p className="kicker">Сеансы</p>
+                                        <div className="settings_sessions">
+                                            {sessionsLoading ? (
+                                                <p className="settings_sessions_empty">Загрузка…</p>
+                                            ) : sessions.length === 0 ? (
+                                                <p className="settings_sessions_empty">Нет активных сеансов</p>
+                                            ) : (
+                                                sessions.map((session) => (
+                                                    <div
+                                                        className="settings_sessions_item app-transition"
+                                                        key={session._id}
+                                                    >
+                                                        <div className="settings_sessions_item_info">
+                                                            <div className="settings_sessions_item_head">
+                                                                <p className="settings_sessions_item_device">{session.device}</p>
+                                                                {session.isCurrent ? (
+                                                                    <span className="settings_sessions_badge app-transition">Этот сеанс</span>
+                                                                ) : null}
+                                                            </div>
+                                                            <div className="settings_sessions_item_meta">
+                                                                <span>{session.location || "—"}</span>
+                                                                <span aria-hidden="true">·</span>
+                                                                <Tooltip text={format_date_time(session.lastSeen)}>
+                                                                    <span className="settings_sessions_item_time">
+                                                                        {format_back(session.lastSeen) || format_date_time(session.lastSeen)}
+                                                                    </span>
+                                                                </Tooltip>
+                                                            </div>
+                                                        </div>
+                                                        <DangerButton
+                                                            type="button"
+                                                            isLoading={endingSessionId === session._id}
+                                                            disabled={Boolean(endingSessionId) || logoutLoading}
+                                                            onClick={() => handleDeleteSession(session)}
+                                                        >
+                                                            Завершить
+                                                        </DangerButton>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="settings_logout app-transition">
+                                        <DangerButton
+                                            className="logout_button"
+                                            type="button"
+                                            isLoading={logoutLoading}
+                                            disabled={Boolean(endingSessionId)}
+                                            onClick={handleLogout}
+                                        >
+                                            Выйти с аккаунта
+                                        </DangerButton>
+                                    </div>
                                 </div>
                             </div>
                         )

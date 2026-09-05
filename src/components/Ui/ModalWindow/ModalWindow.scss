@@ -1,4 +1,4 @@
-@use "../../styles/helpers" as *;
+@use "../../../styles/helpers" as *;
 
 .modal_window {
         position: fixed; 
@@ -92,14 +92,12 @@
                 }
             }
             
-            /* small variant: don't force fixed size, allow content to size naturally */
             &._small, &.modal_window_body_small {
                 height: auto;
                 max-width: 95vw;
                 width: 400px;
             }
 
-            /* explicit large variant mirrors default fixed size */
             &._large, &.modal_window_body_large {
                 height: 600px;
                 max-height: 600px;

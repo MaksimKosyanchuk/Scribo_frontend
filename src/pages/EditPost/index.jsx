@@ -16,65 +16,9 @@ import { getPostById, editPost } from '../../api/posts.api';
 import { getCategories } from '../../api/categories.api';
 import { FIELD_LIMITS } from '../../constants/fieldLimits';
 
-import CategoryIcon1 from "../../assets/svg/categories/1.svg?react";
-import CategoryIcon2 from "../../assets/svg/categories/2.svg?react";
-import CategoryIcon3 from "../../assets/svg/categories/3.svg?react";
-import CategoryIcon4 from "../../assets/svg/categories/4.svg?react";
-import CategoryIcon5 from "../../assets/svg/categories/5.svg?react";
-import CategoryIcon6 from "../../assets/svg/categories/6.svg?react";
-import CategoryIcon7 from "../../assets/svg/categories/7.svg?react";
-import CategoryIcon8 from "../../assets/svg/categories/8.svg?react";
-import CategoryIcon9 from "../../assets/svg/categories/9.svg?react";
-import CategoryIcon10 from "../../assets/svg/categories/10.svg?react";
-import CategoryIcon11 from "../../assets/svg/categories/11.svg?react";
-import CategoryIcon12 from "../../assets/svg/categories/12.svg?react";
-import CategoryIcon13 from "../../assets/svg/categories/13.svg?react";
-import CategoryIcon14 from "../../assets/svg/categories/14.svg?react";
-import CategoryIcon15 from "../../assets/svg/categories/15.svg?react";
-import CategoryIcon16 from "../../assets/svg/categories/16.svg?react";
-import CategoryIcon17 from "../../assets/svg/categories/17.svg?react";
-import CategoryIcon18 from "../../assets/svg/categories/18.svg?react";
-import CategoryIcon19 from "../../assets/svg/categories/19.svg?react";
-import CategoryIcon20 from "../../assets/svg/categories/20.svg?react";
-import CategoryIcon21 from "../../assets/svg/categories/21.svg?react";
-import CategoryIcon22 from "../../assets/svg/categories/22.svg?react";
-import CategoryIcon23 from "../../assets/svg/categories/23.svg?react";
-import CategoryIcon24 from "../../assets/svg/categories/24.svg?react";
-import CategoryIcon25 from "../../assets/svg/categories/25.svg?react";
-import CategoryIcon26 from "../../assets/svg/categories/26.svg?react";
-
 import "./EditPost.scss"
 
 import SearchSelect from '../../components/Ui/SearchSelect/index';
-
-const categoryIcons = {
-    1: CategoryIcon1,
-    2: CategoryIcon2,
-    3: CategoryIcon3,
-    4: CategoryIcon4,
-    5: CategoryIcon5,
-    6: CategoryIcon6,
-    7: CategoryIcon7,
-    8: CategoryIcon8,
-    9: CategoryIcon9,
-    10: CategoryIcon10,
-    11: CategoryIcon11,
-    12: CategoryIcon12,
-    13: CategoryIcon13,
-    14: CategoryIcon14,
-    15: CategoryIcon15,
-    16: CategoryIcon16,
-    17: CategoryIcon17,
-    18: CategoryIcon18,
-    19: CategoryIcon19,
-    20: CategoryIcon20,
-    21: CategoryIcon21,
-    22: CategoryIcon22,
-    23: CategoryIcon23,
-    24: CategoryIcon24,
-    25: CategoryIcon25,
-    26: CategoryIcon26,
-};
 
 const EditPost = () => {
     const navigate = useNavigate()
@@ -125,7 +69,7 @@ const EditPost = () => {
                 setFields({
                     postTitle: post.title ?? '',
                     postContent: post.content_text ?? '',
-                    categoryId: post.category ?? '',
+                    categoryId: post.category?._id ?? post.category ?? '',
                     featuredImage: post.featured_image ?? null,
                     author: post.author ?? null
                 })
@@ -138,8 +82,6 @@ const EditPost = () => {
                 for(const category of categories_result.data) {
                     category.className = CATEGORY_COLORS[category.color]?.className
                     category.value = category._id
-
-                    category.iconObject = categoryIcons[category.icon];
                 }
                 setAllCategories(categories_result.data)
             }
@@ -254,10 +196,6 @@ const EditPost = () => {
         }
     }
 
-    const selectedCategory = allCategories.find(
-        category => category._id === fields.categoryId
-    );
-
     return (
         <form className="edit_post" onSubmit={handleSubmit}>
             <Field
@@ -304,7 +242,6 @@ const EditPost = () => {
                     }
                     onFocus={() => handleFocus("categoryId")}
                     error={errors?.categoryId}
-                    className={CATEGORY_COLORS[selectedCategory?.color]?.className}
                     options={allCategories}
                 />
             </Field>
@@ -351,7 +288,7 @@ const EditPost = () => {
                     Сохранить
                 </PrimaryButton>
 
-                <DangerButton onClick={() => navigate("/posts")}>
+                <DangerButton disabled={isLoading} onClick={() => navigate("/posts")}>
                     Отмена
                 </DangerButton>
             </div>

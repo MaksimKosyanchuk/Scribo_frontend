@@ -1,110 +1,133 @@
 @use "../../styles/helpers" as *;
 
 .banner {
+    position: relative;
     display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    margin-bottom: 28px;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    padding: 0 0 var(--space-6);
+    padding-left: 20px;
 
-    &_content{
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 2px;
+        bottom: var(--space-6);
+        width: 3px;
+        border-radius: 2px;
+        background: var(--text-color);
+        transition: background 0.3s ease;
+    }
+
+    &_kicker {
+        font-size: var(--text-xs);
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--light-text-color);
+        line-height: 1.3;
+    }
+
+    &_lead {
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -0.045em;
+        line-height: 1.2;
+        color: var(--text-color);
+        max-width: 16em;
+
+        @include screen() {
+            font-size: 22px;
+        }
+    }
+
+    &_links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-top: var(--space-1);
+        border-top: 1px solid var(--line-color);
+
+        @include screen() {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &_link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px 14px 0;
+        color: var(--text-color);
+        border-bottom: 1px solid var(--line-color);
+
+        &:first-child {
+            padding-right: 20px;
+            border-right: 1px solid var(--line-color);
+        }
+
+        &:last-child {
+            padding-left: 20px;
+        }
+
+        @include screen() {
+            &:first-child {
+                padding-right: 0;
+                border-right: none;
+            }
+
+            &:last-child {
+                padding-left: 0;
+            }
+        }
+
+        @include hover {
+            text-decoration: none;
+
+            .banner_link_label {
+                text-decoration: underline;
+                text-underline-offset: 3px;
+            }
+
+            .banner_link_chevron {
+                transform: translateX(3px);
+            }
+        }
+    }
+
+    &_link_icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        color: var(--text-color);
+    }
+
+    &_link_copy {
         display: flex;
         flex-direction: column;
-        
-        @include screen() {
-            gap: 20px;
-        }
-
-        
-        &_title {
-            display: flex;
-            align-items: flex-end;
-            
-            h1 { 
-                display: flex;
-                flex-direction: column;
-                line-height: 0.85;
-                font-size: 38px;
-                
-                @include screen() {
-                    font-size: 34PX;
-                }
-            }
-            
-            &_logo {
-                width: 152px;
-                height: 32px;
-                fill: none;
-                color: var(--text-color);
-
-                path {
-                    stroke: var(--text-color);
-                    stroke-width: 4px;
-            
-                    stroke-dasharray: 520;
-                    stroke-dashoffset: 520;
-            
-                    animation:
-                    banner-stroke 1.8s linear forwards,
-                    banner-fill 0.5s ease forwards 1.6s;
-                    transition: .3s;
-            
-                    @include screen() {
-                        height: 28px;
-                    }
-                }
-            }
-        }
-        
-        &_text {
-            max-width: 80%;
-            margin-top: 10px;
-    
-            @include screen() {
-                margin: 0;
-            }
-        }
-    
-        &_actions {
-            margin-top: auto;
-            display: flex;
-            gap: 14px;
-
-            .chip_button{
-                border-radius: 50px;
-            }
-        }
+        gap: 1px;
+        min-width: 0;
+        flex: 1;
     }
 
-
-    &_image {
-        width: 50%;
-        height: auto;
-        object-fit: cover;
-        border-radius: 12px;
-        position: relative;
-        z-index: 1;
-
-        
-        @include screen() {
-            display: none;
-        }
+    &_link_label {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.3;
     }
-}
 
-@keyframes banner-stroke {
-    from {
-        stroke-dashoffset: 520;
+    &_link_hint {
+        font-size: 12px;
+        color: var(--light-text-color);
+        line-height: 1.3;
     }
-    to {
-        stroke-dashoffset: 0;
-    }
-}
 
-@keyframes banner-fill {
-    from {
-        fill: transparent;
-    }
-    to {
-        fill: currentColor;
+    &_link_chevron {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        color: var(--light-text-color);
+        transition: transform 0.2s ease;
     }
 }

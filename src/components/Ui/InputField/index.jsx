@@ -4,7 +4,7 @@ import "./InputField.scss";
 
 import ConfirmedIcon from "../../../assets/svg/confirmed-icon.svg?react";
 
-const Input = forwardRef(
+const InputField = forwardRef(
 (
   {
     className,
@@ -55,4 +55,6 @@ const Input = forwardRef(
   );
 });
 
-export default Input;
+InputField.displayName = "InputField";
+
+export default InputField;

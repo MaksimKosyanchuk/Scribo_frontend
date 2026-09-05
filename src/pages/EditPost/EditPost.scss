@@ -1,10 +1,9 @@
 @use "../../styles/helpers.scss" as *;
-@use "../../styles/categoryColors.scss" as *;
 
 .edit_post {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--space-6);
 
     .input_field {
         width: 100%;
@@ -26,50 +25,7 @@
         .search_select_item_selected {
             background: var(--section-item-hover-background-color);
         }
-
-        @include category-colors {
-            .search_select_input {
-                background: rgb(
-                    from var(--category-color) r g b / .1
-                );
-
-                border-color: var(--category-color);
-
-                .input_field {
-                    color: var(--category-color);
-                }
-            }
-
-            .search_select_icon {
-                color: var(--category-color);
-            }
-        }
     }
-
-    .search_select_item {
-        @include category-colors {
-            p {
-                color: var(--category-color);
-            }
-
-            .search_select_icon {
-                color: var(--category-color);
-            }
-
-            @include hover {
-                background-color: rgb(
-                    from var(--category-color) r g b / .1
-                );
-            }
-
-            &.search_select_item_selected {
-                background-color: rgb(
-                    from var(--category-color) r g b / .1
-                );
-            }
-        }
-    }
-
 
     .drop_file {
         min-height: 230px;

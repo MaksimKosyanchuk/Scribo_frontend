@@ -11,12 +11,12 @@ import { FIELD_LIMITS } from '../../constants/fieldLimits';
 
 import "../Auth/Auth.scss";
 
-import GoogleAuthButton from '../../components/Ui/GoogleAuthButton/index';
+import GoogleAuthButton from '../../components/GoogleAuthButton/index';
 
 const Login = () => {
     const navigate = useNavigate(); 
     const [ googleToken, setGoogleToken ] = useState(null)
-    const [ isLoading, setIsLoading ] = useState(false)
+    const [ pendingAuth, setPendingAuth ] = useState(null)
     const [ fields, setFields ] = useState(
         {
             userName: '',
@@ -28,24 +28,28 @@ const Login = () => {
    
     useEffect(() => {
         const do_login = async () => {
+            setPendingAuth('google')
+            try {
+                const result = await verificationGoogle(googleToken)
 
-            setIsLoading(true)
-            const result = await verificationGoogle(googleToken)
-
-            if(result.status === true) {
-                if(result.data.is_registered === true) {
-                    await loginGoogle(googleToken)
-
-                    setIsLoading(false)
-                    navigate('/posts');
-                    showToast({ message: 'Вы вошли в аккаунт!', type: 'success' }); 
+                if(result.status === true) {
+                    if(result.data.is_registered === true) {
+                        await loginGoogle(googleToken)
+                        navigate('/posts');
+                        showToast({ message: 'Вы вошли в аккаунт!', type: 'success' });
+                    }
+                    else {
+                        navigate('/auth/register', { state: { google_token: googleToken, email: result.data.email } });
+                    }
                 }
                 else {
-                    navigate('/auth/register', { state: { google_token: googleToken, email: result.data.email } });
+                    showToast({ message: 'Не удалось войти через Google', type: 'error' });
+                    setPendingAuth(null)
                 }
             }
-            else {
-                throw new Error(`Invalid google token ${result}`)
+            catch {
+                showToast({ message: 'Не удалось войти через Google', type: 'error' });
+                setPendingAuth(null)
             }
         }
 
@@ -98,9 +102,13 @@ const Login = () => {
             return
         }
         
-        setIsLoading(true)
-        const result = await loginUsername(fields.userName, fields.userPassword)
-        setIsLoading(false)
+        setPendingAuth('password')
+        let result
+        try {
+            result = await loginUsername(fields.userName, fields.userPassword)
+        } finally {
+            setPendingAuth(null)
+        }
         
         if (result.status === true) { 
             navigate('/posts');
@@ -150,11 +158,23 @@ const Login = () => {
                     <div className="auth_page_forgot">
                         <Link to="/auth/forgot-password">Забыли пароль?</Link>
                     </div>
-                    <PrimaryButton type="submit" isLoading={isLoading}>Войти</PrimaryButton>
+                    <PrimaryButton
+                        type="submit"
+                        isLoading={pendingAuth === 'password'}
+                        disabled={Boolean(pendingAuth)}
+                    >
+                        Войти
+                    </PrimaryButton>
                 </div>
             </div>
             <p className="auth_page_or">или</p>
-            <GoogleAuthButton setGoogleToken={setGoogleToken}/>
+            <GoogleAuthButton
+                setGoogleToken={setGoogleToken}
+                isLoading={pendingAuth === 'google'}
+                disabled={pendingAuth === 'password'}
+                onClickStart={() => setPendingAuth('google')}
+                onAuthEnd={() => setPendingAuth(null)}
+            />
             <p className="redirect_object">
                 Нет аккаунта?
                 <Link to={"/auth/register"}>Зарегистрироваться</Link>

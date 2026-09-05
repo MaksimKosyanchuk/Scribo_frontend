@@ -1,6 +1,7 @@
 @use "../../../styles/helpers" as *;
 
 .action_button {
+    position: relative;
     padding: 10px 16px;
     font-size: 14px;
     border-radius: 8px;
@@ -29,7 +30,6 @@
     }
     &_loading {
         color: transparent;
-        background-color: transparent;
         cursor: not-allowed;
 
         svg {
@@ -42,7 +42,18 @@
         }
 
         @include hover {
-            background-color: transparent;
+            background: var(--secondary-button-background-color);
+        }
+    }
+
+    &.action_button_disabled {
+        cursor: not-allowed;
+        color: var(--secondary-button-disabled-color);
+        background-color: var(--secondary-button-disabled-background-color);
+        border-color: var(--secondary-button-disabled-border-color);
+
+        @include hover {
+            background-color: var(--secondary-button-disabled-background-color);
         }
     }
 }

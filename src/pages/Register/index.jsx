@@ -7,7 +7,7 @@ import { FIELD_LIMITS } from '../../constants/fieldLimits';
 
 import InputField from '../../components/Ui/InputField/index';
 import DropFile from '../../components/Ui/DropFile/index';
-import GoogleAuthButton from '../../components/Ui/GoogleAuthButton/index';
+import GoogleAuthButton from '../../components/GoogleAuthButton/index';
 import PrimaryButton from '../../components/Ui/PrimaryButton';
 import Field from '../../components/Ui/Field/index';
 import OtpInput from '../../components/Ui/OtpInput/index';
@@ -268,20 +268,22 @@ const VerifyGmailCode = ({ email }) => {
             return;
         }
 
-        const result = await veriticationEmailConfirm(email, fullCode);
-        
-        setIsLoading(false)
+        try {
+            const result = await veriticationEmailConfirm(email, fullCode);
 
-        if(result.statusCode === 200) {
-            setRedigrectToForm(true)
-            return
-        }
-        if (result?.errors?.body) {
-            setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
-            return
-        }
-        if(result.statusCode === 401 || result.statusCode === 400) {
-            setErrors({ emailCode: " " })
+            if(result.statusCode === 200) {
+                setRedigrectToForm(true)
+                return
+            }
+            if (result?.errors?.body) {
+                setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
+                return
+            }
+            if(result.statusCode === 401 || result.statusCode === 400) {
+                setErrors({ emailCode: " " })
+            }
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -328,27 +330,38 @@ const Register = () => {
     const { showToast } = useContext(AppContext);
     const [googleToken, setGoogleToken] = useState();
     const [gmailCodeSedned, setGmailCodeSedned] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [pendingAuth, setPendingAuth] = useState(null);
 
     useEffect(() => {
         const do_login = async () => {
-            const result = await verificationGoogle(googleToken)
-            
-            if(result.statusCode !== 200) {
-                throw new Error(`Invalid google token ${result}`)
-            }
-            else {
-                if(result.data.is_registered) {
-                    const result = await loginGoogle(googleToken)
-                    
-                    if(result.statusCode === 200) {
-                        navigate("/")
-                        showToast({ message: "Вход выполнен!", type: "success" });
-                    }
+            setPendingAuth('google')
+            try {
+                const result = await verificationGoogle(googleToken)
+                
+                if(result.statusCode !== 200) {
+                    showToast({ message: "Не удалось войти через Google", type: "error" });
+                    setPendingAuth(null)
                 }
                 else {
-                    navigate("/auth/register", { state: { google_token: googleToken, email: result.data.email } })
+                    if(result.data.is_registered) {
+                        const loginResult = await loginGoogle(googleToken)
+                        
+                        if(loginResult.statusCode === 200) {
+                            navigate("/")
+                            showToast({ message: "Вход выполнен!", type: "success" });
+                        }
+                        else {
+                            setPendingAuth(null)
+                        }
+                    }
+                    else {
+                        navigate("/auth/register", { state: { google_token: googleToken, email: result.data.email } })
+                    }
                 }
+            }
+            catch {
+                showToast({ message: "Не удалось войти через Google", type: "error" });
+                setPendingAuth(null)
             }
         } 
 
@@ -383,17 +396,17 @@ const Register = () => {
     }
 
     const handleRegister = async () => {
-        setIsLoading(true)
-
         if(!field_validation()) {
-            setIsLoading(false)
             return
         }
 
-
-        const result = await verificationEmail(fields.email)
-
-        setIsLoading(false)
+        setPendingAuth('email')
+        let result
+        try {
+            result = await verificationEmail(fields.email)
+        } finally {
+            setPendingAuth(null)
+        }
 
         if(result.statusCode === 200) {
             setGmailCodeSedned(true)
@@ -436,13 +449,23 @@ const Register = () => {
                             length={FIELD_LIMITS.email.max}
                         />
                     </Field>
-                    <PrimaryButton isLoading={isLoading} type="submit">
+                    <PrimaryButton
+                        isLoading={pendingAuth === 'email'}
+                        disabled={Boolean(pendingAuth)}
+                        type="submit"
+                    >
                         Продолжить
                     </PrimaryButton>
                     </div>
                 </div>
                 <p className="auth_page_or">или</p>
-                <GoogleAuthButton setGoogleToken={setGoogleToken}/>
+                <GoogleAuthButton
+                    setGoogleToken={setGoogleToken}
+                    isLoading={pendingAuth === 'google'}
+                    disabled={pendingAuth === 'email'}
+                    onClickStart={() => setPendingAuth('google')}
+                    onAuthEnd={() => setPendingAuth(null)}
+                />
                 <p className="redirect_object">
                     Уже есть аккаунт?
                     <Link to={"/auth/login"}>Войти</Link>

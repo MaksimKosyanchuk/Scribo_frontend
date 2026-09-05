@@ -225,7 +225,6 @@ const Posts = ({
                                 isLoading={false}
                                 key={post._id}
                                 post={post}
-                                category={post.category}
                                 setPosts={updatePosts}
                             />
                         ))

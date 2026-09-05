@@ -8,15 +8,23 @@ import ArrowDownUpIcon from "../../../assets/svg/chevron-down-up.svg?react";
 import  CloseIcon from "../../../assets/svg/cross-icon.svg?react";
 
 
+const optionLabel = (option) => option?.label ?? option?.name ?? "";
+
+const optionKey = (option, index) =>
+    option?.id ?? option?._id ?? (typeof option?.value === "object" ? index : option?.value) ?? index;
+
 const SearchSelect = ({
     options = [],
     value = "",
+    onChange,
     onSetValue,
     error,
     className = "",
     onFocus,
-    placeholder = "Выбрать"
+    placeholder = "Выбрать",
+    emptyLabel = "Ничего не найдено",
 }) => {
+    const setValue = onChange ?? onSetValue;
 
     const [isOpen, setIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState("");
@@ -39,7 +47,7 @@ const SearchSelect = ({
             return options;
 
         return options.filter(option =>
-            option.name.toLowerCase().includes(search)
+            optionLabel(option).toLowerCase().includes(search)
         );
 
     }, [options, inputValue]);
@@ -48,24 +56,24 @@ const SearchSelect = ({
         const search = inputValue.trim().toLowerCase();
 
         const exactOption = options.find(
-            option => option.name?.trim().toLowerCase() === search
+            option => optionLabel(option).trim().toLowerCase() === search
         );
 
         if (!exactOption) {
             if (value !== "" && value != null) {
-                onSetValue?.("");
+                setValue?.("");
             }
             setInputValue("");
         } else if (exactOption.value !== value) {
-            onSetValue?.(exactOption.value);
-            setInputValue(exactOption.name);
+            setValue?.(exactOption.value);
+            setInputValue(optionLabel(exactOption));
         } else {
-            setInputValue(exactOption.name);
+            setInputValue(optionLabel(exactOption));
         }
 
         setIsSearching(false);
         setHighlightedIndex(-1);
-    }, [inputValue, options, onSetValue, value]);
+    }, [inputValue, options, setValue, value]);
 
     const closeSelect = useCallback(() => {
         setIsOpen(false);
@@ -75,7 +83,7 @@ const SearchSelect = ({
 
     useEffect(() => {
         const option = options.find(o => o.value === value);
-        setInputValue(option?.name ?? "");
+        setInputValue(optionLabel(option));
     }, [value, options]);
 
     useEffect(() => {
@@ -122,8 +130,8 @@ const SearchSelect = ({
     };
 
     const handleSelect = (option) => {
-        onSetValue(option.value);
-        setInputValue(option.name);
+        setValue?.(option.value);
+        setInputValue(optionLabel(option));
         setIsSearching(false);
         setHighlightedIndex(-1);
         setIsOpen(false);
@@ -186,22 +194,21 @@ const SearchSelect = ({
 
     const ShowSelected = !isSearching && selectedOption;
     const Icon = ShowSelected?.iconObject;
+    const showCategoryDot = Boolean(ShowSelected?.className);
 
     return (
         <div
             ref={wrapperRef}
-            className={`search_select ${ShowSelected ? className : ""} app-transition`}
+            className={`search_select ${className} app-transition`}
         >
             <div className={`search_select_input ${error ? "incorrect_field" : ""} app-transition`}>
-                {
-                    ShowSelected?.iconObject ?
-
-                        <div className={`search_select_icon ${className}`}>
-                            <Icon/>
-                        </div>
-                    :
-                        <></>
-                }
+                {showCategoryDot ? (
+                    <span className={`category_dot ${ShowSelected.className}`} aria-hidden="true" />
+                ) : Icon ? (
+                    <div className={`search_select_icon ${className}`}>
+                        <Icon/>
+                    </div>
+                ) : null}
 
                 <InputField
                     ref={inputRef}
@@ -222,7 +229,7 @@ const SearchSelect = ({
                         e.preventDefault();
 
                         if (isOpen) {
-                            onSetValue("");
+                            setValue?.("");
                             setInputValue("");
                             setIsSearching(false);
                         } else {
@@ -243,7 +250,7 @@ const SearchSelect = ({
                         filteredOptions.map((option, index) => (
 
                             <button
-                                key={option._id}
+                                key={optionKey(option, index)}
                                 ref={el => optionRefs.current[index] = el}
                                 type="button"
                                 className={`search_select_item ${option.className ?? ""} ${highlightedIndex === index ? "search_select_item_selected" : ""} app-transition`}
@@ -252,12 +259,14 @@ const SearchSelect = ({
                                 {
                                     option.render?.() ?? (
                                         <>
-                                            {option.iconObject && (
+                                            {option.className ? (
+                                                <span className={`category_dot ${option.className}`} aria-hidden="true" />
+                                            ) : option.iconObject ? (
                                                 <div className={`search_select_icon ${option.className ?? ""}`}>
                                                     <option.iconObject />
                                                 </div>
-                                            )}
-                                            <p>{option.name}</p>
+                                            ) : null}
+                                            <p>{optionLabel(option)}</p>
                                         </>
                                     )
                                 }
@@ -269,7 +278,7 @@ const SearchSelect = ({
 
                         <div className="search_select_empty">
                             <p>
-                                Ничего не найдено
+                                {emptyLabel}
                             </p>
                         </div>
 

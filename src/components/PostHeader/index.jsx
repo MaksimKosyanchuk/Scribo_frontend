@@ -1,4 +1,4 @@
-import { useContext, memo } from "react";
+import { useContext, memo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 import { AppContext } from "../../App";
@@ -22,42 +22,66 @@ import Category from "../Category";
 
 import Sceleton from "../Ui/Sceleton/Sceleton";
 
-const getDeleteModalContent = (post, requestCloseModal, deletePost, onDeletePost, showToast) => (
+const DeletePostActions = ({ post, requestCloseModal, onDeletePost, showToast }) => {
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDelete = async () => {
+        setIsDeleting(true);
+        try {
+            const result = await deletePost(post._id);
+            if (result.status) {
+                onDeletePost(post._id);
+            } else {
+                showToast({
+                    type: "error",
+                    message: result.message
+                });
+            }
+            requestCloseModal();
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    return (
+        <div className="modal_delete_post_content_bottom">
+            <ActionButton
+                disabled={isDeleting}
+                onClick={requestCloseModal}
+                className="modal_delete_post_content_button"
+            >
+                Отмена
+            </ActionButton>
+            <DangerButton
+                onClick={handleDelete}
+                className="modal_delete_post_content_button"
+                isActive={true}
+                isLoading={isDeleting}
+            >
+                Удалить
+            </DangerButton>
+        </div>
+    );
+};
+
+const getDeleteModalContent = (post, requestCloseModal, onDeletePost, showToast) => (
     <div className="modal_delete_post_content">
         <div className="modal_delete_post_content_post">
             <div className="modal_delete_post_content_post_header">
                 <PostHeader post={post} />
-                <Category category={post.category} isActive={true}/>
+                <Category tag category={post.category} />
             </div>
             <h2 className="modal_delete_post_content_post_title">{post.title}</h2>
             {post.featured_image && (
                 <img className="modal_delete_post_content_post_image" src={post.featured_image} alt="post_image" />
             )}
         </div>
-        <div className="modal_delete_post_content_bottom">
-            <ActionButton onClick={requestCloseModal} className="modal_delete_post_content_button">Отмена</ActionButton>
-            <DangerButton 
-                onClick={async () => {
-                    await deletePost(post._id).then((result) => {
-                        if(result.status){
-                            onDeletePost(post._id);
-                        }
-                        else {
-                            showToast({
-                                type: "error",
-                                message: result.message
-                            })
-                        }
-                        requestCloseModal()
-                    })
-
-                }}
-                className="modal_delete_post_content_button" 
-                isActive={true}
-            >
-                Удалить
-            </DangerButton>
-        </div>
+        <DeletePostActions
+            post={post}
+            requestCloseModal={requestCloseModal}
+            onDeletePost={onDeletePost}
+            showToast={showToast}
+        />
     </div>
 );
 
@@ -68,7 +92,7 @@ const PostHeader = memo(({ post, onDeletePost, className, isLoading=false }) => 
     const handleDeletePost = async () => {
         showModalWindow({
             title: `Вы уверены что хотите удалить пост?`,
-            content: getDeleteModalContent(post, requestCloseModal, deletePost, onDeletePost, showToast),
+            content: getDeleteModalContent(post, requestCloseModal, onDeletePost, showToast),
             showCloseButton: false,
             closeFunc: () => {}
         });

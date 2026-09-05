@@ -3,7 +3,7 @@
 .auth_page {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: var(--space-6);
     max-width: 520px;
     width: 100%;
     margin: 0 auto 40px;
@@ -14,11 +14,11 @@
         gap: 8px;
 
         h1 {
-            font-size: 20px;
+            font-size: var(--text-2xl);
         }
 
         p {
-            font-size: 14px;
+            font-size: var(--text-md);
             color: var(--light-text-color);
         }
     }
@@ -31,7 +31,9 @@
     }
 
     &_title {
-        font-size: 18px;
+        font-size: var(--text-2xl);
+        font-weight: 600;
+        letter-spacing: -0.03em;
         margin: 0;
     }
 

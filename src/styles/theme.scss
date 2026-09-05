@@ -1,7 +1,7 @@
 body {
   --accent-color: #1b73fb;
 
-  --main-background: var(--gray-ff);
+  --main-background: var(--gray-f1);
 
   --warning-color: rgb(255 179 0);
   --warning-background-color: rgba(255, 245, 163, .8);
@@ -16,9 +16,9 @@ body {
 
   --administrator-color: red;
 
-  --line-color: #afafaf;
+  --line-color: var(--gray-b5);
 
-  --text-color: var(--gray-25);
+  --text-color: var(--gray-16);
   --light-text-color: var(--gray-79);
 
   --text-selection-color: var(--gray-f1);
@@ -36,7 +36,7 @@ body {
   --input-background-color: var(--gray-f9);
   --input-outline-color: var(--gray-c6);
   --input-outline-active-color: var(--gray-25);
-  --input-placeholder-color: var(--gray-c6);
+  --input-placeholder-color: var(--gray-99);
 
   --drop-file-background-color: transparent;
   --drop-file-hover-background-color: var(--gray-f7);
@@ -49,11 +49,14 @@ body {
   --submit-button-primary-hover-color: var(--gray-33);
   --submit-button-secondary-color: var(--main-background);
   --submit-button-loading-background-color: var(--gray-d7);
-  --submit-button-disabled-background-color: var(--gray-e1);
+  --submit-button-disabled-background-color: var(--gray-f1);
   --submit-button-disabled-color: var(--gray-99);
 
   --secondary-button-background-color: var(--gray-f1);
   --secondary-button-hover-background-color: var(--gray-e7);
+  --secondary-button-disabled-background-color: var(--gray-f1);
+  --secondary-button-disabled-color: var(--gray-99);
+  --secondary-button-disabled-border-color: var(--gray-e1);
 
   --section-background-color: var(--gray-ff);
   --section-light-color: var(--gray-99);
@@ -61,16 +64,17 @@ body {
   --section-item-hover-background-color: rgba(139, 139, 139, .1);
 
   --float-section-background-color: rgba(255, 255, 255, .8);
-  --float-section-line-color: var(--gray-c6);
+  --float-section-line-color: var(--gray-b5);
 
 
   --loader-color: black;
 
   --sticky-button-background-color: rgba(241, 241, 241, .8);
 
-  --red-button-primary-color: var(--red-f1);
+  --red-button-primary-color: var(--red-f5);
+  --red-button-hover-color: var(--red-6d);
   --red-button-secondary-color: var(--gray-ff);
-  --red-button-third-color: var(--red-fd);
+  --red-button-third-color: var(--red-f5);
 
   --profile-badge-background-color: var(--gray-f1);
   --profile-badge-hover-background-color: var(--gray-e7);
@@ -95,8 +99,8 @@ body {
   --post-card-description-color: #6b6b6b;
   --post-card-hover-background-color: var(--gray-f9);
 
-  --footer-background: var(--gray-ff);
-  --footer-line-color: var(--gray-e7);
+  --footer-background: var(--gray-f1);
+  --footer-line-color: var(--gray-b5);
   --footer-content-color: var(--gray-b5);
   --footer-content-hover-color: var(--gray-4f);
 
@@ -122,7 +126,7 @@ body {
   --text-editor-toolbar-item-hover-background: var(--gray-d7);
   --text-editor-toolbar-item-color: var(--gray-63);
 
-  --switcher-bar-border-color: var(--gray-c6);
+  --switcher-bar-border-color: var(--gray-b5);
   --switcher-bar-item-color: var(--gray-63);
   --switcher-bar-item-hover-background-color: var(--gray-d7);
   --switcher-bar-active-item-background-color: var(--gray-f1);
@@ -194,10 +198,10 @@ body.dark-theme {
 
   --administrator-color: var(--red-f5);
 
-  --line-color: var(--gray-4f);
+  --line-color: var(--gray-25);
 
-  --text-color: var(--gray-e1);
-  --light-text-color: var(--gray-63);
+  --text-color: var(--gray-f1);
+  --light-text-color: var(--gray-79);
 
   --text-selection-color: var(--gray-25);
   --text-selection-background-color: var(--gray-b5);
@@ -227,11 +231,14 @@ body.dark-theme {
   --submit-button-primary-hover-color: var(--gray-b5);
   --submit-button-secondary-color: var(--main-background);
   --submit-button-loading-background-color: var(--gray-33);
-  --submit-button-disabled-background-color: var(--gray-1e);
-  --submit-button-disabled-color: var(--gray-4f);
+  --submit-button-disabled-background-color: var(--gray-25);
+  --submit-button-disabled-color: var(--gray-79);
 
   --secondary-button-background-color: var(--gray-1e);
   --secondary-button-hover-background-color: var(--gray-25);
+  --secondary-button-disabled-background-color: var(--gray-25);
+  --secondary-button-disabled-color: var(--gray-79);
+  --secondary-button-disabled-border-color: var(--gray-33);
 
   --section-background-color: var(--gray-1e);
   --section-light-color: var(--gray-79);
@@ -246,9 +253,10 @@ body.dark-theme {
 
   --sticky-button-background-color: rgba(22, 22, 22, .8);
 
-  --red-button-primary-color: var(--red-fd);
+  --red-button-primary-color: var(--red-b9);
+  --red-button-hover-color: var(--red-c4);
   --red-button-secondary-color: var(--gray-ff);
-  --red-button-third-color: var(--red-fd);
+  --red-button-third-color: var(--red-b9);
 
   --profile-badge-background-color: var(--gray-33);
   --profile-badge-hover-background-color: var(--gray-4f);
@@ -273,8 +281,8 @@ body.dark-theme {
   --post-card-description-color: var(--gray-b5);
   --post-card-hover-background-color: var(--gray-25);
 
-  --footer-background: var(--gray-1e);
-  --footer-line-color: var(--gray-4f);
+  --footer-background: var(--gray-16);
+  --footer-line-color: var(--gray-25);
   --footer-content-color: var(--gray-79);
   --footer-content-hover-color: var(--gray-d7);
 

@@ -186,8 +186,19 @@ const Profile = () => {
     }
 
     const open_follows = async () => {
-        const follows =  user?.follows?.map(item => ({ _id: item }));
-        const result = await fetchUsers(follows)
+        const ids = (user?.follows || [])
+            .map((item) => ({ _id: item }))
+            .filter((item) => item._id);
+
+        if (!ids.length) {
+            showModalWindow({
+                title: "Подписки",
+                content: <p className="profile_follow_empty">Пока никого нет</p>
+            });
+            return;
+        }
+
+        const result = await fetchUsers(ids);
 
         showModalWindow(
             {
@@ -208,8 +219,19 @@ const Profile = () => {
     }
 
     const open_followers = async () => {
-        const follows =  user?.followers?.map(item => ({ _id: item }));
-        const result = await fetchUsers(follows)
+        const ids = (user?.followers || [])
+            .map((item) => ({ _id: item }))
+            .filter((item) => item._id);
+
+        if (!ids.length) {
+            showModalWindow({
+                title: "Подписчики",
+                content: <p className="profile_follow_empty">Пока никого нет</p>
+            });
+            return;
+        }
+
+        const result = await fetchUsers(ids);
         
         showModalWindow(
             {
@@ -231,7 +253,7 @@ const Profile = () => {
 
     return (
         <div className="profile">
-            <div className="profile_info section app-transition">
+            <div className="profile_info app-transition">
                 <div className="profile_info_main">
                     <Sceleton
                         isLoading={isProfileLoading}
@@ -253,9 +275,9 @@ const Profile = () => {
                             className="profile_info_nick"
                         >
                             <div className="profile_info_nick">
-                                <p className="profile_info_nick_name">
-                                    {user?.nick_name}
-                                </p>
+                            <h1 className="profile_info_nick_name">
+                                {user?.nick_name}
+                            </h1>
                                 {user?.is_verified && (
                                     <Tooltip text="Подтвержденный аккаунт">
                                         <Verified
@@ -303,6 +325,50 @@ const Profile = () => {
                                 </Tooltip>
                             </div>
                         </Sceleton>
+                        <div className="profile_info_stats">
+                            <Sceleton
+                                isLoading={isProfileLoading}
+                                section={false}
+                                className="profile_info_stat"
+                            >
+                                <button
+                                    type="button"
+                                    className="profile_info_stat app-transition"
+                                    onClick={() => scrollTo("posts_column", "start")}
+                                >
+                                    <span className="profile_info_stat_value">{posts?.length ?? "0"}</span>
+                                    <span className="profile_info_stat_label">постов</span>
+                                </button>
+                            </Sceleton>
+                            <Sceleton
+                                isLoading={isProfileLoading}
+                                section={false}
+                                className="profile_info_stat"
+                            >
+                                <button
+                                    type="button"
+                                    className="profile_info_stat app-transition"
+                                    onClick={open_followers}
+                                >
+                                    <span className="profile_info_stat_value">{user?.followers?.length ?? "0"}</span>
+                                    <span className="profile_info_stat_label">подписчиков</span>
+                                </button>
+                            </Sceleton>
+                            <Sceleton
+                                isLoading={isProfileLoading}
+                                section={false}
+                                className="profile_info_stat"
+                            >
+                                <button
+                                    type="button"
+                                    className="profile_info_stat app-transition"
+                                    onClick={open_follows}
+                                >
+                                    <span className="profile_info_stat_value">{user?.follows?.length ?? "0"}</span>
+                                    <span className="profile_info_stat_label">подписок</span>
+                                </button>
+                            </Sceleton>
+                        </div>
                     </div>
 
                     <Sceleton
@@ -326,48 +392,6 @@ const Profile = () => {
                                     className="profile_info_action"
                                 />
                         }
-                    </Sceleton>
-                </div>
-
-                <div className="profile_info_stats">
-                    <Sceleton
-                        isLoading={isProfileLoading}
-                        className="profile_info_stat"
-                    >
-                        <button
-                            type="button"
-                            className="profile_info_stat app-transition"
-                            onClick={() => scrollTo("posts_column", "start")}
-                        >
-                            <h1>{posts?.length ?? "0"}</h1>
-                            <p>постов</p>
-                        </button>
-                    </Sceleton>
-                    <Sceleton
-                        isLoading={isProfileLoading}
-                        className="profile_info_stat"
-                    >
-                        <button
-                            type="button"
-                            className="profile_info_stat app-transition"
-                            onClick={open_followers}
-                        >
-                            <h1>{user?.followers?.length ?? "0"}</h1>
-                            <p>подписчиков</p>
-                        </button>
-                    </Sceleton>
-                    <Sceleton
-                        isLoading={isProfileLoading}
-                        className="profile_info_stat"
-                    >
-                        <button
-                            type="button"
-                            className="profile_info_stat app-transition"
-                            onClick={open_follows}
-                        >
-                            <h1>{user?.follows?.length ?? "0"}</h1>
-                            <p>подписок</p>
-                        </button>
                     </Sceleton>
                 </div>
             </div>

@@ -10,6 +10,7 @@ const DropFile = ({
     value,
     previewUrl = null,
     setValue,
+    onChange,
     background = null,
     dropFileType,
     errors,
@@ -17,7 +18,11 @@ const DropFile = ({
     addNewErrors,
     clearErrors,
     onRemove,
+    maxSizeBytes = 4 * 1024 * 1024,
+    typeError = "Incorrect type of file!",
+    sizeError = "Max size of image must be 4 mb!",
 }) => {
+    const setFile = onChange ?? setValue;
     const [preview, setPreview] = useState(null);
     const [isPreviewHidden, setIsPreviewHidden] = useState(false);
     const [isDragged, setIsDragged] = useState(false);
@@ -57,11 +62,11 @@ const DropFile = ({
             dropFileType.trim() !== "" &&
             !new RegExp(dropFileType).test(file.type)
         ) {
-            errors.push("Incorrect type of file!");
+            errors.push(typeError);
         }
 
-        if (file.size > 4 * 1024 * 1024) {
-            errors.push("Max size of image must be 4 mb!");
+        if (file.size > maxSizeBytes) {
+            errors.push(sizeError);
         }
 
         return {
@@ -77,7 +82,7 @@ const DropFile = ({
         const validation = validateImage(file);
 
         if (validation.isValid) {
-            setValue(file);
+            setFile(file);
             clearErrors?.();
         } else {
             addNewErrors?.(validation.errors);
@@ -112,7 +117,7 @@ const DropFile = ({
             setIsDragged(false);
 
             if (e.dataTransfer.files.length > 0) {
-                setValue(e.dataTransfer.files[0]);
+                setFile(e.dataTransfer.files[0]);
             }
         };
 
@@ -127,7 +132,7 @@ const DropFile = ({
             el.removeEventListener("dragover", handleDrag);
             el.removeEventListener("drop", handleDrop);
         };
-    }, [setValue]);
+    }, [setFile]);
 
     return (
         <>
@@ -156,7 +161,7 @@ const DropFile = ({
                                     inputRef.current && (inputRef.current.value = "");
                                     setIsPreviewHidden(true);
                                     setPreview(null);
-                                    setValue(null);
+                                    setFile(null);
                                     onRemove?.();
                                 }}
                             >

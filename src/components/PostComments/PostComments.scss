@@ -86,16 +86,16 @@
     &_list{
         display: flex;
         flex-direction: column;
-        gap: 24px;
-
-        @include screen() {
-            gap: 12px;
-        }
+        gap: 0;
 
         .comment {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 16px;
+
+            &:last-child > .comment_body {
+                border-bottom: none;
+            }
 
             @include screen() {
                 padding-bottom: 0;
@@ -106,10 +106,12 @@
                 display: flex;
                 flex-direction: column;
                 gap: 12px;
-                padding: 16px;
-                
+                padding: 12px 0;
+                border-bottom: 1px solid var(--line-color);
+                border-radius: 0;
+
                 @include screen() {
-                    padding: 12px;
+                    padding: 12px 0;
                 }
 
                 &_top_side {

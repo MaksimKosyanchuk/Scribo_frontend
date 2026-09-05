@@ -41,6 +41,28 @@ const PostsFilters = ({ filters, setFilters, isLoading=false }) => {
                 );
             }
 
+            const allOn = prev.find(f => f._id === "all")?.isActive;
+
+            if (allOn) {
+                return prev.map(filter => {
+                    if (filter._id === "subscription") {
+                        return filter;
+                    }
+
+                    if (filter._id === "all") {
+                        return {
+                            ...filter,
+                            isActive: false,
+                        };
+                    }
+
+                    return {
+                        ...filter,
+                        isActive: filter._id === categoryId,
+                    };
+                });
+            }
+
             let updated = prev.map(filter => {
                 if (filter._id === categoryId) {
                     return {
@@ -79,10 +101,20 @@ const PostsFilters = ({ filters, setFilters, isLoading=false }) => {
     return (
         <Sceleton isLoading={isLoading} className="posts_filters" rounded={true} section={false}>
             <div className="posts_filters">
-                {filters.map((category, index) => (
+                {filters.map((category, index) => {
+                    const allActive = filters.find((f) => f._id === "all")?.isActive;
+                    const visuallyActive =
+                        category._id === "all" || category._id === "subscription"
+                            ? category.isActive
+                            : allActive
+                                ? false
+                                : category.isActive;
+
+                    return (
                     <React.Fragment key={category._id ?? category.name}>
                         <Category
-                            isActive={category.isActive}
+                            quiet
+                            isActive={visuallyActive}
                             onClick={() => handleClick(category._id)}
                             category={category}
                         />
@@ -91,7 +123,8 @@ const PostsFilters = ({ filters, setFilters, isLoading=false }) => {
                             <div className="post_filter post_filter_separator app-transition" />
                         )}
                     </React.Fragment>
-                ))}
+                    );
+                })}
             </div>
         </Sceleton>
     );
