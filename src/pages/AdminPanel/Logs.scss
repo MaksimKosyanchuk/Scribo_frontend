@@ -254,5 +254,22 @@
         &_update_role {
             --action-color: var(--log-update-color);
         }
+
+        &_create_support_request {
+            --action-color: var(--log-create-color);
+        }
+
+        &_reply_support_request {
+            --action-color: var(--log-update-color);
+        }
+
+        &_update_support_status {
+            --action-color: var(--log-update-color);
+        }
+
+        &_entity_guest {
+            cursor: default;
+            color: var(--light-text-color);
+        }
     }
 }

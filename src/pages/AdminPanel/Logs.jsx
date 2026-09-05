@@ -17,6 +17,7 @@ import DeleteIcon from "../../assets/svg/delete.svg?react";
 import NewUserIcon from "../../assets/svg/new-user.svg?react";
 import RedirectIcon from "../../assets/svg/redirect.svg?react";
 import TagIcon from "../../assets/svg/tag.svg?react";
+import CommentIcon from "../../assets/svg/comment.svg?react";
 import FilterIcon from "../../assets/svg/filter.svg?react";
 
 import SearchSearch from "../../components/Ui/SearchSelect";
@@ -28,6 +29,7 @@ import Category from "../../components/Category/index";
 import Popup from "../../components/Ui/Popup";
 import ChipButton from "../../components/Ui/ChipButton";
 import RoleBadge from "../../components/RoleBadge/index";
+import { kindLabel, statusLabel } from "../Support/constants";
 
 import Pagination from "../../components/Ui/Pagination";
 import "./Logs.scss";
@@ -46,7 +48,11 @@ const LogLayout = ({ action, user, time, children, setFilter, log }) => {
     return (
         <div className={`admin_panel_content_logs_page_item admin_panel_content_logs_page_item_${action?.className} app-transition`}>
             <div className="admin_panel_content_logs_page_item_left">
-                <UserEntity className="test" id={log.data.user} data={user} setFilter={setFilter} />
+                {log.data?.user ? (
+                    <UserEntity className="test" id={log.data.user} data={user} setFilter={setFilter} />
+                ) : (
+                    <GuestEntity email={log.data?.email} />
+                )}
             </div>
             <div className="admin_panel_content_logs_page_item_center">
                 {Children.toArray(children?.props?.children ?? children)[0]}
@@ -220,6 +226,57 @@ const RoleEntity = ({ data }) => {
     )
 }
 
+const GuestEntity = ({ email }) => {
+    return (
+        <div className="admin_panel_content_logs_page_item_entity admin_panel_content_logs_page_item_entity_guest">
+            <p>Гость{email ? ` · ${email}` : ""}</p>
+        </div>
+    )
+}
+
+const SupportEntity = ({ id, accessKey, kind, setFilter }) => {
+    const navigate = useNavigate();
+    const { showToast } = useContext(AppContext);
+
+    return (
+        <Popup body={[
+            {
+                title: "Открыть обращение",
+                onClick: () => {
+                    accessKey ? navigate(`/support/${accessKey}`) : showToast({
+                        type: "error",
+                        message: "Обращение не найдено"
+                    })
+                },
+                icon: <RedirectIcon/>
+            },
+            {
+                title: "История обращения",
+                onClick: () => {
+                    setFilter({
+                        type: "support_request",
+                        id
+                    })
+                },
+                icon: <FilterIcon/>
+            }
+        ]}>
+            <div className="admin_panel_content_logs_page_item_entity admin_panel_content_logs_page_item_entity_post">
+                <CommentIcon/>
+                <p>{kindLabel(kind) || "Обращение"}</p>
+            </div>
+        </Popup>
+    )
+}
+
+const SupportStatusEntity = ({ status }) => {
+    return (
+        <div className="admin_panel_content_logs_page_item_entity admin_panel_content_logs_page_item_entity_role">
+            <p>{statusLabel(status)}</p>
+        </div>
+    )
+}
+
 const LOG_RENDERERS = {
     create_post: ({ log, posts, setFilter }) => (
         <>
@@ -317,6 +374,64 @@ const LOG_RENDERERS = {
             <UserEntity id={log.data.updated_user} data={users.find(u => u._id === log.data.updated_user)} setFilter={setFilter} />
             <RoleEntity id={log.data.new_role} data={ { role: log.data.new_role } } setFilter={setFilter} />
         </>
+    ),
+
+    create_support_request: ({ log, setFilter }) => (
+        <>
+            <div className="admin_panel_content_logs_page_item_message">
+                <div className="admin_panel_content_logs_page_item_message_icon">
+                    <PlusIcon/>
+                </div>
+                <p>
+                    {log.data?.kind === "complaint"
+                        ? "Оставил жалобу"
+                        : log.data?.kind === "help"
+                            ? "Запросил помощь"
+                            : "Оставил запрос"}
+                </p>
+            </div>
+            <SupportEntity
+                id={log.data.support_request}
+                accessKey={log.data.access_key}
+                kind={log.data.kind}
+                setFilter={setFilter}
+            />
+        </>
+    ),
+
+    reply_support_request: ({ log, setFilter }) => (
+        <>
+            <div className="admin_panel_content_logs_page_item_message">
+                <div className="admin_panel_content_logs_page_item_message_icon">
+                    <CommentIcon/>
+                </div>
+                <p>{log.data?.author_type === "requester" ? "Дополнил обращение" : "Ответил на обращение"}</p>
+            </div>
+            <SupportEntity
+                id={log.data.support_request}
+                accessKey={log.data.access_key}
+                kind={log.data.kind}
+                setFilter={setFilter}
+            />
+        </>
+    ),
+
+    update_support_status: ({ log, setFilter }) => (
+        <>
+            <div className="admin_panel_content_logs_page_item_message">
+                <div className="admin_panel_content_logs_page_item_message_icon">
+                    <EditIcon/>
+                </div>
+                <p>Сменил статус обращения</p>
+            </div>
+            <SupportEntity
+                id={log.data.support_request}
+                accessKey={log.data.access_key}
+                kind={log.data.kind}
+                setFilter={setFilter}
+            />
+            <SupportStatusEntity status={log.data.status} />
+        </>
     )
 };
 
@@ -366,6 +481,21 @@ const ACTIONS = {
         title: "Role update",
         className: "update_role",
         icon: EditIcon
+    },
+    create_support_request: {
+        title: "Обращение",
+        className: "create_support_request",
+        icon: PlusIcon
+    },
+    reply_support_request: {
+        title: "Ответ на обращение",
+        className: "reply_support_request",
+        icon: CommentIcon
+    },
+    update_support_status: {
+        title: "Статус обращения",
+        className: "update_support_status",
+        icon: EditIcon
     }
 };
 
@@ -406,7 +536,7 @@ const LogsPage = () => {
                 limit: 9
             };
 
-            if (filter.type && filter.id && ["user", "post", "category"].includes(filter.type)) {
+            if (filter.type && filter.id && ["user", "post", "category", "support_request"].includes(filter.type)) {
                 logsQuery[filter.type] = filter.id;
             }
 
@@ -572,6 +702,32 @@ const LogsPage = () => {
                 )
             });
         }
+
+        if (
+            log.data?.support_request &&
+            !search_select_options.some(
+                option =>
+                    option.value.type === "support_request" &&
+                    option.value.value === log.data.support_request
+            )
+        ) {
+            search_select_options.push({
+                value: {
+                    type: "support_request",
+                    value: log.data.support_request
+                },
+                name: kindLabel(log.data.kind) || "Обращение",
+                _id: log.data.support_request,
+                render: () => (
+                    <SupportEntity
+                        id={log.data.support_request}
+                        accessKey={log.data.access_key}
+                        kind={log.data.kind}
+                        setFilter={() => {}}
+                    />
+                )
+            });
+        }
     });
 
     return (
@@ -583,6 +739,14 @@ const LogsPage = () => {
                         {filter.type === "user" && <UserEntity id={filter.id} data={users.find(u => u._id === filter.id)} setFilter={applyFilter} />}
                         {filter.type === "post" && <PostEntity id={filter.id} data={posts.find(p => p._id === filter.id)} setFilter={applyFilter} />}
                         {filter.type === "category" && <CategoryEntity id={filter.id} data={categories.find(c => c._id === filter.id)} setFilter={applyFilter} />}
+                        {filter.type === "support_request" && (
+                            <SupportEntity
+                                id={filter.id}
+                                accessKey={logs.find((log) => log.data?.support_request === filter.id)?.data?.access_key}
+                                kind={logs.find((log) => log.data?.support_request === filter.id)?.data?.kind}
+                                setFilter={applyFilter}
+                            />
+                        )}
                         {filter.type === "role" && <RoleEntity id={filter.id} data={ { role: filter.id } } setFilter={applyFilter} />}
                         <CancelButton onClick={() => applyFilter({ type: null, id: null })}>Отмена</CancelButton>
                     </div>
@@ -611,7 +775,7 @@ const LogsPage = () => {
                                     key={log._id}
                                     action={action}
                                     setFilter={applyFilter}
-                                    user={users.find(user => user._id === log.data.user)}
+                                    user={users.find(user => user._id === log.data?.user)}
                                     log={log}
                                     time={log.date_time}
                                 >

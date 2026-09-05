@@ -1,38 +1,99 @@
-import "./DropDown.scss"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-const { useState } = require('react')
+import "./DropDown.scss";
 
-const Dropdown = ({ options, value, onChange }) => {
+import ChevronDownIcon from "../../../assets/svg/chevron-down.svg?react";
+
+const optionLabel = (option) => option?.name ?? option?.label ?? "";
+
+const DropDown = ({
+    options = [],
+    value,
+    onChange,
+    placeholder = "Выбрать",
+    error = false,
+    className = ""
+}) => {
     const [isOpen, setIsOpen] = useState(false);
+    const wrapperRef = useRef(null);
 
-    const selectedOption = options.find(o => o.value === value);
+    const selectedOption = useMemo(
+        () => options.find((option) => option.value === value),
+        [options, value]
+    );
+
+    const close = useCallback(() => setIsOpen(false), []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!wrapperRef.current?.contains(event.target)) {
+                close();
+            }
+        };
+
+        const handleEscape = (event) => {
+            if (event.key === "Escape") {
+                close();
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("keydown", handleEscape);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleEscape);
+        };
+    }, [close]);
+
+    const handleSelect = (option) => {
+        onChange?.(option.value);
+        close();
+    };
 
     return (
-        <div className="dropdown app-transition">
-            <button type='button' className='dropdown_select app-transition' onClick={() => setIsOpen(v => !v)}>
-                <p>
-                    {selectedOption?.label || 'Выберите вариант'}
+        <div
+            ref={wrapperRef}
+            className={`dropdown ${isOpen ? "dropdown_open" : ""} ${error ? "dropdown_error" : ""} ${className}`.trim()}
+        >
+            <button
+                type="button"
+                className="dropdown_select app-transition"
+                aria-expanded={isOpen}
+                onClick={() => setIsOpen((open) => !open)}
+            >
+                {selectedOption?.icon ? (
+                    <span className="dropdown_icon">{selectedOption.icon}</span>
+                ) : null}
+                <p className={selectedOption ? "" : "dropdown_select_placeholder"}>
+                    {selectedOption ? optionLabel(selectedOption) : placeholder}
                 </p>
+                <ChevronDownIcon className="dropdown_chevron" />
             </button>
 
-            {isOpen && (
-                <div className="dropdown_list app-transition">
-                   {options.map((option, index) => (
-                        <>
+            {isOpen ? (
+                <div className="dropdown_list blurred float_section app-transition">
+                    {options.map((option) => {
+                        const selected = option.value === value;
+
+                        return (
                             <button
-                                className={`dropdown_item app-transition ${index === options.length - 1 ? "last_item" : ""} ${option.value === value ? "selected" : ""}`}
-                                onClick={() => {
-                                    onChange(option.value);
-                                    setIsOpen(false);
-                            }}>
-                                <p>{option.label}</p>
+                                type="button"
+                                key={String(option.value)}
+                                className={`dropdown_item app-transition ${selected ? "dropdown_item_selected" : ""}`}
+                                onClick={() => handleSelect(option)}
+                            >
+                                {option.icon ? (
+                                    <span className="dropdown_icon">{option.icon}</span>
+                                ) : null}
+                                <p>{optionLabel(option)}</p>
                             </button>
-                        </>
-                    ))}
+                        );
+                    })}
                 </div>
-            )}
+            ) : null}
         </div>
-    )
+    );
 };
 
-export default Dropdown;
+export default DropDown;

@@ -19,8 +19,10 @@ import SettingsIcon from "../../assets/svg/settings.svg?react";
 import LogoutIcon from "../../assets/svg/logout.svg?react";
 import ArrowDownIcon from "../../assets/svg/chevron-down.svg?react";
 import RedirectIcon from "../../assets/svg/redirect.svg?react";
+import CommentIcon from "../../assets/svg/comment.svg?react";
 
 import UserBadge from '../UserBadge/index';
+import NotificationMessage from '../NotificationMessage/index';
 import CurrentUserBadge from "../CurrentUserBadge/index"
 import PrimaryButton from '../Ui/PrimaryButton/index';
 import ActionButton from '../Ui/ActionButton/index';
@@ -62,32 +64,7 @@ function Header() {
           <UserBadge data={userMap[item?.user]} />
         </div>
         <p className='modal_window_body_content_notification_message'>
-          {(() => {
-            switch (item.type) {
-              case "follow":
-                  return "Подписался(-ась) на ваши обновления"
-                case "unfollow":
-                  return "Отписался(-ась) от вас"
-                case "like_post":
-                  return (
-                    <>Поставил лайк на ваш <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>пост</Link></>
-                  )
-                case "comment_post":
-                  return (
-                    <>
-                      Прокомментировал(-а) ваш <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>пост</Link>
-                    </>
-                  )
-                case "reply_comment":
-                  return (
-                    <>
-                      Ответил(-а) на <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`} state={{ comment: item.comment, time: Date.now() }}>ваш комментарий</Link>
-                    </>
-                  )
-                default:
-                  return ""
-                }
-            })()}
+          <NotificationMessage item={item} />
         </p>
         <p className='modal_window_body_content_notification_time'>{format_back(item.time)}</p>
       </div>
@@ -133,7 +110,7 @@ function Header() {
               ["admin", "tech_admin"].includes(profile?.role) ?
               <>
                   {
-                    location.pathname === '/admin-panel' ?
+                    location.pathname.startsWith('/admin-panel') ?
                       <ActionButton className="header_admin_button" onClick={() => { navigate('/posts') }}>
                         <RedirectIcon/>
                         Домой
@@ -192,6 +169,11 @@ function Header() {
                     "title": "Настройки",
                     icon: <SettingsIcon/>,
                     onClick: () => { navigate(`/settings`) }
+                  },
+                  {
+                    "title": "Мои запросы",
+                    icon: <CommentIcon />,
+                    onClick: () => { navigate('/support/mine') }
                   },
                   ...((["admin", "tech_admin"].includes(profile?.role))
                     ? [{

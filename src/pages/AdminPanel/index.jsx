@@ -3,6 +3,7 @@ import "./AdminPanel.scss";
 import TagIcon from "../../assets/svg/tag.svg?react";
 import PeoplesIcon from "../../assets/svg/peoples.svg?react";
 import LogIcon from "../../assets/svg/post.svg?react";
+import CommentIcon from "../../assets/svg/comment.svg?react";
 
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
@@ -14,6 +15,7 @@ import SidebarPage from "../../components/SidebarPage/index";
 import CategoriesPage from "./Categories.jsx";
 import LogsPage from "./Logs.jsx";
 import AdminsPage from "./Admins.jsx";
+import RequestsPage from "./Requests.jsx";
 
 const AdminPanel = () => {
     const navigate = useNavigate();
@@ -44,6 +46,12 @@ const AdminPanel = () => {
             key: "logs",
             icon: <LogIcon />,
             content: <LogsPage />
+        },
+        {
+            title: "Запросы",
+            key: "requests",
+            icon: <CommentIcon />,
+            content: <RequestsPage />
         }
     ]
 
