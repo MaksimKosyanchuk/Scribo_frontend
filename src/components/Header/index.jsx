@@ -48,7 +48,7 @@ function Header() {
                         Домой
                       </ActionButton>
                     : 
-                      <ActionButton className="header_admin_button" onClick={() => { navigate('/admin-panel') }}>
+                      <ActionButton className="header_admin_button" onClick={() => { navigate('/admin-panel?tab=dashboard') }}>
                         <RedirectIcon/>
                         В админ панель
                       </ActionButton>
