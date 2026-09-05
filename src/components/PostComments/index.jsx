@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "./PostComments.scss";
 
 import { commentPost, getComments } from "../../api/posts.api";
+import { FIELD_LIMITS } from "../../constants/fieldLimits";
 import { deleteComment, editComment, likeComment } from "../../api/comments.api";
 import { hasId, sameId, setIdPresent } from "../../utils/ids";
 
@@ -65,7 +66,7 @@ const CommentForm = ({
                 <InputField
                     isMultiline
                     multilineRows={3}
-                    length={500}
+                    length={FIELD_LIMITS.comment.max}
                     value={value}
                     onMouseDown={handleInputMouseDown}
                     placeholder={placeholder}
@@ -125,8 +126,8 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
         e.preventDefault();
 
         const data = {
-            comment_text: replyText,
-            parent_comment_id: comment._id
+            commentText: replyText,
+            parentCommentId: comment._id
         }
 
         const result = await commentPost(postId, data)
@@ -422,7 +423,7 @@ const PostComments = ({ postId, navigateTo }) => {
         setIsLoading(true);
 
         const data = {
-            comment_text: commentText
+            commentText: commentText
         }
 
         const result = await commentPost(postId, data)

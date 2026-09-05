@@ -29,7 +29,7 @@ const editComment = async (commentId, commentText) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ comment_text: commentText })
+            body: JSON.stringify({ commentText: commentText })
         });
         const result = await res.json();
 

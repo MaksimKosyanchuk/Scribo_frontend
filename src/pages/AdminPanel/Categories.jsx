@@ -44,6 +44,7 @@ import Redirect from "../../assets/svg/redirect.svg?react";
 import ArrowLeftIcon from "../../assets/svg/arrow-left.svg?react";
 
 import { getCategories, editCategory, deleteCategory, createCategory } from "../../api/categories.api";
+import { FIELD_LIMITS } from "../../constants/fieldLimits";
 
 import DangerButton from "../../components/Ui/DangerButton/index";
 import Popup from "../../components/Ui/Popup/index";
@@ -100,9 +101,9 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
     });
 
     const [ fields, setFields ] = useState({
-        name: "",
-        icon: null,
-        color: null,
+        categoryName: "",
+        categoryIcon: null,
+        categoryColor: null,
         _id: ""
     });
 
@@ -147,16 +148,30 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
 
     useEffect(() => {
         setFields({
-            name: category?.name ?? "",
-            icon: category?.icon ?? null,
-            color: category?.color ?? null,
+            categoryName: category?.name ?? "",
+            categoryIcon: category?.icon ?? null,
+            categoryColor: category?.color ?? null,
             _id: category?._id ?? ""
         })
     }, [category]);
 
     const doSave = async () => {
+        const name = (fields.categoryName || '').trim();
+        if (!name || name.length > FIELD_LIMITS.categoryName.max) {
+            setErrors(prev => ({
+                ...prev,
+                categoryName: !name
+                    ? 'Введите название'
+                    : `Название не длиннее ${FIELD_LIMITS.categoryName.max} символов`
+            }));
+            return;
+        }
         setFetching(true);
-        const result = await editCategory(category._id, fields);
+        const result = await editCategory(category._id, {
+            categoryName: fields.categoryName,
+            categoryIcon: fields.categoryIcon,
+            categoryColor: fields.categoryColor
+        });
         setFetching(false);
         if (result.status) {
             const updatedCategory = {
@@ -184,7 +199,9 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
             });
         }
         else {
-            setErrors(result.errors ?? {});
+            if (result?.errors?.body) {
+                setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
+            }
 
             showToast({
                 type: "error",
@@ -196,7 +213,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
     const popupColorBody = Object.values(CATEGORY_COLORS).map(color => ({
         title: color.name,
         id: color.id,
-        onClick: () => setFields({ ...fields, color: color.id }),
+        onClick: () => setFields({ ...fields, categoryColor: color.id }),
         className: `${CATEGORY_COLORS[color.id].className}`,
         icon: <RectRoundedIcon className="..." />
     }))
@@ -204,7 +221,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
     popupColorBody.push({
         title: "Без цвета",
         id: null,
-        onClick: () => setFields({ ...fields, color: null }),
+        onClick: () => setFields({ ...fields, categoryColor: null }),
         className: "category_color_none",
         icon: <RectRoundedIcon className="..." />
     })
@@ -231,24 +248,29 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                 <></>
                             :
                                 <div className="admin_panel_content_edit_categories_page_settings app-transition">
-                                    <Field error={errors?.body?.name?.message} title={"Название"}>
+                                    <Field error={errors?.categoryName} title={"Название"}>
                                         <InputField
                                             placeholder={"Введите название категории"}
-                                            value={fields?.name}
-                                            error={errors?.body?.name?.message}
-                                            onMouseDown={() => setErrors(prev => ({ ...prev, body: { ...prev.body, name: null } }))}
-                                            onChange={(e) => setFields({...fields, name: e.target.value})}
+                                            value={fields?.categoryName}
+                                            error={errors?.categoryName}
+                                            length={FIELD_LIMITS.categoryName.max}
+                                            onMouseDown={() => setErrors(prev => {
+                                                const next = { ...prev };
+                                                delete next.categoryName;
+                                                return next;
+                                            })}
+                                            onChange={(e) => setFields({...fields, categoryName: e.target.value})}
                                         />
                                     </Field>
                                     <div classneame="admin_panel_content_edit_categories_page_settings_color">
                                         <Popup body={popupColorBody}>
                                             <div className={`admin_panel_content_edit_categories_page_settings_color`}>
-                                                <Field title={"Цвет"} error={errors?.body?.color?.message}>
+                                                <Field title={"Цвет"} error={errors?.categoryColor}>
                                                     <div className="admin_panel_content_edit_categories_page_settings_color_content app-transition">
-                                                        <div className={`admin_panel_content_edit_categories_page_settings_color_content_rect ${CATEGORY_COLORS[fields.color]?.className} app-transition`} >
+                                                        <div className={`admin_panel_content_edit_categories_page_settings_color_content_rect ${CATEGORY_COLORS[fields.categoryColor]?.className} app-transition`} >
                                                             <RectRoundedIcon/>
                                                         </div>
-                                                        <p>{popupColorBody.find((c) => c.id === fields.color)?.title}</p>
+                                                        <p>{popupColorBody.find((c) => c.id === fields.categoryColor)?.title}</p>
                                                     </div>
                                                 </Field>
                                             </div>
@@ -265,14 +287,14 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                                     <div
                                                         key={id}
                                                         className={`admin_panel_content_edit_categories_page_settings_icon_content_item ${
-                                                            fields.icon === id
+                                                            fields.categoryIcon === id
                                                                 ? "admin_panel_content_edit_categories_page_settings_icon_content_item_active"
                                                                 : ""
                                                         }`}
                                                         onClick={() =>
                                                             setFields(prev => ({
                                                                 ...prev,
-                                                                icon: prev.icon === id ? null : id
+                                                                categoryIcon: prev.categoryIcon === id ? null : id
                                                             }))
                                                         }
                                                     >
@@ -298,9 +320,9 @@ const CreateCategoryPage = ({ setActivePage }) => {
 
 
     const [fields, setFields] = useState({
-        name: "",
-        icon: null,
-        color: null
+        categoryName: "",
+        categoryIcon: null,
+        categoryColor: null
     });
 
     const popupColorBody = [
@@ -312,7 +334,7 @@ const CreateCategoryPage = ({ setActivePage }) => {
             onClick: () =>
                 setFields(prev => ({
                     ...prev,
-                    color: color.id
+                    categoryColor: color.id
                 }))
         })),
         {
@@ -323,12 +345,22 @@ const CreateCategoryPage = ({ setActivePage }) => {
             onClick: () =>
                 setFields(prev => ({
                     ...prev,
-                    color: null
+                    categoryColor: null
                 }))
         }
     ];
 
     const doCreate = async () => {
+        const name = (fields.categoryName || '').trim();
+        if (!name || name.length > FIELD_LIMITS.categoryName.max) {
+            setErrors(prev => ({
+                ...prev,
+                categoryName: !name
+                    ? 'Введите название'
+                    : `Название не длиннее ${FIELD_LIMITS.categoryName.max} символов`
+            }));
+            return;
+        }
         setFetching(true);
 
         const result = await createCategory(fields);
@@ -343,7 +375,9 @@ const CreateCategoryPage = ({ setActivePage }) => {
 
             setActivePage("");
         } else {
-            setErrors(result.errors ?? {});
+            if (result?.errors?.body) {
+                setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
+            }
             showToast({
                 type: "error",
                 message: "Ошибка при создании категории!"
@@ -365,16 +399,21 @@ const CreateCategoryPage = ({ setActivePage }) => {
 
                 <div className="admin_panel_content_edit_categories_page_settings app-transition">
 
-                    <Field error={errors?.body?.name?.message} title={"Название"}>
+                    <Field error={errors?.categoryName} title={"Название"}>
                         <InputField
                             placeholder="Введите название категории"
-                            onMouseDown={() => setErrors(prev => ({ ...prev, body: { ...prev.body, name: null } }))}
-                            value={fields.name}
-                            error={errors?.body?.name?.message}
+                            length={FIELD_LIMITS.categoryName.max}
+                            onMouseDown={() => setErrors(prev => {
+                                const next = { ...prev };
+                                delete next.categoryName;
+                                return next;
+                            })}
+                            value={fields.categoryName}
+                            error={errors?.categoryName}
                             onChange={(e) =>
                                 setFields(prev => ({
                                     ...prev,
-                                    name: e.target.value
+                                    categoryName: e.target.value
                                 }))
                             }
                         />
@@ -382,17 +421,17 @@ const CreateCategoryPage = ({ setActivePage }) => {
 
                     <Popup body={popupColorBody}>
                         <div className="admin_panel_content_edit_categories_page_settings_color">
-                            <Field error={errors?.body?.color?.message} title={"Цвет"}>
+                            <Field error={errors?.categoryColor} title={"Цвет"}>
                                 <div className="admin_panel_content_edit_categories_page_settings_color_content app-transition">
 
                                     <div
-                                        className={`admin_panel_content_edit_categories_page_settings_color_content_rect ${CATEGORY_COLORS[fields.color]?.className ?? ""}`}
+                                        className={`admin_panel_content_edit_categories_page_settings_color_content_rect ${CATEGORY_COLORS[fields.categoryColor]?.className ?? ""}`}
                                     >
                                         <RectRoundedIcon />
                                     </div>
 
                                     <p>
-                                        {popupColorBody.find(c => c.id === fields.color)?.title}
+                                        {popupColorBody.find(c => c.id === fields.categoryColor)?.title}
                                     </p>
 
                                 </div>
@@ -414,14 +453,14 @@ const CreateCategoryPage = ({ setActivePage }) => {
                                     <div
                                         key={id}
                                         className={`admin_panel_content_edit_categories_page_settings_icon_content_item ${
-                                            fields.icon === id
+                                            fields.categoryIcon === id
                                                 ? "admin_panel_content_edit_categories_page_settings_icon_content_item_active"
                                                 : ""
                                         }`}
                                         onClick={() =>
                                             setFields(prev => ({
                                                 ...prev,
-                                                icon: prev.icon === id ? null : id
+                                                categoryIcon: prev.categoryIcon === id ? null : id
                                             }))
                                         }
                                     >

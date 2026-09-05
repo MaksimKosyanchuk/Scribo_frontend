@@ -62,7 +62,7 @@ const editProfile = async (data) => {
     }
 }
 
-const changePassword = async ({ current_password, new_password, new_password_confirm }) => {
+const changePassword = async ({ currentPassword, newPassword, newPasswordConfirm }) => {
     if (!getAccessToken()) {
         return {
             status: false,
@@ -74,10 +74,10 @@ const changePassword = async ({ current_password, new_password, new_password_con
     const response = await apiFetch(`${API_URL}/api/profile/password`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            current_password,
-            new_password,
-            new_password_confirm
+            body: JSON.stringify({
+            currentPassword,
+            newPassword,
+            newPasswordConfirm
         })
     });
 

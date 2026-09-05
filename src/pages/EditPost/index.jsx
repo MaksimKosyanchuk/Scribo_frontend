@@ -14,6 +14,7 @@ import { CATEGORY_COLORS } from "../../styles/constants";
 
 import { getPostById, editPost } from '../../api/posts.api';
 import { getCategories } from '../../api/categories.api';
+import { FIELD_LIMITS } from '../../constants/fieldLimits';
 
 import CategoryIcon1 from "../../assets/svg/categories/1.svg?react";
 import CategoryIcon2 from "../../assets/svg/categories/2.svg?react";
@@ -89,10 +90,10 @@ const EditPost = () => {
 
     const [ fields, setFields ] = useState(
         {
-            title: '',
-            content_text: '',
-            featured_image: null,
-            category: ''
+            postTitle: '',
+            postContent: '',
+            featuredImage: null,
+            categoryId: ''
         }
     )
 
@@ -122,10 +123,10 @@ const EditPost = () => {
             if (result?.status === true && result?.data) {
                 const post = result.data
                 setFields({
-                    title: post.title ?? '',
-                    content_text: post.content_text ?? '',
-                    category: post.category ?? '',
-                    featured_image: post.featured_image ?? null,
+                    postTitle: post.title ?? '',
+                    postContent: post.content_text ?? '',
+                    categoryId: post.category ?? '',
+                    featuredImage: post.featured_image ?? null,
                     author: post.author ?? null
                 })
                 setFeaturedImage(post.featured_image)
@@ -150,12 +151,12 @@ const EditPost = () => {
     const add_errors_to_image = (new_errors) => {
         const updated_errors = { ...errors };
 
-        if (!updated_errors.featured_image) { 
-            updated_errors.featured_image = [];
+        if (!updated_errors.featuredImage) { 
+            updated_errors.featuredImage = [];
         }
 
         for(const new_error of new_errors) {
-            updated_errors.featured_image.push(new_error)
+            updated_errors.featuredImage.push(new_error)
         }
         setErrors(updated_errors);
     }
@@ -163,8 +164,8 @@ const EditPost = () => {
     const clear_errors_from_image = () => {
         const updated_errors = { ...errors };
 
-        if(updated_errors.featured_image) {
-            delete updated_errors.featured_image
+        if(updated_errors.featuredImage) {
+            delete updated_errors.featuredImage
         }
 
         setErrors(updated_errors)
@@ -190,41 +191,52 @@ const EditPost = () => {
 
     const handleClick = () => {
         const other = { ...errors };
-        delete other.featured_image;
+        delete other.featuredImage;
         setErrors(other);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const next = {};
+        const title = (fields.postTitle || '').trim();
+        if (title.length < FIELD_LIMITS.postTitle.min) {
+            next.postTitle = 'Введите заголовок';
+        } else if (title.length > FIELD_LIMITS.postTitle.max) {
+            next.postTitle = `Заголовок не длиннее ${FIELD_LIMITS.postTitle.max} символов`;
+        }
+        if (!(fields.postContent || '').trim()) {
+            next.postContent = 'Введите текст поста';
+        } else if (fields.postContent.length > FIELD_LIMITS.postContent.max) {
+            next.postContent = `Текст не длиннее ${FIELD_LIMITS.postContent.max} символов`;
+        }
+        if (Object.keys(next).length) {
+            setErrors(prev => ({ ...prev, ...next }));
+            return;
+        }
         setIsLoading(true);
-        const result = await create_post(fields.title, fields.content_text)
+        const result = await create_post()
         setIsLoading(false);
         setCreateResult(result)
     }
 
     const handleFocus = (fieldName) => {
-        setErrors(prevErrors => ({
-            ...prevErrors,
-            body: Object.fromEntries(
-                Object.entries(prevErrors.body || {}).filter(
-                    ([key]) => key !== fieldName
-                )
-            )
-        }));
+        const other = { ...errors };
+        delete other[fieldName];
+        setErrors(other);
     };
 
     const create_post = async () => {
         const formData = new FormData();
-        formData.append('title', fields.title)
-        formData.append('content_text', fields.content_text)
+        formData.append('postTitle', fields.postTitle)
+        formData.append('postContent', fields.postContent)
 
-        const isImageChanged = fields.featured_image instanceof File ||
-            fields.featured_image !== (featuredImage ?? null);
+        const isImageChanged = fields.featuredImage instanceof File ||
+            fields.featuredImage !== (featuredImage ?? null);
         if (isImageChanged) {
-            formData.append('featured_image', fields.featured_image);
+            formData.append('featuredImage', fields.featuredImage);
         }
         
-        formData.append('category', fields.category)
+        formData.append('categoryId', fields.categoryId)
 
         const result = await editPost(id, formData)
         
@@ -235,25 +247,25 @@ const EditPost = () => {
         }
         else {
             showToast({ message: "Ошибка при редактировании поста!", type: "error" })
-            if(result?.errors && Object.keys(result?.errors).length > 0) {
-                setErrors(result.errors)
+            if (result?.errors?.body) {
+                setErrors(Object.fromEntries(Object.entries(result.errors.body).map(([field, obj]) => [field, obj.message])));
             }
             return result
         }
     }
 
     const selectedCategory = allCategories.find(
-        category => category._id === fields.category
+        category => category._id === fields.categoryId
     );
 
     return (
         <form className="edit_post" onSubmit={handleSubmit}>
             <Field
-                error={errors?.body?.title?.message}
+                error={errors?.postTitle}
                 title={"Заголовок"}
             >
                 <InputFiled
-                    value={fields.title}
+                    value={fields.postTitle}
                     placeholder={titlePlaceholder}
                     className={
                         "edit_post_title" +
@@ -269,74 +281,65 @@ const EditPost = () => {
                     onChange={(e) =>
                         setFields({
                             ...fields,
-                            title: e.target.value
+                            postTitle: e.target.value
                         })
                     }
-                    onFocus={() => handleFocus("title")}
-                    length={200}
-                    error={errors?.body?.title?.message}
+                    onFocus={() => handleFocus("postTitle")}
+                    length={FIELD_LIMITS.postTitle.max}
+                    error={errors?.postTitle}
                 />
             </Field>
 
             <Field
-                error={errors?.body?.category?.message}
+                error={errors?.categoryId}
                 title={"Категория"}
             >
                 <SearchSelect
-                    value={fields?.category}
+                    value={fields?.categoryId}
                     onSetValue={(value) =>
                         setFields((prev) => ({
                             ...prev,
-                            category: value
+                            categoryId: value
                         }))
                     }
-                    onFocus={() =>
-                        setErrors((prevErrors) => ({
-                            ...prevErrors,
-                            body: Object.fromEntries(
-                                Object.entries(prevErrors.body || {}).filter(
-                                    ([key]) => key !== "category"
-                                )
-                            )
-                        }))
-                    }
-                    error={errors?.body?.category?.message}
+                    onFocus={() => handleFocus("categoryId")}
+                    error={errors?.categoryId}
                     className={CATEGORY_COLORS[selectedCategory?.color]?.className}
                     options={allCategories}
                 />
             </Field>
 
             <DropFile
-                value={fields.featured_image}
+                value={fields.featuredImage}
                 setValue={(file) =>
                     setFields((prev) => ({
                         ...prev,
-                        featured_image: file
+                        featuredImage: file
                     }))
                 }
                 dropFileType={"image/*"}
                 fileTypes={"SVG, PNG, JPEG, JPG и другие"}
-                errors={errors?.body?.featured_image?.message}
+                errors={errors?.featuredImage}
                 addNewErrors={add_errors_to_image}
                 clearErrors={clear_errors_from_image}
                 onRemove={handleClick}
-                previewUrl={fields.featured_image}
+                previewUrl={fields.featuredImage}
             />
 
             <Field
-                error={errors?.body?.content_text?.message}
+                error={errors?.postContent}
                 title={"Текст поста"}
             >
                 <TextEditorField
-                    initialHtml={fields.content_text}
-                    onFocus={() => handleFocus("content_text")}
+                    initialHtml={fields.postContent}
+                    onFocus={() => handleFocus("postContent")}
                     onChange={(html) =>
                         setFields({
                             ...fields,
-                            content_text: html
+                            postContent: html
                         })
                     }
-                    error={errors?.body?.content_text?.message}
+                    error={errors?.postContent}
                 />
             </Field>
 

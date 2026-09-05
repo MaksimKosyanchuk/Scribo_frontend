@@ -34,7 +34,7 @@ const updateRole = async (user_id, new_role) => {
         const response = await apiFetch(`${API_URL}/api/users/${user_id}/role`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ role: new_role })
+            body: JSON.stringify({ userRole: new_role })
         });
         const result = await response.json();
         return result;

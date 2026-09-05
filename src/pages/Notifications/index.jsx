@@ -140,7 +140,11 @@ const Notifications = () => {
                                 key={item._id}
                                 className={`notifications_page_item app-transition ${isUnread ? "notifications_page_item_unread" : ""}`}
                             >
-                                <span className={`notifications_page_item_dot ${isUnread ? "notifications_page_item_dot_on" : ""}`} />
+                                {
+                                    isUnread && (
+                                        <span className={`notifications_page_item_dot notifications_page_item_dot_on`} />
+                                    )
+                                }
                                 <div className="notifications_page_item_body">
                                     <UserBadge
                                         data={actor}

@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import { AppContext } from "../../App";
 import { createSupportRequest } from "../../api/support.api";
+import { FIELD_LIMITS } from "../../constants/fieldLimits";
 import { SUPPORT_KINDS } from "./constants";
 
 import Field from "../../components/Ui/Field/index";
@@ -17,9 +18,9 @@ const Support = () => {
     const { showToast, profile, profileLoading } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
     const [fields, setFields] = useState({
-        email: "",
-        kind: "request",
-        message: ""
+        userEmail: "",
+        supportKind: "request",
+        supportMessage: ""
     });
     const [errors, setErrors] = useState({});
 
@@ -32,16 +33,20 @@ const Support = () => {
     const validate = () => {
         const next = {};
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email.trim())) {
-            next.email = "Укажите корректную почту";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.userEmail.trim())) {
+            next.userEmail = "Укажите корректную почту";
         }
 
-        if (!fields.kind) {
-            next.kind = "Выберите тип обращения";
+        if (!fields.supportKind) {
+            next.supportKind = "Выберите тип обращения";
         }
 
-        if (!fields.message.trim()) {
-            next.message = "Напишите сообщение";
+        if (!fields.supportMessage.trim()) {
+            next.supportMessage = "Напишите сообщение";
+        } else if (fields.supportMessage.trim().length < FIELD_LIMITS.supportMessage.min) {
+            next.supportMessage = `Сообщение не короче ${FIELD_LIMITS.supportMessage.min} символов`;
+        } else if (fields.supportMessage.length > FIELD_LIMITS.supportMessage.max) {
+            next.supportMessage = `Сообщение не длиннее ${FIELD_LIMITS.supportMessage.max} символов`;
         }
 
         setErrors(next);
@@ -56,9 +61,9 @@ const Support = () => {
         setIsLoading(true);
         try {
             const result = await createSupportRequest({
-                email: fields.email.trim(),
-                kind: fields.kind,
-                message: fields.message.trim()
+                userEmail: fields.userEmail.trim(),
+                supportKind: fields.supportKind,
+                supportMessage: fields.supportMessage.trim()
             });
 
             if (result.status === true && result.data?.access_key) {
@@ -102,39 +107,39 @@ const Support = () => {
                     handleSubmit();
                 }}
             >
-                <Field title="Почта" error={errors?.email ?? null}>
+                <Field title="Почта" error={errors?.userEmail ?? null}>
                     <InputField
                         type="email"
-                        value={fields.email}
+                        value={fields.userEmail}
                         placeholder="you@example.com"
-                        onChange={(event) => setFields({ ...fields, email: event.target.value })}
-                        onFocus={() => handleFocus("email")}
-                        error={errors?.email ?? null}
-                        length={120}
+                        onChange={(event) => setFields({ ...fields, userEmail: event.target.value })}
+                        onFocus={() => handleFocus("userEmail")}
+                        error={errors?.userEmail ?? null}
+                        length={FIELD_LIMITS.email.max}
                     />
                 </Field>
-                <Field title="Тип" error={errors?.kind ?? null}>
+                <Field title="Тип" error={errors?.supportKind ?? null}>
                     <DropDown
                         options={SUPPORT_KINDS}
-                        value={fields.kind}
+                        value={fields.supportKind}
                         placeholder="Тип обращения"
-                        error={Boolean(errors?.kind)}
+                        error={Boolean(errors?.supportKind)}
                         onChange={(value) => {
-                            handleFocus("kind");
-                            setFields({ ...fields, kind: value });
+                            handleFocus("supportKind");
+                            setFields({ ...fields, supportKind: value });
                         }}
                     />
                 </Field>
-                <Field title="Сообщение" error={errors?.message ?? null}>
+                <Field title="Сообщение" error={errors?.supportMessage ?? null}>
                     <InputField
                         isMultiline={true}
                         multilineRows={8}
-                        length={2000}
-                        value={fields.message}
+                        length={FIELD_LIMITS.supportMessage.max}
+                        value={fields.supportMessage}
                         placeholder="Опишите ситуацию"
-                        onChange={(event) => setFields({ ...fields, message: event.target.value })}
-                        onFocus={() => handleFocus("message")}
-                        error={errors?.message ?? null}
+                        onChange={(event) => setFields({ ...fields, supportMessage: event.target.value })}
+                        onFocus={() => handleFocus("supportMessage")}
+                        error={errors?.supportMessage ?? null}
                     />
                 </Field>
                 <PrimaryButton type="submit" isLoading={isLoading}>

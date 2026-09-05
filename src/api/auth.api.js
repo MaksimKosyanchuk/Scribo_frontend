@@ -7,7 +7,7 @@ const verificationGoogle = async (token) => {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ google_token: token }),
+            body: JSON.stringify({ googleToken: token }),
         }
     
         const response = await fetch(`${API_URL}/api/auth/verification/google`, requestOptions)
@@ -37,7 +37,7 @@ const loginGoogle = async (token) => {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ google_token: token, ...geo }),
+            body: JSON.stringify({ googleToken: token, ...geo }),
             credentials: 'include'
         }
         
@@ -62,7 +62,7 @@ const loginUsername = async (username, password) => {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_name: username, password: password, ...geo }),
+            body: JSON.stringify({ userName: username, userPassword: password, ...geo }),
             credentials: 'include'
         }
         
@@ -112,8 +112,8 @@ const veriticationEmailConfirm = async (email, fullCode) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: email,
-                email_code: fullCode,
+                userEmail: email,
+                emailCode: fullCode,
             })
         }
         
@@ -140,7 +140,7 @@ const verificationEmail = async (email) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: email
+                userEmail: email
             })
         }
 
@@ -164,6 +164,7 @@ const jsonAuthPost = async (path, body) => {
         const response = await fetch(`${API_URL}${path}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify(body)
         })
         const result = await response.json()
@@ -182,18 +183,18 @@ const jsonAuthPost = async (path, body) => {
     }
 }
 
-const requestPasswordReset = (email) => jsonAuthPost("/api/auth/password/forgot", { email })
+const requestPasswordReset = (email) => jsonAuthPost("/api/auth/password/forgot", { userEmail: email })
 
-const confirmPasswordReset = (email, email_code) => jsonAuthPost("/api/auth/password/forgot/confirm", {
-    email,
-    email_code
+const confirmPasswordReset = (email, emailCode) => jsonAuthPost("/api/auth/password/forgot/confirm", {
+    userEmail: email,
+    emailCode
 })
 
-const resetPassword = ({ email, email_code, new_password, new_password_confirm }) => jsonAuthPost("/api/auth/password/reset", {
-    email,
-    email_code,
-    new_password,
-    new_password_confirm
+const resetPassword = ({ email, emailCode, newPassword, newPasswordConfirm }) => jsonAuthPost("/api/auth/password/reset", {
+    userEmail: email,
+    emailCode,
+    newPassword,
+    newPasswordConfirm
 })
 
 const logout = async () => {
