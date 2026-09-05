@@ -1,27 +1,41 @@
 import "./AppLayout.scss";
 
-import { useContext, useEffect, useCallback } from "react";
+import { useContext, useEffect, useCallback, useRef } from "react";
 import { AppContext } from "../../App";
 import { useLocation } from "react-router-dom";
 
 import { getProfile } from "../../api/profile.api";
 import { trackVisit } from "../../api/analytics.api";
+import { getAccessToken } from "../../api/http";
 
 const SKIP_TRACKING = /^\/admin-panel/;
 
 const AppLayout = ({ children }) => {
     const location = useLocation()
-    const { setProfile, setProfileLoading, authReady } = useContext(AppContext) 
+    const { profile, setProfile, setProfileLoading, authReady } = useContext(AppContext)
+    const profileRef = useRef(profile)
+    const requestIdRef = useRef(0)
+
+    profileRef.current = profile
 
     const setProfileData = useCallback(async () => {
-        setProfileLoading(true);
+        const requestId = ++requestIdRef.current
+        const silent = Boolean(profileRef.current)
+
+        if (!silent) {
+            setProfileLoading(true);
+        }
 
         const result = await getProfile();
+
+        if (requestId !== requestIdRef.current) {
+            return
+        }
 
         if (result.status) {
             setProfile(result.data);
         }
-        else {
+        else if (result.unauthorized || !getAccessToken()) {
             setProfile(null);
         }
 
@@ -33,31 +47,18 @@ const AppLayout = ({ children }) => {
             return
         }
 
-        let cancelled = false
-
         document.body.scrollTo({
             top: 0,
             behavior: "smooth",
         });
 
         const path = location.pathname;
+        setProfileData();
 
-        const run = async () => {
-            await setProfileData()
-
-            if (cancelled || SKIP_TRACKING.test(path)) {
-                return
-            }
-
-            await trackVisit(path)
+        if (!SKIP_TRACKING.test(path)) {
+            trackVisit(path);
         }
-
-        run()
-
-        return () => {
-            cancelled = true
-        }
-    }, [location, setProfileData, authReady]);
+    }, [location.pathname, location.search, setProfileData, authReady]);
 
      return (
         <div className="app-layout app-transition" id="app-layout">

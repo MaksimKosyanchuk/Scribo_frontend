@@ -1,4 +1,5 @@
 import { API_URL } from "../config";
+import { getVisitorGeo } from "./geo.client";
 
 let accessToken = null;
 let refreshPromise = null;
@@ -40,9 +41,12 @@ export async function refreshAccessToken() {
     const generation = authGeneration;
 
     refreshPromise = (async () => {
+        const geo = await getVisitorGeo()
         const response = await fetch(`${API_URL}/api/auth/refresh`, {
             method: "POST",
-            credentials: "include"
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(geo)
         });
         const result = await parseJson(response);
 

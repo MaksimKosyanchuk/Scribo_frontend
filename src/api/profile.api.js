@@ -5,6 +5,7 @@ const getProfile = async () => {
     if (!getAccessToken()) {
         return {
             status: false,
+            unauthorized: true,
             message: "No token found",
             data: null
         }
@@ -16,13 +17,25 @@ const getProfile = async () => {
             headers: { 'Content-Type': 'application/json' },
         });
 
-        return await response.json();
+        const result = await response.json();
+
+        if (response.status === 401) {
+            return {
+                status: false,
+                unauthorized: true,
+                message: result?.message || "Unauthorized",
+                data: null
+            }
+        }
+
+        return result
     }
     catch (error) {
         console.error('Error fetching profile:', error);
 
         return {
             status: false,
+            unauthorized: false,
             message: "Error fetching profile",
             data: null
         }
