@@ -41,7 +41,7 @@ export function getAccountMenuBody({
                 onClick: () => navigate(
                     location.pathname.startsWith("/admin-panel")
                         ? "/posts"
-                        : "/admin-panel"
+                        : "/admin-panel?tab=dashboard"
                 )
             }]
             : [],

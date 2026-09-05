@@ -16,7 +16,7 @@ const SidebarPage = ({ pages, pageTitle }) => {
     }
 
     const setPage = (key) => {
-        setSearchParams({ tab: key });
+        setSearchParams({ tab: key }, { replace: true });
     };
 
     return (

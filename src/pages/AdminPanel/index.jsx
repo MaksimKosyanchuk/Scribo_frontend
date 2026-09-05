@@ -4,6 +4,7 @@ import TagIcon from "../../assets/svg/tag.svg?react";
 import PeoplesIcon from "../../assets/svg/peoples.svg?react";
 import LogIcon from "../../assets/svg/post.svg?react";
 import CommentIcon from "../../assets/svg/comment.svg?react";
+import ChartIcon from "../../assets/svg/chart.svg?react";
 
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
@@ -16,6 +17,7 @@ import CategoriesPage from "./Categories.jsx";
 import LogsPage from "./Logs.jsx";
 import AdminsPage from "./Admins.jsx";
 import RequestsPage from "./Requests.jsx";
+import DashboardPage from "./Dashboard.jsx";
 
 const AdminPanel = () => {
     const navigate = useNavigate();
@@ -29,6 +31,12 @@ const AdminPanel = () => {
     }, [profile, profileLoading, navigate]);
 
     const pages=[
+        {
+            title: "Дашборд",
+            key: "dashboard",
+            icon: <ChartIcon />,
+            content: <DashboardPage />
+        },
         {
             title: "Категории",
             key: "categories",
