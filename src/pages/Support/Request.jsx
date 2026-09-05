@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { AppContext } from "../../App.jsx";
 import { getPublicSupportRequest, replyPublicSupportRequest, updateSupportRequestStatus } from "../../api/support.api";
