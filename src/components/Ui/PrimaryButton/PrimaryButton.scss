@@ -38,7 +38,7 @@
         }
     }
 
-    &_disabled {
+    &.primary_button_disabled {
         cursor: not-allowed;
         background-color: var(--submit-button-disabled-background-color);
         color: var(--submit-button-disabled-color);

@@ -33,3 +33,12 @@
         border-color: var(--chip-active-button-hover-background-color);
     }
 }
+
+.chip_button_disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+
+    @include hover {
+        background-color: transparent;
+    }
+}

@@ -7,29 +7,39 @@ import "./GoogleAuthButton.scss";
 
 import ActionButton from '../ActionButton/index';
 
-const GoogleAuthButton = ({ setGoogleToken }) => {
-  const [ isLoading, setIsLoading ] = useState(false);
+const GoogleAuthButton = ({
+    setGoogleToken,
+    isLoading = false,
+    disabled = false,
+    onClickStart,
+    onAuthEnd,
+}) => {
+  const [popupLoading, setPopupLoading] = useState(false);
+  const loading = isLoading || popupLoading;
 
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
+      setPopupLoading(false);
       setGoogleToken(tokenResponse.access_token)
-      setIsLoading(false);
     },
     onError: () => {
-      setIsLoading(false);
+      setPopupLoading(false);
+      onAuthEnd?.();
     },
     onNonOAuthError: () => {
-      setIsLoading(false);
+      setPopupLoading(false);
+      onAuthEnd?.();
     }
   });
 
   const login = () => {
-    setIsLoading(true);
+    setPopupLoading(true);
+    onClickStart?.();
     googleLogin();
   }
 
   return (
-    <ActionButton isLoading={isLoading} disabled={isLoading} onClick={login} className="google_auth_button">
+    <ActionButton isLoading={loading} disabled={disabled || loading} onClick={login} className="google_auth_button">
       <GoogleIcon/>
         Продолжить с Google
     </ActionButton>

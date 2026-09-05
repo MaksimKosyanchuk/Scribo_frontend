@@ -33,6 +33,8 @@ const Settings = () => {
     const [changingPassword, setChangingPassword] = useState(false);
     const [sessions, setSessions] = useState([]);
     const [sessionsLoading, setSessionsLoading] = useState(false);
+    const [logoutLoading, setLogoutLoading] = useState(false);
+    const [endingSessionId, setEndingSessionId] = useState(null);
     const [passwordFields, setPasswordFields] = useState({
         currentPassword: "",
         newPassword: "",
@@ -314,29 +316,39 @@ const Settings = () => {
     };
 
     const handleLogout = async () => {
-        await logoutRequest();
-        setProfile(null);
-        showToast({ message: "Вы вышли из аккаунта!", type: "success" });
-        navigate("/posts");
+        setLogoutLoading(true)
+        try {
+            await logoutRequest();
+            setProfile(null);
+            showToast({ message: "Вы вышли из аккаунта!", type: "success" });
+            navigate("/posts");
+        } finally {
+            setLogoutLoading(false)
+        }
     }
 
     const handleDeleteSession = async (session) => {
-        const result = await deleteSession(session._id)
+        setEndingSessionId(session._id)
+        try {
+            const result = await deleteSession(session._id)
 
-        if (!result?.status) {
-            showToast({ message: "Не удалось завершить сеанс", type: "error" })
-            return
+            if (!result?.status) {
+                showToast({ message: "Не удалось завершить сеанс", type: "error" })
+                return
+            }
+
+            if (result.data?.wasCurrent) {
+                setProfile(null)
+                showToast({ message: "Текущий сеанс завершён", type: "success" })
+                navigate("/posts")
+                return
+            }
+
+            setSessions(prev => prev.filter(item => item._id !== session._id))
+            showToast({ message: "Сеанс удалён", type: "success" })
+        } finally {
+            setEndingSessionId(null)
         }
-
-        if (result.data?.wasCurrent) {
-            setProfile(null)
-            showToast({ message: "Текущий сеанс завершён", type: "success" })
-            navigate("/posts")
-            return
-        }
-
-        setSessions(prev => prev.filter(item => item._id !== session._id))
-        showToast({ message: "Сеанс удалён", type: "success" })
     }
 
     const handleAvatarRemove = () => {
@@ -530,7 +542,7 @@ const Settings = () => {
                                         </Field>
                                         <div className="settings_panel_actions">
                                             <PrimaryButton type="submit" isLoading={passwordLoading}>Изменить пароль</PrimaryButton>
-                                            <ActionButton type="button" onClick={closePasswordForm}>Отмена</ActionButton>
+                                            <ActionButton type="button" disabled={passwordLoading} onClick={closePasswordForm}>Отмена</ActionButton>
                                         </div>
                                     </form>
                                 ) : (
@@ -575,7 +587,12 @@ const Settings = () => {
                                                         </p>
                                                     </Tooltip>
                                                 </div>
-                                                <DangerButton type="button" onClick={() => handleDeleteSession(session)}>
+                                                <DangerButton
+                                                    type="button"
+                                                    isLoading={endingSessionId === session._id}
+                                                    disabled={Boolean(endingSessionId) || logoutLoading}
+                                                    onClick={() => handleDeleteSession(session)}
+                                                >
                                                     Завершить
                                                 </DangerButton>
                                             </div>
@@ -583,7 +600,13 @@ const Settings = () => {
                                     )}
                                 </div>
                                 <div className="settings_logout">
-                                    <DangerButton className="logout_button" type="button" onClick={handleLogout}>
+                                    <DangerButton
+                                        className="logout_button"
+                                        type="button"
+                                        isLoading={logoutLoading}
+                                        disabled={Boolean(endingSessionId)}
+                                        onClick={handleLogout}
+                                    >
                                         Выйти с аккаунта
                                     </DangerButton>
                                 </div>

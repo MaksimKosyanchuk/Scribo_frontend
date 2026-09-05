@@ -351,7 +351,7 @@ const EditPost = () => {
                     Сохранить
                 </PrimaryButton>
 
-                <DangerButton onClick={() => navigate("/posts")}>
+                <DangerButton disabled={isLoading} onClick={() => navigate("/posts")}>
                     Отмена
                 </DangerButton>
             </div>

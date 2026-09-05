@@ -56,6 +56,40 @@ import PrimaryButton from "../../components/Ui/PrimaryButton/index";
 import ActionButton from "../../components/Ui/ActionButton/index";
 import Field from "../../components/Ui/Field/index";
 
+const DeleteCategoryActions = ({ category, closeModal, requestCloseModal, fetchCategories, showToast }) => {
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const requestDelete = async () => {
+        setIsDeleting(true);
+        try {
+            const result = await deleteCategory(category._id);
+
+            if (result.status) {
+                showToast({
+                    type: "success",
+                    message: "Категория успешно удалена!"
+                });
+                requestCloseModal();
+                fetchCategories();
+            } else {
+                showToast({
+                    type: "error",
+                    message: result.message
+                });
+            }
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    return (
+        <div className="admin_panel_content_categories_page_modal_window_bottom">
+            <ActionButton disabled={isDeleting} onClick={closeModal}>Отмена</ActionButton>
+            <DangerButton onClick={requestDelete} isActive={true} isLoading={isDeleting}>Удалить</DangerButton>
+        </div>
+    );
+};
+
 const categoryIcons = {
     1: CategoryIcon1,
     2: CategoryIcon2,
@@ -228,7 +262,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
 
     return (
         <>
-            <ActionButton className="admin_panel_content_categories_page_back" onClick={() => setActivePage('')}><ArrowLeftIcon className="app-transition" /> Назад</ActionButton>
+            <ActionButton disabled={fetching} className="admin_panel_content_categories_page_back" onClick={() => setActivePage('')}><ArrowLeftIcon className="app-transition" /> Назад</ActionButton>
             {
                 isLoading ?
                     <Loading size={40}/>
@@ -388,6 +422,7 @@ const CreateCategoryPage = ({ setActivePage }) => {
     return (
         <>
             <ActionButton
+                disabled={fetching}
                 className="admin_panel_content_categories_page_back"
                 onClick={() => setActivePage("")}
             >
@@ -518,33 +553,16 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
     }
 
     const getDeleleteCategoryModalContent = (category, closeModal) => {
-        const requestDelete = async () => {
-            const result = await deleteCategory(category._id);
-
-
-            if (result.status) {
-                showToast({
-                    type: "success",
-                    message: "Категория успешно удалена!"
-                });
-                requestCloseModal();
-                fetchCategories();  
-            }
-            else {
-                showToast({
-                    type: "error",
-                    message: result.message
-                });
-            }
-        }
-
         return (
             <div className="admin_panel_content_categories_page_modal_window">
                 <Category category={category} isActive={true} />
-                <div className="admin_panel_content_categories_page_modal_window_bottom">
-                    <ActionButton onClick={closeModal}>Отмена</ActionButton>
-                    <DangerButton onClick={() => { requestDelete(); }} isActive={true}>Удалить</DangerButton>
-                </div>
+                <DeleteCategoryActions
+                    category={category}
+                    closeModal={closeModal}
+                    requestCloseModal={requestCloseModal}
+                    fetchCategories={fetchCategories}
+                    showToast={showToast}
+                />
             </div>
         )
     }

@@ -4,7 +4,12 @@ import Loader from "../Loading";
 export default function ActionButton({ children, onClick, type = "button", className = "", disabled = false, isLoading = false }) {
   const isDisabled = disabled || isLoading;
   return (
-    <button className={`action_button app-transition ${className} ${isDisabled ? "disabled" : ""} ${isLoading ? "action_button_loading" : ""}`} onClick={isDisabled ? undefined : onClick} type={type}>
+    <button
+      className={`action_button app-transition ${className} ${isLoading ? "action_button_loading" : ""} ${isDisabled && !isLoading ? "action_button_disabled" : ""}`}
+      onClick={isDisabled ? undefined : onClick}
+      type={type}
+      disabled={isDisabled}
+    >
       <Loader size={20}/>
       {children}
     </button>

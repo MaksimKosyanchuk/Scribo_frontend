@@ -144,7 +144,7 @@ const SupportRequestPage = () => {
         <div className="support_request_detail">
             <div className="support_request_detail_card section app-transition">
                 <div className="support_request_detail_top">
-                    <ActionButton onClick={() => navigate(isStaff ? "/admin-panel?tab=requests" : item.is_owner ? "/support/mine" : "/support")}>
+                    <ActionButton disabled={sending || statusSaving} onClick={() => navigate(isStaff ? "/admin-panel?tab=requests" : item.is_owner ? "/support/mine" : "/support")}>
                         <ArrowLeftIcon />
                         {isStaff ? "К запросам" : item.is_owner ? "Мои запросы" : "Поддержка"}
                     </ActionButton>
@@ -218,7 +218,7 @@ const SupportRequestPage = () => {
                             error={error}
                         />
                     </Field>
-                    <PrimaryButton type="submit" isLoading={sending}>
+                    <PrimaryButton type="submit" isLoading={sending} disabled={statusSaving}>
                         Отправить
                     </PrimaryButton>
                 </form>

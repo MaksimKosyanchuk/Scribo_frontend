@@ -274,7 +274,7 @@ const CreatePost = () => {
             </Field>
             <div className="create_post_buttons">
                 <PrimaryButton onClick={handleSubmit} isLoading={isLoading}>Создать пост</PrimaryButton>
-                <DangerButton onClick={() => navigate("/posts")}>Отмена</DangerButton>
+                <DangerButton disabled={isLoading} onClick={() => navigate("/posts")}>Отмена</DangerButton>
             </div>
         </form>
     )

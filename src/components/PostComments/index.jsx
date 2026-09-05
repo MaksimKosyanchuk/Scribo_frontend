@@ -77,6 +77,7 @@ const CommentForm = ({
                     {onCancel && (
                         <CancelButton
                             type="button"
+                            disabled={isLoading}
                             onClick={onCancel}
                         >
                             Отмена

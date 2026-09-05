@@ -49,11 +49,14 @@ body {
   --submit-button-primary-hover-color: var(--gray-33);
   --submit-button-secondary-color: var(--main-background);
   --submit-button-loading-background-color: var(--gray-d7);
-  --submit-button-disabled-background-color: var(--gray-e1);
+  --submit-button-disabled-background-color: var(--gray-f1);
   --submit-button-disabled-color: var(--gray-99);
 
   --secondary-button-background-color: var(--gray-f1);
   --secondary-button-hover-background-color: var(--gray-e7);
+  --secondary-button-disabled-background-color: var(--gray-f1);
+  --secondary-button-disabled-color: var(--gray-99);
+  --secondary-button-disabled-border-color: var(--gray-e1);
 
   --section-background-color: var(--gray-ff);
   --section-light-color: var(--gray-99);
@@ -68,9 +71,10 @@ body {
 
   --sticky-button-background-color: rgba(241, 241, 241, .8);
 
-  --red-button-primary-color: var(--red-f1);
+  --red-button-primary-color: var(--red-f5);
+  --red-button-hover-color: var(--red-6d);
   --red-button-secondary-color: var(--gray-ff);
-  --red-button-third-color: var(--red-fd);
+  --red-button-third-color: var(--red-f5);
 
   --profile-badge-background-color: var(--gray-f1);
   --profile-badge-hover-background-color: var(--gray-e7);
@@ -227,11 +231,14 @@ body.dark-theme {
   --submit-button-primary-hover-color: var(--gray-b5);
   --submit-button-secondary-color: var(--main-background);
   --submit-button-loading-background-color: var(--gray-33);
-  --submit-button-disabled-background-color: var(--gray-1e);
-  --submit-button-disabled-color: var(--gray-4f);
+  --submit-button-disabled-background-color: var(--gray-25);
+  --submit-button-disabled-color: var(--gray-79);
 
   --secondary-button-background-color: var(--gray-1e);
   --secondary-button-hover-background-color: var(--gray-25);
+  --secondary-button-disabled-background-color: var(--gray-25);
+  --secondary-button-disabled-color: var(--gray-79);
+  --secondary-button-disabled-border-color: var(--gray-33);
 
   --section-background-color: var(--gray-1e);
   --section-light-color: var(--gray-79);
@@ -246,9 +253,10 @@ body.dark-theme {
 
   --sticky-button-background-color: rgba(22, 22, 22, .8);
 
-  --red-button-primary-color: var(--red-fd);
+  --red-button-primary-color: var(--red-b9);
+  --red-button-hover-color: var(--red-c4);
   --red-button-secondary-color: var(--gray-ff);
-  --red-button-third-color: var(--red-fd);
+  --red-button-third-color: var(--red-b9);
 
   --profile-badge-background-color: var(--gray-33);
   --profile-badge-hover-background-color: var(--gray-4f);

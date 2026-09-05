@@ -20,7 +20,7 @@ const ForgotPassword = () => {
     const navigate = useNavigate();
     const { showToast, setProfile } = useContext(AppContext);
     const [step, setStep] = useState("email");
-    const [isLoading, setIsLoading] = useState(false);
+    const [pendingAction, setPendingAction] = useState(null);
     const [email, setEmail] = useState("");
     const [code, setCode] = useState(Array(CODE_LENGTH).fill(""));
     const [passwords, setPasswords] = useState({
@@ -41,15 +41,19 @@ const ForgotPassword = () => {
         }
     };
 
-    const sendCode = async () => {
+    const sendCode = async (fromResend = false) => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
             setErrors({ userEmail: "Некорректная почта" });
             return;
         }
 
-        setIsLoading(true);
-        const result = await requestPasswordReset(email.trim());
-        setIsLoading(false);
+        setPendingAction(fromResend ? "resend" : "submit");
+        let result
+        try {
+            result = await requestPasswordReset(email.trim());
+        } finally {
+            setPendingAction(null);
+        }
 
         if (result?.statusCode === 429) {
             showToast({ message: "Слишком много запросов. Подождите немного.", type: "error" });
@@ -75,9 +79,13 @@ const ForgotPassword = () => {
             return;
         }
 
-        setIsLoading(true);
-        const result = await confirmPasswordReset(email.trim(), emailCode);
-        setIsLoading(false);
+        setPendingAction("submit");
+        let result
+        try {
+            result = await confirmPasswordReset(email.trim(), emailCode);
+        } finally {
+            setPendingAction(null);
+        }
 
         if (result?.statusCode === 429) {
             showToast({ message: "Слишком много попыток. Подождите немного.", type: "error" });
@@ -111,14 +119,18 @@ const ForgotPassword = () => {
             return;
         }
 
-        setIsLoading(true);
-        const result = await resetPassword({
+        setPendingAction("submit");
+        let result
+        try {
+            result = await resetPassword({
             email: email.trim(),
             emailCode: code.join(""),
             newPassword: passwords.newPassword,
             newPasswordConfirm: passwords.newPasswordConfirm
         });
-        setIsLoading(false);
+        } finally {
+            setPendingAction(null);
+        }
 
         if (result?.statusCode === 429) {
             showToast({ message: "Слишком много попыток. Подождите немного.", type: "error" });
@@ -162,7 +174,7 @@ const ForgotPassword = () => {
                                 length={FIELD_LIMITS.email.max}
                             />
                         </Field>
-                        <PrimaryButton type="submit" isLoading={isLoading}>Отправить код</PrimaryButton>
+                        <PrimaryButton type="submit" isLoading={pendingAction === "submit"}>Отправить код</PrimaryButton>
                     </div>
                     </div>
                     <p className="redirect_object">
@@ -194,18 +206,19 @@ const ForgotPassword = () => {
                                 />
                             </div>
                         </div>
-                        <PrimaryButton type="submit" isLoading={isLoading}>Продолжить</PrimaryButton>
+                        <PrimaryButton type="submit" isLoading={pendingAction === "submit"} disabled={Boolean(pendingAction)}>Продолжить</PrimaryButton>
                         <ActionButton
                             type="button"
-                            onClick={sendCode}
-                            disabled={isLoading}
+                            onClick={() => sendCode(true)}
+                            isLoading={pendingAction === "resend"}
+                            disabled={Boolean(pendingAction)}
                         >
                             Отправить код ещё раз
                         </ActionButton>
                     </div>
                     </div>
                     <p className="redirect_object">
-                        <button type="button" className="auth_text_button" onClick={() => setStep("email")}>
+                        <button type="button" className="auth_text_button" disabled={Boolean(pendingAction)} onClick={() => setStep("email")}>
                             Изменить почту
                         </button>
                     </p>
@@ -247,7 +260,7 @@ const ForgotPassword = () => {
                                 error={errors?.newPasswordConfirm ?? null}
                             />
                         </Field>
-                        <PrimaryButton type="submit" isLoading={isLoading}>Сменить пароль</PrimaryButton>
+                        <PrimaryButton type="submit" isLoading={pendingAction === "submit"}>Сменить пароль</PrimaryButton>
                     </div>
                     </div>
                     <p className="redirect_object">
