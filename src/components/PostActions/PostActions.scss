@@ -46,7 +46,7 @@
         align-items: center;
         cursor: pointer;
         gap: 2px;
-        padding: 10px;
+        padding: 6px;
         border-radius: 6px;
         
         color: var(--light-text-color);
@@ -65,8 +65,7 @@
 
         @include hover {
             color: var(--text-color);
-
-            background: var(--section-item-hover-background-color);
+            background: transparent;
 
             p {
                 color: var(--text-color);

@@ -176,7 +176,7 @@ const SupportMine = () => {
             </form>
 
             <div className="support_page_list">
-                <h1>История</h1>
+                <h1 className="kicker">История</h1>
                 {listLoading ? (
                     <Loading size={40} />
                 ) : (

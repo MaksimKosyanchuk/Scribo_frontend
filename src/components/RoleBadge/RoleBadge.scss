@@ -1,14 +1,14 @@
 @use "../../styles/helpers" as *;
 
 .role_badge {
-    margin-top: 6px;
+    margin-top: 2px;
     color: var(--role-color);
     background: rgb(from var(--role-color) r g b / 0.1);
     display: flex;
     align-items: center;
     width: fit-content;
     border-radius: 8px;
-    padding: 6px 14px;
+    padding: 4px 8px;
     gap: 6px;
     cursor: default;
 

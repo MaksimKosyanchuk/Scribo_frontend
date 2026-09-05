@@ -7,7 +7,8 @@
     gap: 6px;
 
     &_label {
-        font-size: 18px;
+        font-size: var(--text-xs);
+        color: var(--light-text-color);
     }
 
     .search_select_arrow {
@@ -33,7 +34,7 @@
         width: 100%;
         border: 1px solid var(--input-outline-color);
         border-radius: 8px;
-        padding: 10px 16px;
+        padding: 8px 12px;
     
         .input_field {
             border: none;

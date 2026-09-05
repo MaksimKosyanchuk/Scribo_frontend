@@ -3,7 +3,7 @@
 .auth_page {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: var(--space-6);
     max-width: 520px;
     width: 100%;
     margin: 0 auto 40px;

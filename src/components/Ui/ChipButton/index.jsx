@@ -1,10 +1,10 @@
 import { memo } from "react";
 import "./ChipButton.scss";
 
-const ChipButton = memo(({ isActive = false, onClick, children, className = "", disabled = false }) => (
+const ChipButton = memo(({ isActive = false, onClick, children, className = "", disabled = false, variant = "default" }) => (
     <button
         type="button"
-        className={`chip_button app-transition ${isActive ? "chip_button_active" : ""} ${disabled ? "chip_button_disabled" : ""} ${className}`}
+        className={`chip_button app-transition ${variant === "quiet" ? "chip_button_quiet" : ""} ${isActive ? "chip_button_active" : ""} ${disabled ? "chip_button_disabled" : ""} ${className}`}
         onClick={disabled ? undefined : onClick}
         disabled={disabled}
     >

@@ -1,110 +1,22 @@
 @use "../../styles/helpers" as *;
 
 .banner {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    margin-bottom: 28px;
+    margin-bottom: var(--space-6);
 
-    &_content{
-        display: flex;
-        flex-direction: column;
-        
-        @include screen() {
-            gap: 20px;
-        }
-
-        
-        &_title {
-            display: flex;
-            align-items: flex-end;
-            
-            h1 { 
-                display: flex;
-                flex-direction: column;
-                line-height: 0.85;
-                font-size: 38px;
-                
-                @include screen() {
-                    font-size: 34PX;
-                }
-            }
-            
-            &_logo {
-                width: 152px;
-                height: 32px;
-                fill: none;
-                color: var(--text-color);
-
-                path {
-                    stroke: var(--text-color);
-                    stroke-width: 4px;
-            
-                    stroke-dasharray: 520;
-                    stroke-dashoffset: 520;
-            
-                    animation:
-                    banner-stroke 1.8s linear forwards,
-                    banner-fill 0.5s ease forwards 1.6s;
-                    transition: .3s;
-            
-                    @include screen() {
-                        height: 28px;
-                    }
-                }
-            }
-        }
-        
-        &_text {
-            max-width: 80%;
-            margin-top: 10px;
-    
-            @include screen() {
-                margin: 0;
-            }
-        }
-    
-        &_actions {
-            margin-top: auto;
-            display: flex;
-            gap: 14px;
-
-            .chip_button{
-                border-radius: 50px;
-            }
-        }
+    p {
+        font-size: var(--text-md);
+        color: var(--light-text-color);
+        line-height: 1.5;
+        max-width: 36em;
     }
 
+    a {
+        color: var(--text-color);
+        font-weight: 500;
 
-    &_image {
-        width: 50%;
-        height: auto;
-        object-fit: cover;
-        border-radius: 12px;
-        position: relative;
-        z-index: 1;
-
-        
-        @include screen() {
-            display: none;
+        @include hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
         }
-    }
-}
-
-@keyframes banner-stroke {
-    from {
-        stroke-dashoffset: 520;
-    }
-    to {
-        stroke-dashoffset: 0;
-    }
-}
-
-@keyframes banner-fill {
-    from {
-        fill: transparent;
-    }
-    to {
-        fill: currentColor;
     }
 }

@@ -127,7 +127,7 @@ const Notifications = () => {
                 <p>Лайки, комментарии, подписки и ответы по запросам.</p>
             </div>
 
-            <div className="notifications_page_list section app-transition">
+            <div className="notifications_page_list app-transition">
                 {usersLoading ? (
                     <Loading size={40} />
                 ) : items.length ? (

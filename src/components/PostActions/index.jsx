@@ -41,7 +41,7 @@ async function share(id, showToast) {
     }
 }
 
-const PostActions = ({ className, article, setArticle, isLoading=false }) => {
+const PostActions = ({ className, article, setArticle, isLoading=false, showCategory = true }) => {
     const { profile, setProfile, showToast } = useContext(AppContext)
     const [isSaved, setIsSaved] = useState(hasId(profile?.saved_posts, article?._id));
     const [isSavingProcess, setIsSavingProcess] = useState(false)
@@ -196,11 +196,13 @@ const PostActions = ({ className, article, setArticle, isLoading=false }) => {
                     </Tooltip>
                 </div>
             </Sceleton>
-            <Sceleton isLoading={isLoading} rounded={true} className="post_actions_right_side">
-                <div className="post_actions_right_side">
-                    <Category category={article.category} isActive={true}/>
-                </div>     
-            </Sceleton>
+            {showCategory ? (
+                <Sceleton isLoading={isLoading} rounded={true} className="post_actions_right_side">
+                    <div className="post_actions_right_side">
+                        <Category category={article.category} isActive={true}/>
+                    </div>
+                </Sceleton>
+            ) : null}
         </div>
     )
 };

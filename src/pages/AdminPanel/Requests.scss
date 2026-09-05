@@ -42,8 +42,8 @@
         width: 100%;
         text-align: left;
         padding: 12px 16px;
-        border-radius: 8px;
-        border: 1px solid var(--line-color);
+        border-radius: var(--radius-sm);
+        border: 0;
         cursor: pointer;
 
         @include hover {

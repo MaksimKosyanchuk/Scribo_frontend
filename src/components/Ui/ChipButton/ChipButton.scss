@@ -34,6 +34,46 @@
     }
 }
 
+.chip_button_quiet {
+    padding: 4px 2px;
+    border: 0;
+    background: transparent;
+    border-radius: 0;
+    font-size: var(--text-sm);
+    font-weight: 400;
+    color: var(--light-text-color);
+    box-shadow: inset 0 -2px 0 transparent;
+
+    p {
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+    }
+
+    @include hover {
+        background-color: transparent;
+        color: var(--text-color);
+    }
+}
+
+.chip_button_quiet.chip_button_active {
+    color: var(--text-color);
+    background-color: transparent;
+    border-color: transparent;
+    font-weight: 400;
+    box-shadow: inset 0 -2px 0 var(--text-color);
+
+    p {
+        color: inherit;
+    }
+
+    @include hover {
+        background-color: transparent;
+        border-color: transparent;
+        color: var(--text-color);
+    }
+}
+
 .chip_button_disabled {
     cursor: not-allowed;
     opacity: 0.55;

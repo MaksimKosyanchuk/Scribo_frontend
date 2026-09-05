@@ -52,7 +52,7 @@ export default function SwitchBar({
             className={`switcher_bar app-transition ${className}`}
         >
             <div
-                className="switcher_bar_indicator"
+                className="switcher_bar_indicator app-transition"
                 style={{
                     width: indicator.width,
                     transform: `translateX(${indicator.left}px)`,
@@ -64,7 +64,7 @@ export default function SwitchBar({
                     key={index}
                     ref={(el) => (buttonsRef.current[index] = el)}
                     type="button"
-                    className={`switcher_bar_item ${
+                    className={`switcher_bar_item app-transition ${
                         activeIndex === index
                             ? "switcher_bar_item_active"
                             : ""

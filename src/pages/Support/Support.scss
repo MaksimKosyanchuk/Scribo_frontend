@@ -3,7 +3,7 @@
 .support_page {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: var(--space-6);
     max-width: 520px;
     margin: 0 auto 40px;
 
@@ -55,16 +55,12 @@
     &_list {
         display: flex;
         flex-direction: column;
-        gap: 12px;
-
-        h1 {
-            font-size: 18px;
-        }
+        gap: var(--space-5);
 
         .pagination_content {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 0;
         }
     }
 

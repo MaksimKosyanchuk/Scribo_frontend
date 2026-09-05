@@ -464,7 +464,7 @@ const Settings = () => {
                                         </Field>
                                     </div>
                                 </div>
-                                <p className="settings_panel_hint">Конфиденциальность</p>
+                                <p className="kicker settings_panel_hint">Конфиденциальность</p>
                                 <div className="private_setting">
                                     <div className="private_setting_content app-transition">
                                         <div className="private_setting_content_item app-transition">
@@ -561,7 +561,7 @@ const Settings = () => {
                                         </div>
                                     </Field>
                                 )}
-                                <p className="settings_panel_hint">Устройства, с которых выполнен вход</p>
+                                <p className="kicker settings_panel_hint">Устройства, с которых выполнен вход</p>
                                 <div className="settings_sessions">
                                     {sessionsLoading ? (
                                         <p className="settings_sessions_empty">Загрузка…</p>
@@ -599,7 +599,7 @@ const Settings = () => {
                                         ))
                                     )}
                                 </div>
-                                <div className="settings_logout">
+                                <div className="settings_logout app-transition">
                                     <DangerButton
                                         className="logout_button"
                                         type="button"

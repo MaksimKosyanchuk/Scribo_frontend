@@ -4,7 +4,7 @@
 .create_post {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--space-6);
 
     .drop_file{
         min-height: 230px;

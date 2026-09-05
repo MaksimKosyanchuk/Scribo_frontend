@@ -3,7 +3,7 @@
 .notifications_page {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: var(--space-6);
     max-width: 640px;
     width: 100%;
     margin: 0 auto 40px;
@@ -26,12 +26,8 @@
     &_list {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        padding: 12px;
-
-        @include screen() {
-            padding: 8px;
-        }
+        gap: 0;
+        padding: 0;
 
         .loader {
             margin: 24px auto;
@@ -42,11 +38,16 @@
         display: flex;
         align-items: start;
         gap: 10px;
-        padding: 12px;
-        border-radius: 8px;
+        padding: 12px 0;
+        border-radius: 0;
+        border-bottom: 1px solid var(--line-color);
 
         @include hover {
-            background: var(--section-item-hover-background-color);
+            background: transparent;
+        }
+
+        &:last-child {
+            border-bottom: none;
         }
 
         &_unread {

@@ -142,7 +142,7 @@ const SupportRequestPage = () => {
 
     return (
         <div className="support_request_detail">
-            <div className="support_request_detail_card section app-transition">
+            <div className="support_request_detail_card app-transition">
                 <div className="support_request_detail_top">
                     <ActionButton disabled={sending || statusSaving} onClick={() => navigate(isStaff ? "/admin-panel?tab=requests" : item.is_owner ? "/support/mine" : "/support")}>
                         <ArrowLeftIcon />
@@ -173,8 +173,8 @@ const SupportRequestPage = () => {
                 ) : null}
             </div>
 
-            <div className="support_request_detail_card section app-transition">
-                <h1>Переписка</h1>
+            <div className="support_request_detail_card app-transition">
+                <h1 className="kicker">Переписка</h1>
                 {
                     item.replies?.length ?
                         <div className="support_request_detail_replies">
