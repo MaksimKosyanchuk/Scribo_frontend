@@ -225,7 +225,7 @@ export default function TextEditor({
 
             <div className="text_editor_body_top_side app-transition">
               <EditorToolbar />
-              <SwitchBar active_index={switcherActiveIndex} setActiveIndex={setSwitcherActiveIndex} items={["Редактировать", "Предпросмотр"]} />
+              <SwitchBar activeIndex={switcherActiveIndex} setActiveIndex={setSwitcherActiveIndex} items={["Редактировать", "Предпросмотр"]} />
             </div>
             <RichTextPlugin
               contentEditable={

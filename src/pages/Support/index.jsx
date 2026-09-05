@@ -127,8 +127,8 @@ const Support = () => {
                 </Field>
                 <Field title="Сообщение" error={errors?.message ?? null}>
                     <InputField
-                        is_multiline={true}
-                        multiline_rows={8}
+                        isMultiline={true}
+                        multilineRows={8}
                         length={2000}
                         value={fields.message}
                         placeholder="Опишите ситуацию"
@@ -137,7 +137,7 @@ const Support = () => {
                         error={errors?.message ?? null}
                     />
                 </Field>
-                <PrimaryButton type="submit" is_loading={isLoading}>
+                <PrimaryButton type="submit" isLoading={isLoading}>
                     Отправить
                 </PrimaryButton>
                 <p className="support_page_note">

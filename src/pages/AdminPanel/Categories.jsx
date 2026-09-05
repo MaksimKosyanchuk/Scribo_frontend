@@ -282,7 +282,7 @@ const EditCategoryPage = ({ active_category, setActivePage }) => {
                                             })}
                                         </div>
                                     </div>
-                                    <PrimaryButton is_loading={fetching} onClick={() => { doSave() }}>Сохранить</PrimaryButton>
+                                    <PrimaryButton isLoading={fetching} onClick={() => { doSave() }}>Сохранить</PrimaryButton>
                                 </div>
                         }
                     </div>
@@ -435,7 +435,7 @@ const CreateCategoryPage = ({ setActivePage }) => {
                     </div>
 
                     <PrimaryButton
-                        is_loading={fetching}
+                        isLoading={fetching}
                         onClick={doCreate}
                     >
                         Создать
@@ -478,7 +478,7 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
         return variable;
     }
 
-    const getDeleleteCategoryModalContent = (category, close_func) => {
+    const getDeleleteCategoryModalContent = (category, closeModal) => {
         const requestDelete = async () => {
             const result = await deleteCategory(category._id);
 
@@ -501,10 +501,10 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
 
         return (
             <div className="admin_panel_content_categories_page_modal_window">
-                <Category category={category} is_active={true} />
+                <Category category={category} isActive={true} />
                 <div className="admin_panel_content_categories_page_modal_window_bottom">
-                    <ActionButton onClick={close_func}>Отмена</ActionButton>
-                    <DangerButton onClick={() => { requestDelete(); }} is_active={true}>Удалить</DangerButton>
+                    <ActionButton onClick={closeModal}>Отмена</ActionButton>
+                    <DangerButton onClick={() => { requestDelete(); }} isActive={true}>Удалить</DangerButton>
                 </div>
             </div>
         )
@@ -514,8 +514,8 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
         showModalWindow({
             "title": "Вы уверены что хотите удалить категорию?",
             content: getDeleleteCategoryModalContent(category, requestCloseModal),
-            show_close_button: false,
-            close_func: () => {}
+            showCloseButton: false,
+            closeFunc: () => {}
         })
     }
 
@@ -532,7 +532,7 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
                             return(
                                 <div className="admin_panel_content_categories_page_category app-transition" key={index}>
                                     <div className="admin_panel_content_categories_page_category_data">
-                                        <Category onClick={() => {}} className="admin_panel_content_categories_page_category_data_icon" category={category} is_active={true} />
+                                        <Category onClick={() => {}} className="admin_panel_content_categories_page_category_data_icon" category={category} isActive={true} />
                                         <div className="admin_panel_content_categories_page_category_data_content">
                                             <p className="admin_panel_content_categories_page_category_data_content_name">{category?.name}</p>
                                             <div className="admin_panel_content_categories_page_category_data_content_color">
@@ -550,25 +550,29 @@ const HomeCategoryPage = ({ setActivePage, setActiveCategory }) => {
                                     <div className="admin_panel_content_categories_page_category_actions">
                                         <Popup
                                             body={[
-                                                {
-                                                    title: "Перейти к постам",
-                                                    icon: <Redirect />,
-                                                    onClick: () => { navigate(`/posts?filter=${category._id}`) },
-                                                },
-                                                {
-                                                    title: "Редактировать",
-                                                    icon: <EditIcon />,
-                                                    onClick: () => {
-                                                        setActiveCategory(category._id)
-                                                        setActivePage('edit')
+                                                [
+                                                    {
+                                                        title: "Перейти к постам",
+                                                        icon: <Redirect />,
+                                                        onClick: () => { navigate(`/posts?filter=${category._id}`) },
                                                     },
-                                                },
-                                                {
-                                                    title: "Удалить",
-                                                    icon: <DeleteIcon />,
-                                                    type: "danger",
-                                                    onClick: () => { doDeleteCategory(categories.find(c => c._id === category._id)) },
-                                                }
+                                                    {
+                                                        title: "Редактировать",
+                                                        icon: <EditIcon />,
+                                                        onClick: () => {
+                                                            setActiveCategory(category._id)
+                                                            setActivePage('edit')
+                                                        },
+                                                    },
+                                                ],
+                                                [
+                                                    {
+                                                        title: "Удалить",
+                                                        icon: <DeleteIcon />,
+                                                        type: "danger",
+                                                        onClick: () => { doDeleteCategory(categories.find(c => c._id === category._id)) },
+                                                    }
+                                                ]
                                             ]}
                                         >
 

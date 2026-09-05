@@ -2,221 +2,284 @@
 
 .settings {
     display: flex;
-    justify-content: center;
+    flex: 1 1;
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 40px;
 
-    .top_side {
+    .sidebar_page {
+        flex: 1 1;
         display: flex;
-        flex-direction: column;
-        width: 100%;
-        align-items: center;
-        gap: 10px;
+        min-width: 0;
     }
 
-    .form_input{
+    .settings_panel {
         display: flex;
         flex-direction: column;
         gap: 20px;
-        width: 500px;
+        width: 100%;
+        min-width: 0;
+        flex: 1;
+    }
+
+    .settings_panel_hint {
+        font-size: 13px;
+        line-height: 1.4;
+        color: var(--light-text-color);
+    }
+
+    .settings_panel_actions {
+        display: flex;
+        justify-content: flex-start;
+        padding-top: 4px;
+    }
+
+    .form_input {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
         margin: 0;
+    }
 
-        .drop_file{
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
+    .field {
+        width: 100%;
+    }
 
-            @include screen() {
-                width: 120px;
-                height: 120px;
-            }
+    .settings_profile {
+        display: grid;
+        grid-template-columns: 140px minmax(0, 1fr);
+        gap: 28px;
+        align-items: start;
+        width: 100%;
 
-            .remove_image {
-                position: absolute;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                bottom: 5px;
-                background-color: var(--sticky-button-background-color);
-                border: 1px solid var(--line-color);
-                
-                p {
-                    display: none;
-                }
-
-                .remove_image_button {
-                    cursor: pointer;
-                    padding: 6px 8px;
-        
-                    svg{
-                        color: var(--red-button-third-color);
-                        height: 12px;
-                        width: 12px;
-                        
-                        @include screen() {
-                            height: 16px;
-                            width: 16px;
-                        }
-                    }
-                }
-            }
-
-            &_info {
-                gap: 6px;
-                width: 100%;
-                height: 100%;
-                justify-content: flex-end;
-
-                @include screen() {
-                    gap: 4px;
-                }
-
-                &_avatar_icon {
-                    height: 70%;
-                    width: 70%;
-                    color: var(--avatar-icon-color);
-                }
-
-                &_upload_icon {
-                    width: 40px;
-                    height: 40px;
-
-                    @include screen() {
-                        height: 35px;
-                        width: 35px;
-                    }
-                }
-
-                &_main_text {
-                    display: none;
-                }
-
-                &_help_text {
-                    font-size: 12px;
-                    text-align: center;
-
-                    @include screen() {
-                        font-size: 10px;
-                    }
-                }
-
-                &_select {
-                    display: none;
-                }
-            }
-        }
-
-        .image_input {
-            border-radius: 50%;
-        }
-
-        .drop_file_error_messages {
-            margin-bottom: 20px;
-        }
-
-        .otp_container {
-            &_title_email {
-                font-weight: 600;
-            }
-
-            &_content{
-                display: flex;
-                gap: 10px;
-                text-align: center;
-                .input_field_label_error_message {
-                    display: none;
-                }
-        
-                .input_field, .incorrect_field {
-                    padding: 12px;
-                    text-align: center;
-        
-                }
-            }
-        }
-
-        .private_setting {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            width: 100%;
-
-            &_content {
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-                border: 1px solid var(--input-outline-color);
-                border-radius: 8px;
-                padding: 12px;
-                
-                &_item{
-                    display: flex;
-                    width: 100%;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 20px;
-
-                    p {
-                        font-size: 16px;
-                    }
-                }
-    
-            }
-        }
-
-
-        &_buttons {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            align-items: flex-start;
+        @include screen() {
+            grid-template-columns: 1fr;
             gap: 20px;
         }
 
-        .settings_sessions {
+        &_avatar {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            align-items: flex-start;
+        }
+
+        &_fields {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 0;
             width: 100%;
-            margin-top: 8px;
+        }
+    }
 
-            &_title {
-                font-size: 16px;
-                font-weight: 600;
+    .drop_file {
+        border-radius: 50%;
+        width: 140px;
+        height: 140px;
+        flex-shrink: 0;
+
+        @include screen() {
+            width: 112px;
+            height: 112px;
+        }
+
+        .remove_image {
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            bottom: 5px;
+            background-color: var(--sticky-button-background-color);
+            border: 1px solid var(--line-color);
+
+            p {
+                display: none;
             }
 
-            &_empty {
-                font-size: 13px;
-                color: var(--light-text-color);
-            }
+            .remove_image_button {
+                cursor: pointer;
+                padding: 6px 8px;
 
-            &_item {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-                padding: 12px;
-                border: 1px solid var(--line-color);
-                border-radius: 8px;
+                svg {
+                    color: var(--red-button-third-color);
+                    height: 12px;
+                    width: 12px;
 
-                &_info {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 4px;
-                    min-width: 0;
-                }
-
-                &_device {
-                    font-size: 14px;
-                    font-weight: 500;
-                }
-
-                &_meta {
-                    font-size: 12px;
-                    color: var(--light-text-color);
+                    @include screen() {
+                        height: 16px;
+                        width: 16px;
+                    }
                 }
             }
         }
 
+        &_info {
+            gap: 6px;
+            width: 100%;
+            height: 100%;
+            justify-content: flex-end;
+
+            @include screen() {
+                gap: 4px;
+            }
+
+            &_avatar_icon {
+                height: 70%;
+                width: 70%;
+                color: var(--avatar-icon-color);
+            }
+
+            &_upload_icon {
+                width: 40px;
+                height: 40px;
+
+                @include screen() {
+                    height: 35px;
+                    width: 35px;
+                }
+            }
+
+            &_main_text {
+                display: none;
+            }
+
+            &_help_text {
+                font-size: 12px;
+                text-align: center;
+
+                @include screen() {
+                    font-size: 10px;
+                }
+            }
+
+            &_select {
+                display: none;
+            }
+        }
     }
 
+    .image_input {
+        border-radius: 50%;
+    }
+
+    .drop_file_error_messages {
+        margin-top: 8px;
+    }
+
+    .private_setting {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        &_content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--line-color);
+            border-radius: 8px;
+            overflow: hidden;
+
+            &_item {
+                display: flex;
+                width: 100%;
+                align-items: center;
+                justify-content: space-between;
+                gap: 20px;
+                padding: 14px 16px;
+                border-bottom: 1px solid var(--line-color);
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                @include hover {
+                    background: var(--section-item-hover-background-color);
+                }
+
+                p {
+                    font-size: 14px;
+                    line-height: 1.4;
+                }
+            }
+        }
+    }
+
+    .settings_sessions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+
+        &_empty {
+            font-size: 13px;
+            color: var(--light-text-color);
+            padding: 16px;
+            border: 1px solid var(--line-color);
+            border-radius: 8px;
+        }
+
+        &_badge {
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+            color: var(--success-color);
+            background: rgb(from var(--success-color) r g b / 0.12);
+        }
+
+        &_item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--line-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+
+            @include hover {
+                background: var(--section-item-hover-background-color);
+            }
+
+            .danger_button {
+                width: auto;
+                flex-shrink: 0;
+            }
+
+            &_info {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                min-width: 0;
+            }
+
+            &_head {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            &_device {
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            &_location,
+            &_time {
+                font-size: 12px;
+                color: var(--light-text-color);
+            }
+        }
+    }
+
+    .settings_logout {
+        display: flex;
+        justify-content: flex-start;
+        padding-top: 12px;
+        border-top: 1px solid var(--line-color);
+    }
 }

@@ -19,7 +19,7 @@ const followIds = (profile) =>
 
 const Posts = ({
     query = EMPTY_QUERY,
-    posts_filters = [],
+    postsFilters = [],
     wait = false,
     posts: controlledPosts,
     setPosts: controlledSetPosts,
@@ -59,16 +59,16 @@ const Posts = ({
             return;
         }
 
-        const isPostsFiltersEmpty = posts_filters.length === 0;
+        const isPostsFiltersEmpty = postsFilters.length === 0;
 
         let uniqueFilters = categoryList.map((category) => ({
             ...category,
-            is_active: isPostsFiltersEmpty
+            isActive: isPostsFiltersEmpty
                 ? true
                 : (
-                    posts_filters.includes("все") ||
-                    posts_filters.includes(String(category._id).toLowerCase()) ||
-                    posts_filters.includes(category._id)
+                    postsFilters.includes("все") ||
+                    postsFilters.includes(String(category._id).toLowerCase()) ||
+                    postsFilters.includes(category._id)
                 ),
         }));
 
@@ -76,7 +76,7 @@ const Posts = ({
             uniqueFilters.unshift({
                 _id: "subscription",
                 name: "По подписке",
-                is_active: posts_filters.includes("по подписке"),
+                isActive: postsFilters.includes("по подписке"),
                 color: null,
                 iconObject: null,
             });
@@ -85,21 +85,21 @@ const Posts = ({
         uniqueFilters.unshift({
             _id: "all",
             name: "Все",
-            is_active: isPostsFiltersEmpty || posts_filters.includes("все"),
+            isActive: isPostsFiltersEmpty || postsFilters.includes("все"),
             color: null,
             iconObject: null,
         });
 
         setFilters(uniqueFilters);
         setPage(1);
-    }, [isControlled, categoryList, posts_filters, profile?._id]);
+    }, [isControlled, categoryList, postsFilters, profile?._id]);
 
     const requestQuery = useMemo(() => {
         const extraQuery = JSON.parse(queryKey);
-        const allActive = filters.find((f) => f._id === "all")?.is_active;
-        const subscriptionFilterActive = filters.find((f) => f._id === "subscription")?.is_active;
+        const allActive = filters.find((f) => f._id === "all")?.isActive;
+        const subscriptionFilterActive = filters.find((f) => f._id === "subscription")?.isActive;
         const categoryIds = filters
-            .filter((f) => !["all", "subscription"].includes(f._id) && f.is_active)
+            .filter((f) => !["all", "subscription"].includes(f._id) && f.isActive)
             .map((f) => f._id);
 
         const next = {

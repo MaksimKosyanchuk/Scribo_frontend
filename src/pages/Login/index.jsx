@@ -8,7 +8,7 @@ import Field from '../../components/Ui/Field/index';
 
 import { verificationGoogle, loginGoogle, loginUsername } from '../../api/auth.api';
 
-import "./Login.scss";
+import "../Auth/Auth.scss";
 
 import GoogleAuthButton from '../../components/Ui/GoogleAuthButton/index';
 
@@ -123,38 +123,41 @@ const Login = () => {
     };
  
   return (
-    <div className='login'>
-        <form className='form_input app-transition' onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
-            <Field title="Логин" error={errors?.user_login ?? null}>
-                <InputField
-                    className={`user_login`}
-                    type="text"
-                    onChange={(e) => setFields({ ...fields, user_login: e.target.value })}
-                    onFocus={() => handleFocus('user_login')}
-                    input_label="Логин"
-                    placeholder="Введите имя пользователя или email"
-                    value={fields.user_login}
-                    error={errors?.user_login ?? null}
-                />
-            </Field>
-            <Field title="Пароль" error={errors?.password ?? null}>
-                <InputField
-                    className={`password`}
-                    type="password"
-                    onChange={(e) => setFields({ ...fields, password: e.target.value })}
-                    onFocus={() => handleFocus('password')}
-                    input_label="Пароль"
-                    placeholder="Введите пароль"
-                    value={fields.password}
-                    error={errors?.password ?? null}
-                />
-            </Field>
-            <PrimaryButton type="submit" is_loading={isLoading}>Войти</PrimaryButton>
+    <div className="auth_page">
+        <form className="form_input" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+            <div className="auth_page_group section app-transition">
+                <div className="auth_page_group_intro">
+                    <h1>Вход</h1>
+                </div>
+                <Field title="Логин" error={errors?.user_login ?? null}>
+                    <InputField
+                        className={`user_login`}
+                        type="text"
+                        onChange={(e) => setFields({ ...fields, user_login: e.target.value })}
+                        onFocus={() => handleFocus('user_login')}
+                        placeholder="Имя пользователя или email"
+                        value={fields.user_login}
+                        error={errors?.user_login ?? null}
+                    />
+                </Field>
+                <Field title="Пароль" error={errors?.password ?? null}>
+                    <InputField
+                        className={`password`}
+                        type="password"
+                        onChange={(e) => setFields({ ...fields, password: e.target.value })}
+                        onFocus={() => handleFocus('password')}
+                        placeholder="Введите пароль"
+                        value={fields.password}
+                        error={errors?.password ?? null}
+                    />
+                </Field>
+                <PrimaryButton type="submit" isLoading={isLoading}>Войти</PrimaryButton>
+            </div>
+            <p className="auth_page_or">или</p>
             <GoogleAuthButton setGoogleToken={setGoogleToken}/>
-            <p className={"redirect_object"}>Нет акаунта?
-            <Link to={"/auth/register"}>
-                Зарегестрироваться.
-            </Link>
+            <p className="redirect_object">
+                Нет аккаунта?
+                <Link to={"/auth/register"}>Зарегистрироваться</Link>
             </p>
         </form>
     </div>

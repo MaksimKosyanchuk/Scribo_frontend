@@ -53,12 +53,16 @@ const likeComment = async (commentId, method="POST") => {
             }
         });
         const result = await res.json();
-        
-        return result;
+
+        return {
+            statusCode: res.status,
+            ...result
+        };
     } catch (err) {
         console.log(err);
         return {
-            status: "error",
+            status: false,
+            statusCode: 0,
             message: err,
             data: null
         };

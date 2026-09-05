@@ -11,7 +11,7 @@ const ModalWindow = ({ modalWindow, showModalWindow, modalCloseRequest }) => {
 
     const closeTimeoutRef = useRef(null);
 
-    const close_modal_window = useCallback(() => {
+    const closeModalWindow = useCallback(() => {
         if (closeTimeoutRef.current) {
             clearTimeout(closeTimeoutRef.current);
             closeTimeoutRef.current = null;
@@ -19,7 +19,7 @@ const ModalWindow = ({ modalWindow, showModalWindow, modalCloseRequest }) => {
 
         setIsVisible(false);
 
-        const closeFunc = modalWindow?.close_func;
+        const closeFunc = modalWindow?.closeFunc;
 
         closeTimeoutRef.current = setTimeout(() => {
             document.body.classList.remove("no-scroll");
@@ -37,7 +37,7 @@ const ModalWindow = ({ modalWindow, showModalWindow, modalCloseRequest }) => {
         }, 300);
     }, [modalWindow, showModalWindow]);
 
-    const open_modal_window = useCallback(() => {
+    const openModalWindow = useCallback(() => {
         if (closeTimeoutRef.current) {
             clearTimeout(closeTimeoutRef.current);
             closeTimeoutRef.current = null;
@@ -48,16 +48,16 @@ const ModalWindow = ({ modalWindow, showModalWindow, modalCloseRequest }) => {
     }, []);
 
     useEffect(() => {
-        close_modal_window();
-    }, [location, close_modal_window]);
+        closeModalWindow();
+    }, [location, closeModalWindow]);
 
     useEffect(() => {
         if (modalWindow) {
-            open_modal_window();
+            openModalWindow();
         } else {
-            close_modal_window();
+            closeModalWindow();
         }
-    }, [modalWindow, open_modal_window, close_modal_window]);
+    }, [modalWindow, openModalWindow, closeModalWindow]);
 
     const prevCloseReqRef = useRef(modalCloseRequest);
 
@@ -66,10 +66,10 @@ const ModalWindow = ({ modalWindow, showModalWindow, modalCloseRequest }) => {
             prevCloseReqRef.current = modalCloseRequest;
 
             if (modalWindow) {
-                close_modal_window();
+                closeModalWindow();
             }
         }
-    }, [modalCloseRequest, modalWindow, close_modal_window]);
+    }, [modalCloseRequest, modalWindow, closeModalWindow]);
 
     useEffect(() => {
         return () => {
@@ -83,7 +83,7 @@ const ModalWindow = ({ modalWindow, showModalWindow, modalCloseRequest }) => {
     return (
         <div className={`modal_window ${isVisible ? "visible" : ""}`}>
             <button
-                onClick={close_modal_window}
+                onClick={closeModalWindow}
                 className="modal_window_background"
             />
 
@@ -101,11 +101,11 @@ const ModalWindow = ({ modalWindow, showModalWindow, modalCloseRequest }) => {
                         {modalWindow?.title ?? ""}
                     </p>
 
-                    {modalWindow?.show_close_button === false ? (
+                    {modalWindow?.showCloseButton === false ? (
                         <></>
                     ) : (
                         <button
-                            onClick={close_modal_window}
+                            onClick={closeModalWindow}
                             className="modal_window_body_title_close_button app-transition"
                         >
                             <CrossIcon />

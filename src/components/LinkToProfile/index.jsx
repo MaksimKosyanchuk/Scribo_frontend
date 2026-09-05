@@ -3,7 +3,7 @@ import { AppContext } from '../../App';
 import { Link } from 'react-router-dom';
 import './LinkToProfile.scss'
 
-const LinkToProfile = ({children, class_name}) => {
+const LinkToProfile = ({children, className}) => {
     const [link, setLink] = useState('/auth/login');
 
     const { profile } = useContext(AppContext);
@@ -17,7 +17,7 @@ const LinkToProfile = ({children, class_name}) => {
     }, [profile]);
 
     return (
-        <Link to={link} className={`profile_link ${class_name ?? ""}`}>
+        <Link to={link} className={`profile_link ${className ?? ""}`}>
             {children}
         </Link>
     );

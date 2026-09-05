@@ -5,9 +5,7 @@ import { AppContext } from '../../App';
 
 import './Header.scss';
 
-import { getUsers, read_notifications } from '../../api/users.api';
 import { logout } from '../../api/auth.api';
-import { format_back } from "../../utils/format";
 
 import SunIcon from "../../assets/svg/sun.svg?react";
 import MoonIcon from "../../assets/svg/moon.svg?react";
@@ -15,86 +13,20 @@ import MainLogo from "../../assets/svg/full-logo-icon.svg?react";
 import DefaultProfileIcon from "../../assets/svg/profile.svg?react";
 import NotificationIcon from "../../assets/svg/notification.svg?react";
 import PlusIcon from "../../assets/svg/plus-icon.svg?react";
-import SettingsIcon from "../../assets/svg/settings.svg?react";
-import LogoutIcon from "../../assets/svg/logout.svg?react";
 import ArrowDownIcon from "../../assets/svg/chevron-down.svg?react";
 import RedirectIcon from "../../assets/svg/redirect.svg?react";
-import CommentIcon from "../../assets/svg/comment.svg?react";
 
-import UserBadge from '../UserBadge/index';
-import NotificationMessage from '../NotificationMessage/index';
 import CurrentUserBadge from "../CurrentUserBadge/index"
 import PrimaryButton from '../Ui/PrimaryButton/index';
 import ActionButton from '../Ui/ActionButton/index';
 import Popup from '../Ui/Popup/index';
+import { getAccountMenuBody } from '../AccountMenu/getAccountMenuBody';
 
 function Header() {
-  const { showToast, profile, setProfile, setIsDarkTheme, isDarkTheme, showModalWindow } = useContext(AppContext)
+  const { showToast, profile, setProfile, setIsDarkTheme, isDarkTheme } = useContext(AppContext)
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  const get_notification = async (notifications) => {
-    const userIds = [
-      ...new Set(
-          notifications
-              .map(item => item.user)
-              .filter(Boolean)
-      )
-    ];
-
-    const users = await getUsers(
-        userIds.map(_id => ({ _id }))
-    );
-
-    const userMap = users?.data?.reduce((acc, u) => {
-      acc[u._id] = u;
-      return acc;
-    }, {});
-
-    return [...notifications].reverse().map((item) => (
-      <div key={item._id} className="modal_window_body_content_notification">
-        <div className='modal_window_body_content_notification_new'>
-          {
-            !item.is_read ?
-                <div className="modal_window_body_content_notification_new_circle"></div>
-              :
-                <></>
-          }
-          <UserBadge data={userMap[item?.user]} />
-        </div>
-        <p className='modal_window_body_content_notification_message'>
-          <NotificationMessage item={item} />
-        </p>
-        <p className='modal_window_body_content_notification_time'>{format_back(item.time)}</p>
-      </div>
-    ));
-  };
-    
-  const open_notifications = async () => {
-    if(!profile) {
-      showToast({type: "warning", message: "Войдите в аккаунт, чтоб получать уведомления!"})
-      return
-    }
-
-    const notificationContent = await get_notification(profile?.notifications);
-  
-    const update_notification = async () => {
-      const result = await read_notifications()
-      if(result.status === true){
-        setProfile({ 
-          ...profile, 
-          notifications: profile.notifications.map((item) => ({ ...item, is_read: true }))
-        });
-      }
-    }
-
-    showModalWindow({
-      title: `Уведомления`,
-      content: notificationContent,
-      close_func: update_notification
-    });
-  };
 
   return (
     <header className="header blurred app-transition">
@@ -134,7 +66,7 @@ function Header() {
               :
                 <></>
             }
-            <button type='button' onClick={() => { open_notifications() }} className='header_item header_notification'>
+            <Link to="/notifications" className='header_item header_notification app-transition'>
               {
                 profile?.notifications?.some(item => item.is_read === false ) 
                   ? 
@@ -145,8 +77,8 @@ function Header() {
                     <></>
               }
               <NotificationIcon className="header_item_icon app-transition"/>
-            </button>
-            <button type='button' onClick={() => setIsDarkTheme(!isDarkTheme)} className='header_item'>
+            </Link>
+            <button type='button' onClick={() => setIsDarkTheme(!isDarkTheme)} className='header_item app-transition'>
               {
                 isDarkTheme ?
                   <MoonIcon className='header_item_icon app-transition'></MoonIcon>
@@ -158,54 +90,21 @@ function Header() {
             {
               profile ?
 
-              <Popup className="header_user_badge_popup" z_index={3000}
-                body={[
-                  {
-                    "title": "В профиль",
-                    icon: <DefaultProfileIcon/>,
-                    onClick: () => { navigate(`/users/${profile.nick_name}`) }
-                  },
-                  {
-                    "title": "Настройки",
-                    icon: <SettingsIcon/>,
-                    onClick: () => { navigate(`/settings`) }
-                  },
-                  {
-                    "title": "Мои запросы",
-                    icon: <CommentIcon />,
-                    onClick: () => { navigate('/support/mine') }
-                  },
-                  ...((["admin", "tech_admin"].includes(profile?.role))
-                    ? [{
-                        title: location.pathname.startsWith("/admin-panel")
-                          ? "Домой"
-                          : "В админ панель",
-                        icon: <RedirectIcon />,
-                        onClick: () => navigate(
-                          location.pathname.startsWith("/admin-panel")
-                            ? "/posts"
-                            : "/admin-panel"
-                        )
-                      }]
-                    : []),
-                  {
-                    "title": "Выйти с акаунта",
-                    icon: <LogoutIcon/>,
-                    type: "danger",
-                    onClick: () => { 
-                      setProfile(null);
-                      logout().then(() => {
-                        showToast({type: "success", message: "Вы вышли из аккаунта!"})
-                      })
-                    }
-                  }
-                ]}
+              <Popup className="header_user_badge_popup app-transition"
+                body={getAccountMenuBody({
+                  profile,
+                  location,
+                  navigate,
+                  setProfile,
+                  showToast,
+                  logout,
+                })}
               >
-                <CurrentUserBadge as_link={false} DefaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
+                <CurrentUserBadge asLink={false} defaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
                 <ArrowDownIcon className="header_item_icon header_user_badge_popup_arrow app-transition"/>
               </Popup>
               :
-                <CurrentUserBadge as_link={true} className={"header_item"} DefaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
+                <CurrentUserBadge asLink={true} className={"header_item"} defaultAvatar={<DefaultProfileIcon className='header_item_icon app-transition'/>}/> 
             }
           </div>
         </div>

@@ -1,17 +1,18 @@
-import { AppContext } from "../../App.jsx";
 import { useContext } from "react";
+import { AppContext } from "../../App.jsx";
 
 import { follow } from "../../api/users.api.js";
+import { hasId, sameId } from "../../utils/ids";
 
 import "./FollowButton.scss";
 
 import ActionButton from "../Ui/ActionButton";
 
-const FollowButton = ({ setNewData, author_id, class_name }) => {
+const FollowButton = ({ setNewData, authorId, className }) => {
     const { profile, showToast } = useContext(AppContext);
 
-    const do_follow = async () => {
-        const result = await follow({ method: "POST", user_id: author_id })
+    const followUser = async () => {
+        const result = await follow({ method: "POST", user_id: authorId })
         
         if(result.status === true) {
             await setNewData(result.data)
@@ -24,8 +25,8 @@ const FollowButton = ({ setNewData, author_id, class_name }) => {
         }
     }
 
-    const do_unfollow = async () => {
-        const result = await follow({ method: "DELETE", user_id: author_id })
+    const unfollowUser = async () => {
+        const result = await follow({ method: "DELETE", user_id: authorId })
         
         if(result.status === true) {
             await setNewData(result.data)
@@ -39,10 +40,10 @@ const FollowButton = ({ setNewData, author_id, class_name }) => {
     }
 
     return (
-        profile?.follows?.some(item => item === author_id) ?
-            <ActionButton onClick={() => do_unfollow(author_id)} className={ `follow_button app-transition ${class_name ?? "" } ${ (profile?._id === author_id) ? "non_visible" : "" }` }>Отписаться</ActionButton>
+        profile?.follows?.some((item) => hasId([item], authorId)) ?
+            <ActionButton onClick={() => unfollowUser(authorId)} className={ `follow_button app-transition ${className ?? "" } ${ sameId(profile?._id, authorId) ? "non_visible" : "" }` }>Отписаться</ActionButton>
         :
-            <ActionButton onClick={() => do_follow(author_id)} className={ `follow_button app-transition ${class_name ?? "" } ${ (profile?._id === author_id) ? "non_visible" : "" }` }>Подписаться</ActionButton>
+            <ActionButton onClick={() => followUser(authorId)} className={ `follow_button app-transition ${className ?? "" } ${ sameId(profile?._id, authorId) ? "non_visible" : "" }` }>Подписаться</ActionButton>
     )
 }
 

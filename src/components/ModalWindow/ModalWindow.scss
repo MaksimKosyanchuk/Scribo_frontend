@@ -80,9 +80,16 @@
             }
 
             &_content {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
                 padding: 20px;
                 flex-grow: 1;
                 overflow-y: auto;
+
+                @include screen() {
+                    padding: 10px;
+                }
             }
             
             /* small variant: don't force fixed size, allow content to size naturally */

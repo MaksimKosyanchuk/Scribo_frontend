@@ -59,22 +59,26 @@
       
       .header_item{
         display: flex;
-        height: 20px;
-        transition: .2s ease-out;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        color: var(--header-button-color);
+
+        @include hover {
+            color: var(--header-button-hover-color);
+            background: var(--section-item-hover-background-color);
+        }
 
         &_icon {
-          color: var(--header-button-color);
-          width: 100%;
-          height: 100%;
+          color: inherit;
+          width: 20px;
+          height: 20px;
           object-fit: cover;
 
           *[fill] {
               fill: currentColor;
-          }
-
-          @include hover {
-              color: var(--header-button-hover-color);
-              cursor: pointer;
           }
         }
       }
@@ -115,8 +119,12 @@
         }
 
         .header_notification {
+          position: relative;
+
           &_new {
-            position: fixed;
+            position: absolute;
+            top: 8px;
+            right: 8px;
 
             &_circle {
               background-color: red;
@@ -153,90 +161,25 @@
 
     .header_user_badge_popup {
       align-items: center;
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+
+      @include hover {
+        background: var(--section-item-hover-background-color);
+      }
+
+      .user_badge {
+        padding: 0;
+
+        @include hover {
+          background: transparent;
+        }
+      }
 
       .header_user_badge_popup_arrow{
         width: 16px;
         height: 16px;
       }
     }
-}
-
-.modal_window_body {
-  &_content{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    @include screen() {
-      padding: 10px !important;
-      gap: 20px !important;
-    }
-
-    &_notification {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      
-      .follow_button {
-        padding: 6px 12px;
-        font-size: 12px;
-        border-radius: 8px;
-        grid-row: 1;
-        align-self: start;
-        align-self: center;
-        justify-self: flex-end;
-      }
-
-      .user_badge {
-        grid-row: 1;
-      }
-
-      &_new {
-        display: flex;
-        align-items: center;
-        
-        &_circle{
-          margin-right: 10px;
-          background-color: red;
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-        }
-      }
-
-      &_message {
-        margin-top: 4px;
-        font-size: 14px;
-        align-content: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        &_post_link {
-          text-decoration: underline;
-        }
-
-        @include screen() {
-          grid-column: 1 / span 2;
-          white-space: normal;
-          font-size: 14px;
-        }
-      }
-
-      &_time {
-        font-size: 12px;
-        white-space: nowrap;
-        color: var(--light-text-color);
-        align-content: center;
-        margin-left: auto;
-        margin-left: 0;
-        grid-row: 3;
-
-        @include screen() {
-          grid-column: 1;
-          font-size: 10px;
-        }
-      }
-    }
-  }
 }

@@ -12,7 +12,7 @@ const NotificationMessage = ({ item }) => {
             return (
                 <>
                     Поставил лайк на ваш{" "}
-                    <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>
+                    <Link className="notification_link app-transition" to={`/posts/${item.post}`}>
                         пост
                     </Link>
                 </>
@@ -21,7 +21,7 @@ const NotificationMessage = ({ item }) => {
             return (
                 <>
                     Прокомментировал(-а) ваш{" "}
-                    <Link className="modal_window_body_content_notification_message_post_link" to={`/posts/${item.post}`}>
+                    <Link className="notification_link app-transition" to={`/posts/${item.post}`}>
                         пост
                     </Link>
                 </>
@@ -31,7 +31,7 @@ const NotificationMessage = ({ item }) => {
                 <>
                     Ответил(-а) на{" "}
                     <Link
-                        className="modal_window_body_content_notification_message_post_link"
+                        className="notification_link app-transition"
                         to={`/posts/${item.post}`}
                         state={{ comment: item.comment, time: Date.now() }}
                     >
@@ -43,7 +43,7 @@ const NotificationMessage = ({ item }) => {
             return (
                 <>
                     Новый ответ по вашему{" "}
-                    <Link className="modal_window_body_content_notification_message_post_link" to={`/support/${item.support_request}`}>
+                    <Link className="notification_link app-transition" to={`/support/${item.support_request}`}>
                         запросу
                     </Link>
                 </>
@@ -52,7 +52,7 @@ const NotificationMessage = ({ item }) => {
             return (
                 <>
                     Статус вашего{" "}
-                    <Link className="modal_window_body_content_notification_message_post_link" to={`/support/${item.support_request}`}>
+                    <Link className="notification_link app-transition" to={`/support/${item.support_request}`}>
                         запроса
                     </Link>
                     : {statusLabel(item.support_status)}

@@ -16,7 +16,7 @@ const Article = () => {
     const navigate = useNavigate()
 
     const [isLoading, setIsLoading] = useState(false)
-    const [article, setArticle] = useState([ ])
+    const [article, setArticle] = useState(null)
 
     useEffect(() => {
         const getArticle = async () => {
@@ -57,10 +57,10 @@ const Article = () => {
 
 
     return (
-        (!isLoading) ?
+        (!isLoading && article?._id) ?
         <div>
             {
-                article ?
+                article._id ?
                 <div className="article">
                 
                     <h1 className="article_title">{article.title}</h1>
