@@ -20,7 +20,7 @@ import TagIcon from "../../assets/svg/tag.svg?react";
 import CommentIcon from "../../assets/svg/comment.svg?react";
 import FilterIcon from "../../assets/svg/filter.svg?react";
 
-import SearchSearch from "../../components/Ui/SearchSelect";
+import SearchSelect from "../../components/Ui/SearchSelect";
 import CancelButton from "../../components/Ui/CancelButton";
 import Loading from "../../components/Ui/Loading";
 import Tooltip from "../../components/Ui/Tooltip"; 
@@ -756,7 +756,7 @@ const LogsPage = () => {
                         <CancelButton onClick={() => applyFilter({ type: null, id: null })}>Отмена</CancelButton>
                     </div>
                 :
-                    <SearchSearch options={search_select_options} onSetValue={(value) => {
+                    <SearchSelect options={search_select_options} onChange={(value) => {
                         if (!value?.type) {
                             return;
                         }

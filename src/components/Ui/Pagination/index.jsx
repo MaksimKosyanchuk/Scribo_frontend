@@ -36,7 +36,9 @@ const Pagination = ({
     page,
     pagesCount: pagesCountProp,
     onPageChange,
-    children
+    children,
+    prevLabel = "Назад",
+    nextLabel = "Вперед",
 }) => {
     const isServer = typeof pagesCountProp === "number" && typeof onPageChange === "function";
     const [currentPage, setCurrentPage] = useState(0);
@@ -95,7 +97,7 @@ const Pagination = ({
                             <ChevronLeft className="app-transition" />
 
                             <p>
-                                Назад
+                                {prevLabel}
                             </p>
                         </button>
                     )}
@@ -126,7 +128,7 @@ const Pagination = ({
                             onClick={() => goTo(activePage + 1)}
                         >
                             <p>
-                                Вперед
+                                {nextLabel}
                             </p>
 
                             <ChevronRight className="app-transition" />

@@ -4,9 +4,11 @@ import { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react
 export default function SwitchBar({
     activeIndex,
     setActiveIndex,
+    onChange,
     items,
     className = "",
 }) {
+    const selectIndex = onChange ?? setActiveIndex;
     const containerRef = useRef(null);
     const buttonsRef = useRef([]);
 
@@ -67,7 +69,7 @@ export default function SwitchBar({
                             ? "switcher_bar_item_active"
                             : ""
                     }`}
-                    onClick={() => setActiveIndex(index)}
+                    onClick={() => selectIndex?.(index)}
                 >
                     {item}
                 </button>

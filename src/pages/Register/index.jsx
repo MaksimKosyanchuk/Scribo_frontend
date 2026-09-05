@@ -7,7 +7,7 @@ import { FIELD_LIMITS } from '../../constants/fieldLimits';
 
 import InputField from '../../components/Ui/InputField/index';
 import DropFile from '../../components/Ui/DropFile/index';
-import GoogleAuthButton from '../../components/Ui/GoogleAuthButton/index';
+import GoogleAuthButton from '../../components/GoogleAuthButton/index';
 import PrimaryButton from '../../components/Ui/PrimaryButton';
 import Field from '../../components/Ui/Field/index';
 import OtpInput from '../../components/Ui/OtpInput/index';

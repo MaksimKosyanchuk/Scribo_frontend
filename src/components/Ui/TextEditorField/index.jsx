@@ -33,7 +33,7 @@ import { useState, useEffect } from "react";
 import { useRef } from "react";
 
 const editorConfig = {
-  namespace: "MyEditor",
+  namespace: "TextEditor",
   theme: {
     text: {
       bold: "text_editor_bold",

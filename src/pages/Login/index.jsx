@@ -11,7 +11,7 @@ import { FIELD_LIMITS } from '../../constants/fieldLimits';
 
 import "../Auth/Auth.scss";
 
-import GoogleAuthButton from '../../components/Ui/GoogleAuthButton/index';
+import GoogleAuthButton from '../../components/GoogleAuthButton/index';
 
 const Login = () => {
     const navigate = useNavigate(); 

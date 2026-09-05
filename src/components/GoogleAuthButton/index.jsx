@@ -1,11 +1,11 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import { useState } from 'react';
 
-import GoogleIcon from "../../../assets/svg/google-icon.svg?react"
+import GoogleIcon from "../../assets/svg/google-icon.svg?react"
 
 import "./GoogleAuthButton.scss";
 
-import ActionButton from '../ActionButton/index';
+import ActionButton from '../Ui/ActionButton/index';
 
 const GoogleAuthButton = ({
     setGoogleToken,
@@ -13,6 +13,7 @@ const GoogleAuthButton = ({
     disabled = false,
     onClickStart,
     onAuthEnd,
+    children = "Продолжить с Google",
 }) => {
   const [popupLoading, setPopupLoading] = useState(false);
   const loading = isLoading || popupLoading;
@@ -41,7 +42,7 @@ const GoogleAuthButton = ({
   return (
     <ActionButton isLoading={loading} disabled={disabled || loading} onClick={login} className="google_auth_button">
       <GoogleIcon/>
-        Продолжить с Google
+        {children}
     </ActionButton>
   );
 };

@@ -25,14 +25,12 @@ import AppLayout from './layouts/AppLayout/index.jsx';
 import FullContainer from './layouts/FullContainer/index.jsx';
 import PageLayout from './layouts/PageLayout/index.jsx';
 
-import ModalWindow from './components/ModalWindow/index.jsx';
+import ModalWindow from './components/Ui/ModalWindow/index.jsx';
 import Header from './components/Header/index.jsx';
 import Footer from './components/Footer/index.jsx';
 import Toast from './components/Ui/Toast/index.jsx';
 
 import MobileNavigationBar from './components/MobileNavigationBar/index.jsx';
-
-import SceletonProvider from "./components/Ui/Sceleton";
 
 import { CATEGORY_COLORS } from './styles/constants.js';
 import { getAccessToken, setAccessToken, subscribeAccessToken, refreshAccessToken } from './api/http.js';
@@ -43,10 +41,24 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate
+  Navigate,
+  useLocation
 } from "react-router-dom";
 
 const AppContext = createContext()
+
+function AppModals({ modalWindow, showModalWindow, modalCloseRequest }) {
+  const location = useLocation();
+
+  return (
+    <ModalWindow
+      modalWindow={modalWindow}
+      showModalWindow={showModalWindow}
+      modalCloseRequest={modalCloseRequest}
+      dismissKey={location.key}
+    />
+  );
+}
 
 function App() {
   let lsTheme = localStorage.getItem('theme');
@@ -112,10 +124,9 @@ function App() {
   return (
     <AppContext.Provider value={{profile, setProfile, isDarkTheme, setIsDarkTheme, profileLoading, setProfileLoading, toast, showToast, modalWindow, showModalWindow, requestCloseModal, accessToken, setAccessToken, authReady }}>
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <SceletonProvider>
           <div className={"App"} id="app-root">
             <AppLayout>
-              <ModalWindow
+              <AppModals
                 modalWindow={modalWindow}
                 showModalWindow={showModalWindow}
                 modalCloseRequest={modalCloseRequest}
@@ -167,7 +178,6 @@ function App() {
               <Toast toast={toast} showToast={showToast}/>
             </AppLayout>
           </div>
-        </SceletonProvider>
       </Router>
     </AppContext.Provider>
   )
