@@ -1,7 +1,7 @@
 body {
   --accent-color: #1b73fb;
 
-  --main-background: var(--gray-ff);
+  --main-background: var(--gray-f7);
 
   --warning-color: rgb(255 179 0);
   --warning-background-color: rgba(255, 245, 163, .8);
@@ -16,9 +16,9 @@ body {
 
   --administrator-color: red;
 
-  --line-color: #afafaf;
+  --line-color: var(--gray-e7);
 
-  --text-color: var(--gray-25);
+  --text-color: var(--gray-16);
   --light-text-color: var(--gray-79);
 
   --text-selection-color: var(--gray-f1);
@@ -99,7 +99,7 @@ body {
   --post-card-description-color: #6b6b6b;
   --post-card-hover-background-color: var(--gray-f9);
 
-  --footer-background: var(--gray-ff);
+  --footer-background: var(--gray-f7);
   --footer-line-color: var(--gray-e7);
   --footer-content-color: var(--gray-b5);
   --footer-content-hover-color: var(--gray-4f);
@@ -198,10 +198,10 @@ body.dark-theme {
 
   --administrator-color: var(--red-f5);
 
-  --line-color: var(--gray-4f);
+  --line-color: var(--gray-25);
 
-  --text-color: var(--gray-e1);
-  --light-text-color: var(--gray-63);
+  --text-color: var(--gray-f1);
+  --light-text-color: var(--gray-79);
 
   --text-selection-color: var(--gray-25);
   --text-selection-background-color: var(--gray-b5);
@@ -281,8 +281,8 @@ body.dark-theme {
   --post-card-description-color: var(--gray-b5);
   --post-card-hover-background-color: var(--gray-25);
 
-  --footer-background: var(--gray-1e);
-  --footer-line-color: var(--gray-4f);
+  --footer-background: var(--gray-16);
+  --footer-line-color: var(--gray-25);
   --footer-content-color: var(--gray-79);
   --footer-content-hover-color: var(--gray-d7);
 

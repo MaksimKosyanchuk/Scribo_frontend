@@ -5,10 +5,11 @@
     &_content {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 6px;
 
         &_label{
-            font-size: 14px;
+            font-size: var(--text-xs);
+            color: var(--light-text-color);
         }
     }
 
