@@ -1,5 +1,6 @@
 import { API_URL } from "../config"
 import { apiFetch } from "./http"
+import { getVisitorGeo } from "./geo.client"
 
 const getVisitorId = () => {
     const key = "scribo_visitor_id"
@@ -18,70 +19,6 @@ const getVisitorId = () => {
     catch {
         return `anon-${Date.now().toString(36)}`
     }
-}
-
-const getVisitorGeo = async () => {
-    const key = "scribo_visitor_geo"
-
-    try {
-        const cached = sessionStorage.getItem(key)
-
-        if (cached) {
-            const parsed = JSON.parse(cached)
-
-            if (parsed?.city || parsed?.country) {
-                return parsed
-            }
-        }
-    }
-    catch {
-        // ignore cache errors
-    }
-
-    const sources = [
-        {
-            url: "https://ipwho.is/",
-            parse: (data) => data?.success ? {
-                city: data.city || "",
-                region: data.region || "",
-                country: data.country || "",
-                ip: data.ip || ""
-            } : null
-        },
-        {
-            url: "https://ipapi.co/json/",
-            parse: (data) => data?.city || data?.country_name ? {
-                city: data.city || "",
-                region: data.region || "",
-                country: data.country_name || data.country || "",
-                ip: data.ip || ""
-            } : null
-        }
-    ]
-
-    for (const source of sources) {
-        try {
-            const response = await fetch(source.url)
-            const data = await response.json()
-            const geo = source.parse(data)
-
-            if (geo?.city || geo?.country) {
-                try {
-                    sessionStorage.setItem(key, JSON.stringify(geo))
-                }
-                catch {
-                    // ignore
-                }
-
-                return geo
-            }
-        }
-        catch {
-            // try next provider
-        }
-    }
-
-    return {}
 }
 
 const trackVisit = async (path) => {

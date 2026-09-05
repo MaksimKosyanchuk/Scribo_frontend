@@ -11,17 +11,17 @@ import "./Dashboard.scss";
 const RANGES = [7, 14, 30];
 
 const ACTIVITY_LABELS = {
-    create_post: "Посты",
+    create_post: "Новые посты",
     update_post: "Правки постов",
     delete_post: "Удаления постов",
     register: "Регистрации",
-    create_category: "Категории",
+    create_category: "Новые категории",
     update_category: "Правки категорий",
     delete_category: "Удаления категорий",
     update_role: "Смена ролей",
-    create_support_request: "Обращения",
-    reply_support_request: "Ответы",
-    update_support_status: "Статусы обращений",
+    create_support_request: "Тикеты в поддержку",
+    reply_support_request: "Ответы на тикеты",
+    update_support_status: "Смена статуса тикета",
     like_post: "Лайки",
     comment_post: "Комментарии",
     reply_comment: "Ответы на комментарии"
@@ -215,7 +215,7 @@ const BarChart = ({ items, empty, wideLabel }) => {
     const maxValue = Math.max(1, ...items.map((item) => item.count));
 
     if (!items.length) {
-        return <p className="analytics_empty">{empty || "Пока нет событий за период"}</p>;
+        return <p className="analytics_empty">{empty || "Пока нет действий за период"}</p>;
     }
 
     return (
@@ -236,13 +236,16 @@ const BarChart = ({ items, empty, wideLabel }) => {
     );
 };
 
-const StatCard = ({ label, value, previous }) => {
+const StatCard = ({ label, value, previous, hint }) => {
     const delta = previous == null ? null : deltaLabel(value, previous);
 
     return (
         <div className="analytics_stat app-transition">
             <p className="analytics_stat_label">{label}</p>
             <p className="analytics_stat_value">{formatNumber(value)}</p>
+            {hint ? (
+                <p className="analytics_stat_hint">{hint}</p>
+            ) : null}
             {delta ? (
                 <p className={`analytics_stat_delta analytics_stat_delta_${delta.tone}`}>{delta.text}</p>
             ) : null}
@@ -304,11 +307,25 @@ const DashboardPage = () => {
             .filter((item) => item.type && item.count > 0),
         [data]
     );
+    const devices = useMemo(
+        () => (data?.devices || []).map((item) => ({
+            type: item.kind,
+            count: item.visits || 0
+        })),
+        [data]
+    );
+    const categories = useMemo(
+        () => (data?.categories || []).map((item) => ({
+            type: item.name,
+            count: item.posts || 0
+        })),
+        [data]
+    );
 
     return (
         <div className="analytics">
             <div className="analytics_toolbar">
-                <p className="analytics_toolbar_hint">Посещения, уникальные гости и активность за выбранный период</p>
+                    <p className="analytics_toolbar_hint">Посещения, города, устройства и категории за выбранный период</p>
                 <div className="analytics_toolbar_ranges">
                     {RANGES.map((range) => (
                         <ChipButton
@@ -336,8 +353,8 @@ const DashboardPage = () => {
                         />
                         <StatCard label="Новые пользователи" value={totals.new_users} />
                         <StatCard label="Новые посты" value={totals.new_posts} />
-                        <StatCard label="Комментарии" value={totals.new_comments} />
-                        <StatCard label="События" value={totals.activity_events} />
+                        <StatCard label="Комментарии" value={totals.new_comments} hint="Новые за период" />
+                        <StatCard label="Категории" value={totals.categories} hint="Всего рубрик на сайте" />
                         <StatCard label="Всего пользователей" value={totals.registered_users} />
                     </div>
 
@@ -365,6 +382,29 @@ const DashboardPage = () => {
                         </section>
                     </div>
 
+                    <div className="analytics_grid">
+                        <section className="analytics_block">
+                            <div className="analytics_block_head">
+                                <h2>Устройства</h2>
+                            </div>
+                            <BarChart
+                                items={devices}
+                                empty="Устройства появятся после новых посещений"
+                            />
+                        </section>
+
+                        <section className="analytics_block">
+                            <div className="analytics_block_head">
+                                <h2>Посты по категориям</h2>
+                            </div>
+                            <BarChart
+                                items={categories}
+                                wideLabel
+                                empty="Пока нет постов в категориях"
+                            />
+                        </section>
+                    </div>
+
                     <div className="analytics_grid analytics_grid_bottom">
                         <section className="analytics_block">
                             <div className="analytics_block_head">
@@ -387,7 +427,7 @@ const DashboardPage = () => {
 
                         <section className="analytics_block">
                             <div className="analytics_block_head">
-                                <h2>Активность</h2>
+                                <h2>Действия на сайте</h2>
                             </div>
                             <BarChart items={activity} />
                         </section>

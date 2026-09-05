@@ -1,5 +1,6 @@
 import { API_URL } from "../config";
 import { apiFetch, setAccessToken } from "./http";
+import { getVisitorGeo } from "./geo.client";
 
 const verificationGoogle = async (token) => {
     try {
@@ -32,10 +33,11 @@ const applyAuthResult = (result) => {
 
 const loginGoogle = async (token) => {
     try {
+        const geo = await getVisitorGeo()
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ google_token: token }),
+            body: JSON.stringify({ google_token: token, ...geo }),
             credentials: 'include'
         }
         
@@ -56,10 +58,11 @@ const loginGoogle = async (token) => {
 
 const loginUsername = async (username, password) => {
     try {
+        const geo = await getVisitorGeo()
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_name: username, password: password }),
+            body: JSON.stringify({ user_name: username, password: password, ...geo }),
             credentials: 'include'
         }
         
