@@ -18,33 +18,9 @@
         padding: 28px 8px 20px 28px;
         user-select: none;
 
-        > * {
+        > :not(.page_not_found_rules) {
             position: relative;
             z-index: 1;
-        }
-
-        &::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background-color: var(--line-color);
-            mask-image: repeating-linear-gradient(
-                to bottom,
-                transparent 0,
-                transparent 31px,
-                #000 31px,
-                #000 32px
-            );
-            -webkit-mask-image: repeating-linear-gradient(
-                to bottom,
-                transparent 0,
-                transparent 31px,
-                #000 31px,
-                #000 32px
-            );
-            @include use-transition();
         }
 
         &::before {
@@ -55,9 +31,34 @@
             bottom: 0;
             z-index: 1;
             width: 1px;
-            background-color: var(--administrator-color);
+            background-color: red;
             opacity: 0.55;
             @include use-transition();
+        }
+
+        @at-root .dark-theme #{&}::before {
+            background-color: var(--red-f5);
+        }
+    }
+
+    &_rules {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        pointer-events: none;
+    }
+
+    &_rule {
+        display: block;
+        height: 1px;
+        width: 100%;
+        background-color: var(--gray-b5);
+
+        @at-root .dark-theme #{&} {
+            background-color: var(--gray-25);
         }
     }
 
