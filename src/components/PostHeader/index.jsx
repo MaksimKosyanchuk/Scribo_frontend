@@ -69,7 +69,7 @@ const getDeleteModalContent = (post, requestCloseModal, onDeletePost, showToast)
         <div className="modal_delete_post_content_post">
             <div className="modal_delete_post_content_post_header">
                 <PostHeader post={post} />
-                <Category category={post.category} isActive={true}/>
+                <Category tag category={post.category} />
             </div>
             <h2 className="modal_delete_post_content_post_title">{post.title}</h2>
             {post.featured_image && (

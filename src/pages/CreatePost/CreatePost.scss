@@ -1,5 +1,4 @@
 @use "../../styles/helpers" as *;
-@use "../../styles/categoryColors" as *;
 
 .create_post {
     display: flex;
@@ -86,42 +85,6 @@
     .search_select {
         .search_select_item_selected {
             background: var(--section-item-hover-background-color);
-        }
-
-        @include category-colors {
-            .search_select_input {
-                background: rgb(from var(--category-color) r g b / .1);;
-                border-color: var(--category-color);
-
-                .input_field {
-                    color: var(--category-color);
-                }
-            }
-
-            .search_select_icon{
-                color: var(--category-color);
-            }
-        }
-    }
-
-    .search_select_item {
-        @include category-colors {
-
-            p {
-                color: var(--category-color);
-            }
-
-            .search_select_icon {
-                color: var(--category-color);
-            }
-
-            @include hover {
-                background-color: rgb(from var(--category-color) r g b / .1);
-            }
-
-            &.search_select_item_selected {
-                background-color: rgb(from var(--category-color) r g b / .1);
-            }
         }
     }
 

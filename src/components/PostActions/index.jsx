@@ -199,7 +199,7 @@ const PostActions = ({ className, article, setArticle, isLoading=false, showCate
             {showCategory ? (
                 <Sceleton isLoading={isLoading} rounded={true} className="post_actions_right_side">
                     <div className="post_actions_right_side">
-                        <Category category={article.category} isActive={true}/>
+                        <Category tag category={article.category} />
                     </div>
                 </Sceleton>
             ) : null}

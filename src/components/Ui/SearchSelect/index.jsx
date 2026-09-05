@@ -194,6 +194,7 @@ const SearchSelect = ({
 
     const ShowSelected = !isSearching && selectedOption;
     const Icon = ShowSelected?.iconObject;
+    const showCategoryDot = Boolean(ShowSelected?.className);
 
     return (
         <div
@@ -201,15 +202,13 @@ const SearchSelect = ({
             className={`search_select ${className} app-transition`}
         >
             <div className={`search_select_input ${error ? "incorrect_field" : ""} app-transition`}>
-                {
-                    ShowSelected?.iconObject ?
-
-                        <div className={`search_select_icon ${className}`}>
-                            <Icon/>
-                        </div>
-                    :
-                        <></>
-                }
+                {showCategoryDot ? (
+                    <span className={`category_dot ${ShowSelected.className}`} aria-hidden="true" />
+                ) : Icon ? (
+                    <div className={`search_select_icon ${className}`}>
+                        <Icon/>
+                    </div>
+                ) : null}
 
                 <InputField
                     ref={inputRef}
@@ -260,11 +259,13 @@ const SearchSelect = ({
                                 {
                                     option.render?.() ?? (
                                         <>
-                                            {option.iconObject && (
+                                            {option.className ? (
+                                                <span className={`category_dot ${option.className}`} aria-hidden="true" />
+                                            ) : option.iconObject ? (
                                                 <div className={`search_select_icon ${option.className ?? ""}`}>
                                                     <option.iconObject />
                                                 </div>
-                                            )}
+                                            ) : null}
                                             <p>{optionLabel(option)}</p>
                                         </>
                                     )

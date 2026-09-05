@@ -1,22 +1,44 @@
 import { Link } from "react-router-dom";
 
+import GhIcon from "../../assets/svg/github-icon.svg?react";
+import ProfileIcon from "../../assets/svg/profile-icon.svg?react";
+import ChevronRightIcon from "../../assets/svg/chevron-right.svg?react";
+
 import "./Banner.scss";
 
 const Banner = () => (
-    <div className="banner">
-        <p>
-            Личный проект.{" "}
+    <aside className="banner">
+        <p className="banner_kicker">Личный проект</p>
+        <p className="banner_lead">Пишу, когда есть что сказать — без редакции.</p>
+        <div className="banner_links app-transition">
             <a
+                className="banner_link app-transition"
                 href="https://github.com/MaksimKosyanchuk"
                 target="_blank"
                 rel="noreferrer"
+                aria-label="GitHub MaksimKosyanchuk"
             >
-                GitHub
+                <GhIcon className="banner_link_icon app-transition" aria-hidden="true" />
+                <span className="banner_link_copy">
+                    <span className="banner_link_label">GitHub</span>
+                    <span className="banner_link_hint">MaksimKosyanchuk</span>
+                </span>
+                <ChevronRightIcon className="banner_link_chevron" aria-hidden="true" />
             </a>
-            {" · "}
-            <Link to="/users/Maks">Профиль</Link>
-        </p>
-    </div>
+            <Link
+                className="banner_link app-transition"
+                to="/users/Maks"
+                aria-label="Профиль на этом сайте"
+            >
+                <ProfileIcon className="banner_link_icon app-transition" aria-hidden="true" />
+                <span className="banner_link_copy">
+                    <span className="banner_link_label">Мой профиль</span>
+                    <span className="banner_link_hint">на scribo</span>
+                </span>
+                <ChevronRightIcon className="banner_link_chevron" aria-hidden="true" />
+            </Link>
+        </div>
+    </aside>
 );
 
 export default Banner;

@@ -65,5 +65,19 @@
                 }
             }
         }
+
+        &.category_content_tag {
+            color: var(--text-color);
+            font-weight: 400;
+            box-shadow: none;
+
+            .category_dot {
+                opacity: 1;
+            }
+
+            p {
+                color: inherit;
+            }
+        }
     }
 }

@@ -1,13 +1,142 @@
+@use "../../styles/helpers.scss" as *;
+
 .page_not_found {
-    min-height: 80dvh;
+    min-height: 70dvh;
     display: flex;
-    justify-content: center;
     flex-direction: column;
-    align-items: center;
-    
-    h1 {
-        font-size: 60px;
-        color: var(--background-text-color);
+    justify-content: center;
+    gap: var(--space-6);
+    padding: var(--space-6) 0;
+    max-width: 36em;
+
+    &_sheet {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-height: 220px;
+        padding: 28px 8px 20px 28px;
         user-select: none;
+
+        > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-color: var(--line-color);
+            mask-image: repeating-linear-gradient(
+                to bottom,
+                transparent 0,
+                transparent 31px,
+                #000 31px,
+                #000 32px
+            );
+            -webkit-mask-image: repeating-linear-gradient(
+                to bottom,
+                transparent 0,
+                transparent 31px,
+                #000 31px,
+                #000 32px
+            );
+            @include use-transition();
+        }
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            z-index: 1;
+            width: 1px;
+            background-color: var(--administrator-color);
+            opacity: 0.55;
+            @include use-transition();
+        }
+    }
+
+    &_code {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 6px;
+        font-size: 80px;
+        font-weight: 600;
+        letter-spacing: -0.07em;
+        line-height: 0.9;
+        color: var(--text-color);
+
+        @include screen() {
+            font-size: 56px;
+        }
+    }
+
+    &_zero {
+        display: inline-block;
+        width: 0.72em;
+        height: 0.72em;
+        border: 3px solid var(--text-color);
+        border-radius: 50%;
+        box-sizing: border-box;
+        opacity: 0.32;
+        transform: translateY(2px);
+    }
+
+    &_draft {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        font-size: 14px;
+        color: var(--light-text-color);
+        min-height: 20px;
+        margin-bottom: 8px;
+    }
+
+    &_caret {
+        display: inline-block;
+        width: 8px;
+        height: 16px;
+        margin-left: 2px;
+        background: var(--text-color);
+        animation: page-not-found-caret 1s steps(1) infinite;
+    }
+
+    &_copy {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+        max-width: 28em;
+    }
+
+    h1 {
+        font-size: var(--text-2xl);
+        font-weight: 600;
+        letter-spacing: -0.04em;
+        color: var(--text-color);
+    }
+
+    &_lead {
+        font-size: var(--text-md);
+        color: var(--light-text-color);
+        line-height: 1.5;
+        margin-bottom: var(--space-2);
+    }
+}
+
+@keyframes page-not-found-caret {
+    0%,
+    49% {
+        opacity: 1;
+    }
+    50%,
+    100% {
+        opacity: 0;
     }
 }

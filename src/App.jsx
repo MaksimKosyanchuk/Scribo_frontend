@@ -140,11 +140,6 @@ function App() {
                           <Route element={<DefaultContainer/>}>
 
                               <Route
-                                  path="*"
-                                  element={<Navigate to="/404" replace />}
-                              />
-
-                              <Route
                                   path="/"
                                   element={<Navigate to="/posts" replace />}
                               />
@@ -163,6 +158,7 @@ function App() {
                               <Route path="/support" Component={Support}/>
                               <Route path="/support/mine" Component={SupportMine}/>
                               <Route path="/support/:key" Component={SupportRequestPage}/>
+                              <Route path="*" Component={PageNotFound}/>
 
                           </Route>
 

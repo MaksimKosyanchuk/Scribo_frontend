@@ -353,8 +353,8 @@ const DashboardPage = () => {
                         />
                         <StatCard label="Новые пользователи" value={totals.new_users} />
                         <StatCard label="Новые посты" value={totals.new_posts} />
-                        <StatCard label="Комментарии" value={totals.new_comments} hint="Новые за период" />
-                        <StatCard label="Категории" value={totals.categories} hint="Всего рубрик на сайте" />
+                        <StatCard label="Комментарии" value={totals.new_comments} />
+                        <StatCard label="Категории" value={totals.categories} />
                         <StatCard label="Всего пользователей" value={totals.registered_users} />
                     </div>
 
