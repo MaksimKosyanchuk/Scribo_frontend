@@ -54,6 +54,7 @@ export function getAccountMenuBody({
                     setProfile(null);
                     logout().then(() => {
                         showToast({ type: "success", message: "Вы вышли из аккаунта!" })
+                        navigate("/posts")
                     })
                 }
             }
