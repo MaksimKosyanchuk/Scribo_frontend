@@ -134,7 +134,7 @@ function Header() {
               :
                 <></>
             }
-            <button type='button' onClick={() => { open_notifications() }} className='header_item header_notification'>
+            <button type='button' onClick={() => { open_notifications() }} className='header_item header_notification app-transition'>
               {
                 profile?.notifications?.some(item => item.is_read === false ) 
                   ? 
@@ -146,7 +146,7 @@ function Header() {
               }
               <NotificationIcon className="header_item_icon app-transition"/>
             </button>
-            <button type='button' onClick={() => setIsDarkTheme(!isDarkTheme)} className='header_item'>
+            <button type='button' onClick={() => setIsDarkTheme(!isDarkTheme)} className='header_item app-transition'>
               {
                 isDarkTheme ?
                   <MoonIcon className='header_item_icon app-transition'></MoonIcon>
@@ -158,7 +158,7 @@ function Header() {
             {
               profile ?
 
-              <Popup className="header_user_badge_popup" z_index={3000}
+              <Popup className="header_user_badge_popup app-transition" z_index={3000}
                 body={[
                   {
                     "title": "В профиль",

@@ -33,6 +33,7 @@ import { kindLabel, statusLabel } from "../Support/constants";
 
 import Pagination from "../../components/Ui/Pagination";
 import "./Logs.scss";
+import "./Requests.scss";
 
 
 const formatTime = (date) => {
@@ -270,11 +271,15 @@ const SupportEntity = ({ id, accessKey, kind, setFilter }) => {
 }
 
 const SupportStatusEntity = ({ status }) => {
+    if (!status) {
+        return null;
+    }
+
     return (
-        <div className="admin_panel_content_logs_page_item_entity admin_panel_content_logs_page_item_entity_role">
-            <p>{statusLabel(status)}</p>
-        </div>
-    )
+        <span className={`support_status support_status_${status}`}>
+            {statusLabel(status)}
+        </span>
+    );
 }
 
 const LOG_RENDERERS = {

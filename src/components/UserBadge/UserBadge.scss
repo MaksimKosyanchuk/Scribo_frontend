@@ -3,9 +3,14 @@
 .user_badge {
     display: flex;
     align-items: center;
-    box-sizing: content-box;
+    box-sizing: border-box;
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
 
     @include hover {
+        background: var(--section-item-hover-background-color);
+
         .user_badge_info_name {
             color: var(--user-badge-name-hover-color);
         }

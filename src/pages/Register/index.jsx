@@ -12,7 +12,7 @@ import Field from '../../components/Ui/Field/index';
 import OtpInput from '../../components/Ui/OtpInput/index';
 
 
-import "./Register.scss";
+import "../Auth/Auth.scss";
 
 import AvatarIcon from "../../assets/svg/avatar-icon.svg?react"
 
@@ -156,31 +156,40 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
     }
 
     return (
-        <div className='register'>
-            <form className='form_input app-transition'>
-                <>
-                    <DropFile
-                        value={fields.avatar}
-                        setValue={(file) =>
-                            setFields({ ...fields, avatar: file })
-                        }
-                        background={
-                            <AvatarIcon className="drop_file_info_avatar_icon app-transition" />
-                        }
-                        drop_file_type="image/*"
-                        file_types="SVG, PNG, JPEG, JPG и другие"
-                        errors={errors?.featured_image}
-                        add_new_errors={add_errors_to_image}
-                        clear_errors={clear_errors_from_image}
-                        onRemove={handleClick}
-                    />
-                    <Field>
+        <div className="auth_page">
+            <form
+                className="form_input"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleRegister();
+                }}
+            >
+                <div className="auth_page_group section app-transition">
+                    <div className="auth_page_group_intro">
+                        <h1>Регистрация</h1>
+                    </div>
+                    <div className="top_side">
+                        <DropFile
+                            value={fields.avatar}
+                            setValue={(file) =>
+                                setFields({ ...fields, avatar: file })
+                            }
+                            background={
+                                <AvatarIcon className="drop_file_info_avatar_icon app-transition" />
+                            }
+                            drop_file_type="image/*"
+                            file_types="SVG, PNG, JPEG, JPG и другие"
+                            errors={errors?.featured_image}
+                            add_new_errors={add_errors_to_image}
+                            clear_errors={clear_errors_from_image}
+                            onRemove={handleClick}
+                        />
+                    </div>
+                    <Field title="Почта">
                         <InputField
                             className={`email`}
                             type="text"
-                            onChange={(e) => setFields({ ...fields, email: e.target.value })}
-                            onFocus={() => handleFocus('nick_name')}
-                            input_label="Почта"
+                            onChange={() => {}}
                             placeholder="Email"
                             value={email ?? fields.email}
                             error={errors?.email ?? null}
@@ -193,7 +202,6 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                             type="text"
                             onChange={(e) => setFields({ ...fields, nick_name: e.target.value })}
                             onFocus={() => handleFocus('nick_name')}
-                            input_label="Имя пользователя"
                             placeholder="User Name"
                             value={fields.nick_name}
                             error={errors?.nick_name ?? null}
@@ -203,35 +211,39 @@ const RegisterForm = ({ email = null, google_token = null, gmail_code = null }) 
                         <InputField
                             className={`description`}
                             type="text"
-                            is_multiline = {true}
+                            is_multiline={true}
                             length={30}
                             onChange={(e) => setFields({ ...fields, description: e.target.value })}
                             onFocus={() => handleFocus('description')}
-                            input_label="Описание"
                             placeholder="Description of profile"
                             value={fields.description}
                             error={errors?.description ?? null}
                         />
                     </Field>
+                </div>
+                <div className="auth_page_group section app-transition">
+                    <div className="auth_page_group_intro">
+                        <h1>Пароль</h1>
+                    </div>
                     <Field title="Пароль" error={errors?.password ?? null}>
                         <InputField
                             className={`password`}
                             type="password"
                             onChange={(e) => setFields({ ...fields, password: e.target.value })}
                             onFocus={() => handleFocus('password')}
-                            input_label="Пароль"
                             placeholder="Password123"
                             value={fields.password}
                             error={errors?.password ?? null}
                         />
                     </Field>
-                    <PrimaryButton is_loading={isLoading} onClick={handleRegister}>
+                    <PrimaryButton type="submit" is_loading={isLoading}>
                         Зарегистрироваться
                     </PrimaryButton>
-                    <p className={"redirect_object"}>Уже есть аккаунт?
-                        <Link to={"/auth/login"}>Войти.</Link>
-                    </p>
-                </>
+                </div>
+                <p className="redirect_object">
+                    Уже есть аккаунт?
+                    <Link to={"/auth/login"}>Войти</Link>
+                </p>
             </form>
         </div>
     );
@@ -271,31 +283,37 @@ const VerifyGmailCode = ({ email }) => {
 
     return (
         redigrectToForm ? <RegisterForm email={email} gmail_code={code.join("")}/> :
-        <div className='register'>
-            <form className="form_input app-transition"
+        <div className="auth_page">
+            <form
+                className="form_input"
                 onSubmit={(e) => {
                     e.preventDefault();
                     handleSubmit();
                 }}
             >
-                <div className="otp_container">
-                    <div className='otp_container_title'>
-                        <p>Введите код, отправленный на </p>
-                        <p className='otp_container_title_email'>{email}</p>
+                <div className="auth_page_group section app-transition">
+                    <div className="auth_page_group_intro">
+                        <h1>Регистрация</h1>
                     </div>
-                    <div className='otp_container_content'>
-                        <OtpInput
-                            length={CODE_LENGTH}
-                            value={code}
-                            onChange={setCode}
-                            error={errors?.code}
-                            onFocus={() => setErrors({})}
-                        />
+                    <div className="otp_container">
+                        <div className="otp_container_title">
+                            <p>Код отправлен на</p>
+                            <p className="otp_container_title_email">{email}</p>
+                        </div>
+                        <div className="otp_container_content">
+                            <OtpInput
+                                length={CODE_LENGTH}
+                                value={code}
+                                onChange={setCode}
+                                error={errors?.code}
+                                onFocus={() => setErrors({})}
+                            />
+                        </div>
                     </div>
+                    <PrimaryButton type="submit" is_loading={isLoading}>
+                        Продолжить
+                    </PrimaryButton>
                 </div>
-                <PrimaryButton type="submit" is_loading={isLoading}>
-                    Отправить
-                </PrimaryButton>
             </form>
         </div> 
     );
@@ -389,21 +407,24 @@ const Register = () => {
 
     return (
         gmailCodeSedned ? <VerifyGmailCode email={fields.email}/> : 
-        <div className='register'>
-            <form className='form_input app-transition'
+        <div className="auth_page">
+            <form
+                className="form_input"
                 onSubmit={(e) => {
                     e.preventDefault();
                     handleRegister();
                 }}
             >
-                <>
+                <div className="auth_page_group section app-transition">
+                    <div className="auth_page_group_intro">
+                        <h1>Регистрация</h1>
+                    </div>
                     <Field title="Почта" error={errors?.email ?? null}>
                         <InputField
                             className={`email`}
                             type="text"
                             onChange={(e) => setFields({ ...fields, email: e.target.value })}
                             onFocus={() => handleFocus('email')}
-                            input_label="Почта"
                             placeholder="Email"
                             value={email ?? fields.email}
                             error={errors?.email ?? null}
@@ -411,13 +432,15 @@ const Register = () => {
                         />
                     </Field>
                     <PrimaryButton is_loading={isLoading} type="submit">
-                        Зарегистрироваться
+                        Продолжить
                     </PrimaryButton>
-                    <GoogleAuthButton setGoogleToken={setGoogleToken}/>
-                    <p className={"redirect_object"}>Уже есть аккаунт?
-                        <Link to={"/auth/login"}>Войти.</Link>
-                    </p>
-                </>
+                </div>
+                <p className="auth_page_or">или</p>
+                <GoogleAuthButton setGoogleToken={setGoogleToken}/>
+                <p className="redirect_object">
+                    Уже есть аккаунт?
+                    <Link to={"/auth/login"}>Войти</Link>
+                </p>
             </form>
         </div>
     )

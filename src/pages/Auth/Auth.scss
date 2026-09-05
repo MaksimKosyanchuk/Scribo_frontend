@@ -1,12 +1,27 @@
 @use '../../styles/helpers.scss' as *;
 
-.settings {
+.auth_page {
     display: flex;
     flex-direction: column;
     gap: 24px;
     max-width: 520px;
     width: 100%;
     margin: 0 auto 40px;
+
+    &_intro {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        h1 {
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 14px;
+            color: var(--light-text-color);
+        }
+    }
 
     .form_input {
         display: flex;
@@ -21,16 +36,8 @@
     }
 
     .primary_button,
-    .danger_button {
+    .google_auth_button {
         width: 100%;
-    }
-
-    .top_side {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        align-items: center;
-        gap: 16px;
     }
 
     &_group {
@@ -52,6 +59,48 @@
                 color: var(--light-text-color);
             }
         }
+    }
+
+    &_or {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--light-text-color);
+        font-size: 12px;
+
+        &::before,
+        &::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--line-color);
+        }
+    }
+
+    .redirect_object {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 4px;
+        font-size: 13px;
+        color: var(--light-text-color);
+
+        a {
+            font-weight: 500;
+            color: var(--text-color);
+
+            @include hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .top_side {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        gap: 16px;
     }
 
     .drop_file {
@@ -144,99 +193,33 @@
     }
 
     .drop_file_error_messages {
-        margin-bottom: 20px;
+        margin-bottom: 0;
     }
 
-    .private_setting {
+    .otp_container {
         display: flex;
         flex-direction: column;
-        gap: 8px;
-        width: 100%;
+        gap: 16px;
+
+        &_title_email {
+            font-weight: 500;
+            word-break: break-all;
+        }
 
         &_content {
-            width: 100%;
             display: flex;
-            flex-direction: column;
-            gap: 4px;
+            justify-content: center;
+            gap: 16px;
+            text-align: center;
 
-            &_item {
-                display: flex;
-                width: 100%;
-                align-items: center;
-                justify-content: space-between;
-                gap: 20px;
-                padding: 10px 12px;
-                border-radius: 8px;
-
-                @include hover {
-                    background: var(--section-item-hover-background-color);
-                }
-
-                p {
-                    font-size: 14px;
-                }
-            }
-        }
-    }
-
-    .settings_sessions {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-
-        &_empty {
-            font-size: 13px;
-            color: var(--light-text-color);
-        }
-
-        &_badge {
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 8px;
-            border-radius: 6px;
-            white-space: nowrap;
-            color: var(--success-color);
-            background: rgb(from var(--success-color) r g b / 0.12);
-        }
-
-        &_item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 12px;
-            border: 1px solid var(--line-color);
-            border-radius: 8px;
-
-            .danger_button {
-                width: auto;
-                flex-shrink: 0;
+            .input_field_label_error_message {
+                display: none;
             }
 
-            &_info {
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-                min-width: 0;
-            }
-
-            &_head {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                flex-wrap: wrap;
-            }
-
-            &_device {
-                font-size: 14px;
-                font-weight: 500;
-            }
-
-            &_location,
-            &_time {
-                font-size: 12px;
-                color: var(--light-text-color);
+            .input_field,
+            .incorrect_field {
+                padding: 12px;
+                text-align: center;
             }
         }
     }

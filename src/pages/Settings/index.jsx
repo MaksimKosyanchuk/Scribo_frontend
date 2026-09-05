@@ -12,6 +12,7 @@ import Toggle from '../../components/Ui/Toggle/index';
 import PrimaryButton from '../../components/Ui/PrimaryButton';
 import DangerButton from '../../components/Ui/DangerButton';
 import Field from '../../components/Ui/Field';
+import Tooltip from '../../components/Ui/Tooltip';
 
 import "./Settings.scss";
 
@@ -254,10 +255,19 @@ const Settings = () => {
     };
 
     return (
-        <div className='settings'>
-            <form className='form_input app-transition' onSubmit={(e) => save_settings(e) }>
-                <>
-                    <div className='top_side'>
+        <div className="settings">
+            <form
+                className="form_input"
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    save_settings();
+                }}
+            >
+                <div className="settings_group section app-transition">
+                    <div className="settings_group_intro">
+                        <h1>Профиль</h1>
+                    </div>
+                    <div className="top_side">
                         <DropFile
                             value={fields.avatar}
                             setValue={(file) =>
@@ -272,40 +282,17 @@ const Settings = () => {
                             onRemove={handleAvatarRemove}
                             preview_url={profile?.avatar}
                         />
-                        <div className='email'>
-                            <p className='email_label'>
-                                {profile?.email}
-                            </p>
-                        </div>
                     </div>
-                        <div className='private_setting'>
-                            <div className='private_setting_title'>
-                                <p>Приватность</p>
-                            </div>
-                            <div className='private_setting_content app-transition'>
-                                <div className='private_setting_content_item app-transition'>
-                                    <p>Отображать мой email в профиле</p>
-                                    <Toggle 
-                                        checked={fields.is_email_public}
-                                        onChange={set_email_visibility}
-                                    />
-                                </div>
-                                <div className='private_setting_content_item app-transition'>
-                                    <p>Разрешить просмотр моих сохраненных постов</p>
-                                    <Toggle 
-                                        checked={fields.is_saved_posts_public}
-                                        onChange={set_saved_posts_visibility}
-                                    />
-                                </div>
-                                <div className='private_setting_content_item app-transition'>
-                                    <p>Темная тема</p>
-                                    <Toggle 
-                                        checked={isDarkTheme}
-                                        onChange={setIsDarkTheme}
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                    {profile?.email ? (
+                        <Field title="Почта">
+                            <InputField
+                                type="email"
+                                value={profile.email}
+                                confirmed={Boolean(profile.is_verified)}
+                                onChange={() => {}}
+                            />
+                        </Field>
+                    ) : null}
                     <Field error={errors?.nick_name ?? null} title={"Имя пользователя"}>
                         <InputField
                             className={`user_name`}
@@ -321,7 +308,7 @@ const Settings = () => {
                         <InputField
                             className={`description`}
                             type="text"
-                            is_multiline = {true}
+                            is_multiline={true}
                             length={60}
                             rows={3}
                             onChange={(e) => setFields({ ...fields, description: e.target.value })}
@@ -331,37 +318,88 @@ const Settings = () => {
                             error={errors?.description ?? null}
                         />
                     </Field>
-                    <div className='form_input_buttons'>
-                        <PrimaryButton type='button' is_loading={isLoading} onClick={save_settings}>Сохранить</PrimaryButton>
-                        <DangerButton className="logout_button app-transition" type="button" onClick={handleLogout}>Выйти с аккаунта</DangerButton>
+                </div>
+
+                <div className="settings_group section app-transition">
+                    <div className="settings_group_intro">
+                        <h1>Приватность и оформление</h1>
                     </div>
-                    <div className="settings_sessions">
-                        <p className="settings_sessions_title">Сеансы</p>
-                        {sessionsLoading ? (
-                            <p className="settings_sessions_empty">Загрузка…</p>
-                        ) : sessions.length === 0 ? (
-                            <p className="settings_sessions_empty">Нет активных сеансов</p>
-                        ) : (
-                            sessions.map((session) => (
-                                <div className="settings_sessions_item app-transition" key={session._id}>
-                                    <div className="settings_sessions_item_info">
-                                        <p className="settings_sessions_item_device">
-                                            {session.device}
-                                            {session.isCurrent ? " · этот сеанс" : ""}
-                                        </p>
-                                        <p className="settings_sessions_item_meta">
-                                            {session.location || "—"} · {format_back(session.lastSeen) || format_date_time(session.lastSeen)}
-                                        </p>
-                                    </div>
-                                    <DangerButton type="button" onClick={() => handleDeleteSession(session)}>
-                                        Завершить
-                                    </DangerButton>
-                                </div>
-                            ))
-                        )}
+                    <div className="private_setting">
+                        <div className="private_setting_content app-transition">
+                            <div className="private_setting_content_item app-transition">
+                                <p>Отображать мой email в профиле</p>
+                                <Toggle
+                                    checked={fields.is_email_public}
+                                    onChange={set_email_visibility}
+                                />
+                            </div>
+                            <div className="private_setting_content_item app-transition">
+                                <p>Разрешить просмотр моих сохраненных постов</p>
+                                <Toggle
+                                    checked={fields.is_saved_posts_public}
+                                    onChange={set_saved_posts_visibility}
+                                />
+                            </div>
+                            <div className="private_setting_content_item app-transition">
+                                <p>Темная тема</p>
+                                <Toggle
+                                    checked={isDarkTheme}
+                                    onChange={setIsDarkTheme}
+                                />
+                            </div>
+                        </div>
                     </div>
-                </>
+                    <PrimaryButton type="submit" is_loading={isLoading}>Сохранить</PrimaryButton>
+                </div>
             </form>
+
+            <div className="settings_group section app-transition">
+                <div className="settings_group_intro">
+                    <h1>Сеансы</h1>
+                    <p>Устройства, с которых выполнен вход</p>
+                </div>
+                <div className="settings_sessions">
+                    {sessionsLoading ? (
+                        <p className="settings_sessions_empty">Загрузка…</p>
+                    ) : sessions.length === 0 ? (
+                        <p className="settings_sessions_empty">Нет активных сеансов</p>
+                    ) : (
+                        sessions.map((session) => (
+                            <div
+                                className="settings_sessions_item app-transition"
+                                key={session._id}
+                            >
+                                <div className="settings_sessions_item_info">
+                                    <div className="settings_sessions_item_head">
+                                        <p className="settings_sessions_item_device">{session.device}</p>
+                                        {session.isCurrent ? (
+                                            <span className="settings_sessions_badge">Этот сеанс</span>
+                                        ) : null}
+                                    </div>
+                                    <p className="settings_sessions_item_location">{session.location || "—"}</p>
+                                    <Tooltip text={format_date_time(session.lastSeen)}>
+                                        <p className="settings_sessions_item_time">
+                                            {format_back(session.lastSeen) || format_date_time(session.lastSeen)}
+                                        </p>
+                                    </Tooltip>
+                                </div>
+                                <DangerButton type="button" onClick={() => handleDeleteSession(session)}>
+                                    Завершить
+                                </DangerButton>
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
+
+            <div className="settings_group section app-transition">
+                <div className="settings_group_intro">
+                    <h1>Аккаунт</h1>
+                </div>
+                <DangerButton className="logout_button app-transition" type="button" onClick={handleLogout}>
+                    Выйти с аккаунта
+                </DangerButton>
+            </div>
         </div>
     );
 };

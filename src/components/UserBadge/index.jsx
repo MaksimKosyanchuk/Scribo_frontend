@@ -33,14 +33,14 @@ const UserBadge = ( { data, class_name, asLink = true } ) => {
 
     if (!asLink) {
         return (
-            <div className={`user_badge ${class_name ?? ''}`}>
+            <div className={`user_badge app-transition ${class_name ?? ''}`}>
                 {content}
             </div>
         )
     }
 
     return (
-        <Link className={`user_badge ${class_name ?? ''}`} to={`/users/${data.nick_name}`}>
+        <Link className={`user_badge app-transition ${class_name ?? ''}`} to={`/users/${data.nick_name}`}>
             {content}
         </Link>
     )

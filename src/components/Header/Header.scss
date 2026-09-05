@@ -59,22 +59,26 @@
       
       .header_item{
         display: flex;
-        height: 20px;
-        transition: .2s ease-out;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        color: var(--header-button-color);
+
+        @include hover {
+            color: var(--header-button-hover-color);
+            background: var(--section-item-hover-background-color);
+        }
 
         &_icon {
-          color: var(--header-button-color);
-          width: 100%;
-          height: 100%;
+          color: inherit;
+          width: 20px;
+          height: 20px;
           object-fit: cover;
 
           *[fill] {
               fill: currentColor;
-          }
-
-          @include hover {
-              color: var(--header-button-hover-color);
-              cursor: pointer;
           }
         }
       }
@@ -115,8 +119,12 @@
         }
 
         .header_notification {
+          position: relative;
+
           &_new {
-            position: fixed;
+            position: absolute;
+            top: 8px;
+            right: 8px;
 
             &_circle {
               background-color: red;
@@ -153,6 +161,21 @@
 
     .header_user_badge_popup {
       align-items: center;
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+
+      @include hover {
+        background: var(--section-item-hover-background-color);
+      }
+
+      .user_badge {
+        padding: 0;
+
+        @include hover {
+          background: transparent;
+        }
+      }
 
       .header_user_badge_popup_arrow{
         width: 16px;
