@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../../App";
 
 import HomeIcon from "../../assets/svg/home-icon.svg?react";
+import SearchIcon from "../../assets/svg/search.svg?react";
 import NotificationsIcon from "../../assets/svg/notification.svg?react";
 import PlusIcon from "../../assets/svg/plus-icon.svg?react";
 import MoonIcon from "../../assets/svg/moon.svg?react";
@@ -46,6 +47,13 @@ const MobileNavigationBar = () => {
             path: "/posts",
             node: <HomeIcon />,
             onClick: () => navigate("/posts"),
+        };
+
+        const search = {
+            id: "search",
+            path: "/search",
+            node: <SearchIcon />,
+            onClick: () => navigate("/search"),
         };
 
         const notifications = {
@@ -110,7 +118,7 @@ const MobileNavigationBar = () => {
                 onClick: () => navigate("/auth/login"),
             };
 
-        const left = [home];
+        const left = [home, search];
 
         if (profile) {
             left.push(notifications);

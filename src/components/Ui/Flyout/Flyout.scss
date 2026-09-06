@@ -1,0 +1,36 @@
+@use "../../../styles/helpers.scss" as *;
+
+.flyout {
+    z-index: 1200;
+    min-width: 160px;
+    max-width: min(320px, calc(100vw - 16px));
+    padding: 6px;
+    pointer-events: auto;
+
+    &_item {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 36px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-color);
+        text-align: start;
+
+        @include hover {
+            background-color: var(--section-item-hover-background-color);
+        }
+
+        &_active {
+            background-color: var(--section-item-hover-background-color);
+        }
+    }
+}
+
+.flyout_trigger {
+    display: inline-flex;
+    width: fit-content;
+    height: fit-content;
+}

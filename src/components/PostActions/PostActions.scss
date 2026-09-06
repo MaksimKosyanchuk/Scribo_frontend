@@ -45,7 +45,7 @@
         display: flex;
         align-items: center;
         cursor: pointer;
-        gap: 2px;
+        gap: 4px;
         padding: 6px;
         border-radius: 6px;
         
@@ -69,6 +69,19 @@
 
             p {
                 color: var(--text-color);
+            }
+        }
+    }
+
+    &_views {
+        cursor: default;
+
+        @include hover {
+            color: var(--light-text-color);
+            background: transparent;
+
+            p {
+                color: var(--light-text-color);
             }
         }
     }

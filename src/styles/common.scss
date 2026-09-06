@@ -116,6 +116,11 @@ a {
     color: inherit;
 }
 
+.hashtag {
+    color: var(--hashtag-color);
+    cursor: pointer;
+}
+
 button {
     outline: none;
     border: none;

@@ -75,7 +75,7 @@ const getPostById = async (id, query) => {
         }).join('&')
     }
 
-    const result = await fetch(`${API_URL}/api/posts/${id}?${queryString}`)
+    const result = await apiFetch(`${API_URL}/api/posts/${id}?${queryString}`)
         .then(res => res.json())
         .catch((err) => {
             console.log(err)

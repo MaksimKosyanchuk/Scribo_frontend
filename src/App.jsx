@@ -6,6 +6,7 @@ const ApiDocs = lazy(() => import('./pages/Api/index.jsx'));
 
 import PageNotFound from './pages/PageNotFound/index.jsx';
 import HomePage from './pages/HomePage/index.jsx';
+import SearchPage from './pages/Search/index.jsx';
 import Article from './pages/Article/index.jsx';
 import Profile from './pages/Profile/index.jsx';
 import Settings from './pages/Settings/index.jsx';
@@ -151,6 +152,7 @@ function App() {
                               <Route path="/auth/register" Component={Register}/>
                               <Route path="/404" Component={PageNotFound}/>
                               <Route path="/posts/" Component={HomePage}/>
+                              <Route path="/search" Component={SearchPage}/>
                               <Route path="/create-post" Component={CreatePost}/>
                               <Route path="/users/:id" Component={Profile}/>
                               <Route path="/posts/:id" Component={Article}/>

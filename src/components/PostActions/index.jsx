@@ -12,6 +12,7 @@ import BookMarkBorder from "../../assets/svg/bookmark-outline.svg?react";
 import BookMarkFilled from "../../assets/svg/bookmark-filled.svg?react";
 import ShareIcon from "../../assets/svg/share.svg?react";
 import CommentIcon from "../../assets/svg/comment.svg?react";
+import EyeIcon from "../../assets/svg/eye.svg?react";
 import LikeIcon from "../../assets/svg/like-outline.svg?react";
 import FilledLikeIcon from "../../assets/svg/like-filled.svg?react";
 
@@ -95,9 +96,21 @@ const PostActions = ({ className, article, setArticle, isLoading=false, showCate
         if (!Array.isArray(comments)) return 0;
 
         return comments.reduce((count, comment) => {
+            if (!comment || typeof comment !== "object") {
+                return count;
+            }
             return count + 1 + getCommentsCount(comment.replies);
         }, 0);
     };
+
+    const commentsCount =
+        typeof article.comments_count === "number"
+            ? article.comments_count
+            : getCommentsCount(article.comments);
+    const viewsCount = Number(article.views_count || article.views || 0);
+    const firstCommentId = Array.isArray(article.comments)
+        ? article.comments.find((comment) => comment?._id)?._id
+        : "";
 
     const flushLike = async () => {
         if (likeBusy.current || !article?._id || !profile?._id) {
@@ -172,12 +185,12 @@ const PostActions = ({ className, article, setArticle, isLoading=false, showCate
                         </button>
                     </Tooltip>
                     <Tooltip text={"Перейти к комментариям"} className="post_actions_comment"  clickable={true}>
-                        <Link className="post_actions_button post_actions_comment app-transition" to={`/posts/${article._id}?comment=${article.comments?.length > 0 ? article.comments[0]._id : ""}`}>
+                        <Link className="post_actions_button post_actions_comment app-transition" to={`/posts/${article._id}${firstCommentId ? `?comment=${firstCommentId}` : ""}`}>
                             <CommentIcon/>
                             {
-                                article.comments?.length > 0 ?
+                                commentsCount > 0 ?
                                     <p>
-                                        {getCommentsCount(article.comments)}
+                                        {commentsCount}
                                     </p>
                                 :
                                     <></>
@@ -188,6 +201,12 @@ const PostActions = ({ className, article, setArticle, isLoading=false, showCate
                         <button type="button" className="post_actions_button app-transition" onClick={handleSavePost} disabled={isSavingProcess}>
                             {isSaved ? <BookMarkFilled /> : <BookMarkBorder />}
                         </button>
+                    </Tooltip>
+                    <Tooltip text="Просмотры">
+                        <span className="post_actions_button post_actions_views">
+                            <EyeIcon />
+                            <p>{viewsCount}</p>
+                        </span>
                     </Tooltip>
                     <Tooltip text={isMobile() ? "Поделиться" : "Скопировать ссылку"} clickable={true}>
                         <button className="post_actions_button app-transition" onClick={() => { share(article._id, showToast) }}>

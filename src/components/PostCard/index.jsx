@@ -5,6 +5,7 @@ import "./PostCard.scss";
 
 import PostHeader from "../PostHeader";
 import PostActions from "../PostActions";
+import PostHashtags from "../PostHashtags";
 
 import Sceleton from "../Ui/Sceleton/Sceleton";
 
@@ -62,6 +63,7 @@ const PostCard = ({
                 setArticle={updatePost}
                 showCategory={false}
             />
+            {isLoading ? null : <PostHashtags post={post} />}
         </article>
     );
 };

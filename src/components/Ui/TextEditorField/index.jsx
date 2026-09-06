@@ -18,6 +18,9 @@ import { TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { LinkNode } from "@lexical/link";
 import { TextNode } from "lexical";
+import { HashtagNode } from "./HashtagNode";
+import HashtagPlugin from "./HashtagPlugin";
+import HashtagSuggestPlugin from "./HashtagSuggestPlugin";
 
 import "./TextEditorField.scss";
 import SwitchBar from "../SwitchBar";
@@ -40,6 +43,7 @@ const editorConfig = {
       italic: "text_editor_italic",
     },
     link: "text_editor_link",
+    hashtag: "hashtag",
     list: {
       ul: "text_editor_ul",
       ol: "text_editor_ol",
@@ -50,6 +54,7 @@ const editorConfig = {
   },
   nodes: [
     TextNode,
+    HashtagNode,
     ListNode,
     ListItemNode,
     LinkNode,
@@ -238,6 +243,8 @@ export default function TextEditor({
             <HistoryPlugin />
             <ListPlugin />
             <LinkPlugin />
+            <HashtagPlugin />
+            <HashtagSuggestPlugin enabled={switcherActiveIndex === 0} />
 
             <OnChangePlugin
               onChange={(editorState, editor) => {
