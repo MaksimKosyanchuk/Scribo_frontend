@@ -71,6 +71,12 @@
                     color: var(--link-text-color);
                 }
             }
+
+            span.hashtag,
+            .hashtag {
+                color: var(--hashtag-color);
+                cursor: pointer;
+            }
         }
 
         &_input:focus-visible {

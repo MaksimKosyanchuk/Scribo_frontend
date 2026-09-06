@@ -4,6 +4,7 @@ import PostComment from "../../components/PostComments/index";
 import Loading from "../../components/Ui/Loading";
 import PostActions from "../../components/PostActions";
 import "./Article.scss";
+import HashtagHtml from "../../components/HashtagHtml";
 import PostHeader from "../../components/PostHeader";
 
 import { getPostById } from "../../api/posts.api";
@@ -24,7 +25,8 @@ const Article = () => {
                 setIsLoading(true)
 
                 const result = await getPostById(id, {
-                    expand: "author,category"
+                    expand: "author,category",
+                    view: 1,
                 })
 
                 if (result.status) {
@@ -75,9 +77,22 @@ const Article = () => {
                     : 
                         <></>
                     }
-                    <div className="article_content" dangerouslySetInnerHTML={{__html: article.content_text}}>
-                    </div>
-                    <PostComment postId={article._id} navigateTo={comment}/>
+                    <HashtagHtml className="article_content" html={article.content_text} />
+                    <PostComment
+                        postId={article._id}
+                        navigateTo={comment}
+                        onCommentsChange={(comments, commentsCount) => {
+                            setArticle((current) =>
+                                current
+                                    ? {
+                                        ...current,
+                                        comments,
+                                        comments_count: commentsCount,
+                                    }
+                                    : current,
+                            );
+                        }}
+                    />
                 </div>
                 :
                 <></>     

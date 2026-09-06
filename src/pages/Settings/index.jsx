@@ -426,10 +426,6 @@ const Settings = () => {
                                                 onRemove={handleAvatarRemove}
                                                 previewUrl={profile?.avatar}
                                             />
-                                            <div className="settings_avatar_copy">
-                                                <p className="settings_avatar_title">Фото профиля</p>
-                                                <p className="settings_avatar_hint">Нажмите на круг, чтобы заменить. PNG, JPEG, SVG</p>
-                                            </div>
                                         </div>
                                         {profile?.email ? (
                                             <Field title="Почта">

@@ -12,6 +12,7 @@ import MoonIcon from "../../assets/svg/moon.svg?react";
 import MainLogo from "../../assets/svg/full-logo-icon.svg?react";
 import DefaultProfileIcon from "../../assets/svg/profile.svg?react";
 import NotificationIcon from "../../assets/svg/notification.svg?react";
+import SearchIcon from "../../assets/svg/search.svg?react";
 import PlusIcon from "../../assets/svg/plus-icon.svg?react";
 import ArrowDownIcon from "../../assets/svg/chevron-down.svg?react";
 import RedirectIcon from "../../assets/svg/redirect.svg?react";
@@ -66,6 +67,13 @@ function Header() {
               :
                 <></>
             }
+            <Link
+              to="/search"
+              className={`header_item app-transition ${location.pathname.startsWith("/search") ? "header_item_active" : ""}`}
+              aria-label="Поиск"
+            >
+              <SearchIcon className="header_item_icon app-transition"/>
+            </Link>
             <Link to="/notifications" className='header_item header_notification app-transition'>
               {
                 profile?.notifications?.some(item => item.is_read === false ) 

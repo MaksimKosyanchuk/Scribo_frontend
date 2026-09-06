@@ -82,6 +82,12 @@
             color: var(--link-text-color);
         }
 
+        a.hashtag,
+        .hashtag {
+            color: var(--hashtag-color);
+            cursor: pointer;
+        }
+
         @include screen(){
             font-size: 14px;
             line-height: 1.4;

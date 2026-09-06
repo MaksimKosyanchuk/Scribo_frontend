@@ -71,6 +71,10 @@
             background: var(--section-item-hover-background-color);
         }
 
+        &.header_item_active {
+            color: var(--header-button-hover-color);
+        }
+
         &_icon {
           color: inherit;
           width: 20px;

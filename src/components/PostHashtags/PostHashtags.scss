@@ -1,0 +1,22 @@
+@use "../../styles/helpers.scss" as *;
+
+.post_hashtags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &_item {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--hashtag-color);
+
+        @include hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+    }
+}

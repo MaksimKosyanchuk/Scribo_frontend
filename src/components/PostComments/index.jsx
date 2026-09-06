@@ -22,11 +22,12 @@ import RedirectIcon from "../../assets/svg/redirect.svg?react";
 
 import CurrentUserBadge from "../CurrentUserBadge/index.jsx";
 import UserBadge from "../UserBadge/index.jsx";
-import InputField from "../Ui/InputField/index";
+import HashtagField from "../Ui/HashtagField";
 import PrimaryButton from "../Ui/PrimaryButton/index";
 import CancelButton from "../../components/Ui/CancelButton/index";
 import Tooltip from "../Ui/Tooltip/index";
 import Popup from "../Ui/Popup/index.jsx";
+import HashtagText from "../HashtagText";
 
 const CommentForm = ({
     value,
@@ -63,8 +64,7 @@ const CommentForm = ({
             <div className="comment_form_content">
                 <CurrentUserBadge asLink={false} />
 
-                <InputField
-                    isMultiline
+                <HashtagField
                     multilineRows={3}
                     length={FIELD_LIMITS.comment.max}
                     value={value}
@@ -111,7 +111,7 @@ const mapCommentTree = (comments, commentId, updater) =>
         return item
     })
 
-const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, profile, fetchComments, patchComment, showToast, postId }) => {
+const Comment = ({ comment, level = 0, isFirstRoot = false, replyCommentText, setReplyCommentText, profile, fetchComments, patchComment, showToast, postId }) => {
     const [showForm, setShowForm] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -277,7 +277,7 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
 
     return (
         <div
-            className={`comment app-transition ${level === 0 ? `comment_root` : ''}`}
+            className={`comment app-transition${level === 0 ? " comment_root" : ""}${level === 0 && !isFirstRoot ? " comment_root_line" : ""}`}
         >
             <div className="comment_body app-transition">
                 {
@@ -319,9 +319,11 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
                                 }
                             </div>
                             <div className="comment_body_middle_side">
-                                <p className="comment_body_middle_side_text" id={`comment_${comment._id}`}>
-                                    {comment.comment_text}
-                                </p>
+                                <HashtagText
+                                    className="comment_body_middle_side_text"
+                                    id={`comment_${comment._id}`}
+                                    text={comment.comment_text}
+                                />
                             </div>
                             <div className="comment_body_bottom_side">
                                 <Tooltip text={hasId(comment.likes, profile?._id) ? "Убрать лайк" : "Поставить лайк"}>
@@ -398,7 +400,17 @@ const Comment = ({ comment, level = 0, replyCommentText, setReplyCommentText, pr
     );
 };
 
-const PostComments = ({ postId, navigateTo }) => {
+const countCommentTree = (nodes) => {
+    if (!Array.isArray(nodes)) {
+        return 0;
+    }
+    return nodes.reduce(
+        (total, comment) => total + 1 + countCommentTree(comment.replies),
+        0,
+    );
+};
+
+const PostComments = ({ postId, navigateTo, onCommentsChange }) => {
     const [comments, setComments] = useState([]);
     const [commentText, setCommentText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -412,6 +424,7 @@ const PostComments = ({ postId, navigateTo }) => {
             onSuccessFetch && onSuccessFetch(result.data);
 
             setComments(result.data);
+            onCommentsChange?.(result.data, countCommentTree(result.data));
         }
     };
 
@@ -446,6 +459,7 @@ const PostComments = ({ postId, navigateTo }) => {
             getComments(postId).then((result) => {
                 if(result.status === true) {
                     setComments(result.data);
+                    onCommentsChange?.(result.data, countCommentTree(result.data));
                 }
             });
         }
@@ -478,10 +492,11 @@ const PostComments = ({ postId, navigateTo }) => {
                 /> 
             }
             <div className="post_comments_list">
-                {comments?.map((comment) => (
+                {comments?.map((comment, index) => (
                     <Comment
                         key={comment._id}
                         comment={comment}
+                        isFirstRoot={index === 0}
                         fetchComments={fetchComments}
                         patchComment={patchComment}
                         showToast={showToast}

@@ -30,6 +30,15 @@
                 }
             }
 
+            .hashtag_field .input_field {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .hashtag_field .input_field::placeholder {
+                font-size: 14px;
+            }
+
             .input_field_label {
                 .input span {
                     margin-bottom: 0;
@@ -46,6 +55,15 @@
             }
 
             @include screen() {
+                .hashtag_field .input_field {
+                    padding: 8px;
+                    font-size: 12px;
+                }
+
+                .hashtag_field .input_field::placeholder {
+                    font-size: 12px;
+                }
+
                 .input_field_label {
                     .input_field {
                         padding: 8px;
@@ -93,10 +111,6 @@
             flex-direction: column;
             gap: 16px;
 
-            &:last-child > .comment_body {
-                border-bottom: none;
-            }
-
             @include screen() {
                 padding-bottom: 0;
                 gap: 12px;
@@ -107,7 +121,6 @@
                 flex-direction: column;
                 gap: 12px;
                 padding: 12px 0;
-                border-bottom: 1px solid var(--line-color);
                 border-radius: 0;
 
                 @include screen() {
@@ -164,6 +177,10 @@
                         font-size: 14px;
                         color: var(--post-text-color);
                         word-break: break-word;
+
+                        .hashtag {
+                            color: var(--hashtag-color);
+                        }
                     }
                 }
                 
@@ -226,6 +243,12 @@
                     }
                 }
             }
+        }
+
+        .comment_root_line {
+            margin-top: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line-color);
         }
 
         .comment_highlight {

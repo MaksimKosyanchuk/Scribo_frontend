@@ -35,6 +35,14 @@
         border: 1px solid var(--input-outline-active-color);
     }
 
+    &[type="search"]::-webkit-search-decoration,
+    &[type="search"]::-webkit-search-cancel-button,
+    &[type="search"]::-webkit-search-results-button,
+    &[type="search"]::-webkit-search-results-decoration {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
     &::placeholder {
         font-size: var(--text-md);
         color: var(--input-placeholder-color);

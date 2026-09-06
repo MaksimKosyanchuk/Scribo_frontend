@@ -1,6 +1,6 @@
 {
   "name": "scribo-frontend",
-  "version": "3.10.18",
+  "version": "4.0.0",
   "private": true,
   "type": "module",
   "description": "Frontend for Scribo blog platform",
