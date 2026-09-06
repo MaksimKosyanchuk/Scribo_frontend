@@ -325,6 +325,22 @@ const Profile = () => {
                                 </Tooltip>
                             </div>
                         </Sceleton>
+                        {(isProfileLoading || user?.last_activity_at) ? (
+                            <Sceleton
+                                isLoading={isProfileLoading}
+                                rounded={true}
+                                className="profile_info_date"
+                            >
+                                <div className="profile_info_date">
+                                    <Calendar className="app-transition" />
+                                    <Tooltip text={format_date_time(user.last_activity_at)}>
+                                        <p>
+                                            Последняя активность: {format_back(user.last_activity_at)}
+                                        </p>
+                                    </Tooltip>
+                                </div>
+                            </Sceleton>
+                        ) : null}
                         <div className="profile_info_stats">
                             <Sceleton
                                 isLoading={isProfileLoading}

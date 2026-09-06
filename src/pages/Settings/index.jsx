@@ -47,6 +47,7 @@ const Settings = () => {
             userDescription: '',
             isEmailPublic: false,
             isSavedPostsPublic: false,
+            isLastActivityPublic: true,
             userAvatar: null
         }
     )
@@ -58,10 +59,10 @@ const Settings = () => {
         }))
     }
     
-    const set_saved_posts_visibility = (visibility) => {
+    const set_last_activity_visibility = (visibility) => {
         setFields(prev => ({
             ...prev,
-            isSavedPostsPublic: visibility
+            isLastActivityPublic: visibility
         }))
     }
 
@@ -85,7 +86,8 @@ const Settings = () => {
                 userDescription: profile.description ?? "",
                 userAvatar: profile.avatar,
                 isEmailPublic: profile.is_email_public,
-                isSavedPostsPublic: profile.is_saved_posts_public
+                isSavedPostsPublic: profile.is_saved_posts_public,
+                isLastActivityPublic: profile.is_last_activity_public !== false
             }));
         };
 
@@ -270,7 +272,8 @@ const Settings = () => {
             userNickName: profile.nick_name ?? "",
             userDescription: profile.description ?? "",
             isEmailPublic: profile.is_email_public,
-            isSavedPostsPublic: profile.is_saved_posts_public
+            isSavedPostsPublic: profile.is_saved_posts_public,
+            isLastActivityPublic: profile.is_last_activity_public !== false
         }
 
         for (let field in fields) {
@@ -484,6 +487,16 @@ const Settings = () => {
                                             <Toggle
                                                 checked={fields.isSavedPostsPublic}
                                                 onChange={set_saved_posts_visibility}
+                                            />
+                                        </div>
+                                        <div className="settings_switch">
+                                            <div className="settings_switch_copy">
+                                                <p className="settings_switch_title">Показывать последнюю активность</p>
+                                                <p className="settings_switch_hint">Дата и время будут видны на странице профиля</p>
+                                            </div>
+                                            <Toggle
+                                                checked={fields.isLastActivityPublic}
+                                                onChange={set_last_activity_visibility}
                                             />
                                         </div>
                                     </div>

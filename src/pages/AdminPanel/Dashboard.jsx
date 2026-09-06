@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { AppContext } from "../../App";
 import { getDashboard } from "../../api/analytics.api";
 import { hashtagSearchPath } from "../../utils/hashtags";
+import { format_date_time } from "../../utils/format";
 
 import ChipButton from "../../components/Ui/ChipButton";
 import Loading from "../../components/Ui/Loading";
@@ -579,6 +580,29 @@ const DashboardPage = () => {
                                 />
                             </section>
                         </div>
+                    </AnalyticsGroup>
+
+                    <AnalyticsGroup title="Последняя активность">
+                        <section className="analytics_block app-transition">
+                            {(data?.recent_users || []).length ? (
+                                <div className="analytics_table">
+                                    {(data.recent_users || []).map((item) => (
+                                        <Link
+                                            key={String(item._id)}
+                                            className="analytics_table_row"
+                                            to={`/users/${item.nick_name}`}
+                                        >
+                                            <span className="analytics_table_path">{item.nick_name}</span>
+                                            <span className="analytics_table_muted">
+                                                {format_date_time(item.last_activity_at)}
+                                            </span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="analytics_empty">Пока нет пользователей</p>
+                            )}
+                        </section>
                     </AnalyticsGroup>
 
                     <AnalyticsGroup title="Активность" className="analytics_group_compact">
