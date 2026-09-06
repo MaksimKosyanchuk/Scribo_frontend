@@ -32,7 +32,11 @@ const ACTIVITY_LABELS = {
 
 const TRAFFIC_KEYS = [
     { key: "visits", label: "Просмотры", color: "var(--text-color)" },
-    { key: "visitors", label: "Посетители", color: "var(--hashtag-color)" },
+];
+
+const TRAFFIC_TOOLTIP_KEYS = [
+    { key: "visits", label: "Просмотры" },
+    { key: "visitors", label: "Посетители" },
 ];
 
 const locationLabel = (item) => {
@@ -103,18 +107,30 @@ const deltaLabel = (current, previous) => {
     };
 };
 
-const TrendChart = ({ series, keys }) => {
+const TrendChart = ({ series, keys, tooltipKeys }) => {
     const [hover, setHover] = useState(null);
+    const [cursor, setCursor] = useState(null);
     const width = 720;
     const height = 248;
     const pad = { top: 16, right: 12, bottom: 32, left: 36 };
     const innerWidth = width - pad.left - pad.right;
     const innerHeight = height - pad.top - pad.bottom;
+    const details = tooltipKeys || keys;
 
     const maxValue = Math.max(
         1,
         ...series.flatMap((point) => keys.map((item) => Number(point[item.key] || 0))),
     );
+
+    const moveCursor = (event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        setCursor({
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
+            w: rect.width,
+            h: rect.height,
+        });
+    };
 
     const toX = (index) => {
         if (series.length <= 1) {
@@ -153,8 +169,25 @@ const TrendChart = ({ series, keys }) => {
     const hitWidth = series.length ? innerWidth / series.length : innerWidth;
     const active = hover != null ? series[hover] : null;
 
+    const tooltipStyle = cursor
+        ? {
+            left: cursor.x,
+            top: cursor.y,
+            transform: `translate(${cursor.x > cursor.w * 0.62 ? "calc(-100% - 12px)" : "12px"}, ${
+                cursor.y > cursor.h * 0.7 ? "calc(-100% - 8px)" : "8px"
+            })`,
+        }
+        : undefined;
+
     return (
-        <div className="analytics_chart_wrap">
+        <div
+            className="analytics_chart_wrap"
+            onMouseMove={moveCursor}
+            onMouseLeave={() => {
+                setHover(null);
+                setCursor(null);
+            }}
+        >
             <svg className="analytics_chart" viewBox={`0 0 ${width} ${height}`} role="img">
                 {yTicks.map((value) => (
                     <g key={value}>
@@ -213,7 +246,6 @@ const TrendChart = ({ series, keys }) => {
                         height={innerHeight}
                         fill="transparent"
                         onMouseEnter={() => setHover(index)}
-                        onMouseLeave={() => setHover(null)}
                     />
                 ))}
                 {ticks.map((point) => {
@@ -231,10 +263,10 @@ const TrendChart = ({ series, keys }) => {
                     );
                 })}
             </svg>
-            {active ? (
-                <div className="analytics_chart_tooltip">
+            {active && cursor ? (
+                <div className="analytics_chart_tooltip" style={tooltipStyle}>
                     <p>{formatDay(active.date)}</p>
-                    {keys.map((item) => (
+                    {details.map((item) => (
                         <p key={item.key}>
                             {item.label}: {formatNumber(active[item.key])}
                         </p>
@@ -440,7 +472,11 @@ const DashboardPage = () => {
                     <AnalyticsGroup title="Трафик">
                         <section className="analytics_block app-transition">
                             {series.length ? (
-                                <TrendChart series={series} keys={TRAFFIC_KEYS} />
+                                <TrendChart
+                                    series={series}
+                                    keys={TRAFFIC_KEYS}
+                                    tooltipKeys={TRAFFIC_TOOLTIP_KEYS}
+                                />
                             ) : (
                                 <p className="analytics_empty">Нет просмотров за период</p>
                             )}

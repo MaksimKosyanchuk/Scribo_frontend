@@ -19,7 +19,7 @@ const getPosts = async (query) => {
         }).filter(Boolean).join('&')
     }
     
-    const result = await fetch(`${API_URL}/api/posts?${queryString}`)
+    const result = await apiFetch(`${API_URL}/api/posts?${queryString}`)
     .then(res => res.json())
     .catch((err) => { 
         console.log(err)
@@ -112,7 +112,7 @@ const commentPost = async (id, data) => {
 }
 
 const getComments = async (id) => {
-    const result = await fetch(`${API_URL}/api/posts/${id}/comments?expand=author`)
+    const result = await apiFetch(`${API_URL}/api/posts/${id}/comments?expand=author`)
     .then(res => res.json())
     .catch((err) => {
         console.log(err)

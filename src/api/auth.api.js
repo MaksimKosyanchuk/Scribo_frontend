@@ -10,7 +10,7 @@ const verificationGoogle = async (token) => {
             body: JSON.stringify({ googleToken: token }),
         }
     
-        const response = await fetch(`${API_URL}/api/auth/verification/google`, requestOptions)
+        const response = await apiFetch(`${API_URL}/api/auth/verification/google`, requestOptions)
         const result = await response.json()
         const code = response.status
     
@@ -38,10 +38,9 @@ const loginGoogle = async (token) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ googleToken: token, ...geo }),
-            credentials: 'include'
         }
         
-        const response = await fetch(`${API_URL}/api/auth/login/google`, requestOptions)
+        const response = await apiFetch(`${API_URL}/api/auth/login/google`, requestOptions)
         const code = response.status
         const result = await response.json()
 
@@ -63,10 +62,9 @@ const loginUsername = async (username, password) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userName: username, userPassword: password, ...geo }),
-            credentials: 'include'
         }
         
-        const response = await fetch(`${API_URL}/api/auth/login/username`, requestOptions)
+        const response = await apiFetch(`${API_URL}/api/auth/login/username`, requestOptions)
         const code = response.status
         const result = await response.json()
     
@@ -81,7 +79,7 @@ const loginUsername = async (username, password) => {
 }
 
 const emailRegister = async (data) => {
-    const response = await fetch(`${API_URL}/api/auth/register/email`, { method: "POST", body: data })
+    const response = await apiFetch(`${API_URL}/api/auth/register/email`, { method: "POST", body: data })
 
     const code = response.status
     const result = await response.json()
@@ -93,7 +91,7 @@ const emailRegister = async (data) => {
 }
 
 const googleRegister = async (data) => {
-    const response = await fetch(`${API_URL}/api/auth/register/google`, { method: "POST", body: data })
+    const response = await apiFetch(`${API_URL}/api/auth/register/google`, { method: "POST", body: data })
 
     const code = response.status
     const result = await response.json()
@@ -117,7 +115,7 @@ const veriticationEmailConfirm = async (email, fullCode) => {
             })
         }
         
-        const response = await fetch(`${API_URL}/api/auth/verification/email/confirm`, requestOptions)
+        const response = await apiFetch(`${API_URL}/api/auth/verification/email/confirm`, requestOptions)
     
         const code = response.status
         const result = await response.json()
@@ -144,7 +142,7 @@ const verificationEmail = async (email) => {
             })
         }
 
-        const response = await fetch(`${API_URL}/api/auth/verification/email`, requestOptions)
+        const response = await apiFetch(`${API_URL}/api/auth/verification/email`, requestOptions)
 
         const code = response.status
         const result = await response.json()
@@ -161,7 +159,7 @@ const verificationEmail = async (email) => {
 
 const jsonAuthPost = async (path, body) => {
     try {
-        const response = await fetch(`${API_URL}${path}`, {
+        const response = await apiFetch(`${API_URL}${path}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",

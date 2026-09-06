@@ -3,7 +3,7 @@ import { apiFetch } from "./http";
 
 const getCategories = async () => {
     try {
-        const res = await fetch(`${API_URL}/api/categories?expand=category`);
+        const res = await apiFetch(`${API_URL}/api/categories?expand=category`);
         const result = await res.json();
 
         return result;

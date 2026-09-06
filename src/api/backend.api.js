@@ -1,6 +1,8 @@
+import { apiFetch } from "./http";
+
 const getApiDocs = async () => {
     try {
-        const response = await fetch(
+        const response = await apiFetch(
             `${import.meta.env.VITE_APP_API_URL}/api/docs`
         );
 

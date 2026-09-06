@@ -184,6 +184,18 @@
         height: auto;
         display: block;
 
+        polyline,
+        path,
+        line,
+        circle,
+        text {
+            transition:
+                fill 0.3s ease,
+                stroke 0.3s ease,
+                opacity 0.3s ease,
+                color 0.3s ease;
+        }
+
         &_grid {
             stroke: var(--line-color);
             stroke-width: 1;
@@ -224,8 +236,7 @@
 
         &_tooltip {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            z-index: 2;
             padding: 8px 10px;
             border-radius: 8px;
             background: var(--section-background-color);
@@ -233,6 +244,11 @@
             font-size: 12px;
             color: var(--text-color);
             pointer-events: none;
+            white-space: nowrap;
+            transition:
+                background-color 0.3s ease,
+                color 0.3s ease,
+                box-shadow 0.3s ease;
 
             p + p {
                 color: var(--light-text-color);
@@ -285,12 +301,16 @@
             border-radius: 999px;
             background: var(--section-item-hover-background-color);
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
 
         &_fill {
             height: 100%;
             border-radius: 999px;
             background: var(--text-color);
+            transition:
+                background-color 0.3s ease,
+                width 0.3s ease;
         }
     }
 
