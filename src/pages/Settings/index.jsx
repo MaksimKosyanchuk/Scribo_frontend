@@ -59,6 +59,13 @@ const Settings = () => {
         }))
     }
     
+    const set_saved_posts_visibility = (visibility) => {
+        setFields(prev => ({
+            ...prev,
+            isSavedPostsPublic: visibility
+        }))
+    }
+
     const set_last_activity_visibility = (visibility) => {
         setFields(prev => ({
             ...prev,
