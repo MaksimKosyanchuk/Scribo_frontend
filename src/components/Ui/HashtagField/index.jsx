@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { searchHashtags } from "../../../api/search.api";
 import {
@@ -10,6 +10,14 @@ import {
 import "../InputField/InputField.scss";
 import "../Flyout/Flyout.scss";
 import "./HashtagField.scss";
+
+const caretOffset = (field, text) => {
+    const start = field?.selectionStart;
+    if (typeof start === "number" && start > 0) {
+        return start;
+    }
+    return String(text || "").length;
+};
 
 const HashtagField = ({
     value,
@@ -43,15 +51,7 @@ const HashtagField = ({
         }
     };
 
-    const caretOffset = (field, text) => {
-        const start = field?.selectionStart;
-        if (typeof start === "number" && start > 0) {
-            return start;
-        }
-        return String(text || "").length;
-    };
-
-    const refreshSuggest = () => {
+    const refreshSuggest = useCallback(() => {
         const field = textareaRef.current;
         const text = field?.value || value || "";
         const active = getActiveHashtag(text, caretOffset(field, text));
@@ -73,7 +73,7 @@ const HashtagField = ({
             setActiveIndex(0);
             setItems(tags || []);
         }, 80);
-    };
+    }, [value]);
 
     const applyTag = (tag) => {
         const field = textareaRef.current;
@@ -91,7 +91,7 @@ const HashtagField = ({
 
     useEffect(() => {
         refreshSuggest();
-    }, [value]);
+    }, [refreshSuggest]);
 
     return (
         <div className="hashtag_field input_field_wrapper">

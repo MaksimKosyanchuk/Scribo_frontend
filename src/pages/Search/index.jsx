@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { searchSite } from "../../api/search.api";
@@ -84,10 +84,7 @@ const SearchPage = () => {
     const people = results.users || [];
     const categories = results.categories || [];
     const posts = results.posts || [];
-    const total = useMemo(
-        () => people.length + categories.length + posts.length,
-        [people, categories, posts],
-    );
+    const total = people.length + categories.length + posts.length;
 
     return (
         <div className="search_page">

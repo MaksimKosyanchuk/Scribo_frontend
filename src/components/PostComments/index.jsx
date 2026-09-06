@@ -416,6 +416,8 @@ const PostComments = ({ postId, navigateTo, onCommentsChange }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { profile, showModalWindow, showToast } = useContext(AppContext);
     const navigate = useNavigate();
+    const onCommentsChangeRef = useRef(onCommentsChange);
+    onCommentsChangeRef.current = onCommentsChange;
 
     const fetchComments = async ({ onSuccessFetch }) => {
         const result = await getComments(postId)
@@ -424,7 +426,7 @@ const PostComments = ({ postId, navigateTo, onCommentsChange }) => {
             onSuccessFetch && onSuccessFetch(result.data);
 
             setComments(result.data);
-            onCommentsChange?.(result.data, countCommentTree(result.data));
+            onCommentsChangeRef.current?.(result.data, countCommentTree(result.data));
         }
     };
 
@@ -459,7 +461,7 @@ const PostComments = ({ postId, navigateTo, onCommentsChange }) => {
             getComments(postId).then((result) => {
                 if(result.status === true) {
                     setComments(result.data);
-                    onCommentsChange?.(result.data, countCommentTree(result.data));
+                    onCommentsChangeRef.current?.(result.data, countCommentTree(result.data));
                 }
             });
         }
