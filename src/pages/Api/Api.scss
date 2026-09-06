@@ -1,55 +1,246 @@
-div[data-v-app]{
-    .section {
-        border: none;
+@use "../../styles/helpers" as *;
+
+.api-docs {
+    width: 100%;
+    min-width: 0;
+
+    &_status,
+    &_outdated {
+        margin: 0 0 var(--space-3);
+        font-size: 14px;
+        color: var(--light-text-color);
+
     }
 
-    .badge {
-        padding: 6px;
+    &_outdated {
+        color: var(--red-f5, #ff4545);
+    }
 
-        &:has(.outdated-label) {
-            display: flex;
-            align-items: center;
-            gap: 6px;
+    .swagger-ui {
+        font-family: inherit;
 
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.35);
-            border-radius: 6px;
 
-            color: #ef4444;
+        .wrapper,
+        .information-container,
+        .scheme-container {
+            padding-left: 0;
+            padding-right: 0;
+            background: transparent;
+            box-shadow: none;
 
-            .outdated-label {
-                margin: 0;
-                padding: 2px 6px;
+        }
 
-                background: #ef4444;
-                color: #fff;
+        .scheme-container {
+            padding-top: 0;
+        }
 
-                border-radius: 4px;
+        .info,
+        .info .title,
+        .info p,
+        .info li,
+        .info h1,
+        .info h2,
+        .info h3,
+        .info .base-url,
+        .opblock-tag,
+        .opblock-tag small,
+        .opblock-summary-path,
+        .opblock-summary-path__deprecated,
+        .opblock-summary-description,
+        .opblock-description-wrapper p,
+        .opblock-external-docs-wrapper,
+        .opblock-title_normal,
+        .tab li,
+        .parameter__name,
+        .parameter__type,
+        .parameter__in,
+        .parameter__deprecated,
+        .parameter__empty,
+        .response-col_status,
+        .response-col_description,
+        .response-col_links,
+        .responses-inner h4,
+        .responses-inner h5,
+        .model-title,
+        .model,
+        .model-box,
+        .prop-type,
+        .prop-format,
+        table thead tr th,
+        table thead tr td,
+        table tbody tr td,
+        .servers-title,
+        .schemes-title,
+        label,
+        .renderedMarkdown p,
+        .renderedMarkdown li {
+            color: var(--swagger-main-text-color);
+            font-family: inherit;
+            @include use-transition;
+        }
 
-                font-size: 10px;
-                font-weight: 700;
-                line-height: 1.2;
-                text-transform: uppercase;
-                letter-spacing: 0.4px;
+        span {
+            color: var(--text-color);
+        }
+
+        .opblock-summary-description,
+        .opblock-tag small,
+        .parameter__type,
+        .parameter__in,
+        .info .base-url {
+            color: var(--swagger-secondary-text-color);
+        }
+
+        .info .title small,
+        .info .title small pre {
+            background: transparent;
+            border: 1px solid var(--line-color);
+            color: var(--swagger-secondary-text-color);
+            @include use-transition;
+        }
+
+        .opblock-tag {
+            border-bottom: 1px solid var(--line-color);
+
+            a {
+                color: var(--swagger-titles-color);
             }
         }
+
+//         .expand-operation svg,
+//         .expand-methods svg,
+//         .arrow,
+//         .opblock-control-arrow,
+//         .model-toggle:after,
+//         svg.arrow {
+//             fill: var(--swagger-main-text-color);
+//             color: var(--swagger-main-text-color);
+
+//         }
+
+//         .authorization__btn svg,
+//         .unlocked,
+//         .locked {
+//             fill: #49cc90;
+//         }
+
+        .opblock {
+            background: var(--section-background-color);
+            border: none;
+            border-radius: var(--radius, 12px);
+            box-shadow: none;
+            @include use-transition;
+
+        }
+
+        .opblock .opblock-summary {
+            border: none;
+        }
+
+        .opblock .opblock-section-header {
+            background: transparent;
+            box-shadow: none;
+            border-color: var(--line-color);
+
+
+            h4,
+            label {
+                color: var(--swagger-main-text-color);
+            }
+        }
+
+        .opblock-body {
+            background: transparent;
+        }
+
+        .opblock-tag-section {
+            border-bottom: 1px solid var(--line-color);
+            @include use-transition;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="search"],
+        textarea,
+        select,
+        .operation-filter-input {
+            background: var(--swagger-field-background-color);
+            color: var(--swagger-field-color);
+            border: 1px solid var(--input-outline-color);
+            border-radius: 8px;
+            box-shadow: none;
+            @include use-transition;
+        }
+
+        select option {
+            background: var(--swagger-option-background-color);
+            color: var(--swagger-field-color);
+        }
+
+//         .btn {
+//             border-radius: 8px;
+//             font-weight: 500;
+
+//         }
+
+//         .btn.cancel {
+//             color: var(--swagger-secondary-text-color);
+//             border-color: var(--line-color);
+//         }
+
+//         .copy-to-clipboard {
+//             background: var(--section-item-hover-background-color);
+
+//         }
+
+//         .highlight-code,
+//         .microlight,
+//         .renderedMarkdown code,
+//         .opblock-body pre {
+//             background: var(--main-background);
+//             color: var(--swagger-main-text-color);
+
+//         }
+
+//         .model-box,
+//         section.models,
+//         section.models h4,
+//         section.models .model-container {
+//             background: var(--section-background-color);
+//             border: none;
+//             border-color: var(--line-color);
+//             color: var(--swagger-main-text-color);
+//             border-radius: var(--radius, 12px);
+
+//         }
+
+//         table thead tr th,
+//         table tbody tr td {
+//             border-color: var(--line-color);
+//         }
+
+//         .dialog-ux .modal-ux {
+//             background: var(--section-background-color);
+//             border: none;
+//             color: var(--swagger-main-text-color);
+
+//         }
+
+//         .dialog-ux .modal-ux-header,
+//         .dialog-ux .modal-ux-content {
+//             background: transparent;
+//             border-color: var(--line-color);
+//             color: var(--swagger-main-text-color);
+//         }
+
+//         .auth-container,
+//         .auth-btn-wrapper,
+//         .wrapper .block-desktop {
+
+//         }
+
+//         .topbar {
+//             display: none;
+//         }
     }
-}
-
-.scalar .scalar-app-layout.scalar-client {
-    margin-top: calc(var(--header-height) + 20px);
-}
-
-body {
-    --scalar-color-1: var(--text-color);
-    --scalar-color-2: var(--text-color);
-    --scalar-color-3: var(--light-text-color);
-    --scalar-color-accent: #0a85d1;
-    --scalar-sidebar-background-1: var(--section-background-color);
-    --scalar-sidebar-border-color: var(--line-color);
-    --scalar-background-1: var(--section-background-color);
-    --scalar-background-2: var(--section-background-color);
-    --scalar-background-3: var(--section-background-color);
-    --scalar-background-accent: #5369d20f;
-    --scalar-border-color: var(--line-color);
 }

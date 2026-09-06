@@ -1,4 +1,5 @@
 import { API_URL } from "../config";
+import { apiFetch } from "./http";
 
 const searchSite = async (q) => {
     const query = String(q || "").trim();
@@ -10,7 +11,7 @@ const searchSite = async (q) => {
     }
 
     try {
-        const response = await fetch(
+        const response = await apiFetch(
             `${API_URL}/api/search?q=${encodeURIComponent(query)}`,
         );
         return await response.json();
@@ -30,7 +31,7 @@ const searchHashtags = async (q) => {
     }
 
     try {
-        const response = await fetch(
+        const response = await apiFetch(
             `${API_URL}/api/search/hashtags?q=${encodeURIComponent(query)}`,
         );
         const result = await response.json();

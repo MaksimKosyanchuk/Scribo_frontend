@@ -1,6 +1,6 @@
 {
   "name": "scribo-frontend",
-  "version": "4.0.0",
+  "version": "4.1.1",
   "private": true,
   "type": "module",
   "description": "Frontend for Scribo blog platform",
@@ -12,11 +12,11 @@
     "@lexical/list": "^0.39.0",
     "@lexical/react": "^0.39.0",
     "@react-oauth/google": "^0.13.4",
-    "@scalar/api-reference-react": "^0.9.63",
     "lexical": "^0.39.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^7.18.2"
+    "react-router-dom": "^7.18.2",
+    "swagger-ui-dist": "^5.32.15"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
@@ -30,17 +30,13 @@
     "vite-plugin-svgr": "^5.2.0"
   },
   "scripts": {
-      "lint": "eslint .",
-      "lint:fix": "eslint . --fix",
-
-      "start": "vite",
-
-      "dev": "vite",
-
-      "prebuild": "npm run lint",
-      "build": "vite build",
-
-      "preview": "vite preview"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "start": "vite",
+    "dev": "vite",
+    "prebuild": "npm run lint",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",

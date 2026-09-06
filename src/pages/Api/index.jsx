@@ -1,11 +1,10 @@
-import { useEffect, useContext, useState } from "react";
-import { ApiReferenceReact } from "@scalar/api-reference-react";
-import "@scalar/api-reference-react/style.css";
+import { useEffect, useMemo, useRef, useState } from "react";
+import SwaggerUIBundle from "swagger-ui-dist/swagger-ui-es-bundle.js";
+import "swagger-ui-dist/swagger-ui.css";
 import "./Api.scss";
 
 import { getApiDocs } from "../../api/backend.api";
-
-import { AppContext } from "../../App";
+import { getAccessToken } from "../../api/http";
 
 const isApiOutdated = (docsVersion, backendVersion) => {
     if (!docsVersion || !backendVersion) {
@@ -15,82 +14,107 @@ const isApiOutdated = (docsVersion, backendVersion) => {
     const [docsMajor, docsMinor] = docsVersion.split(".");
     const [backendMajor, backendMinor] = backendVersion.split(".");
 
-    return (
-        docsMajor !== backendMajor ||
-        docsMinor !== backendMinor
-    );
+    return docsMajor !== backendMajor || docsMinor !== backendMinor;
 };
 
-function Api() {
-    const { isDarkTheme } = useContext(AppContext);
+function interceptSwaggerRequest(request) {
+    const token = getAccessToken();
 
+    if (token) {
+        request.headers.Authorization = `Bearer ${token}`;
+    }
+
+    request.credentials = "include";
+    return request;
+}
+
+function Api() {
+    const swaggerRoot = useRef(null);
     const [apiDocument, setApiDocument] = useState(null);
+    const [loadError, setLoadError] = useState(false);
 
     useEffect(() => {
+        let cancelled = false;
+
         const loadApiDocument = async () => {
             const docs = await getApiDocs();
 
-            if(docs.status) {
-                setApiDocument(docs.data);
+            if (cancelled) {
+                return;
             }
-            console.log("API Document loaded:", docs);
+
+            if (docs?.status && docs.data) {
+                setApiDocument(docs.data);
+                setLoadError(false);
+                return;
+            }
+
+            setLoadError(true);
         };
 
         loadApiDocument();
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     useEffect(() => {
-        if (!apiDocument) return;
+        const node = swaggerRoot.current;
 
-        const outdated = isApiOutdated(
-            apiDocument.info?.version,
-            apiDocument.info?.["x-backend-version"]
-        );
+        if (!apiDocument || !node) {
+            return undefined;
+        }
 
-        if (!outdated) return;
-
-        const addOutdatedLabel = () => {
-            const badges = document.querySelectorAll(".badge");
-
-            badges.forEach((badge) => {
-                if (
-                    badge.textContent.includes(apiDocument.info.version) &&
-                    !badge.querySelector(".outdated-label")
-                ) {
-                    const label = document.createElement("p");
-
-                    label.className = "outdated-label";
-                    label.textContent = "Outdated";
-
-                    badge.appendChild(label);
-                }
-            });
-        };
-
-        const observer = new MutationObserver(addOutdatedLabel);
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
+        SwaggerUIBundle({
+            spec: apiDocument,
+            domNode: node,
+            docExpansion: "list",
+            defaultModelsExpandDepth: 1,
+            deepLinking: true,
+            filter: true,
+            persistAuthorization: true,
+            tryItOutEnabled: true,
+            withCredentials: true,
+            requestInterceptor: interceptSwaggerRequest,
         });
 
-        addOutdatedLabel();
-
-        return () => observer.disconnect();
+        return () => {
+            node.replaceChildren();
+        };
     }, [apiDocument]);
+
+    const outdated = useMemo(
+        () =>
+            isApiOutdated(
+                apiDocument?.info?.version,
+                apiDocument?.info?.["x-backend-version"],
+            ),
+        [apiDocument],
+    );
+
+    if (loadError) {
+        return (
+            <p className="api-docs_status">
+                Не удалось загрузить описание API.
+            </p>
+        );
+    }
 
     if (!apiDocument) {
         return null;
     }
 
     return (
-        <ApiReferenceReact
-            configuration={{
-                content: apiDocument,
-                forceDarkModeState: isDarkTheme ? "dark" : "light",
-                hideDarkModeToggle: true
-            }}
-        />
+        <div className="api-docs">
+            {outdated ? (
+                <p className="api-docs_outdated">
+                    Спека {apiDocument.info.version} не совпадает с бэкендом{" "}
+                    {apiDocument.info["x-backend-version"]}
+                </p>
+            ) : null}
+            <div ref={swaggerRoot} />
+        </div>
     );
 }
 

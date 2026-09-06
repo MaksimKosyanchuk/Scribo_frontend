@@ -1,70 +1,128 @@
-# Scribo — React Blog Project
+# Scribo frontend
 
-A news blog platform built with ReactJS and a RESTful API.
+Web client for the Scribo blog platform: reading, writing, accounts, search, support, and the admin panel.
 
----
+**Vite 8** + **React 18** + **React Router 7**. Talks to **Scribo_nest** (`/api/...`). Version `4.0.0` matches the API package.
 
-## Technologies
+## Stack
 
-- HTML, CSS, SCSS, JS
-- ReactJS
-- JSON Web Token (JWT)  
-- dotenv for environment variables
-- Swagger UI
-- Google OAuth 2.0
+| Layer | Choice |
+| --- | --- |
+| Bundler | Vite (dev server default port **3000**) |
+| UI | React 18, SCSS, Geist |
+| Routing | react-router-dom 7 |
+| Editor | Lexical (posts) |
+| Auth UI | JWT in memory + refresh cookie; Google Identity (`@react-oauth/google`) |
+| API docs page | Swagger UI (`/api` in the app), spec from the backend |
 
----
+Design tokens live in `src/styles/theme.scss`. Keep canvas / object / field roles from that file; do not wrap the feed in extra cards.
 
 ## Features
 
-- Create, edit, and delete posts  
-- Read and browse posts  
-- Login and register accounts  
-- Follow and unfollow other users
-- Save posts to saved
+- Feed, article, search (including hashtags)
+- Register / login (email + Google), password reset, sessions in settings
+- Create and edit posts, categories, hashtag suggestions
+- Comments with nested replies
+- Profiles, follow, saved posts, likes, share, view counts
+- Support tickets (user + admin)
+- Admin panel: users, categories, logs, analytics dashboard
+- Light / dark theme
+- In-app API reference at `/api`
 
----
+## Requirements
 
-## Installation & Running
+- Node.js 20+ (22.x matches the API)
+- Running Scribo API (see `../Scribo_nest`)
+- Google Cloud OAuth 2.0 **Web client** id for Google sign-in
 
-### 1. Clone the repository
+## Setup
+
 ```bash
-https://github.com/scribo-blog-org/Scribo_frontend
 cd Scribo_frontend
+cp .env.example .env
+npm install
+npm run dev
 ```
 
-### 2. Setup environment variables
-Create a `.env` file in the root of the project and set:
+Open `http://localhost:3000`. If that port is taken, Vite picks the next one (e.g. 3001/3002); put the real origin in the API `FRONTEND_ORIGIN`.
+
+`npm start` is an alias of `npm run dev`.
+
+## Environment
+
+Vite only exposes variables prefixed with `VITE_`. Restart the dev server after changing `.env`.
+
+| Variable | Required | Notes |
+| --- | --- | --- |
+| `VITE_APP_API_URL` | yes | API origin **without** a trailing slash, e.g. `http://localhost:3001` |
+| `VITE_GOOGLE_CLIENT_ID` | for Google login | OAuth web client id |
+| `VITE_APP_VERCEL_PROJECT_PRODUCTION_URL` | for share/copy | Host only, no `https://` — used when copying a post URL |
+
+Example local file:
 
 ```env
-REACT_APP_API_URL=<your backend server URL>
-REACT_APP_GOOGLE_CLIENT_ID=<your google cliend id for Google OAuth>
+VITE_APP_API_URL=http://localhost:3001
+VITE_GOOGLE_CLIENT_ID=
+VITE_APP_VERCEL_PROJECT_PRODUCTION_URL=localhost:3000
 ```
 
-> Example: `REACT_APP_API_URL=https://scribo-backend.vercel.app`
+Requests use `credentials: 'include'` so the refresh cookie is sent. The API must list this app’s origin in `FRONTEND_ORIGIN` (production) or allow localhost (non-production).
 
-> Example: `REACT_APP_GOOGLE_CLIENT_ID=340625159023-mgjdt8l715vba1m2dh4qor76gosrqv98.apps.googleusercontent.com`
+## Scripts
 
-### 3. Install dependencies
 ```bash
-npm install
+npm run dev        # Vite
+npm start          # same
+npm run build      # lint, then production bundle → dist/
+npm run preview    # serve dist/
+npm run lint
+npm run lint:fix
 ```
 
-### 4. Run the development server
-```bash
-npm start
+`prebuild` runs ESLint; `npm run build` fails if lint fails.
+
+## Layout
+
+```
+src/
+  index.jsx              GoogleOAuthProvider, root
+  App.jsx                routes, session restore, theme
+  api/                   fetch helpers (http.js holds the access token)
+  components/
+  layouts/
+  pages/                 posts, article, auth, settings, admin, support, api docs
+  styles/                theme.scss, common.scss
+  config/                API_URL
 ```
 
-The app will run locally at [http://localhost:3000](http://localhost:3000).
+Notable routes:
 
----
+| Path | Page |
+| --- | --- |
+| `/posts` | Feed |
+| `/posts/:id` | Article |
+| `/search` | Search |
+| `/auth/login`, `/auth/register` | Auth |
+| `/create-post`, `/posts/:id/edit` | Editor |
+| `/users/:id` | Profile |
+| `/settings` | Account / sessions |
+| `/admin-panel` | Admin |
+| `/support` | Support |
+| `/api` | Live OpenAPI (Swagger UI) |
 
-## Links
+## Auth with the API
 
-- [Live site](https://scribo-blog.vercel.app)  
-- [Backend repository](https://github.com/scribo-blog-org/Scribo_backend)
-- [GitHub](https://github.com/scribo-blog-org)  
-- [Personal github](https://github.com/MaksimKosyanchuk)  
-- [Telegram](https://t.me/maks_k0s)  
-- [Instagram](https://www.instagram.com/maks_kos/)  
-- [Twitter](https://twitter.com/maks_k0s)
+On load the app calls `POST /api/auth/refresh` with cookies. A new access token is kept in memory (not `localStorage`). `apiFetch` attaches `Authorization: Bearer` and retries once after refresh on 401.
+
+Google: the browser obtains a Google access token; the API validates it via Google userinfo. Authorized JavaScript origins and redirect URIs in Google Cloud must include this frontend origin.
+
+## Production
+
+Static host (Vercel or any static CDN):
+
+1. Build with production `VITE_*` values (baked in at build time).
+2. Point `VITE_APP_API_URL` at the public Nest origin.
+3. SPA fallback: all paths rewrite to `index.html`.
+4. Align `FRONTEND_ORIGIN` on the API with the real site origin (custom domain, not only `*.vercel.app`, if you use a custom domain).
+
+This app is a client-rendered SPA. The HTML shell title/description are in `index.html`; per-article meta is not server-rendered.

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   $createTextNode,
@@ -109,7 +109,7 @@ const HashtagSuggestPlugin = ({ enabled }) => {
     });
   }, [editor, enabled]);
 
-  const applyTag = (tag) => {
+  const applyTag = useCallback((tag) => {
     editor.update(() => {
       const active = readActiveHashtag();
       if (!active) {
@@ -131,7 +131,7 @@ const HashtagSuggestPlugin = ({ enabled }) => {
     });
     setItems([]);
     setAnchor(null);
-  };
+  }, [editor]);
 
   useEffect(() => {
     if (!enabled || items.length === 0) {
@@ -189,7 +189,7 @@ const HashtagSuggestPlugin = ({ enabled }) => {
       removeEnter();
       removeEscape();
     };
-  }, [editor, enabled, items.length]);
+  }, [applyTag, editor, enabled, items.length]);
 
   if (!enabled || !anchor || items.length === 0) {
     return null;
