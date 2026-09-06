@@ -47,6 +47,7 @@ const PostCard = ({
                 post={post}
                 isLoading={isLoading}
                 onDeletePost={deletePost}
+                showCategory
             />
             {isLoading || !post._id ? (
                 <div className="posts_item_main">{body}</div>

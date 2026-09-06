@@ -85,7 +85,7 @@ const getDeleteModalContent = (post, requestCloseModal, onDeletePost, showToast)
     </div>
 );
 
-const PostHeader = memo(({ post, onDeletePost, className, isLoading=false }) => {
+const PostHeader = memo(({ post, onDeletePost, className, isLoading=false, showCategory=false }) => {
     const { profile, showModalWindow, requestCloseModal, showToast } = useContext(AppContext);
     const navigate = useNavigate();
     
@@ -118,6 +118,13 @@ const PostHeader = memo(({ post, onDeletePost, className, isLoading=false }) => 
                         <p className="post_header_left_date">{format_back(post.created_date)}</p>
                     </Tooltip>
                 </Sceleton>
+                {showCategory ? (
+                    isLoading ? (
+                        <Sceleton isLoading rounded={true} className="post_header_category" />
+                    ) : post.category ? (
+                        <Category tag className="post_header_category" category={post.category} />
+                    ) : null
+                ) : null}
             </div>
             {
                 !isLoading &&
